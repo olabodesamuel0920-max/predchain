@@ -121,12 +121,12 @@ export default function UsersView() {
 
       {/* SEARCH HEADER */}
       <div className="card p-4">
-        <div className="flex justify-between items-center gap-24">
-          <div className="flex items-center gap-12">
+        <div className="flex justify-between items-center gap-4">
+          <div className="flex items-center gap-3">
              <div className="p-10 bg-blue-electric/10 rounded-lg"><Users className="w-5 h-5 text-blue-electric" /></div>
              <h2 className="font-display text-lg font-bold tracking-tight">User Management</h2>
           </div>
-          <div className="flex flex-1 max-w-[500px] gap-12 items-center">
+          <div className="flex flex-1 max-w-[500px] gap-3 items-center">
             <div className="relative flex-1">
                <Search className="absolute left-10 top-1/2 -translate-y-1/2 w-4 h-4 text-muted opacity-40" />
                <input 
@@ -138,11 +138,11 @@ export default function UsersView() {
                  className="input-premium pl-32 py-10"
                />
             </div>
-            <button onClick={handleSearch} disabled={isPending} className="btn btn-blue btn-xs px-20 h-40 font-black uppercase tracking-widest text-[10px]">
+            <button onClick={handleSearch} disabled={isPending} className="btn btn-blue btn-xs px-6 h-10 font-black uppercase tracking-widest text-[10px]">
               {isPending ? 'SEARCHING...' : 'SEARCH'}
             </button>
             <div className="h-24 w-px bg-white/10 mx-4" />
-            <button onClick={() => setShowDemoModal(true)} className="btn btn-primary btn-xs px-20 h-40 font-black uppercase tracking-widest text-[10px] flex items-center gap-8">
+            <button onClick={() => setShowDemoModal(true)} className="btn btn-primary btn-xs px-6 h-10 font-black uppercase tracking-widest text-[10px] flex items-center gap-2">
               <UserPlus className="w-4 h-4" /> CREATE DEMO
             </button>
           </div>
@@ -211,10 +211,10 @@ export default function UsersView() {
           ) : (
             <div className="card p-0 animate-slide-up flex flex-col overflow-hidden">
               {/* Profile Header */}
-              <div className="p-24 border-b border-white/5 bg-white/[0.01]">
-                <div className="flex justify-between items-start mb-24">
-                  <div className="flex items-center gap-12">
-                     <div className="p-10 bg-white/5 rounded-xl border border-white/10"><User className="w-5 h-5 text-white" /></div>
+              <div className="p-6 border-b border-white/5 bg-white/[0.01]">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="flex items-center gap-3">
+                     <div className="p-8 bg-white/5 rounded-xl border border-white/10"><User className="w-5 h-5 text-white" /></div>
                      <div>
                        <h3 className="font-display text-lg font-black tracking-tight flex items-center gap-8">
                          {userDetails.profile?.username}
@@ -250,9 +250,9 @@ export default function UsersView() {
               </div>
 
               {/* Scrollable Detail Body */}
-              <div className="p-24 overflow-y-auto max-h-[600px]">
+              <div className="p-6 overflow-y-auto max-h-[600px]">
                 {activeTab === 'overview' && (
-                  <div className="flex flex-col gap-24 animate-fade-in">
+                  <div className="flex flex-col gap-6 animate-fade-in">
                      <div className="grid grid-cols-2 gap-6">
                        <div className="p-16 bg-white/[0.03] border border-white/5 rounded-xl">
                          <div className="text-[9px] text-muted font-black uppercase mb-8 tracking-widest">Trust Status</div>
@@ -427,14 +427,14 @@ export default function UsersView() {
       </div>
     </div>
     
-    {/* CREATE DEMO MODAL */}
-    {showDemoModal && (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-24">
-        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => !isPending && setShowDemoModal(false)} />
-        <div className="card w-full max-w-[440px] p-0 relative z-10 animate-slide-up bg-zinc-950 border-white/10">
-           <div className="p-24 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
-              <div className="flex items-center gap-12">
-                 <div className="p-10 bg-gold/10 rounded-xl"><UserPlus className="w-5 h-5 text-gold" /></div>
+     {/* CREATE DEMO MODAL */}
+     {showDemoModal && (
+       <div className="fixed inset-0 z-[110] flex items-center justify-center p-24">
+         <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => !isPending && setShowDemoModal(false)} />
+         <div className="card w-full max-w-[500px] p-0 relative z-10 animate-slide-up bg-zinc-950 border-white/10 shadow-2xl">
+            <div className="p-16 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
+               <div className="flex items-center gap-3">
+                  <div className="p-8 bg-gold/10 rounded-xl"><UserPlus className="w-4 h-4 text-gold" /></div>
                  <div>
                     <h3 className="font-display font-black text-white uppercase tracking-widest leading-none">New Demo User</h3>
                     <p className="text-[9px] text-muted font-bold uppercase tracking-widest mt-4 opacity-60">Auth & Wallet Initialization</p>
@@ -442,69 +442,69 @@ export default function UsersView() {
               </div>
            </div>
            
-           <div className="p-24 flex flex-col gap-20">
-              <div className="flex flex-col gap-6">
+           <div className="p-16 flex flex-col gap-12">
+              <div className="flex flex-col gap-4">
                  <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Identifier (Email)</label>
                  <input 
                    type="email" 
                    value={demoData.email} 
                    onChange={e => setDemoData(prev => ({ ...prev, email: e.target.value }))}
-                   className="input-premium py-12 text-xs" 
+                   className="input-premium py-10 text-xs" 
                    placeholder="demo.tester@predchain.com" 
                  />
               </div>
 
-              <div className="grid grid-cols-2 gap-12">
-                 <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-2 gap-8">
+                 <div className="flex flex-col gap-4">
                     <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Username</label>
                     <input 
                       type="text" 
                       value={demoData.username} 
                       onChange={e => setDemoData(prev => ({ ...prev, username: e.target.value }))}
-                      className="input-premium py-12 text-xs font-bold" 
+                      className="input-premium py-10 text-xs font-bold" 
                       placeholder="tester01" 
                     />
                  </div>
-                 <div className="flex flex-col gap-6">
+                 <div className="flex flex-col gap-4">
                     <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Password</label>
                     <input 
                       type="text" 
                       value={demoData.password} 
                       onChange={e => setDemoData(prev => ({ ...prev, password: e.target.value }))}
-                      className="input-premium py-12 text-xs font-mono" 
+                      className="input-premium py-10 text-xs font-mono" 
                       placeholder="••••••••" 
                     />
                  </div>
               </div>
 
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
                  <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Initial Funding (₦)</label>
                  <div className="relative">
-                    <span className="absolute left-12 top-1/2 -translate-y-1/2 text-muted text-xs font-black">₦</span>
+                    <span className="absolute left-10 top-1/2 -translate-y-1/2 text-muted text-[10px] font-black">₦</span>
                     <input 
                       type="number" 
-                      value={demoData.balance} 
-                      onChange={e => setDemoData(prev => ({ ...prev, balance: Number(e.target.value) }))}
-                      className="input-premium py-12 pl-24 text-xs font-mono font-black" 
+                      value={demoData.balance ?? ''} 
+                      onChange={e => setDemoData(prev => ({ ...prev, balance: e.target.value ? Number(e.target.value) : 0 }))}
+                      className="input-premium py-10 pl-20 text-xs font-mono font-black" 
                     />
                  </div>
               </div>
 
-              <div className="p-12 bg-blue-electric/5 border border-blue-electric/10 rounded-xl flex items-center gap-12 mt-8">
-                 <ShieldCheck className="w-5 h-5 text-blue-electric opacity-40" />
+              <div className="p-8 bg-blue-electric/5 border border-blue-electric/10 rounded-xl flex items-center gap-8 mt-4">
+                 <ShieldCheck className="w-4 h-4 text-blue-electric opacity-40" />
                  <p className="text-[9px] text-muted leading-relaxed font-bold uppercase tracking-tight">System will automatically verify and initialize a wallet for this demo user.</p>
               </div>
            </div>
 
-           <div className="p-24 border-t border-white/5 flex gap-12 bg-white/[0.01]">
+           <div className="p-16 border-t border-white/5 flex gap-12 bg-white/[0.01]">
               <button 
                 onClick={() => setShowDemoModal(false)}
-                className="btn btn-ghost flex-1 py-12 font-black uppercase text-[10px] tracking-widest opacity-60 hover:opacity-100"
+                className="btn btn-ghost flex-1 py-10 font-black uppercase text-[10px] tracking-widest opacity-60 hover:opacity-100"
               >Cancel</button>
               <button 
                 onClick={handleCreateDemo}
                 disabled={isPending || !demoData.email || !demoData.username || !demoData.password}
-                className="btn btn-blue flex-1 py-12 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20"
+                className="btn btn-blue flex-1 py-10 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20"
               >
                 {isPending ? 'CREATING...' : 'CREATE USER'}
               </button>

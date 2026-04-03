@@ -76,7 +76,7 @@ export default function FinanceView({ payoutRequests, initialMetrics }: FinanceV
   };
 
   return (
-    <div className="flex flex-col gap-24 animate-slide-up">
+    <div className="flex flex-col gap-8 animate-slide-up">
       {/* Notifications */}
       {(successMsg || errorMsg) && (
         <div className={`fixed bottom-6 right-6 z-[100] px-5 py-3 rounded-xl backdrop-blur-xl border flex items-center gap-3 shadow-2xl animate-slide-up ${

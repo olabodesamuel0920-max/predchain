@@ -562,6 +562,10 @@ BEGIN
   IF p_admin_id IS NOT NULL THEN
     INSERT INTO public.admin_audit_logs (admin_id, action, target_user_id, details)
     VALUES (p_admin_id, 'settle_winner', v_user_id, jsonb_build_object('entry_id', p_entry_id, 'amount', v_reward_amount));
+
+    -- 8. Financial Ledger
+    INSERT INTO public.admin_ledger (admin_id, user_id, amount, type, reason)
+    VALUES (p_admin_id, v_user_id, v_reward_amount, 'debit', 'Challenge Round Reward: ' || v_round_id);
   END IF;
 
 END;

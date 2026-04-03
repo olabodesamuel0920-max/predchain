@@ -57,7 +57,7 @@ export default function SupportView() {
   };
 
   return (
-    <div className="flex flex-col gap-24 animate-slide-up">
+    <div className="flex flex-col gap-8 animate-slide-up">
       {/* Notifications */}
       {(successMsg || errorMsg) && (
         <div className={`fixed bottom-6 right-6 z-[100] px-5 py-3 rounded-xl backdrop-blur-xl border flex items-center gap-3 shadow-2xl animate-slide-up ${
@@ -229,7 +229,7 @@ export default function SupportView() {
                    <button 
                     onClick={() => handleUpdateStatus(selectedTicket.status)}
                     disabled={isPending}
-                    className="btn btn-blue btn-xs px-12 font-black uppercase tracking-widest text-[8px] h-32"
+                    className="btn btn-blue btn-xs px-6 font-black uppercase tracking-widest text-[8px] h-10"
                    >
                      Update Notes
                   </button>

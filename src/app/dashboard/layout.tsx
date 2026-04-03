@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       {/* ─── PROFESSIONAL SIDEBAR SHELL ─── */}
       <aside className="w-64 border-r border-white/5 bg-[#05070a] fixed h-full z-50 hidden lg:flex flex-col shadow-2xl">
         <div className="p-24 border-b border-white/5 bg-white/[0.01]">
-          <Link href="/" className="flex items-center gap-12 group">
+          <Link href="/" className="flex items-center gap-3 group">
             <div className="w-8 h-8 rounded-lg bg-grad-gold flex items-center justify-center font-black text-black group-hover:scale-105 transition-transform shadow-lg shadow-gold/20">
               P
             </div>
@@ -24,25 +24,25 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
              <span className="text-[8px] font-black text-muted uppercase tracking-[0.2em] opacity-40">Main Matrix</span>
           </div>
 
-          <Link href="/dashboard" className="flex items-center justify-between gap-3 px-16 py-12 rounded-xl bg-blue-electric/10 border border-blue-electric/20 text-white font-black uppercase text-[10px] tracking-widest transition-all">
-            <div className="flex items-center gap-12">
+          <Link href="/dashboard" className="flex items-center justify-between gap-3 px-6 py-12 rounded-xl bg-blue-electric/10 border border-blue-electric/20 text-white font-black uppercase text-[10px] tracking-widest transition-all">
+            <div className="flex items-center gap-3">
                <Zap className="w-4 h-4 text-blue-electric" />
                Dashboard
             </div>
             <div className="w-1.5 h-1.5 rounded-full bg-blue-electric animate-pulse" />
           </Link>
 
-          <Link href="/live-challenges" className="flex items-center gap-3 px-16 py-12 rounded-xl hover:bg-white/[0.03] text-muted hover:text-white border border-transparent hover:border-white/5 transition-all font-black uppercase text-[10px] tracking-widest group">
+          <Link href="/live-challenges" className="flex items-center gap-3 px-6 py-12 rounded-xl hover:bg-white/[0.03] text-muted hover:text-white border border-transparent hover:border-white/5 transition-all font-black uppercase text-[10px] tracking-widest group">
             <ShieldCheck className="w-4 h-4 opacity-40 group-hover:opacity-100 transition-opacity" />
             Live Arena
           </Link>
 
-          <Link href="/accounts" className="flex items-center gap-3 px-16 py-12 rounded-xl hover:bg-white/[0.03] text-muted hover:text-white border border-transparent hover:border-white/5 transition-all font-black uppercase text-[10px] tracking-widest group">
+          <Link href="/accounts" className="flex items-center gap-3 px-6 py-12 rounded-xl hover:bg-white/[0.03] text-muted hover:text-white border border-transparent hover:border-white/5 transition-all font-black uppercase text-[10px] tracking-widest group">
             <WalletIcon className="w-4 h-4 opacity-40 group-hover:opacity-100 transition-opacity" />
             Account Tiers
           </Link>
 
-          <Link href="/referral" className="flex items-center gap-3 px-16 py-12 rounded-xl hover:bg-white/[0.03] text-muted hover:text-white border border-transparent hover:border-white/5 transition-all font-black uppercase text-[10px] tracking-widest group">
+          <Link href="/referral" className="flex items-center gap-3 px-6 py-12 rounded-xl hover:bg-white/[0.03] text-muted hover:text-white border border-transparent hover:border-white/5 transition-all font-black uppercase text-[10px] tracking-widest group">
             <Users className="w-4 h-4 opacity-40 group-hover:opacity-100 transition-opacity" />
             Referral Network
           </Link>

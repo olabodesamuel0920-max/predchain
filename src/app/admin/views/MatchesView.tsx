@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
 import { 
   Sword, 
   Calendar, 
@@ -15,10 +15,12 @@ import {
   Play,
   RotateCcw,
   Check,
-  Plus
+  Plus,
+  RefreshCw
 } from 'lucide-react';
-import { settleMatchResult, updateMatchStatus, updateRoundStatus, createMatch } from '@/app/actions/predictions';
+import { settleMatchResult, updateMatchStatus, updateRoundStatus, createMatch, createRound } from '@/app/actions/predictions';
 import { ChallengeMatch, ChallengeRound } from '@/types';
+import { useRouter } from 'next/navigation';
 
 interface MatchesViewProps {
   matches: (ChallengeMatch & { challenge_rounds?: { round_number: number } })[];
@@ -26,13 +28,32 @@ interface MatchesViewProps {
 }
 
 export default function MatchesView({ matches, rounds }: MatchesViewProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [editingScores, setEditingScores] = useState<Record<string, { home: number; away: number }>>({});
-  const [selectedRoundId, setSelectedRoundId] = useState<string>(rounds.find(r => r.status === 'active')?.id || rounds[0]?.id || '');
+  const [selectedRoundId, setSelectedRoundId] = useState<string | null>(rounds.find(r => r.status === 'active')?.id || rounds[0]?.id || null);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [showMatchModal, setShowMatchModal] = useState(false);
+  const [showRoundModal, setShowRoundModal] = useState(false);
   const [matchData, setMatchData] = useState({ home_team: '', away_team: '', kickoff_time: '' });
+  const [roundData, setRoundData] = useState({ round_number: rounds.length + 1, start_date: '', end_date: '' });
+
+  useEffect(() => {
+    if (!selectedRoundId && rounds.length > 0) {
+      setSelectedRoundId(rounds[0].id);
+    }
+  }, [rounds, selectedRoundId]);
+
+  const showSuccess = (msg: string) => {
+    setSuccessMsg(msg);
+    setTimeout(() => setSuccessMsg(''), 3000);
+  };
+
+  const showError = (msg: string) => {
+    setErrorMsg(msg);
+    setTimeout(() => setErrorMsg(''), 3000);
+  };
 
   const filteredMatches = matches.filter(m => m.round_id === selectedRoundId);
   const selectedRound = rounds.find(r => r.id === selectedRoundId);
@@ -52,8 +73,6 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
     startTransition(async () => {
       try {
         await settleMatchResult(matchId, scores.home, scores.away);
-        setSuccessMsg('Match result settled successfully.');
-        setTimeout(() => setSuccessMsg(''), 3000);
       } catch (err: any) {
         setErrorMsg(err.message || 'Settlement failed');
       }
@@ -89,12 +108,27 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
     startTransition(async () => {
       try {
         await createMatch({ ...matchData, round_id: selectedRoundId });
-        setSuccessMsg('Match added to round successfully.');
+        showSuccess('Match added to round successfully.');
         setShowMatchModal(false);
         setMatchData({ home_team: '', away_team: '', kickoff_time: '' });
-        setTimeout(() => setSuccessMsg(''), 3000);
+        router.refresh();
       } catch (err: any) {
-        setErrorMsg(err.message || 'Creation failed');
+        showError(err.message || 'Creation failed');
+      }
+    });
+  };
+
+  const handleCreateRound = async () => {
+    if (!roundData.round_number || !roundData.start_date || !roundData.end_date) return;
+    startTransition(async () => {
+      try {
+        await createRound(roundData);
+        showSuccess(`Round ${roundData.round_number} created successfully.`);
+        setShowRoundModal(false);
+        setRoundData({ round_number: rounds.length + 2, start_date: '', end_date: '' });
+        router.refresh();
+      } catch (err: any) {
+        showError(err.message || 'Round creation failed');
       }
     });
   };
@@ -104,7 +138,7 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
     <div className="flex flex-col gap-24 animate-slide-up">
       {/* Toast Notifications */}
       {(successMsg || errorMsg) && (
-        <div className={`fixed bottom-6 right-6 z-[100] px-5 py-3 rounded-xl backdrop-blur-xl border flex items-center gap-3 shadow-2xl animate-slide-up ${
+        <div className={`fixed bottom-24 right-24 z-[150] px-5 py-3 rounded-xl backdrop-blur-xl border flex items-center gap-3 shadow-2xl animate-slide-up ${
           successMsg ? 'bg-success/90 border-success/20 text-black' : 'bg-danger/90 border-danger/20 text-white'
         }`}>
            {successMsg ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
@@ -119,37 +153,52 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
              <Calendar className="w-5 h-5 text-blue-electric opacity-60" />
              <h2 className="font-display text-lg font-black uppercase tracking-widest">Platform Rounds</h2>
           </div>
-          <button 
-            onClick={() => setShowMatchModal(true)}
-            disabled={!selectedRoundId}
-            className="btn btn-primary btn-xs px-16 h-40 font-black uppercase tracking-widest text-[10px] flex items-center gap-8"
-          >
-            <Plus className="w-4 h-4" /> ADD MATCH TO ROUND
-          </button>
+          <div className="flex gap-3">
+             <button 
+              onClick={() => setShowRoundModal(true)}
+              className="btn btn-ghost btn-xs px-6 h-10 font-black uppercase tracking-widest text-[10px] flex items-center gap-2 border border-white/10"
+            >
+              <Calendar className="w-4 h-4" /> CREATE ROUND
+            </button>
+            <button 
+              onClick={() => setShowMatchModal(true)}
+              disabled={!selectedRoundId}
+              className="btn btn-primary btn-xs px-6 h-10 font-black uppercase tracking-widest text-[10px] flex items-center gap-2"
+            >
+              <Plus className="w-4 h-4" /> ADD MATCH TO ROUND
+            </button>
+          </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {rounds.map(r => (
-            <div 
-              key={r.id} 
-              onClick={() => setSelectedRoundId(r.id)}
-              className={`p-16 rounded-xl border transition-all cursor-pointer group ${
-                selectedRoundId === r.id 
-                ? 'bg-blue-electric/[0.05] border-blue-electric/40 shadow-lg shadow-blue-electric/5' 
-                : 'bg-white/[0.02] border-white/5 hover:border-white/10'
-              }`}
-            >
-              <div className="flex justify-between items-center mb-10">
-                <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${selectedRoundId === r.id ? 'text-blue-electric' : 'text-muted'}`}>Round {r.round_number}</span>
-                <div className={`w-3 h-3 rounded-full ${r.status === 'active' ? 'bg-success animate-pulse' : r.status === 'completed' ? 'bg-blue-electric' : 'bg-muted opacity-20'}`} />
-              </div>
-              <div className="text-[10px] text-white font-black font-mono uppercase tracking-tighter">
-                 {r.status}
-              </div>
-              <div className="text-[9px] text-muted font-bold mt-4 opacity-40 font-mono">
-                 {new Date(r.start_date).toLocaleDateString()} — Logged
-              </div>
+          {rounds.length === 0 ? (
+            <div className="md:col-span-4 py-32 text-center flex flex-col items-center gap-8 opacity-20 italic">
+               <Calendar className="w-8 h-8 text-muted" />
+               <p className="text-[10px] uppercase font-black tracking-widest font-mono">No challenge rounds initialized.</p>
             </div>
-          ))}
+          ) : (
+            rounds.map(r => (
+              <div 
+                key={r.id} 
+                onClick={() => setSelectedRoundId(r.id)}
+                className={`p-16 rounded-xl border transition-all cursor-pointer group ${
+                  selectedRoundId === r.id 
+                  ? 'bg-blue-electric/[0.05] border-blue-electric/40 shadow-lg shadow-blue-electric/5' 
+                  : 'bg-white/[0.02] border-white/5 hover:border-white/10'
+                }`}
+              >
+                <div className="flex justify-between items-center mb-10">
+                  <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${selectedRoundId === r.id ? 'text-blue-electric' : 'text-muted'}`}>Round {r.round_number}</span>
+                  <div className={`w-3 h-3 rounded-full ${r.status === 'active' ? 'bg-success animate-pulse' : r.status === 'completed' ? 'bg-blue-electric' : 'bg-muted opacity-20'}`} />
+                </div>
+                <div className="text-[10px] text-white font-black font-mono uppercase tracking-tighter">
+                   {r.status}
+                </div>
+                <div className="text-[9px] text-muted font-bold mt-4 opacity-40 font-mono">
+                   {new Date(r.start_date).toLocaleDateString()} — Logged
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
 
@@ -297,14 +346,88 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
       </div>
     </div>
 
+    {/* ADD ROUND MODAL */}
+    {showRoundModal && (
+      <div className="fixed inset-0 z-[110] flex items-center justify-center p-24">
+        <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => !isPending && setShowRoundModal(false)} />
+        <div className="card w-full max-w-[500px] p-0 relative z-10 animate-slide-up bg-zinc-950 border-white/10 shadow-2xl">
+           <div className="p-16 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
+              <div className="flex items-center gap-3">
+                 <div className="p-8 bg-blue-electric/10 rounded-xl"><Calendar className="w-4 h-4 text-blue-electric" /></div>
+                 <div>
+                    <h3 className="font-display font-black text-white uppercase tracking-widest leading-none">Create New Round</h3>
+                    <p className="text-[9px] text-muted font-bold uppercase tracking-widest mt-4 opacity-60">Initialize Global Challenge</p>
+                 </div>
+              </div>
+           </div>
+           
+           <div className="p-16 flex flex-col gap-12">
+              <div className="flex flex-col gap-4">
+                 <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Round Number</label>
+                 <input 
+                   type="number" 
+                   value={roundData.round_number || ''} 
+                   onChange={e => setRoundData(prev => ({ ...prev, round_number: e.target.value ? parseInt(e.target.value) : 0 }))}
+                   className="input-premium py-10 text-xs font-bold" 
+                   placeholder="e.g. 1" 
+                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-8">
+                 <div className="flex flex-col gap-4">
+                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Start Date</label>
+                    <input 
+                      type="datetime-local" 
+                      value={roundData.start_date} 
+                      onChange={e => setRoundData(prev => ({ ...prev, start_date: e.target.value }))}
+                      className="input-premium py-10 px-12 text-[11px] font-mono" 
+                    />
+                 </div>
+                 <div className="flex flex-col gap-4">
+                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">End Date</label>
+                    <input 
+                      type="datetime-local" 
+                      value={roundData.end_date} 
+                      onChange={e => setRoundData(prev => ({ ...prev, end_date: e.target.value }))}
+                      className="input-premium py-10 px-12 text-[11px] font-mono" 
+                    />
+                 </div>
+              </div>
+           </div>
+
+           <div className="p-16 border-t border-white/5 flex flex-col gap-12 bg-white/[0.01]">
+              {errorMsg && (
+                <div className="px-12 py-8 bg-danger/10 border border-danger/20 rounded-lg flex items-center gap-8 text-danger text-[9px] font-bold uppercase tracking-widest animate-shake">
+                   <AlertCircle className="w-3.5 h-3.5" />
+                   {errorMsg}
+                </div>
+              )}
+              <div className="flex gap-12">
+                 <button 
+                   onClick={() => setShowRoundModal(false)}
+                   className="btn btn-ghost flex-1 py-10 font-black uppercase text-[10px] tracking-widest opacity-60 hover:opacity-100"
+                 >Cancel</button>
+                 <button 
+                   onClick={handleCreateRound}
+                   disabled={isPending || !roundData.round_number || !roundData.start_date || !roundData.end_date}
+                   className="btn btn-blue flex-1 py-10 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20"
+                 >
+                   {isPending ? 'CREATING...' : 'CREATE ROUND'}
+                 </button>
+              </div>
+           </div>
+        </div>
+      </div>
+    )}
+
     {/* ADD MATCH MODAL */}
     {showMatchModal && (
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-24">
         <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => !isPending && setShowMatchModal(false)} />
-        <div className="card w-full max-w-[440px] p-0 relative z-10 animate-slide-up bg-zinc-950 border-white/10">
-           <div className="p-24 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
-              <div className="flex items-center gap-12">
-                 <div className="p-10 bg-blue-electric/10 rounded-xl"><Plus className="w-5 h-5 text-blue-electric" /></div>
+        <div className="card w-full max-w-[500px] p-0 relative z-10 animate-slide-up bg-zinc-950 border-white/10 shadow-2xl">
+           <div className="p-16 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
+              <div className="flex items-center gap-3">
+                 <div className="p-8 bg-blue-electric/10 rounded-xl"><Plus className="w-5 h-5 text-blue-electric" /></div>
                  <div>
                     <h3 className="font-display font-black text-white uppercase tracking-widest leading-none">Schedule Match</h3>
                     <p className="text-[9px] text-muted font-bold uppercase tracking-widest mt-4 opacity-60">Round {selectedRound?.round_number} Assignment</p>
@@ -312,55 +435,55 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
               </div>
            </div>
            
-           <div className="p-24 flex flex-col gap-20">
+           <div className="p-16 flex flex-col gap-12">
               <div className="grid grid-cols-2 gap-12">
-                 <div className="flex flex-col gap-6">
+                 <div className="flex flex-col gap-4">
                     <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Home Team</label>
                     <input 
                       type="text" 
                       value={matchData.home_team} 
                       onChange={e => setMatchData(prev => ({ ...prev, home_team: e.target.value }))}
-                      className="input-premium py-12 text-xs font-bold" 
+                      className="input-premium py-10 text-xs font-bold" 
                       placeholder="e.g. Arsenal" 
                     />
                  </div>
-                 <div className="flex flex-col gap-6">
+                 <div className="flex flex-col gap-4">
                     <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Away Team</label>
                     <input 
                       type="text" 
                       value={matchData.away_team} 
                       onChange={e => setMatchData(prev => ({ ...prev, away_team: e.target.value }))}
-                      className="input-premium py-12 text-xs font-bold" 
+                      className="input-premium py-10 text-xs font-bold" 
                       placeholder="e.g. Chelsea" 
                     />
                  </div>
               </div>
 
-              <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-4">
                  <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Kickoff Time</label>
                  <input 
                    type="datetime-local" 
                    value={matchData.kickoff_time} 
                    onChange={e => setMatchData(prev => ({ ...prev, kickoff_time: e.target.value }))}
-                   className="input-premium py-12 text-xs font-mono" 
+                   className="input-premium py-10 px-12 text-[11px] font-mono" 
                  />
               </div>
 
-              <div className="p-12 bg-blue-electric/5 border border-blue-electric/10 rounded-xl flex items-center gap-12 mt-8">
-                 <AlertCircle className="w-5 h-5 text-blue-electric opacity-40" />
-                 <p className="text-[9px] text-muted leading-relaxed font-bold uppercase tracking-tight">Predictions will open immediately upon scheduling unless the kickoff time has passed.</p>
+              <div className="p-8 bg-blue-electric/5 border border-blue-electric/10 rounded-xl flex items-center gap-8 mt-4">
+                 <AlertCircle className="w-4 h-4 text-blue-electric opacity-40" />
+                 <p className="text-[9px] text-muted leading-relaxed font-bold uppercase tracking-tight">Predictions will open immediately upon scheduling.</p>
               </div>
            </div>
 
-           <div className="p-24 border-t border-white/5 flex gap-12 bg-white/[0.01]">
+           <div className="p-16 border-t border-white/5 flex gap-12 bg-white/[0.01]">
               <button 
                 onClick={() => setShowMatchModal(false)}
-                className="btn btn-ghost flex-1 py-12 font-black uppercase text-[10px] tracking-widest opacity-60 hover:opacity-100"
+                className="btn btn-ghost flex-1 py-10 font-black uppercase text-[10px] tracking-widest opacity-60 hover:opacity-100"
               >Cancel</button>
               <button 
                 onClick={handleCreateMatch}
                 disabled={isPending || !matchData.home_team || !matchData.away_team || !matchData.kickoff_time}
-                className="btn btn-blue flex-1 py-12 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20"
+                className="btn btn-blue flex-1 py-10 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20"
               >
                 {isPending ? 'SCHEDULING...' : 'CONFIRM MATCH'}
               </button>

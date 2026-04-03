@@ -57,7 +57,7 @@ export default function AdminClient({
       {/* ─── COMPACT SIDE NAVIGATION ─── */}
       <aside className="fixed w-64 border-r border-white/5 bg-primary/40 backdrop-blur-3xl sticky top-0 h-screen flex flex-col p-6">
         <div className="mb-12 px-3">
-          <div className="flex items-center gap-8 mb-4">
+          <div className="flex items-center gap-3 mb-4">
              <Shield className="w-6 h-6 text-gold opacity-80" />
              <div className="text-[9px] font-black text-gold uppercase tracking-[0.2em]">Platform Control</div>
           </div>
@@ -69,7 +69,7 @@ export default function AdminClient({
             <button 
               key={item.id}
               onClick={() => setActiveView(item.id)}
-              className={`flex items-center gap-12 p-12 px-16 rounded-xl transition-all text-sm font-bold group ${
+              className={`flex items-center gap-3 py-3 px-4 rounded-xl transition-all text-sm font-bold group ${
                 activeView === item.id 
                   ? 'bg-white/5 text-white border border-white/10 shadow-lg' 
                   : 'text-muted hover:text-white hover:bg-white/5 border border-transparent'
@@ -78,33 +78,30 @@ export default function AdminClient({
               <item.icon className={`w-18 h-18 transition-opacity ${activeView === item.id ? 'opacity-100 text-blue-electric' : 'opacity-40 group-hover:opacity-70'}`} />
               {item.label}
               {item.id === 'finance' && initialMetrics.pendingPayouts > 0 && (
-                <div className="ml-auto w-6 h-6 rounded-full bg-danger shadow-[0_0_8px_var(--danger)]" />
+                <div className="ml-auto w-2 h-2 rounded-full bg-danger shadow-[0_0_8px_var(--danger)]" />
               )}
             </button>
           ))}
         </nav>
 
-        <div className="mt-auto p-16 bg-white/5 border border-white/10 rounded-2xl">
-          <div className="flex items-center gap-12">
-            <div className="w-32 h-32 rounded-lg bg-grad-gold flex items-center justify-center font-black text-black text-[10px]">AD</div>
+        <div className="p-6 border-t border-white/5 flex items-center justify-between bg-white/[0.02]">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-blue-electric/10 border border-blue-electric/20 flex items-center justify-center font-black text-blue-electric text-xs">AD</div>
             <div className="flex flex-col">
-              <div className="text-[10px] font-black text-white leading-none mb-2 text-gold">ADMINISTRATOR</div>
-              <div className="flex items-center gap-4">
-                 <div className="w-4 h-4 rounded-full bg-success opacity-80" />
-                 <div className="text-[8px] text-muted font-bold uppercase tracking-widest">Online</div>
-              </div>
+              <span className="text-[10px] font-black text-white uppercase tracking-widest">Administrator</span>
+              <span className="text-[8px] text-success font-bold uppercase tracking-widest">Online</span>
             </div>
           </div>
         </div>
       </aside>
 
       {/* ─── MAIN CONTENT AREA ─── */}
-      <main className="flex-1 ml-64 p-12 max-w-[1400px]">
+      <main className="flex-1 ml-64 p-8 max-w-[1600px]">
         
         {/* Header Section */}
-        <header className="mb-12 flex justify-between items-end">
+        <header className="mb-8 flex justify-between items-end">
           <div className="animate-fade-in">
-            <div className="flex items-center gap-8 mb-8 opacity-40">
+            <div className="flex items-center gap-3 mb-6 opacity-40">
                <span className="text-[10px] font-bold uppercase tracking-widest">Management</span>
                <ChevronRight className="w-10 h-10" />
                <span className="text-[10px] font-bold uppercase tracking-widest">{navItems.find(i => i.id === activeView)?.label}</span>
@@ -117,7 +114,7 @@ export default function AdminClient({
             </p>
           </div>
 
-          <div className="flex gap-24 items-center">
+          <div className="flex gap-6 items-center">
              <div className="flex flex-col items-end">
                 <div className="text-[9px] text-muted font-black tracking-widest uppercase mb-4">System Status</div>
                 <div className="flex items-center gap-6">

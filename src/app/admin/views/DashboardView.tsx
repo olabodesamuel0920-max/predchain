@@ -19,7 +19,7 @@ interface DashboardViewProps {
 
 export default function DashboardView({ metrics, recentPurchases }: DashboardViewProps) {
   return (
-    <div className="flex flex-col gap-24 animate-slide-up">
+    <div className="flex flex-col gap-8 animate-slide-up">
       {/* ─── OVERVIEW ─── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="card hover:border-white/10 transition-all p-6 bg-white/[0.02]">

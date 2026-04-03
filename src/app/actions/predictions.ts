@@ -2,6 +2,7 @@
 
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { verifyAdmin } from './admin';
 
 export async function submitPrediction(formData: FormData) {
   const supabase = await createClient();
@@ -65,15 +66,8 @@ export async function submitPrediction(formData: FormData) {
 }
 
 export async function settleMatchResult(matchId: string, homeScore: number, awayScore: number) {
-  const userClient = await createClient();
+  await verifyAdmin();
   const adminClient = await createAdminClient();
-  
-  const { data: { user } } = await userClient.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-
-  // Verify Admin Role via user client
-  const { data: profile } = await userClient.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role !== 'admin') throw new Error('Forbidden: Admin access only.');
 
   const outcome = homeScore > awayScore ? '1' : homeScore < awayScore ? '2' : 'X';
 
@@ -92,12 +86,15 @@ export async function settleMatchResult(matchId: string, homeScore: number, away
   // 2. Update all predictions for this match
   const { data: predictions, error: predsError } = await adminClient
     .from('predictions')
-    .select('id, prediction, entry_id')
+    .select('id, prediction, entry_id, is_locked')
     .eq('match_id', matchId);
 
   if (predsError) throw predsError;
 
   for (const pred of predictions) {
+    // skip if already settled or if match is not locked
+    if (pred.is_locked) continue;
+
     const isCorrect = pred.prediction === outcome;
     await adminClient.from('predictions').update({ 
       is_correct: isCorrect, 
@@ -120,7 +117,7 @@ export async function settleMatchResult(matchId: string, homeScore: number, away
 
         // Check if won (3/3)
         if (newStreak === 3) {
-          await markWinner(pred.entry_id, user.id);
+          await markWinner(pred.entry_id);
         }
       }
     }
@@ -130,13 +127,14 @@ export async function settleMatchResult(matchId: string, homeScore: number, away
   revalidatePath('/dashboard');
 }
 
-async function markWinner(entryId: string, adminId: string) {
+async function markWinner(entryId: string) {
+  const admin = await verifyAdmin();
   const adminClient = await createAdminClient();
 
   // Settle Round Winner Atomically via RPC
   const { error: rpcError } = await adminClient.rpc('settle_round_winner_atomic', {
     p_entry_id: entryId,
-    p_admin_id: adminId
+    p_admin_id: admin.id
   });
 
   if (rpcError) {
@@ -145,14 +143,8 @@ async function markWinner(entryId: string, adminId: string) {
 }
 
 export async function updateMatchStatus(matchId: string, status: 'scheduled' | 'live' | 'finished') {
-  const userClient = await createClient();
+  await verifyAdmin();
   const adminClient = await createAdminClient();
-
-  const { data: { user } } = await userClient.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-
-  const { data: profile } = await userClient.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role !== 'admin') throw new Error('Forbidden');
 
   const { error } = await adminClient
     .from('challenge_matches')
@@ -165,14 +157,8 @@ export async function updateMatchStatus(matchId: string, status: 'scheduled' | '
 }
 
 export async function updateRoundStatus(roundId: string, status: 'upcoming' | 'active' | 'completed') {
-  const userClient = await createClient();
+  await verifyAdmin();
   const adminClient = await createAdminClient();
-
-  const { data: { user } } = await userClient.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-
-  const { data: profile } = await userClient.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role !== 'admin') throw new Error('Forbidden');
 
   const { error } = await adminClient
     .from('challenge_rounds')
@@ -190,14 +176,8 @@ export async function createMatch(data: {
   away_team: string;
   kickoff_time: string;
 }) {
-  const userClient = await createClient();
+  await verifyAdmin();
   const adminClient = await createAdminClient();
-
-  const { data: { user } } = await userClient.auth.getUser();
-  if (!user) throw new Error('Unauthorized');
-
-  const { data: profile } = await userClient.from('profiles').select('role').eq('id', user.id).single();
-  if (profile?.role !== 'admin') throw new Error('Forbidden');
 
   const { error } = await adminClient
     .from('challenge_matches')
@@ -206,6 +186,27 @@ export async function createMatch(data: {
       status: 'scheduled',
       home_score: 0,
       away_score: 0
+    });
+
+  if (error) throw error;
+  revalidatePath('/admin');
+  revalidatePath('/dashboard');
+  return { success: true };
+}
+
+export async function createRound(data: {
+  round_number: number;
+  start_date: string;
+  end_date: string;
+}) {
+  await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  const { error } = await adminClient
+    .from('challenge_rounds')
+    .insert({
+      ...data,
+      status: 'upcoming'
     });
 
   if (error) throw error;

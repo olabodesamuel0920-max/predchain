@@ -65,7 +65,7 @@ export default function SettingsView() {
   };
 
   return (
-    <div className="flex flex-col gap-24 animate-slide-up">
+    <div className="flex flex-col gap-8 animate-slide-up">
       {/* Toast Notifications */}
       {successMsg && (
         <div className="fixed bottom-24 right-24 z-[100] px-20 py-12 bg-success/90 backdrop-blur-xl border border-success/20 text-black rounded-xl flex items-center gap-12 shadow-2xl animate-slide-up">

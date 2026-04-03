@@ -128,7 +128,7 @@ export default function DashboardClient({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-8 px-20 py-10 rounded-xl transition-all whitespace-nowrap border ${
+                  className={`flex items-center gap-2 px-16 py-10 rounded-xl transition-all whitespace-nowrap border ${
                     activeTab === tab.id 
                     ? 'bg-blue-electric/10 border-blue-electric/30 text-white shadow-lg shadow-blue-electric/10' 
                     : 'bg-transparent border-transparent text-muted hover:text-white hover:bg-white/5'
