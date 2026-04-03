@@ -1,0 +1,36 @@
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: [
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  theme: {
+    extend: {
+      colors: {
+        background: "var(--background)",
+        foreground: "var(--foreground)",
+        gold: {
+          DEFAULT: "var(--gold)",
+          soft: "var(--gold-soft)",
+        },
+        blue: {
+          electric: "var(--blue-electric)",
+        },
+      },
+      fontFamily: {
+        sans: ["var(--font-outfit)", "system-ui", "sans-serif"],
+        display: ["var(--font-space-grotesk)", "system-ui", "sans-serif"],
+        mono: ["var(--font-space-mono)", "monospace"],
+      },
+      boxShadow: {
+        gold: "var(--shadow-gold)",
+        blue: "var(--shadow-blue)",
+      },
+    },
+  },
+  plugins: [],
+};
+
+export default config;

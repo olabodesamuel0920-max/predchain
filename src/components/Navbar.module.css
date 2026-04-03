@@ -1,0 +1,215 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 16px 0;
+  transition: all var(--transition-base);
+  border-bottom: 1px solid transparent;
+}
+
+.navbar.scrolled {
+  padding: 12px 0;
+  background: rgba(3, 5, 8, 0.75);
+  backdrop-filter: blur(40px);
+  -webkit-backdrop-filter: blur(40px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.8);
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+/* Logo */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  text-decoration: none;
+  transition: transform var(--transition-fast);
+}
+
+.logo:hover {
+  transform: scale(1.02);
+}
+
+.logoMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 0 12px var(--gold-glow));
+}
+
+.logoText {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #FFFFFF;
+  letter-spacing: -0.02em;
+}
+
+.logoAccent {
+  background: var(--grad-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Nav Links */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  flex: 1;
+  justify-content: center;
+  background: rgba(255,255,255,0.03);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border);
+}
+
+.navLink {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+}
+
+.navLink:hover {
+  color: #FFFFFF;
+  background: rgba(255,255,255,0.06);
+}
+
+.navLink.active {
+  color: #FFFFFF;
+  background: rgba(255,255,255,0.1);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+/* Nav Actions */
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Mobile Toggle */
+.menuToggle {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--bg-glass);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.menuToggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: #FFFFFF;
+  border-radius: 2px;
+  transition: all 0.4s cubic-bezier(0.21, 0.83, 0.26, 1);
+  transform-origin: center;
+}
+
+.menuToggle.menuOpen span:nth-child(1) { transform: translateY(8px) rotate(45deg); }
+.menuToggle.menuOpen span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.menuToggle.menuOpen span:nth-child(3) { transform: translateY(-8px) rotate(-45deg); }
+
+/* Mobile Menu */
+.mobileMenu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(3, 5, 8, 0.98);
+  backdrop-filter: blur(40px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-base);
+}
+
+.mobileMenu.mobileMenuOpen {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.mobileMenuInner {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 120px 32px 60px;
+  gap: 40px;
+}
+
+.mobileNavLinks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobileNavLinks li {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease var(--delay, 0s), transform 0.4s ease var(--delay, 0s);
+}
+
+.mobileMenu.mobileMenuOpen .mobileNavLinks li {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mobileNavLink {
+  display: block;
+  padding: 12px 16px;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.mobileNavLink:hover,
+.mobileNavLink.active {
+  color: #FFFFFF;
+  background: rgba(255,255,255,0.05);
+}
+
+.mobileActions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: auto;
+}
+
+@media (max-width: 1024px) {
+  .navLinks { display: none; }
+}
+
+@media (max-width: 768px) {
+  .navActions { display: none; }
+  .menuToggle { display: flex; }
+  .mobileMenu { display: flex; flex-direction: column; }
+}

@@ -1,0 +1,85 @@
+'use server'
+
+import { createClient } from '@/lib/supabase/server'
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
+
+export async function signup(formData: FormData) {
+  const supabase = await createClient()
+
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+  const full_name = formData.get('full_name') as string
+  const username = formData.get('username') as string
+  const phone = formData.get('phone') as string
+  const referral_code = formData.get('referral_code') as string || null
+
+  // --- UNIQUE PHONE CHECK ---
+  const { data: existingPhone } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('phone', phone)
+    .single()
+
+  if (existingPhone) {
+    return { error: 'Phone number already linked to an account. Please sign in instead.' }
+  }
+  // --------------------------
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name,
+        username,
+        phone,
+        referred_by_code: referral_code
+      }
+    }
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/', 'layout')
+  
+  const returnTo = formData.get('returnTo') as string
+  
+  // If email confirmation is disabled, 'data.session' will be present
+  if (data.session) {
+    redirect(returnTo || '/dashboard')
+  } else {
+    const loginUrl = returnTo ? `/login?message=Check your email to confirm your account&returnTo=${encodeURIComponent(returnTo)}` : '/login?message=Check your email to confirm your account'
+    redirect(loginUrl)
+  }
+}
+
+export async function login(formData: FormData) {
+  const supabase = await createClient()
+
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  })
+
+  if (error) {
+    return { error: error.message }
+  }
+
+  revalidatePath('/', 'layout')
+  
+  const returnTo = formData.get('returnTo') as string
+  redirect(returnTo || '/dashboard')
+}
+
+export async function logout() {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  revalidatePath('/', 'layout')
+  redirect('/')
+}
