@@ -41,3 +41,5 @@ next-env.d.ts
 temp.log
 temp_webpack.log
 export_for_chatgpt.txt
+/prod_temp/
+/v2_temp/
