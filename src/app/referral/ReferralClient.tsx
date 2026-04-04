@@ -201,7 +201,7 @@ export default function ReferralClient({ profile, referrals, totalEarnings }: Re
         <div className="fixed bottom-32 right-32 px-24 py-16 rounded-xl shadow-[0_32px_64px_rgba(0,0,0,0.5)] backdrop-blur-3xl z-[100] flex items-center gap-16 border bg-success/90 border-success/20 text-black animate-slide-up">
            <div className="p-10 rounded-lg bg-black/5"><Check className="w-16 h-16" /></div>
            <div className="flex flex-col gap-1">
-              <span className="text-[8px] font-black uppercase tracking-[0.2em] opacity-40">Transmission Verified</span>
+              <span className="text-[8px] font-black uppercase tracking-[0.2em] opacity-40">Task Verified</span>
               <span className="font-black text-[11px] uppercase tracking-wide italic">{success}</span>
            </div>
         </div>

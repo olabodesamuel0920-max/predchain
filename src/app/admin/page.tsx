@@ -16,8 +16,15 @@ export default async function AdminPage() {
     .eq('id', user.id)
     .single();
 
-  if (profile?.role !== 'admin' && user.email !== 'olabodesamuel0920@gmail.com') {
-    redirect('/dashboard');
+  if (profile?.role !== 'admin') {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-primary">
+        <div className="card text-center p-8 max-w-md">
+          <h2 className="text-xl font-display font-bold text-white mb-2">Access Denied</h2>
+          <p className="text-muted text-sm">You do not have administrative privileges.</p>
+        </div>
+      </div>
+    )
   }
 
   // Fetch Admin Data

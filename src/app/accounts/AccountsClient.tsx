@@ -393,7 +393,7 @@ export default function AccountsClient({ tiers, userId }: AccountsClientProps) {
         }
       } catch (err: unknown) {
         const e = err as Error;
-        setError(e.message || 'Transmission failed. Connectivity interrupted.');
+        setError(e.message || 'Transaction failed. Connectivity interrupted.');
       }
     });
   };

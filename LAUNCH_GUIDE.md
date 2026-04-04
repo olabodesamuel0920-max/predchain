@@ -44,11 +44,6 @@ Perform these steps to confirm platform financial and logical health.
     *   User stats must NOT impact homepage counts (Active Challengers, total paid out).
     *   Demo user can be used for marketing screenshots safely.
 
-### **D. Platform Settings**
-1.  **Maintenance**: Enable **Maintenance Mode** in the **Platform Settings**.
-2.  **Verification**: Attempt to access the dashboard as a regular user; verify access is blocked/notified.
-3.  **Reversion**: Disable maintenance mode and verify access is restored.
-
 ---
 
 ## 🔑 3. Environment Variables (Vault)

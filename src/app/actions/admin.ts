@@ -37,17 +37,9 @@ export async function verifyAdmin() {
     .single();
 
   // PRODUCTION SAFETY GATING:
-  const isDevelopment = process.env.NODE_ENV === 'development';
   const hasAdminRole = profile?.role === 'admin';
-  const isPrimaryEmail = user.email === 'olabodesamuel0920@gmail.com';
 
-  if (hasAdminRole || isPrimaryEmail) {
-    return user;
-  }
-
-  // Fallback for initial local development/bootstrapping ONLY
-  if (isDevelopment) {
-    console.warn(`[DEV ACCESS] User ${user.email} bypassed admin check via development flag.`);
+  if (hasAdminRole) {
     return user;
   }
 

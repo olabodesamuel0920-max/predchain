@@ -99,16 +99,15 @@ export default function SettingsView() {
                 <div className="flex items-center gap-12">
                    <div className={`w-8 h-8 rounded-full ${settings.maintenance_mode ? 'bg-danger shadow-[0_0_8px_var(--danger)] animate-pulse' : 'bg-success shadow-[0_0_8px_var(--success)]'}`} />
                    <div>
-                     <div className="font-black text-xs text-white">Maintenance Mode</div>
+                     <div className="font-black text-xs text-white">Maintenance Mode <span className="badge badge-muted text-[8px] ml-4 bg-transparent border-danger/50 text-danger">Not Wired</span></div>
                      <div className="text-[9px] text-muted font-bold uppercase tracking-widest opacity-40">Block non-admin ingress</div>
                    </div>
                 </div>
                 <button 
-                  onClick={() => handleUpdate('maintenance_mode', !settings.maintenance_mode)}
-                  disabled={isPending}
-                  className={`btn btn-xs px-16 py-8 font-black uppercase text-[9px] tracking-widest transition-all ${settings.maintenance_mode ? 'bg-danger text-white border-danger/30' : 'bg-white/5 text-muted hover:text-white border-dashed'}`}
+                  disabled={true}
+                  className={`btn btn-xs px-16 py-8 font-black uppercase text-[9px] tracking-widest transition-all bg-white/5 text-muted hover:text-white border-dashed opacity-30 cursor-not-allowed`}
                 >
-                  {settings.maintenance_mode ? 'ACTIVE' : 'OFF'}
+                  OFF
                 </button>
               </div>
 
@@ -143,7 +142,7 @@ export default function SettingsView() {
                 <div className="flex items-center gap-12 mb-16">
                    <div className="p-8 bg-blue-electric/10 rounded-lg"><BarChart3 className="w-5 h-5 text-blue-electric" /></div>
                    <div>
-                     <div className="font-black text-xs text-white">Stats Mode</div>
+                     <div className="font-black text-xs text-white">Stats Mode <span className="badge badge-muted text-[8px] ml-4 bg-transparent border-danger/50 text-danger">Not Wired</span></div>
                      <div className="text-[9px] text-muted font-bold uppercase tracking-widest opacity-40">Display mode for metrics</div>
                    </div>
                 </div>
@@ -151,13 +150,8 @@ export default function SettingsView() {
                     {['real', 'launch', 'hidden'].map(m => (
                         <button 
                             key={m}
-                            disabled={isPending}
-                            onClick={() => handleUpdate('trust_stats_mode', m as 'real' | 'launch' | 'hidden')}
-                            className={`py-8 text-[9px] font-black uppercase tracking-widest rounded-lg border transition-all ${
-                                settings.trust_stats_mode === m 
-                                ? 'bg-blue-electric/[0.05] border-blue-electric/40 text-blue-electric' 
-                                : 'bg-transparent border-dashed border-white/10 text-muted opacity-40 hover:opacity-100'
-                            }`}
+                            disabled={true}
+                            className={`py-8 text-[9px] font-black uppercase tracking-widest rounded-lg border transition-all bg-transparent border-dashed border-white/10 text-muted opacity-20 cursor-not-allowed`}
                         >
                             {m}
                         </button>
@@ -170,7 +164,7 @@ export default function SettingsView() {
           {/* Announcement Banner */}
           <div className="card p-24 bg-white/[0.02]">
             <h3 className="text-[10px] font-black uppercase tracking-widest text-muted mb-20 flex items-center gap-8">
-               <Megaphone className="w-4 h-4" /> Announcement Banner
+               <Megaphone className="w-4 h-4" /> Announcement Banner <span className="badge badge-muted text-[8px] ml-auto bg-transparent border-danger/50 text-danger">Not Wired</span>
             </h3>
             <div className="flex flex-col gap-12">
               <textarea 
@@ -181,19 +175,14 @@ export default function SettingsView() {
               />
               <div className="flex gap-4">
                 <button 
-                  onClick={() => handleUpdate('announcement_banner', { ...settings.announcement_banner, active: !settings.announcement_banner?.active })} 
-                  className={`flex-1 py-10 rounded-xl border font-black uppercase text-[10px] tracking-widest transition-all ${
-                    settings.announcement_banner?.active 
-                    ? 'bg-blue-electric/20 text-blue-electric border-blue-electric/30' 
-                    : 'bg-white/5 text-muted border-dashed border-white/10 opacity-40 hover:opacity-100'
-                  }`}
+                  disabled={true}
+                  className={`flex-1 py-10 rounded-xl border font-black uppercase text-[10px] tracking-widest transition-all bg-white/5 text-muted border-dashed border-white/10 opacity-30 cursor-not-allowed`}
                 >
-                  {settings.announcement_banner?.active ? 'Active' : 'Inactive'}
+                  Inactive
                 </button>
                 <button 
-                  onClick={() => handleUpdate('announcement_banner', settings.announcement_banner)} 
-                  disabled={isPending}
-                  className="btn btn-blue px-24 py-10 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-blue-electric/20"
+                  disabled={true}
+                  className="btn btn-blue px-24 py-10 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-blue-electric/20 opacity-30 cursor-not-allowed"
                 >Update Banner</button>
               </div>
             </div>

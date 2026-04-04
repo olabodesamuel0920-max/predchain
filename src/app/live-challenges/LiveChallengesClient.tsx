@@ -84,7 +84,7 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
     startTransition(async () => {
       try {
         await submitPrediction(formData);
-        showSuccess('Transmission locked. Prediction verified.');
+        showSuccess('Prediction locked. Prediction verified.');
       } catch (err: unknown) {
         showError((err as Error).message);
       }
@@ -290,7 +290,7 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
                   <h4 className="font-display text-sm font-black text-white uppercase tracking-widest mb-12 flex items-center gap-8">
                      Streak Rules
                   </h4>
-                  <p className="text-[11px] font-medium text-muted leading-relaxed uppercase tracking-wider opacity-60">You must finalize one correct transmission every 24 hours for three consecutive cycles to unlock liquidity.</p>
+                  <p className="text-[11px] font-medium text-muted leading-relaxed uppercase tracking-wider opacity-60">You must finalize one correct prediction every 24 hours for three consecutive cycles to unlock the reward.</p>
                </div>
                <div className="card p-32 bg-white/[0.02] hover:border-blue-electric/20 transition-all border border-transparent">
                   <div className="w-32 h-32 bg-gold/10 rounded-lg flex items-center justify-center mb-16 italic font-black text-xs text-gold">02</div>
@@ -304,7 +304,7 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
                   <h4 className="font-display text-sm font-black text-white uppercase tracking-widest mb-12 flex items-center gap-8">
                      Instant Payouts
                   </h4>
-                  <p className="text-[11px] font-medium text-muted leading-relaxed uppercase tracking-wider opacity-60">Upon verified 3/3 synchronization, your 10X multiplier is settled instantly and credited to your operational wallet.</p>
+                  <p className="text-[11px] font-medium text-muted leading-relaxed uppercase tracking-wider opacity-60">Upon verified 3/3 synchronization, your 10X multiplier is settled instantly and credited to your wallet.</p>
                </div>
             </div>
             

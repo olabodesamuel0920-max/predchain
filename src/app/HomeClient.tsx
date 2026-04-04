@@ -48,115 +48,16 @@ const STEPS = [
 ];
 
 export default function HomeClient({ stats }: { stats: PlatformStats }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedMatch, setSelectedMatch] = useState<HomeMatch | null>(null);
-  const [prediction, setPrediction] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const [matches, setMatches] = useState<HomeMatch[]>([
+  const [matches] = useState<HomeMatch[]>([
     { id: 1, day: 'Day 1', match: 'ARS vs CHE', status: 'correct', time: 'Completed', pick: 'ARS' },
     { id: 2, day: 'Day 2', match: 'MCI vs LIV', status: 'open', time: 'Awaiting Pick', pick: null },
     { id: 3, day: 'Day 3', match: 'PSG vs RMA', status: 'locked', time: 'Scheduled', pick: null },
   ]);
 
-  const handlePredictClick = (m: HomeMatch) => {
-    setSelectedMatch(m);
-    setPrediction(null);
-    setIsModalOpen(true);
-  };
-
-  const handleSubmitPrediction = () => {
-    if (!prediction || !selectedMatch) return;
-    setIsSubmitting(true);
-    
-    setMatches(prev => prev.map(m => {
-      if (m.id === selectedMatch.id) {
-        return { ...m, status: 'pending', pick: prediction };
-      }
-      return m;
-    }));
-    
-    setIsSubmitting(false);
-    setIsModalOpen(false);
-  };
-
   return (
     <div style={{ paddingTop: '80px', position: 'relative' }}>
         
-      {/* ──────────────────────── PREDICTION MODAL ──────────────────────── */}
-      {isModalOpen && selectedMatch && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-          <div 
-            style={{ position: 'absolute', inset: 0, background: 'rgba(3, 5, 8, 0.85)', backdropFilter: 'blur(16px)' }} 
-            onClick={() => !isSubmitting && setIsModalOpen(false)} 
-          />
-          
-          <div className="card" style={{ position: 'relative', zIndex: 1, width: '100%', maxWidth: '440px', padding: '40px' }}>
-            <div style={{ position: 'absolute', top: 0, left: '50%', transform: 'translate(-50%, -50%)', width: '200px', height: '100px', background: 'var(--blue-electric)', filter: 'blur(80px)', opacity: 0.3, pointerEvents: 'none' }} />
-            
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
-              <span className="badge badge-blue">{selectedMatch.day}</span>
-              <button 
-                onClick={() => setIsModalOpen(false)} 
-                style={{ color: 'var(--text-muted)', fontSize: '1.25rem' }}
-                disabled={isSubmitting}
-              >×</button>
-            </div>
-            
-            <h3 style={{ fontFamily: "var(--font-display)", fontSize: '1.75rem', fontWeight: 700, color: '#FFF', marginBottom: '8px', textAlign: 'center' }}>
-              {selectedMatch.match}
-            </h3>
-            <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '32px' }}>
-              Select the final outcome of the match.
-            </p>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '40px' }}>
-              {selectedMatch.match.split(' vs ').map((team, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setPrediction(team)}
-                  style={{
-                    padding: '16px 24px', borderRadius: '12px',
-                    background: prediction === team ? 'rgba(0, 229, 255, 0.1)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${prediction === team ? 'var(--blue-electric)' : 'var(--border)'}`,
-                    color: prediction === team ? '#FFF' : 'var(--text-secondary)',
-                    fontFamily: "var(--font-sans)", fontSize: '1rem', fontWeight: 600,
-                    display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                    transition: 'all 0.2s ease', cursor: 'pointer'
-                  }}
-                >
-                  <span>{team} Win</span>
-                  {prediction === team && <span style={{ color: 'var(--blue-electric)' }}>✓</span>}
-                </button>
-              ))}
-              <button
-                onClick={() => setPrediction('Draw')}
-                style={{
-                  padding: '16px 24px', borderRadius: '12px',
-                  background: prediction === 'Draw' ? 'rgba(242, 201, 76, 0.1)' : 'rgba(255,255,255,0.03)',
-                  border: `1px solid ${prediction === 'Draw' ? 'var(--gold)' : 'var(--border)'}`,
-                  color: prediction === 'Draw' ? '#FFF' : 'var(--text-secondary)',
-                  fontFamily: "var(--font-sans)", fontSize: '1rem', fontWeight: 600,
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                  transition: 'all 0.2s ease', cursor: 'pointer'
-                }}
-              >
-                <span>Draw</span>
-                {prediction === 'Draw' && <span style={{ color: 'var(--gold)' }}>✓</span>}
-              </button>
-            </div>
-            
-            <button 
-              className="btn btn-blue w-full" 
-              style={{ padding: '16px', opacity: prediction ? 1 : 0.5, pointerEvents: prediction ? 'auto' : 'none' }}
-              onClick={handleSubmitPrediction}
-              disabled={isSubmitting || !prediction}
-            >
-              {isSubmitting ? 'Locking Prediction...' : 'Confirm Prediction'}
-            </button>
-          </div>
-        </div>
-      )}
+      
 
       {/* ──────────────────────── HERO ──────────────────────── */}
       <section style={{
@@ -217,37 +118,35 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
           <div style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', top: '10%', right: '0%', width: '100%', height: '80%', background: 'var(--grad-aurora)', filter: 'blur(90px)', zIndex: 0, opacity: 0.7 }} />
             
-            <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div className="card" style={{ padding: '32px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <div style={{ width: '32px', height: '32px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>⚽</div>
-                    <span style={{ fontFamily: "var(--font-display)", fontSize: '1.125rem', fontWeight: 700 }}>Live Prediction</span>
+            <div className="flex flex-col gap-6 relative z-10">
+              <div className="card p-8">
+                <div className="flex justify-between items-center mb-6">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">⚽</div>
+                    <span className="font-display text-lg font-bold">Live Prediction</span>
                   </div>
                   <span className="badge badge-blue">Round {stats.roundsCompleted + 1}</span>
                 </div>
                 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '32px' }}>
+                <div className="flex flex-col gap-4 mb-8">
                   {matches.map((m, i) => (
-                    <div key={i} style={{
-                      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      padding: '16px', borderRadius: '16px',
+                    <div key={i} className="flex items-center justify-between p-4 rounded-2xl" style={{
                       background: m.status === 'open' ? 'rgba(0,229,255,0.06)' : m.status === 'pending' ? 'rgba(242,201,76,0.06)' : 'rgba(255,255,255,0.02)',
                       border: `1px solid ${m.status === 'correct' ? 'rgba(0,230,118,0.3)' : m.status === 'open' ? 'rgba(0,229,255,0.4)' : m.status === 'pending' ? 'rgba(242,201,76,0.4)' : 'rgba(255,255,255,0.05)'}`,
                     }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                        <span className={`badge ${m.status === 'correct' ? 'badge-success' : m.status === 'open' ? 'badge-blue' : m.status === 'pending' ? 'badge-gold' : 'badge-muted'}`} style={{ padding: '4px 8px', fontSize: '0.625rem' }}>{m.day}</span>
-                        <span style={{ fontFamily: "var(--font-display)", fontSize: '1rem', fontWeight: 600, color: m.status === 'locked' ? 'var(--text-muted)' : '#FFF' }}>{m.match}</span>
+                      <div className="flex items-center gap-4">
+                        <span className={`badge px-2 py-1 text-[10px] ${m.status === 'correct' ? 'badge-success' : m.status === 'open' ? 'badge-blue' : m.status === 'pending' ? 'badge-gold' : 'badge-muted'}`}>{m.day}</span>
+                        <span className="font-display text-base font-semibold" style={{ color: m.status === 'locked' ? 'var(--text-muted)' : '#FFF' }}>{m.match}</span>
                       </div>
                       <div style={{ fontSize: '0.8125rem', fontWeight: 600 }}>
                         {m.status === 'correct' && <span style={{ color: 'var(--success)' }}>✓ Verified</span>}
                         {m.status === 'open' && (
-                          <button 
-                            onClick={() => handlePredictClick(m)}
-                            style={{ background: 'var(--blue-electric)', color: '#000', padding: '6px 16px', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer' }}
+                          <Link 
+                            href="/login"
+                            style={{ background: 'var(--blue-electric)', color: '#000', padding: '6px 16px', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', display: 'inline-block' }}
                           >
                             Predict
-                          </button>
+                          </Link>
                         )}
                         {m.status === 'pending' && <span style={{ color: 'var(--gold)' }}>Picked: {m.pick}</span>}
                         {m.status === 'locked' && <span style={{ color: 'var(--text-muted)' }}>Locked</span>}

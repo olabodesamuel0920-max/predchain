@@ -37,21 +37,9 @@ export async function createClient() {
  */
 export async function createAdminClient() {
   const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
   if (!serviceKey) {
-    console.warn('⚠️ SUPABASE_SERVICE_ROLE_KEY is missing. Admin actions will run with Anon Key and rely on RLS policies.');
-    const cookieStore = await cookies();
-    return createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      anonKey,
-      {
-        cookies: {
-          getAll() { return cookieStore.getAll() },
-          setAll() {}
-        },
-      }
-    );
+    throw new Error('FATAL: SUPABASE_SERVICE_ROLE_KEY is missing. Admin operations cannot securely proceed.');
   }
 
   return createServerClient(
