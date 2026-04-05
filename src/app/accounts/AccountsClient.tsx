@@ -17,6 +17,7 @@ import {
   AlertCircle,
 } from 'lucide-react';
 import { initializePayment } from '@/app/actions/paystack';
+import { purchaseTierWithWallet } from '@/app/actions/wallet';
 import { AccountTier } from '@/types';
 
 // ─── TYPES ───────────────────────────────────────────────────────────────────
@@ -42,6 +43,7 @@ interface DisplayTier {
 interface AccountsClientProps {
   tiers: AccountTier[];
   userId?: string;
+  walletBalance?: number;
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -92,13 +94,17 @@ function buildDisplayTiers(tiers: AccountTier[]): DisplayTier[] {
 // NOTE: ALL spacing uses inline `style` to avoid conflict between the codebase's
 // custom px-based class names (globals.css) and Tailwind's 4px-scale utilities.
 interface TierCardProps {
-  tier: DisplayTier;
+  tier: AccountTier;
+  displayTier: DisplayTier;
   isPending: boolean;
-  onPurchase: (id: string) => void;
+  onPurchase: (id: string, method: 'wallet' | 'paystack') => void;
   isLoggedIn: boolean;
+  walletBalance: number;
 }
 
-function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
+function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, walletBalance }: TierCardProps) {
+  const isWalletEnough = walletBalance >= tier.price_ngn;
+
   const cardStyle: React.CSSProperties = {
     position: 'relative',
     display: 'flex',
@@ -106,12 +112,12 @@ function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
     gap: 20,
     padding: 24,
     borderRadius: 16,
-    border: `1px solid ${tier.accentBorder}`,
-    background: tier.accentBg,
+    border: `1px solid ${displayTier.accentBorder}`,
+    background: displayTier.accentBg,
     flexShrink: 0,
     width: 280,
     cursor: 'default',
-    boxShadow: tier.featured ? `0 24px 60px rgba(0,229,255,0.06)` : '0 8px 32px rgba(0,0,0,0.4)',
+    boxShadow: displayTier.featured ? `0 24px 60px rgba(0,229,255,0.06)` : '0 8px 32px rgba(0,0,0,0.4)',
     transition: 'border-color 0.3s, box-shadow 0.3s',
   };
 
@@ -125,26 +131,19 @@ function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
     fontWeight: 900,
     letterSpacing: '0.12em',
     textTransform: 'uppercase',
-    color: tier.accentColor,
-    background: `${tier.accentColor}15`,
-    border: `1px solid ${tier.accentBorder}`,
+    color: displayTier.accentColor,
+    background: `${displayTier.accentColor}15`,
+    border: `1px solid ${displayTier.accentBorder}`,
   };
-
-  // CTA class derived from tier type — uses CSS class from globals.css
-  const ctaBase = tier.featured
-    ? 'btn btn-blue'
-    : tier.name === 'Premium'
-    ? 'btn btn-outline-gold'
-    : 'btn btn-ghost';
 
   return (
     <motion.div
       style={cardStyle}
-      whileHover={{ y: -6, borderColor: tier.accentColor }}
+      whileHover={{ y: -6, borderColor: displayTier.accentColor }}
       transition={{ type: 'spring', stiffness: 300, damping: 24 }}
     >
       {/* Badge */}
-      {tier.badge && <span style={badgeStyle}>{tier.badge}</span>}
+      {displayTier.badge && <span style={badgeStyle}>{displayTier.badge}</span>}
 
       {/* Header: Icon + name + price */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
@@ -152,10 +151,10 @@ function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
           <div style={{
             padding: 8,
             borderRadius: 8,
-            background: `${tier.accentColor}12`,
+            background: `${displayTier.accentColor}12`,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
           }}>
-            {getTierIcon(tier.name)}
+            {getTierIcon(displayTier.name)}
           </div>
           <span style={{
             fontSize: '0.6rem',
@@ -164,7 +163,7 @@ function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
             textTransform: 'uppercase',
             letterSpacing: '0.18em',
           }}>
-            {tier.name} Logic
+            {displayTier.name} Logic
           </span>
         </div>
 
@@ -177,7 +176,7 @@ function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
           fontStyle: 'italic',
           lineHeight: 1,
         }}>
-          {tier.price}
+          {displayTier.price}
         </div>
       </div>
 
@@ -203,13 +202,13 @@ function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
           }}>
             <div style={{ width: 5, height: 5, borderRadius: '50%', background: 'var(--success)' }} />
             <span style={{ fontSize: '0.55rem', fontWeight: 900, color: 'var(--success)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-              {tier.multiplier}
+              {displayTier.multiplier}
             </span>
           </div>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem', fontWeight: 900, color: '#fff' }}>
-            {tier.reward}
+            {displayTier.reward}
           </span>
           <Trophy style={{ width: 14, height: 14, color: 'var(--gold)', opacity: 0.4 }} />
         </div>
@@ -217,7 +216,7 @@ function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
 
       {/* Feature list */}
       <ul style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1 }}>
-        {tier.features.map((f, i) => (
+        {displayTier.features.map((f, i) => (
           <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 8 }}>
             <Check style={{ width: 11, height: 11, color: 'var(--success)', flexShrink: 0, marginTop: 2 }} />
             <span style={{
@@ -234,44 +233,87 @@ function TierCard({ tier, isPending, onPurchase, isLoggedIn }: TierCardProps) {
         ))}
       </ul>
 
-      {/* CTA button — uses CSS class from globals.css (no Tailwind conflict) */}
-      <button
-        disabled={isPending}
-        onClick={() => onPurchase(tier.id)}
-        className={ctaBase}
-        style={{
-          width: '100%',
-          padding: '11px 16px',
-          fontSize: '0.6rem',
-          fontWeight: 900,
-          letterSpacing: '0.18em',
-          textTransform: 'uppercase',
-          justifyContent: 'center',
-          gap: 6,
-        }}
-      >
-        {isPending ? (
-          <Activity style={{ width: 12, height: 12 }} className="animate-spin" />
+      {/* Action area */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {!isLoggedIn ? (
+          <button
+            onClick={() => onPurchase(tier.id, 'paystack')}
+            className="btn btn-blue"
+            style={{ width: '100%', padding: '11px 16px', fontSize: '0.6rem', fontWeight: 900, letterSpacing: '0.18em', textTransform: 'uppercase', justifyContent: 'center' }}
+          >
+            SIGN IN TO BUY
+          </button>
         ) : (
           <>
-            {!isLoggedIn ? 'SIGN IN TO BUY' : tier.cta}
-            <ChevronRight style={{ width: 11, height: 11 }} />
+            <button
+              disabled={isPending || !isWalletEnough}
+              onClick={() => onPurchase(tier.id, 'wallet')}
+              className={displayTier.featured ? 'btn btn-blue' : 'btn btn-outline'}
+              style={{
+                width: '100%',
+                padding: '11px 16px',
+                fontSize: '0.6rem',
+                fontWeight: 900,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                justifyContent: 'center',
+                gap: 6,
+                opacity: isWalletEnough ? 1 : 0.4,
+              }}
+            >
+              {isPending ? <Activity className="animate-spin w-3 h-3" /> : (
+                <>
+                  <Wallet style={{ width: 12, height: 12 }} />
+                  PAY WITH WALLET
+                </>
+              )}
+            </button>
+            <button
+              disabled={isPending}
+              onClick={() => onPurchase(tier.id, 'paystack')}
+              className="btn btn-ghost"
+              style={{
+                width: '100%',
+                padding: '11px 16px',
+                fontSize: '0.6rem',
+                fontWeight: 900,
+                letterSpacing: '0.18em',
+                textTransform: 'uppercase',
+                justifyContent: 'center',
+                gap: 6,
+                border: '1px solid rgba(255,255,255,0.05)',
+              }}
+            >
+              {isPending ? <Activity className="animate-spin w-3 h-3" /> : (
+                <>
+                  <Activity style={{ width: 12, height: 12 }} />
+                  PAY WITH PAYSTACK
+                </>
+              )}
+            </button>
+            {!isWalletEnough && (
+              <span style={{ fontSize: '0.5rem', fontWeight: 700, color: 'var(--danger)', textAlign: 'center', opacity: 0.8 }}>
+                INSUFFICIENT WALLET BALANCE
+              </span>
+            )}
           </>
         )}
-      </button>
+      </div>
     </motion.div>
   );
 }
 
 // ─── TIER CAROUSEL ────────────────────────────────────────────────────────────
 interface TierCarouselProps {
-  tiers: DisplayTier[];
+  tiers: AccountTier[];
+  displayTiers: DisplayTier[];
   isPending: boolean;
-  onPurchase: (id: string) => void;
+  onPurchase: (id: string, method: 'wallet' | 'paystack') => void;
   isLoggedIn: boolean;
+  walletBalance: number;
 }
 
-function TierCarousel({ tiers, isPending, onPurchase, isLoggedIn }: TierCarouselProps) {
+function TierCarousel({ tiers, displayTiers, isPending, onPurchase, isLoggedIn, walletBalance }: TierCarouselProps) {
   const constraintsRef = useRef<HTMLDivElement>(null);
 
   if (tiers.length === 0) {
@@ -322,13 +364,15 @@ function TierCarousel({ tiers, isPending, onPurchase, isLoggedIn }: TierCarousel
             userSelect: 'none',
           }}
         >
-          {tiers.map(tier => (
+          {displayTiers.map((displayTier, idx) => (
             <TierCard
-              key={tier.id}
-              tier={tier}
+              key={displayTier.id}
+              tier={tiers[idx]}
+              displayTier={displayTier}
               isPending={isPending}
               onPurchase={onPurchase}
               isLoggedIn={isLoggedIn}
+              walletBalance={walletBalance}
             />
           ))}
         </motion.div>
@@ -357,7 +401,7 @@ function TierCarousel({ tiers, isPending, onPurchase, isLoggedIn }: TierCarousel
 
       {/* Dot nav */}
       <div style={{ display: 'flex', justifyContent: 'center', gap: 6, marginTop: 12 }}>
-        {tiers.map((t) => (
+        {displayTiers.map((t) => (
           <div key={t.id} style={{
             height: 3,
             width: t.featured ? 20 : 6,
@@ -372,13 +416,13 @@ function TierCarousel({ tiers, isPending, onPurchase, isLoggedIn }: TierCarousel
 }
 
 // ─── MAIN CLIENT ─────────────────────────────────────────────────────────────
-export default function AccountsClient({ tiers, userId }: AccountsClientProps) {
+export default function AccountsClient({ tiers, userId, walletBalance = 0 }: AccountsClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const displayTiers = buildDisplayTiers(tiers);
 
-  const handlePurchase = async (tierId: string) => {
+  const handlePurchase = async (tierId: string, method: 'wallet' | 'paystack') => {
     if (!userId) {
       router.push(`/login?returnTo=/accounts`);
       return;
@@ -387,9 +431,14 @@ export default function AccountsClient({ tiers, userId }: AccountsClientProps) {
     setError(null);
     startTransition(async () => {
       try {
-        const result = await initializePayment(tierId);
-        if (result.authorization_url) {
-          window.location.href = result.authorization_url;
+        if (method === 'wallet') {
+          await purchaseTierWithWallet(tierId);
+          router.push('/dashboard?success=Tier+purchased+successfully+from+wallet');
+        } else {
+          const result = await initializePayment(tierId);
+          if (result.authorization_url) {
+            window.location.href = result.authorization_url;
+          }
         }
       } catch (err: unknown) {
         const e = err as Error;
@@ -456,10 +505,12 @@ export default function AccountsClient({ tiers, userId }: AccountsClientProps) {
 
       <section style={{ padding: '56px 0', background: 'var(--bg-primary)', position: 'relative', overflow: 'hidden' }}>
         <TierCarousel 
-          tiers={displayTiers} 
+          tiers={tiers} 
+          displayTiers={displayTiers}
           isPending={isPending} 
           onPurchase={handlePurchase} 
           isLoggedIn={!!userId}
+          walletBalance={walletBalance}
         />
       </section>
 

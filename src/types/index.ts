@@ -83,7 +83,7 @@ export interface Transaction {
   id: string;
   wallet_id: string;
   amount: number;
-  type: 'deposit' | 'withdrawal' | 'reward' | 'refund' | 'admin_adjustment';
+  type: 'deposit' | 'withdrawal' | 'reward' | 'refund' | 'purchase' | 'referral_bonus' | 'admin_adjustment';
   reference: string;
   created_at: string;
 }

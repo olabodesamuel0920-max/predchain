@@ -1,11 +1,15 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
-import { ShieldCheck, Zap, Wallet as WalletIcon, Users, Settings, LogOut, ChevronRight, Menu } from 'lucide-react';
+import { ShieldCheck, Zap, Wallet as WalletIcon, Users, Settings, LogOut, ChevronRight, Menu, Terminal } from 'lucide-react';
 
 import { logout } from '@/app/actions/auth';
 
-export default function DashboardLayout({ children }: { children: ReactNode }) {
+export default async function DashboardLayout({ children }: { children: ReactNode }) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  const { data: profile } = await supabase.from('profiles').select('role').eq('id', user?.id).single();
+
   return (
     <div className="flex min-h-screen bg-[#030508] text-white">
       {/* ─── PROFESSIONAL SIDEBAR SHELL ─── */}
@@ -81,6 +85,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
           
           <div className="flex items-center gap-8">
+            {profile?.role === 'admin' && (
+              <Link href="/admin" className="opacity-10 hover:opacity-100 transition-opacity p-2 hidden sm:flex items-center gap-2 text-muted hover:text-blue-electric group text-[8px] uppercase tracking-[0.3em] font-mono">
+                <Terminal className="w-4 h-4 text-muted group-hover:text-blue-electric" />
+                <span className="opacity-0 group-hover:opacity-100 transition-opacity">SYS_CTRL</span>
+              </Link>
+            )}
             <Link href="/accounts" className="btn btn-blue px-16 py-8 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-electric/20 border-none">
                Upgrade Account
             </Link>

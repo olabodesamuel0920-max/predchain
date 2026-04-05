@@ -27,7 +27,8 @@ import {
   Target
 } from 'lucide-react';
 import { submitPrediction } from '@/app/actions/predictions';
-import { requestPayout } from '@/app/actions/wallet';
+import { requestPayout, purchaseTierWithWallet } from '@/app/actions/wallet';
+import { initializeWalletFunding } from '@/app/actions/paystack';
 import { logout } from '@/app/actions/auth';
 import { Profile, ChallengeRound, ChallengeMatch, ChallengeEntry, Prediction, Transaction, Wallet } from '@/types';
 import { useFeedback } from '@/hooks/useFeedback';
@@ -103,6 +104,19 @@ export default function DashboardClient({
         await requestPayout(Number(payoutAmount), bankInfo);
         showSuccess('Withdrawal request submitted.');
         setPayoutAmount('');
+      } catch (err: unknown) {
+        showError((err as Error).message);
+      }
+    });
+  };
+
+  const handleTopUp = async (amount: number) => {
+    startTransition(async () => {
+      try {
+        const result = await initializeWalletFunding(amount);
+        if (result.authorization_url) {
+          window.location.href = result.authorization_url;
+        }
       } catch (err: unknown) {
         showError((err as Error).message);
       }
@@ -308,122 +322,194 @@ export default function DashboardClient({
               </div>
             )}
 
-            {activeTab === 'wallet' && (
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6">
-                <div className="flex flex-col gap-6">
-                  <div className="card p-0 overflow-hidden overflow-x-auto">
-                    <div className="p-20 bg-white/[0.02] border-b border-white/5 flex justify-between items-center">
-                       <div className="flex items-center gap-10">
-                          <History className="w-5 h-5 text-blue-electric opacity-60" />
-                          <h3 className="font-display text-[10px] font-black uppercase tracking-widest">Transaction Audit</h3>
-                       </div>
-                       <div className="text-[9px] text-muted font-mono uppercase tracking-widest">System Logs</div>
-                    </div>
-                    <table className="w-full text-left">
-                      <thead>
-                        <tr className="bg-white/[0.01] border-b border-white/5">
-                          <th className="p-16 text-[9px] font-black text-muted uppercase tracking-widest">Description</th>
-                          <th className="p-16 text-[9px] font-black text-muted uppercase tracking-widest">Status</th>
-                          <th className="p-16 text-[9px] font-black text-muted uppercase tracking-widest">Date</th>
-                          <th className="p-16 text-[9px] font-black text-muted uppercase tracking-widest text-right">Amount</th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-white/[0.03]">
-                        {transactions.length === 0 ? (
-                          <tr><td colSpan={4} className="text-center py-60 text-muted/30 italic text-[10px] font-black uppercase tracking-widest">No entries found.</td></tr>
-                        ) : (
-                          transactions.map(tx => (
-                            <tr key={tx.id} className="hover:bg-white/[0.01] transition-colors group">
-                              <td className="p-16 font-black text-xs text-white uppercase italic">{tx.type}</td>
-                              <td className="p-16">
-                                 <div className="flex items-center gap-6 px-10 py-4 bg-success/10 border border-success/20 rounded-lg w-fit">
-                                    <Check className="w-3 h-3 text-success" />
-                                    <span className="text-[8px] font-black text-success uppercase tracking-widest">Verified</span>
-                                 </div>
-                              </td>
-                              <td className="p-16 text-muted font-mono text-[9px]">{new Date(tx.created_at).toLocaleDateString()}</td>
-                              <td className={`p-16 text-right font-black font-display italic text-base ${tx.amount > 0 ? 'text-success' : 'text-danger'}`}>
-                                 <div className="flex items-center justify-end gap-6 text-sm">
-                                    {tx.amount > 0 ? <ArrowUpRight className="w-4 h-4" /> : <ArrowDownLeft className="w-4 h-4" />}
-                                    ₦{Math.abs(tx.amount).toLocaleString()}
-                                 </div>
-                              </td>
-                            </tr>
-                          ))
-                        )}
-                      </tbody>
-                    </table>
+            {activeTab === 'wallet' && (() => {
+              const txWithdrawn = transactions.filter(t => t.type === 'withdrawal').reduce((acc, t) => acc + Math.abs(t.amount), 0);
+              const txRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
+              const txReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
+              return (
+              <div className="flex flex-col gap-6 animate-slide-up">
+                
+                {/* Financial Summary KPIs */}
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="card p-20 bg-blue-electric/[0.02] border-blue-electric/20 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><WalletIcon className="w-10 h-10" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Available Balance</h3>
+                    <div className="text-2xl font-black font-display text-white italic truncate">₦{balance.toLocaleString()}</div>
+                  </div>
+                  <div className="card p-20 bg-white/[0.02] border-white/5 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><ArrowDownLeft className="w-10 h-10" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Total Withdrawn</h3>
+                    <div className="text-2xl font-black font-display text-white italic truncate">₦{txWithdrawn.toLocaleString()}</div>
+                  </div>
+                  <div className="card p-20 bg-gold/[0.02] border-gold/10 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-10 h-10" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Rewards Earned</h3>
+                    <div className="text-2xl font-black font-display text-white italic truncate">₦{txRewards.toLocaleString()}</div>
+                  </div>
+                  <div className="card p-20 bg-success/[0.02] border-success/10 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Users className="w-10 h-10" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Referral Earnings</h3>
+                    <div className="text-2xl font-black font-display text-white italic truncate">₦{txReferrals.toLocaleString()}</div>
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-6">
-                  <div className="card p-24 bg-white/[0.02] border-blue-electric/10">
-                    <div className="flex items-center gap-12 mb-24">
-                       <div className="p-10 bg-gold/10 rounded-xl border border-gold/20"><WalletIcon className="w-4 h-4 text-gold" /></div>
-                       <div>
-                          <h3 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Withdrawal</h3>
-                          <p className="text-[8px] text-muted font-black uppercase tracking-widest mt-1">Wallet Payout</p>
-                       </div>
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6">
+                  {/* Left Column: Transactions */}
+                  <div className="flex flex-col gap-6">
+                    <div className="card p-0 overflow-hidden">
+                      <div className="p-20 bg-white/[0.02] border-b border-white/5 flex justify-between items-center">
+                         <div className="flex items-center gap-10">
+                            <History className="w-5 h-5 text-blue-electric opacity-60" />
+                            <h3 className="font-display text-[10px] font-black uppercase tracking-widest">Transaction Audit</h3>
+                         </div>
+                         <div className="hidden sm:block text-[9px] text-muted font-mono uppercase tracking-widest">System Logs</div>
+                      </div>
+                      
+                      {/* Responsive Card-Based List */}
+                      <div className="flex flex-col divide-y divide-white/[0.03]">
+                        {transactions.length === 0 ? (
+                          <div className="flex flex-col items-center justify-center py-40 gap-8 opacity-40">
+                             <History className="w-8 h-8 text-muted" />
+                             <p className="text-[10px] font-black uppercase tracking-widest text-muted">No Wallet Activity Present</p>
+                          </div>
+                        ) : (
+                          transactions.map(tx => {
+                            const isPositive = tx.amount > 0;
+                            const txIcon = tx.type === 'deposit' ? <ArrowUpRight className="w-4 h-4" /> :
+                                         tx.type === 'purchase' ? <Target className="w-4 h-4" /> :
+                                         tx.type === 'reward' ? <Trophy className="w-4 h-4" /> :
+                                         tx.type === 'referral_bonus' ? <Users className="w-4 h-4" /> :
+                                         <ArrowDownLeft className="w-4 h-4" />;
+                            
+                            return (
+                              <div key={tx.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-16 gap-12 sm:gap-4 hover:bg-white/[0.01] transition-colors group">
+                                <div className="flex items-center gap-10 min-w-[180px]">
+                                  <div className={`p-8 rounded-lg ${isPositive ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                                    {txIcon}
+                                  </div>
+                                  <div className="flex flex-col gap-1">
+                                    <span className="font-black text-[11px] text-white uppercase italic">{tx.type.replace('_', ' ')}</span>
+                                    <span className="text-[8px] text-muted font-bold uppercase tracking-widest truncate max-w-[140px]">{tx.reference}</span>
+                                  </div>
+                                </div>
+                                
+                                <div className="flex items-center justify-between sm:justify-end flex-1 gap-6 pl-12 sm:pl-0 border-l border-white/5 sm:border-l-0">
+                                   <div className="flex items-center gap-4">
+                                      <div className="flex items-center gap-4 px-6 py-2 bg-success/10 border border-success/20 rounded-md">
+                                         <Check className="w-3 h-3 text-success" />
+                                         <span className="text-[7px] font-black text-success uppercase tracking-widest hidden sm:block">Verified</span>
+                                      </div>
+                                      <span className="text-muted font-mono text-[9px]">{new Date(tx.created_at).toLocaleDateString()}</span>
+                                   </div>
+                                   <div className={`font-black font-display italic text-lg ${isPositive ? 'text-success' : 'text-danger'}`}>
+                                      {isPositive ? '+' : '-'}₦{Math.abs(tx.amount).toLocaleString()}
+                                   </div>
+                                </div>
+                              </div>
+                            );
+                          })
+                        )}
+                      </div>
                     </div>
-                    <form onSubmit={handlePayout} className="flex flex-col gap-16">
-                      <div>
-                        <label className="text-[9px] font-black text-muted uppercase block mb-6 tracking-widest ml-4">Amount (₦)</label>
-                        <input 
-                          type="number" 
-                          value={payoutAmount}
-                          onChange={(e) => setPayoutAmount(e.target.value)}
-                          placeholder="0.00" 
-                          className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-14 text-white font-mono font-black italic focus:outline-none focus:border-blue-electric/40 transition-all text-xl"
-                          required
-                        />
-                      </div>
-                      <div className="flex flex-col gap-6">
-                        <label className="text-[9px] font-black text-muted uppercase block ml-4 tracking-widest">Bank Details</label>
-                        <input 
-                          type="text" 
-                          value={bankInfo.bank}
-                          onChange={(e) => setBankInfo({...bankInfo, bank: e.target.value})}
-                          placeholder="Bank Name" 
-                          className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-12 text-[10px] font-bold text-white focus:outline-none focus:border-white/20 transition-all"
-                          required
-                        />
-                        <input 
-                          type="text" 
-                          value={bankInfo.account}
-                          onChange={(e) => setBankInfo({...bankInfo, account: e.target.value})}
-                          placeholder="Account Number" 
-                          className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-12 text-[10px] font-mono font-black text-white focus:outline-none focus:border-white/20 transition-all"
-                          required
-                        />
-                      </div>
-                      <button 
-                        disabled={isPending || balance < 1000} 
-                        type="submit" 
-                        className="btn btn-blue w-full mt-12 py-14 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-blue-electric/20 flex items-center justify-center gap-8 group"
-                      >
-                        {isPending ? <Activity className="w-4 h-4 animate-spin" /> : <>Process Payout <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" /></>}
-                      </button>
-                      {balance < 1000 && (
-                        <div className="flex items-center justify-center gap-8 px-12 py-10 bg-danger/10 border border-danger/20 rounded-lg">
-                           <AlertCircle className="w-3.5 h-3.5 text-danger" />
-                           <span className="text-[8px] text-danger font-black uppercase tracking-widest">Minimum withdrawal: ₦1,000</span>
-                        </div>
-                      )}
-                    </form>
                   </div>
-                  
-                  <div className="card p-24 bg-gold/[0.02] border-gold/20 shadow-xl shadow-gold/5">
-                     <div className="flex items-center gap-10 mb-12">
-                        <ShieldCheck className="w-5 h-5 text-gold" />
-                        <span className="text-[10px] text-white font-black uppercase tracking-widest">Verified Integrity</span>
-                     </div>
-                     <p className="text-[10px] text-muted font-medium italic opacity-60 uppercase tracking-widest leading-relaxed">
-                       All transactions are verified through our platform node and settled within 48 business hours.
-                     </p>
+
+                  {/* Right Column: Actions */}
+                  <div className="flex flex-col gap-6">
+                    {/* Top Up Panel */}
+                    <div className="card p-24 bg-blue-electric/[0.02] border-blue-electric/10 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-6 opacity-5"><Zap className="w-16 h-16" /></div>
+                      <div className="flex items-center gap-12 mb-20 relative z-10">
+                         <div className="p-10 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Zap className="w-4 h-4 text-blue-electric" /></div>
+                         <div>
+                            <h3 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Top Up Wallet</h3>
+                            <p className="text-[8px] text-muted font-black uppercase tracking-widest mt-1">Instant Funding</p>
+                         </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3 relative z-10">
+                         {[2500, 5000, 10000, 25000].map(amt => (
+                           <button 
+                             key={amt}
+                             onClick={() => handleTopUp(amt)}
+                             disabled={isPending}
+                             className="py-12 bg-white/[0.02] border border-white/5 rounded-xl text-[9px] font-black text-white hover:bg-blue-electric/10 hover:border-blue-electric/30 transition-all uppercase tracking-widest flex items-center justify-center pointer-events-auto"
+                           >
+                             + ₦{amt.toLocaleString()}
+                           </button>
+                         ))}
+                      </div>
+                    </div>
+                    
+                    {/* Withdrawal Panel */}
+                    <div className="card p-24 bg-white/[0.02] border-blue-electric/10">
+                      <div className="flex items-center gap-12 mb-20">
+                         <div className="p-10 bg-gold/10 rounded-xl border border-gold/20"><WalletIcon className="w-4 h-4 text-gold" /></div>
+                         <div>
+                            <h3 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Withdrawal</h3>
+                            <p className="text-[8px] text-muted font-black uppercase tracking-widest mt-1">Wallet Payout</p>
+                         </div>
+                      </div>
+                      <form onSubmit={handlePayout} className="flex flex-col gap-14">
+                        <div>
+                          <label className="text-[9px] font-black text-muted uppercase block mb-4 tracking-widest ml-4">Amount (₦)</label>
+                          <input 
+                            type="number" 
+                            value={payoutAmount}
+                            onChange={(e) => setPayoutAmount(e.target.value)}
+                            placeholder="0.00" 
+                            className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-12 text-white font-mono font-black italic focus:outline-none focus:border-blue-electric/40 transition-all text-lg"
+                            required
+                          />
+                        </div>
+                        <div className="flex flex-col gap-4">
+                          <label className="text-[9px] font-black text-muted uppercase block ml-4 tracking-widest">Bank Details</label>
+                          <input 
+                            type="text" 
+                            value={bankInfo.bank}
+                            onChange={(e) => setBankInfo({...bankInfo, bank: e.target.value})}
+                            placeholder="Bank Name" 
+                            className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-10 text-[10px] font-bold text-white focus:outline-none focus:border-white/20 transition-all"
+                            required
+                          />
+                          <input 
+                            type="text" 
+                            value={bankInfo.account}
+                            onChange={(e) => setBankInfo({...bankInfo, account: e.target.value})}
+                            placeholder="Account Number" 
+                            className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-10 text-[10px] font-mono font-black text-white focus:outline-none focus:border-white/20 transition-all"
+                            required
+                          />
+                        </div>
+                        <button 
+                          disabled={isPending || balance < 1000} 
+                          type="submit" 
+                          className="btn btn-blue w-full mt-6 py-12 font-black uppercase tracking-widest text-[10px] shadow-lg shadow-blue-electric/20 flex items-center justify-center gap-8 group"
+                        >
+                          {isPending ? <Activity className="w-4 h-4 animate-spin" /> : <>Process Payout <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" /></>}
+                        </button>
+                        {balance < 1000 && (
+                          <div className="flex items-center justify-center gap-8 px-12 py-8 bg-danger/10 border border-danger/20 rounded-lg">
+                             <AlertCircle className="w-3.5 h-3.5 text-danger" />
+                             <span className="text-[8px] text-danger font-black uppercase tracking-widest text-center">Min: ₦1,000</span>
+                          </div>
+                        )}
+                      </form>
+                    </div>
+                    
+                    {/* Integrity Label */}
+                    <div className="card p-24 bg-gold/[0.02] border-gold/20 shadow-xl shadow-gold/5 flex flex-col items-center text-center">
+                       <div className="flex items-center gap-8 mb-8">
+                          <ShieldCheck className="w-4 h-4 text-gold" />
+                          <span className="text-[9px] text-white font-black uppercase tracking-widest">Verified Integrity</span>
+                       </div>
+                       <p className="text-[9px] text-muted font-bold italic opacity-60 uppercase tracking-widest leading-relaxed">
+                         Node Verified & Settled in 48 Business Hours.
+                       </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            )}
+              );
+            })()}
 
             {activeTab === 'referrals' && (
               <div className="animate-slide-up flex flex-col gap-6">

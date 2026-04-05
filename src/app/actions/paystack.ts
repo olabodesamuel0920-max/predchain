@@ -39,12 +39,47 @@ export async function initializePayment(tierId: string) {
       metadata: {
         userId: user.id,
         tierId: tier.id,
+        type: 'tier_purchase',
       },
     }),
   });
 
   const data = await response.json();
   if (!data.status) throw new Error(data.message || 'Payment initialization failed');
+
+  return { authorization_url: data.data.authorization_url, reference: data.data.reference };
+}
+
+/**
+ * User-facing action to top up wallet.
+ */
+export async function initializeWalletFunding(amountNgn: number) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Unauthorized');
+  if (amountNgn < 1000) throw new Error('Minimum top-up is ₦1,000');
+
+  const response = await fetch('https://api.paystack.co/transaction/initialize', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: user.email,
+      amount: amountNgn * 100,
+      callback_url: `${APP_URL}/api/payments/verify`,
+      metadata: {
+        userId: user.id,
+        amount: amountNgn,
+        type: 'wallet_funding',
+      },
+    }),
+  });
+
+  const data = await response.json();
+  if (!data.status) throw new Error(data.message || 'Funding initialization failed');
 
   return { authorization_url: data.data.authorization_url, reference: data.data.reference };
 }
@@ -80,10 +115,35 @@ export async function verifyPayment(reference: string) {
     return { success: false, message: 'Payment verification failed at provider' };
   }
 
-  const { userId, tierId } = data.data.metadata;
+  const { userId, tierId, type, amount } = data.data.metadata;
   const paystackAmount = data.data.amount / 100;
 
-  // 3. SECURE PRICE MATCHING
+  // 3. Handle Wallet Funding
+  if (type === 'wallet_funding') {
+    const { data: wallet } = await adminClient
+      .from('wallets')
+      .select('id, balance_ngn')
+      .eq('user_id', userId)
+      .single();
+
+    if (!wallet) throw new Error('Wallet not found');
+
+    await adminClient.from('wallets').update({ 
+      balance_ngn: wallet.balance_ngn + paystackAmount 
+    }).eq('id', wallet.id);
+
+    await adminClient.from('wallet_transactions').insert({
+      wallet_id: wallet.id,
+      amount: paystackAmount,
+      type: 'deposit',
+      reference: `topup_${reference}`
+    });
+
+    revalidatePath('/dashboard');
+    return { success: true, message: 'Wallet funded successfully' };
+  }
+
+  // 4. SECURE PRICE MATCHING (Tier Purchase Flow)
   const { data: tier } = await adminClient
     .from('account_tiers')
     .select('price_ngn')
