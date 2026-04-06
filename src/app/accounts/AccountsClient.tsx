@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition, useRef } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
@@ -245,6 +246,22 @@ function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, wallet
           </button>
         ) : (
           <>
+            {!isWalletEnough && (
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6, marginBottom: 12, padding: '10px', background: 'rgba(255,23,68,0.05)', border: '1px solid rgba(255,23,68,0.1)', borderRadius: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <AlertCircle style={{ width: 12, height: 12, color: 'var(--danger)' }} />
+                  <span style={{ fontSize: '0.6rem', fontWeight: 900, color: 'var(--danger)', letterSpacing: '0.12em', textTransform: 'uppercase' }}>
+                    Insufficient Balance
+                  </span>
+                </div>
+                <Link 
+                  href="/dashboard?tab=wallet" 
+                  style={{ fontSize: '0.55rem', fontWeight: 900, color: 'var(--blue-electric)', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'underline', cursor: 'pointer' }}
+                >
+                  Top up in Wallet Hub
+                </Link>
+              </div>
+            )}
             <button
               disabled={isPending || !isWalletEnough}
               onClick={() => onPurchase(tier.id, 'wallet')}
@@ -268,6 +285,10 @@ function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, wallet
                 </>
               )}
             </button>
+            <div style={{ position: 'relative', height: 10, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+               <div style={{ height: 1, width: '100%', background: 'rgba(255,255,255,0.05)' }} />
+               <span style={{ position: 'absolute', padding: '0 8px', background: displayTier.accentBg, fontSize: '8px', color: 'rgba(255,255,255,0.15)', fontWeight: 900 }}>OR</span>
+            </div>
             <button
               disabled={isPending}
               onClick={() => onPurchase(tier.id, 'paystack')}
@@ -281,21 +302,17 @@ function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, wallet
                 textTransform: 'uppercase',
                 justifyContent: 'center',
                 gap: 6,
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'rgba(255,255,255,0.02)',
+                border: '1px solid rgba(255,255,255,0.08)',
               }}
             >
               {isPending ? <Activity className="animate-spin w-3 h-3" /> : (
                 <>
-                  <Activity style={{ width: 12, height: 12 }} />
-                  PAY WITH PAYSTACK
+                  <Activity style={{ width: 12, height: 12, color: 'var(--success)' }} />
+                  INSTANT PAYSTACK
                 </>
               )}
             </button>
-            {!isWalletEnough && (
-              <span style={{ fontSize: '0.5rem', fontWeight: 700, color: 'var(--danger)', textAlign: 'center', opacity: 0.8 }}>
-                INSUFFICIENT WALLET BALANCE
-              </span>
-            )}
           </>
         )}
       </div>

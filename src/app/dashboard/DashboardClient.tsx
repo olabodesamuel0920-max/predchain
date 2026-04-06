@@ -30,7 +30,7 @@ import { submitPrediction } from '@/app/actions/predictions';
 import { requestPayout, purchaseTierWithWallet } from '@/app/actions/wallet';
 import { initializeWalletFunding } from '@/app/actions/paystack';
 import { logout } from '@/app/actions/auth';
-import { Profile, ChallengeRound, ChallengeMatch, ChallengeEntry, Prediction, Transaction, Wallet } from '@/types';
+import { Profile, ChallengeRound, ChallengeMatch, ChallengeEntry, Prediction, Transaction, Wallet, PayoutRequest, AccountPurchase } from '@/types';
 import { useFeedback } from '@/hooks/useFeedback';
 
 interface DashboardClientProps {
@@ -42,6 +42,8 @@ interface DashboardClientProps {
   userEntry: ChallengeEntry | null;
   predictions: Prediction[];
   transactions: Transaction[];
+  payoutRequests: PayoutRequest[];
+  purchases: AccountPurchase[];
 }
 
 export default function DashboardClient({ 
@@ -52,16 +54,29 @@ export default function DashboardClient({
   matches, 
   userEntry,
   predictions,
-  transactions
+  transactions,
+  payoutRequests,
+  purchases
 }: DashboardClientProps) {
   const searchParams = useSearchParams();
   const [activeTab, setActiveTab] = useState<'overview' | 'challenge' | 'wallet' | 'referrals'>('overview');
+  const [walletSubTab, setWalletSubTab] = useState<'transactions' | 'purchases' | 'payouts'>('transactions');
   const [isPending, startTransition] = useTransition();
   const [payoutAmount, setPayoutAmount] = useState('');
   const [bankInfo, setBankInfo] = useState({ bank: '', account: '', name: '' });
+
+  const txWithdrawn = transactions.filter(t => t.type === 'withdrawal').reduce((acc, t) => acc + Math.abs(t.amount), 0);
+  const txRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
+  const txReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
+  const pendingPayouts = payoutRequests.filter(p => p.status === 'pending').reduce((acc, p) => acc + p.amount, 0);
   const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback(5000);
 
   useEffect(() => {
+    const tabParam = searchParams.get('tab');
+    if (tabParam === 'wallet') setActiveTab('wallet');
+    if (tabParam === 'challenge') setActiveTab('challenge');
+    if (tabParam === 'referrals') setActiveTab('referrals');
+
     const successParam = searchParams.get('success');
     const errorParam = searchParams.get('error');
     if (successParam) {
@@ -321,20 +336,20 @@ export default function DashboardClient({
                 </div>
               </div>
             )}
-
-            {activeTab === 'wallet' && (() => {
-              const txWithdrawn = transactions.filter(t => t.type === 'withdrawal').reduce((acc, t) => acc + Math.abs(t.amount), 0);
-              const txRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
-              const txReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
-              return (
+            {activeTab === 'wallet' && (
               <div className="flex flex-col gap-6 animate-slide-up">
                 
                 {/* Financial Summary KPIs */}
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
                   <div className="card p-20 bg-blue-electric/[0.02] border-blue-electric/20 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><WalletIcon className="w-10 h-10" /></div>
                     <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Available Balance</h3>
                     <div className="text-2xl font-black font-display text-white italic truncate">₦{balance.toLocaleString()}</div>
+                  </div>
+                  <div className="card p-20 bg-danger/[0.02] border-danger/10 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Lock className="w-10 h-10" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Pending Payouts</h3>
+                    <div className="text-2xl font-black font-display text-white italic truncate">₦{pendingPayouts.toLocaleString()}</div>
                   </div>
                   <div className="card p-20 bg-white/[0.02] border-white/5 relative overflow-hidden group">
                     <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><ArrowDownLeft className="w-10 h-10" /></div>
@@ -357,57 +372,125 @@ export default function DashboardClient({
                   {/* Left Column: Transactions */}
                   <div className="flex flex-col gap-6">
                     <div className="card p-0 overflow-hidden">
-                      <div className="p-20 bg-white/[0.02] border-b border-white/5 flex justify-between items-center">
+                      <div className="p-20 bg-white/[0.02] border-b border-white/5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
                          <div className="flex items-center gap-10">
                             <History className="w-5 h-5 text-blue-electric opacity-60" />
-                            <h3 className="font-display text-[10px] font-black uppercase tracking-widest">Transaction Audit</h3>
+                            <h3 className="font-display text-[10px] font-black uppercase tracking-widest">Financial Audit</h3>
                          </div>
-                         <div className="hidden sm:block text-[9px] text-muted font-mono uppercase tracking-widest">System Logs</div>
+                         <div className="flex bg-black/40 border border-white/5 rounded-lg p-2 gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar">
+                           <button onClick={() => setWalletSubTab('transactions')} className={`px-10 py-4 text-[8px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === 'transactions' ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}>Recent Rx</button>
+                           <button onClick={() => setWalletSubTab('purchases')} className={`px-10 py-4 text-[8px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === 'purchases' ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}>Purchases</button>
+                           <button onClick={() => setWalletSubTab('payouts')} className={`px-10 py-4 text-[8px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === 'payouts' ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}>Payout Requests</button>
+                         </div>
                       </div>
                       
                       {/* Responsive Card-Based List */}
                       <div className="flex flex-col divide-y divide-white/[0.03]">
-                        {transactions.length === 0 ? (
-                          <div className="flex flex-col items-center justify-center py-40 gap-8 opacity-40">
-                             <History className="w-8 h-8 text-muted" />
-                             <p className="text-[10px] font-black uppercase tracking-widest text-muted">No Wallet Activity Present</p>
-                          </div>
-                        ) : (
-                          transactions.map(tx => {
-                            const isPositive = tx.amount > 0;
-                            const txIcon = tx.type === 'deposit' ? <ArrowUpRight className="w-4 h-4" /> :
-                                         tx.type === 'purchase' ? <Target className="w-4 h-4" /> :
-                                         tx.type === 'reward' ? <Trophy className="w-4 h-4" /> :
-                                         tx.type === 'referral_bonus' ? <Users className="w-4 h-4" /> :
-                                         <ArrowDownLeft className="w-4 h-4" />;
-                            
-                            return (
-                              <div key={tx.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-16 gap-12 sm:gap-4 hover:bg-white/[0.01] transition-colors group">
-                                <div className="flex items-center gap-10 min-w-[180px]">
-                                  <div className={`p-8 rounded-lg ${isPositive ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
-                                    {txIcon}
+                        {walletSubTab === 'transactions' && (
+                          transactions.length === 0 ? (
+                            <div className="flex flex-col items-center justify-center py-40 gap-8 opacity-40">
+                               <History className="w-8 h-8 text-muted" />
+                               <p className="text-[10px] font-black uppercase tracking-widest text-muted">No Wallet Activity Present</p>
+                            </div>
+                          ) : (
+                            transactions.map(tx => {
+                              const isPositive = tx.amount > 0;
+                              const txIcon = tx.type === 'deposit' ? <ArrowUpRight className="w-4 h-4" /> :
+                                           tx.type === 'purchase' ? <Target className="w-4 h-4" /> :
+                                           tx.type === 'reward' ? <Trophy className="w-4 h-4" /> :
+                                           tx.type === 'referral_bonus' ? <Users className="w-4 h-4" /> :
+                                           <ArrowDownLeft className="w-4 h-4" />;
+                              
+                              return (
+                                <div key={tx.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-16 gap-12 sm:gap-4 hover:bg-white/[0.01] transition-colors group">
+                                  <div className="flex items-center gap-10 min-w-[180px]">
+                                    <div className={`p-8 rounded-lg ${isPositive ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                                      {txIcon}
+                                    </div>
+                                    <div className="flex flex-col gap-1">
+                                      <span className="font-black text-[11px] text-white uppercase italic">{tx.type.replace('_', ' ')}</span>
+                                      <span className="text-[8px] text-muted font-bold uppercase tracking-widest truncate max-w-[140px]">{tx.reference}</span>
+                                    </div>
                                   </div>
-                                  <div className="flex flex-col gap-1">
-                                    <span className="font-black text-[11px] text-white uppercase italic">{tx.type.replace('_', ' ')}</span>
-                                    <span className="text-[8px] text-muted font-bold uppercase tracking-widest truncate max-w-[140px]">{tx.reference}</span>
+                                  
+                                  <div className="flex items-center justify-between sm:justify-end flex-1 gap-6 pl-12 sm:pl-0 border-l border-white/5 sm:border-l-0">
+                                     <div className="flex items-center gap-4">
+                                        <div className="flex items-center gap-4 px-6 py-2 bg-success/10 border border-success/20 rounded-md">
+                                           <Check className="w-3 h-3 text-success" />
+                                           <span className="text-[7px] font-black text-success uppercase tracking-widest hidden sm:block">Verified</span>
+                                        </div>
+                                        <span className="text-muted font-mono text-[9px]">{new Date(tx.created_at).toLocaleDateString()}</span>
+                                     </div>
+                                     <div className={`font-black font-display italic text-lg ${isPositive ? 'text-success' : 'text-danger'}`}>
+                                        {isPositive ? '+' : '-'}₦{Math.abs(tx.amount).toLocaleString()}
+                                     </div>
                                   </div>
                                 </div>
-                                
+                              );
+                            })
+                          )
+                        )}
+                        {walletSubTab === 'purchases' && (
+                           purchases.length === 0 ? (
+                             <div className="flex flex-col items-center justify-center py-40 gap-8 opacity-40">
+                                <Target className="w-8 h-8 text-muted" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted">No Purchase History</p>
+                             </div>
+                           ) : purchases.map(p => (
+                             <div key={p.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-16 gap-12 sm:gap-4 hover:bg-white/[0.01] transition-colors group">
+                                <div className="flex items-center gap-10 min-w-[180px]">
+                                  <div className="p-8 rounded-lg bg-blue-electric/10 text-blue-electric"><Target className="w-4 h-4" /></div>
+                                  <div className="flex flex-col gap-1">
+                                    <span className="font-black text-[11px] text-white uppercase italic">Account Tier</span>
+                                    <span className="text-[8px] text-muted font-bold uppercase tracking-widest">{(p as any).account_tiers?.name || 'Tier Purchase'}</span>
+                                  </div>
+                                </div>
                                 <div className="flex items-center justify-between sm:justify-end flex-1 gap-6 pl-12 sm:pl-0 border-l border-white/5 sm:border-l-0">
                                    <div className="flex items-center gap-4">
-                                      <div className="flex items-center gap-4 px-6 py-2 bg-success/10 border border-success/20 rounded-md">
-                                         <Check className="w-3 h-3 text-success" />
-                                         <span className="text-[7px] font-black text-success uppercase tracking-widest hidden sm:block">Verified</span>
+                                      <div className={`flex items-center gap-4 px-6 py-2 border rounded-md ${p.status === 'completed' ? 'bg-success/10 border-success/20' : 'bg-gold/10 border-gold/20'}`}>
+                                         {p.status === 'completed' ? <Check className="w-3 h-3 text-success" /> : <AlertCircle className="w-3 h-3 text-gold" />}
+                                         <span className={`text-[7px] font-black uppercase tracking-widest hidden sm:block ${p.status === 'completed' ? 'text-success' : 'text-gold'}`}>{p.status === 'completed' ? 'Verified' : p.status}</span>
                                       </div>
-                                      <span className="text-muted font-mono text-[9px]">{new Date(tx.created_at).toLocaleDateString()}</span>
+                                      <span className="text-muted font-mono text-[9px]">{new Date(p.created_at).toLocaleDateString()}</span>
                                    </div>
-                                   <div className={`font-black font-display italic text-lg ${isPositive ? 'text-success' : 'text-danger'}`}>
-                                      {isPositive ? '+' : '-'}₦{Math.abs(tx.amount).toLocaleString()}
+                                   <div className="font-black font-display italic text-lg text-white">
+                                      ₦{p.amount_paid.toLocaleString()}
                                    </div>
                                 </div>
-                              </div>
-                            );
-                          })
+                             </div>
+                           ))
+                        )}
+                        {walletSubTab === 'payouts' && (
+                           payoutRequests.length === 0 ? (
+                             <div className="flex flex-col items-center justify-center py-40 gap-8 opacity-40">
+                                <LogOut className="w-8 h-8 text-muted" />
+                                <p className="text-[10px] font-black uppercase tracking-widest text-muted">No Payout Requests</p>
+                             </div>
+                           ) : payoutRequests.map(req => (
+                             <div key={req.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-16 gap-12 sm:gap-4 hover:bg-white/[0.01] transition-colors group">
+                                <div className="flex items-center gap-10 min-w-[180px]">
+                                  <div className={`p-8 rounded-lg ${req.status === 'completed' ? 'bg-success/10 text-success' : req.status === 'rejected' ? 'bg-danger/10 text-danger' : 'bg-gold/10 text-gold'}`}>
+                                    <WalletIcon className="w-4 h-4" />
+                                  </div>
+                                  <div className="flex flex-col gap-1">
+                                    <span className="font-black text-[11px] text-white uppercase italic">Withdrawal</span>
+                                    <span className="text-[8px] text-muted font-bold uppercase tracking-widest truncate max-w-[140px]">{req.bank_account_info?.bank} - {req.bank_account_info?.account?.slice(-4)}</span>
+                                  </div>
+                                </div>
+                                <div className="flex items-center justify-between sm:justify-end flex-1 gap-6 pl-12 sm:pl-0 border-l border-white/5 sm:border-l-0">
+                                   <div className="flex items-center gap-4">
+                                      <div className={`flex items-center gap-4 px-6 py-2 border rounded-md ${req.status === 'completed' ? 'bg-success/10 border-success/20' : req.status === 'rejected' ? 'bg-danger/10 border-danger/20' : 'bg-gold/10 border-gold/20'}`}>
+                                         {req.status === 'completed' ? <Check className="w-3 h-3 text-success" /> : req.status === 'rejected' ? <AlertCircle className="w-3 h-3 text-danger" /> : <Activity className="w-3 h-3 text-gold animate-spin" />}
+                                         <span className={`text-[7px] font-black uppercase tracking-widest hidden sm:block ${req.status === 'completed' ? 'text-success' : req.status === 'rejected' ? 'text-danger' : 'text-gold'}`}>{req.status}</span>
+                                      </div>
+                                      <span className="text-muted font-mono text-[9px]">{new Date(req.created_at).toLocaleDateString()}</span>
+                                   </div>
+                                   <div className={`font-black font-display italic text-lg ${req.status === 'rejected' ? 'text-danger line-through opacity-50' : req.status === 'pending' ? 'text-gold' : 'text-success'}`}>
+                                      ₦{req.amount.toLocaleString()}
+                                   </div>
+                                </div>
+                             </div>
+                           ))
                         )}
                       </div>
                     </div>
@@ -508,8 +591,7 @@ export default function DashboardClient({
                   </div>
                 </div>
               </div>
-              );
-            })()}
+            )}
 
             {activeTab === 'referrals' && (
               <div className="animate-slide-up flex flex-col gap-6">

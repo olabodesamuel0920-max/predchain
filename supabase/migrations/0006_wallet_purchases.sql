@@ -52,15 +52,20 @@ BEGIN
     p_user_id, p_tier_id, v_tier_price, p_payment_reference, 'wallet', 'completed', now()
   );
 
-  -- 7. Auto-Enroll in Active Round
+  -- 7. Auto-Enroll in Active Round (Prevent Duplicates)
   SELECT id INTO v_active_round_id
   FROM public.challenge_rounds
   WHERE status = 'active'
   LIMIT 1;
 
   IF v_active_round_id IS NOT NULL THEN
+    -- Only insert if they don't already have an entry for this round
     INSERT INTO public.challenge_entries (user_id, round_id, tier_id, streak_count)
-    VALUES (p_user_id, v_active_round_id, p_tier_id, 0);
+    SELECT p_user_id, v_active_round_id, p_tier_id, 0
+    WHERE NOT EXISTS (
+      SELECT 1 FROM public.challenge_entries 
+      WHERE user_id = p_user_id AND round_id = v_active_round_id
+    );
   END IF;
 
 END;

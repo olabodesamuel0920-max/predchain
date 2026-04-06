@@ -1,0 +1,210 @@
+'use client';
+
+import { useState } from 'react';
+import { User, Shield, KeyRound, Mail, Phone, Lock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { updatePassword } from '@/app/actions/auth';
+import { Profile } from '@/types';
+
+interface SettingsClientProps {
+  profile: Profile;
+}
+
+export default function SettingsClient({ profile }: SettingsClientProps) {
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isPending, setIsPending] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handlePasswordUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPending(true);
+    setError(null);
+    setSuccess(false);
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match');
+      setIsPending(false);
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters');
+      setIsPending(false);
+      return;
+    }
+
+    const formData = new FormData(e.currentTarget);
+    const result = await updatePassword(formData);
+
+    setIsPending(false);
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      setSuccess(true);
+      setPassword('');
+      setConfirmPassword('');
+    }
+  };
+
+  return (
+    <div className="container py-40 animate-fade-in">
+      <div className="flex flex-col gap-32">
+        {/* Header */}
+        <div>
+          <h1 className="font-display text-4xl font-black text-white italic uppercase tracking-tight mb-8">
+            Account <span className="text-grad-gold">Sentinel</span>
+          </h1>
+          <p className="text-muted text-[11px] font-bold uppercase tracking-[0.2em] opacity-60">
+            Node Identity & Security Protocol Synchronization
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-32">
+          {/* Identity Summary Card */}
+          <div className="lg:col-span-1 flex flex-col gap-24">
+            <div className="card p-32 bg-white/[0.01] border-white/5 relative overflow-hidden group">
+               <div className="absolute top-0 right-0 p-16 opacity-5 group-hover:opacity-10 transition-opacity">
+                  <User className="w-24 h-24" />
+               </div>
+               
+               <div className="flex flex-col items-center text-center mb-32">
+                  <div className="w-80 h-80 rounded-2xl bg-blue-electric/10 border border-blue-electric/20 flex items-center justify-center font-black text-3xl text-blue-electric mb-24 shadow-2xl shadow-blue-electric/10">
+                    {profile.username.charAt(0).toUpperCase()}
+                  </div>
+                  <h2 className="text-xl font-black text-white uppercase italic tracking-tight">{profile.full_name || profile.username}</h2>
+                  <span className="text-[10px] font-black text-blue-electric uppercase tracking-widest mt-4">Verified Nexus Node</span>
+               </div>
+
+               <div className="flex flex-col gap-12">
+                  <div className="flex items-center justify-between p-12 bg-black/40 border border-white/5 rounded-xl">
+                     <span className="text-[9px] font-black text-muted uppercase tracking-widest">Protocol ID</span>
+                     <span className="text-[10px] font-mono font-black text-white">{profile.username}</span>
+                  </div>
+                  <div className="flex items-center justify-between p-12 bg-black/40 border border-white/5 rounded-xl">
+                     <span className="text-[9px] font-black text-muted uppercase tracking-widest">Node Status</span>
+                     <div className="flex items-center gap-6">
+                        <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                        <span className="text-[10px] font-black text-success uppercase tracking-widest">Active</span>
+                     </div>
+                  </div>
+                  <div className="flex items-center justify-between p-12 bg-black/40 border border-white/5 rounded-xl">
+                     <span className="text-[9px] font-black text-muted uppercase tracking-widest">Access Role</span>
+                     <span className="text-[10px] font-black text-gold uppercase tracking-widest">{profile.role}</span>
+                  </div>
+               </div>
+            </div>
+
+            <div className="card p-24 bg-gold/[0.02] border-gold/10">
+               <div className="flex items-center gap-12 mb-16">
+                  <Shield className="w-5 h-5 text-gold" />
+                  <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Security Protocol</h3>
+               </div>
+               <p className="text-muted text-[10px] font-bold uppercase tracking-widest leading-relaxed opacity-60">
+                 Ensure your master access key is rotationally updated to prevent unauthorized network entry.
+               </p>
+            </div>
+          </div>
+
+          {/* Settings Actions */}
+          <div className="lg:col-span-2 flex flex-col gap-32">
+            
+            {/* Identity Form (ReadOnly for now as per requests) */}
+            <div className="card p-32 border-white/5">
+               <div className="flex items-center gap-12 mb-32 border-b border-white/5 pb-20">
+                  <Mail className="w-5 h-5 text-blue-electric" />
+                  <h3 className="text-[12px] font-black text-white uppercase tracking-widest">Account Identification</h3>
+               </div>
+               
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+                  <div className="flex flex-col gap-8">
+                    <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Authorized Email</label>
+                    <div className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-16 py-12 text-white/40 font-mono text-sm">
+                      {profile.email}
+                    </div>
+                  </div>
+                  <div className="flex flex-col gap-8">
+                    <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Secure Phone</label>
+                    <div className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-16 py-12 text-white/40 font-mono text-sm">
+                      {profile.phone || 'Not Linked'}
+                    </div>
+                  </div>
+               </div>
+            </div>
+
+            {/* Password Reset Form */}
+            <div className="card p-32 border-white/5 bg-white/[0.01]">
+               <div className="flex items-center gap-12 mb-32 border-b border-white/5 pb-20">
+                  <KeyRound className="w-5 h-5 text-gold" />
+                  <h3 className="text-[12px] font-black text-white uppercase tracking-widest">Master Key Override</h3>
+               </div>
+
+               <form onSubmit={handlePasswordUpdate} className="flex flex-col gap-24 max-w-md">
+                 {success && (
+                    <div className="flex items-center gap-12 p-16 bg-success/10 border border-success/20 rounded-xl animate-fade-in">
+                      <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
+                      <p className="text-success text-[10px] font-black uppercase tracking-widest">
+                        Protocol Key Rotation Successful.
+                      </p>
+                    </div>
+                 )}
+                 
+                 {error && (
+                    <div className="flex items-center gap-12 p-16 bg-danger/10 border border-danger/20 rounded-xl animate-shake">
+                      <AlertCircle className="w-5 h-5 text-danger flex-shrink-0" />
+                      <p className="text-danger text-[10px] font-black uppercase tracking-widest">
+                        {error}
+                      </p>
+                    </div>
+                 )}
+
+                 <div className="flex flex-col gap-8">
+                   <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">New Access Key</label>
+                   <div className="relative group">
+                     <Lock className="absolute left-16 top-1/2 -translate-y-1/2 w-4 h-4 text-muted group-focus-within:text-gold transition-colors" />
+                     <input
+                       type="password"
+                       name="password"
+                       required
+                       value={password}
+                       onChange={(e) => setPassword(e.target.value)}
+                       placeholder="Enter New Protocol Key"
+                       className="w-full bg-black/40 border border-white/5 rounded-xl py-16 pl-48 pr-20 text-white font-mono text-sm focus:outline-none focus:border-gold/40 transition-all"
+                     />
+                   </div>
+                 </div>
+
+                 <div className="flex flex-col gap-8">
+                   <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Verify Key Hash</label>
+                   <div className="relative group">
+                     <Lock className="absolute left-16 top-1/2 -translate-y-1/2 w-4 h-4 text-muted group-focus-within:text-gold transition-colors" />
+                     <input
+                       type="password"
+                       required
+                       value={confirmPassword}
+                       onChange={(e) => setConfirmPassword(e.target.value)}
+                       placeholder="Confirm Master Key"
+                       className="w-full bg-black/40 border border-white/5 rounded-xl py-16 pl-48 pr-20 text-white font-mono text-sm focus:outline-none focus:border-gold/40 transition-all"
+                     />
+                   </div>
+                 </div>
+
+                 <button
+                   type="submit"
+                   disabled={isPending}
+                   className="btn btn-blue w-full md:w-fit px-32 py-16 font-black uppercase tracking-widest text-[11px] shadow-lg shadow-blue-electric/20 flex items-center justify-center gap-12 group mt-8"
+                 >
+                   {isPending ? (
+                     <Loader2 className="w-4 h-4 animate-spin" />
+                   ) : (
+                     <>Synchronize New Master Key</>
+                   )}
+                 </button>
+               </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

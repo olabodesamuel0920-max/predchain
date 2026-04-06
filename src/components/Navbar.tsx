@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Shield, User, LogOut, ChevronRight, Menu, X, ArrowUpRight } from 'lucide-react';
 import { logout } from '@/app/actions/auth';
+import { createClient } from '@/lib/supabase/client';
 import styles from './Navbar.module.css';
 
 const navLinks = [
@@ -20,14 +21,28 @@ const navLinks = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const pathname = usePathname();
   const isAuthRoute = pathname?.startsWith('/dashboard') ?? false;
   const isAdminRoute = pathname?.startsWith('/admin') ?? false;
 
   useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      subscription.unsubscribe();
+    };
   }, []);
 
   useEffect(() => {
@@ -85,12 +100,7 @@ export default function Navbar() {
 
           {/* Desktop CTA */}
           <div className="hidden lg:flex items-center gap-16">
-            {isAdminRoute ? (
-              <div className="px-12 py-6 rounded-lg bg-gold/10 border border-gold/20 flex items-center gap-8">
-                <Shield className="w-12 h-12 text-gold" />
-                <span className="text-[10px] font-black text-gold uppercase tracking-[0.2em]">Sentinel Protocol</span>
-              </div>
-            ) : !isAuthRoute ? (
+            {!user ? (
               <div className="flex items-center gap-8">
                 <Link href="/login" className="px-16 py-8 text-[10px] font-black text-muted hover:text-white uppercase tracking-widest transition-colors">Sign In</Link>
                 <Link href="/accounts" className="btn btn-blue px-16 py-8 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-electric/20 flex items-center gap-6">
@@ -99,9 +109,11 @@ export default function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-12 group cursor-pointer">
-                <Link href="/accounts" className="px-12 py-4 rounded-lg border border-white/5 text-[9px] font-black text-muted uppercase tracking-widest hover:border-white/20 transition-all">Upgrade Tier</Link>
-                <div className="w-32 h-32 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-gold shadow-lg group-hover:border-gold/30 transition-all">
-                  S
+                <Link href="/dashboard" className="btn btn-blue px-20 py-8 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-electric/10 flex items-center gap-8 group">
+                   Open Dashboard <ChevronRight className="w-12 h-12 group-hover:translate-x-2 transition-transform" />
+                </Link>
+                <div className="w-32 h-32 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-gold shadow-lg group-hover:border-gold/30 transition-all uppercase">
+                  {user.user_metadata?.username?.charAt(0) || 'U'}
                 </div>
               </div>
             )}
@@ -147,21 +159,21 @@ export default function Navbar() {
           </ul>
 
           <div className="mt-auto flex flex-col gap-12">
-            {isAdminRoute ? (
-              <Link href="/" onClick={() => setMenuOpen(false)} className="btn btn-outline-gold w-full text-[12px] font-black uppercase tracking-widest flex items-center justify-center gap-8">
-                 Exit Sentinel <LogOut className="w-14 h-14" />
-              </Link>
-            ) : !isAuthRoute ? (
+            {!user ? (
               <>
                 <Link href="/login" onClick={() => setMenuOpen(false)} className="px-24 py-16 text-center text-[11px] font-black text-muted uppercase tracking-widest">Sign In</Link>
                 <Link href="/accounts" onClick={() => setMenuOpen(false)} className="btn btn-blue w-full py-16 text-[11px] font-black uppercase tracking-widest shadow-xl">Join Network</Link>
               </>
             ) : (
               <>
-                <Link href="/accounts" onClick={() => setMenuOpen(false)} className="px-24 py-16 text-center text-[11px] font-black text-muted uppercase tracking-widest">Upgrade Tier</Link>
-                <button onClick={() => logout()} className="btn btn-primary w-full py-16 text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-8">
-                   Sign Out <LogOut className="w-14 h-14" />
-                </button>
+                <Link href="/dashboard" onClick={() => setMenuOpen(false)} className="btn btn-blue w-full py-16 text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-8 group">
+                   Open Dashboard <ChevronRight className="w-14 h-14 group-hover:translate-x-2 transition-transform" />
+                </Link>
+                <form action={logout}>
+                   <button type="submit" onClick={() => setMenuOpen(false)} className="w-full py-16 text-[11px] font-black text-zinc-500 uppercase tracking-widest flex items-center justify-center gap-8">
+                     Sign Out <LogOut className="w-14 h-14" />
+                   </button>
+                </form>
               </>
             )}
           </div>

@@ -53,7 +53,21 @@ export default async function DashboardPage() {
     .select('*')
     .eq('wallet_id', wallet?.id)
     .order('created_at', { ascending: false })
-    .limit(10)
+    .limit(50)
+
+  // 6. Fetch payout requests
+  const { data: payoutRequests } = await supabase
+    .from('payout_requests')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    
+  // 7. Fetch account purchases
+  const { data: purchases } = await supabase
+    .from('account_purchases')
+    .select('*, account_tiers(*)')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
 
   return (
     <Suspense fallback={<div className="container py-80 text-center text-muted">Loading Dashboard...</div>}>
@@ -66,7 +80,10 @@ export default async function DashboardPage() {
         userEntry={userEntry}
         predictions={predictions || []}
         transactions={transactions || []}
+        payoutRequests={payoutRequests || []}
+        purchases={purchases || []}
       />
     </Suspense>
   )
 }
+
