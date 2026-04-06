@@ -30,7 +30,7 @@ import { submitPrediction } from '@/app/actions/predictions';
 import { requestPayout, purchaseTierWithWallet } from '@/app/actions/wallet';
 import { initializeWalletFunding } from '@/app/actions/paystack';
 import { logout } from '@/app/actions/auth';
-import { Profile, ChallengeRound, ChallengeMatch, ChallengeEntry, Prediction, Transaction, Wallet, PayoutRequest, AccountPurchase } from '@/types';
+import { Profile, ChallengeRound, ChallengeMatch, ChallengeEntry, Prediction, Transaction, Wallet, PayoutRequest, AccountPurchase, AccountTier } from '@/types';
 import { useFeedback } from '@/hooks/useFeedback';
 
 interface DashboardClientProps {
@@ -44,6 +44,7 @@ interface DashboardClientProps {
   transactions: Transaction[];
   payoutRequests: PayoutRequest[];
   purchases: AccountPurchase[];
+  tiers: AccountTier[];
 }
 
 export default function DashboardClient({ 
@@ -56,26 +57,27 @@ export default function DashboardClient({
   predictions,
   transactions,
   payoutRequests,
-  purchases
+  purchases,
+  tiers
 }: DashboardClientProps) {
-  const searchParams = useSearchParams();
+  const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback(5000);
   const [activeTab, setActiveTab] = useState<'overview' | 'challenge' | 'wallet' | 'referrals'>('overview');
   const [walletSubTab, setWalletSubTab] = useState<'transactions' | 'purchases' | 'payouts'>('transactions');
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
   const [payoutAmount, setPayoutAmount] = useState('');
   const [bankInfo, setBankInfo] = useState({ bank: '', account: '', name: '' });
 
+  const pendingPayouts = payoutRequests.filter(p => p.status === 'pending').reduce((acc, p) => acc + p.amount, 0);
   const txWithdrawn = transactions.filter(t => t.type === 'withdrawal').reduce((acc, t) => acc + Math.abs(t.amount), 0);
   const txRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
   const txReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
-  const pendingPayouts = payoutRequests.filter(p => p.status === 'pending').reduce((acc, p) => acc + p.amount, 0);
-  const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback(5000);
 
   useEffect(() => {
     const tabParam = searchParams.get('tab');
-    if (tabParam === 'wallet') setActiveTab('wallet');
-    if (tabParam === 'challenge') setActiveTab('challenge');
-    if (tabParam === 'referrals') setActiveTab('referrals');
+    if (tabParam && ['overview', 'challenge', 'wallet', 'referrals'].includes(tabParam)) {
+      setActiveTab(tabParam as any);
+    }
 
     const successParam = searchParams.get('success');
     const errorParam = searchParams.get('error');
@@ -86,10 +88,13 @@ export default function DashboardClient({
     }
   }, [searchParams, showSuccess, showError]);
 
-  const initial = profile?.full_name?.charAt(0) || user?.email?.charAt(0) || '?';
-  const username = profile?.username || user?.email?.split('@')[0] || 'User';
+  const displayName = profile?.full_name || profile?.username || user?.email?.split('@')[0] || 'Account';
+  const initial = displayName === 'Account' ? 'A' : displayName.charAt(0).toUpperCase();
   const balance = wallet?.balance_ngn || 0;
   const streak = userEntry?.streak_count || 0;
+
+  const currentTier = tiers.find(t => t.id === userEntry?.tier_id);
+  const potentialReward = currentTier?.perks?.reward || '₦0';
 
   const handlePrediction = async (match_id: string, choice: '1' | 'X' | '2') => {
     if (!userEntry) {
@@ -147,7 +152,7 @@ export default function DashboardClient({
         <div className="container">
           
           {/* Internal Navigation Tabs */}
-          <div className="flex items-center gap-2 mb-8 overflow-x-auto no-scrollbar pb-3 border-b border-white/5">
+          <div className="flex items-center gap-2 mb-6 overflow-x-auto no-scrollbar pb-2 border-b border-white/5">
              {[
                { id: 'overview',   label: 'Overview',   icon: Layout },
                { id: 'challenge',  label: 'Challenge',  icon: Zap },
@@ -157,13 +162,13 @@ export default function DashboardClient({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all whitespace-nowrap border ${
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap border ${
                     activeTab === tab.id 
-                    ? 'bg-blue-electric/10 border-blue-electric/30 text-white shadow-lg shadow-blue-electric/10' 
+                    ? 'bg-blue-electric/10 border-blue-electric/30 text-white shadow-lg shadow-blue-electric/5' 
                     : 'bg-transparent border-transparent text-muted hover:text-white hover:bg-white/5'
                   }`}
                 >
-                   <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-blue-electric' : 'opacity-40'}`} />
+                   <tab.icon className={`w-3.5 h-3.5 ${activeTab === tab.id ? 'text-blue-electric' : 'opacity-40'}`} />
                    <span className="text-[10px] font-black uppercase tracking-widest">{tab.label}</span>
                 </button>
              ))}
@@ -171,68 +176,68 @@ export default function DashboardClient({
 
           <div className="animate-slide-up">
             {activeTab === 'overview' && (
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div className="lg:col-span-8 flex flex-col gap-6">
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="card p-6 relative overflow-hidden group">
-                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp className="w-12 h-12" /></div>
-                         <div className="flex justify-between items-start mb-12">
-                            <div className="p-10 bg-gold/10 rounded-xl"><Activity className="w-5 h-5 text-gold" /></div>
-                            <span className="badge badge-gold py-2 px-10 text-[8px] font-black tracking-widest">Active Round</span>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+                <div className="lg:col-span-8 flex flex-col gap-5">
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <div className="card p-5 relative overflow-hidden group">
+                         <div className="absolute top-0 right-0 p-5 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp className="w-10 h-10" /></div>
+                         <div className="flex justify-between items-start mb-6">
+                            <div className="p-8 bg-gold/10 rounded-xl"><Activity className="w-4 h-4 text-gold" /></div>
+                            <span className="badge badge-gold py-1.5 px-6 text-[8px] font-black tracking-widest">Active Round</span>
                          </div>
-                         <h3 className="text-muted text-[9px] font-black uppercase tracking-widest mb-2">Round Progression</h3>
-                         <div className="text-xl font-black font-display text-white mb-8">
+                         <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-1.5">Progression</h3>
+                         <div className="text-lg font-black font-display text-white mb-6">
                              {userEntry ? `Step ${streak + 1} / 3` : `Round ${activeRound?.round_number || ''} Entry`}
                          </div>
-                         <div className="w-full h-1.5 bg-white/[0.05] rounded-full overflow-hidden border border-white/5">
-                            <div className="h-full bg-grad-gold" style={{ width: `${(streak / 3) * 100}%` }} />
+                         <div className="w-full h-1 bg-white/[0.05] rounded-full overflow-hidden border border-white/5">
+                            <div className="h-full bg-grad-gold shadow-[0_0_8px_var(--gold)]" style={{ width: `${(streak / 3) * 100}%` }} />
                          </div>
                       </div>
-                      <div className="card p-6 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><ShieldCheck className="w-12 h-12" /></div>
-                        <div className="flex justify-between items-start mb-12">
-                            <div className="p-10 bg-blue-electric/10 rounded-xl"><ShieldCheck className="w-5 h-5 text-blue-electric" /></div>
-                            <span className="badge badge-blue py-2 px-10 text-[8px] font-black tracking-widest">Verified</span>
+                      <div className="card p-5 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-5 opacity-5 group-hover:opacity-10 transition-opacity"><ShieldCheck className="w-10 h-10" /></div>
+                        <div className="flex justify-between items-start mb-6">
+                            <div className="p-8 bg-blue-electric/10 rounded-xl"><ShieldCheck className="w-4 h-4 text-blue-electric" /></div>
+                            <span className="badge badge-blue py-1.5 px-6 text-[8px] font-black tracking-widest">Verified</span>
                          </div>
-                         <h3 className="text-muted text-[9px] font-black uppercase tracking-widest mb-2">Account Status</h3>
-                         <div className="text-xl font-black font-display text-white mb-8">System Active</div>
-                         <div className="flex items-center gap-6">
-                            <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_var(--success)] animate-pulse" />
-                            <span className="text-[9px] text-muted font-bold uppercase tracking-widest">Connected</span>
+                         <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-1.5">Account Status</h3>
+                         <div className="text-lg font-black font-display text-white mb-6">Operational</div>
+                         <div className="flex items-center gap-4">
+                            <div className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_8px_var(--success)] animate-pulse" />
+                            <span className="text-[9px] text-muted font-bold uppercase tracking-widest italic opacity-60">Authentication Confirmed</span>
                          </div>
                       </div>
                    </div>
 
                    <div className="card p-0 overflow-hidden">
-                      <div className="p-20 flex justify-between items-center bg-white/[0.02] border-b border-white/5">
-                         <div className="flex items-center gap-10">
-                            <History className="w-5 h-5 text-blue-electric opacity-60" />
-                            <h3 className="font-display text-[10px] font-black uppercase tracking-widest">Match Schedule</h3>
+                      <div className="px-5 py-4 flex justify-between items-center bg-white/[0.02] border-b border-white/5">
+                         <div className="flex items-center gap-3">
+                            <History className="w-4 h-4 text-blue-electric opacity-60" />
+                            <h3 className="font-display text-[9px] font-black uppercase tracking-widest">Match Schedule</h3>
                          </div>
-                         <Link href="/live-challenges" className="text-[9px] text-blue-electric font-black uppercase tracking-widest hover:underline flex items-center gap-4 group">
-                            Full Grid <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-2" />
+                         <Link href="/live-challenges" className="text-[8px] text-blue-electric font-black uppercase tracking-widest hover:underline flex items-center gap-2 group">
+                            Full Grid <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
                          </Link>
                       </div>
                       <div className="flex flex-col divide-y divide-white/5">
                          {matches.length === 0 ? (
-                           <div className="p-48 text-center text-[10px] text-muted italic font-mono opacity-40">No matches found for current period.</div>
+                            <div className="p-12 text-center text-[9px] text-muted italic font-mono opacity-40">No entries scheduled.</div>
                          ) : (
-                           matches.slice(0, 5).map(m => (
-                              <div key={m.id} className="flex items-center justify-between p-16 hover:bg-white/[0.01] transition-colors group">
-                                 <div className="flex-1 text-right font-black text-xs text-white uppercase italic truncate">
-                                    {m.home_team}
-                                 </div>
-                                 <div className="flex flex-col items-center gap-4 px-24 border-x border-white/5 min-w-[120px]">
-                                    <span className="text-[9px] text-muted font-mono tracking-widest">
-                                       {new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                                    </span>
-                                    <div className="px-8 py-2 bg-white/5 border border-white/10 rounded-md text-[8px] font-black text-muted group-hover:text-white">VS</div>
-                                 </div>
-                                 <div className="flex-1 text-left font-black text-xs text-white uppercase italic truncate">
-                                    {m.away_team}
-                                 </div>
-                              </div>
-                           ))
+                            matches.slice(0, 5).map(m => (
+                               <div key={m.id} className="flex items-center justify-between p-4 hover:bg-white/[0.01] transition-colors group">
+                                  <div className="flex-1 text-right font-black text-[10px] text-white uppercase italic truncate">
+                                     {m.home_team}
+                                  </div>
+                                  <div className="flex flex-col items-center gap-1 px-8 border-x border-white/5 min-w-[100px]">
+                                     <span className="text-[8px] text-muted font-mono tracking-widest">
+                                        {new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                     </span>
+                                     <div className="px-5 py-0.5 bg-white/5 border border-white/10 rounded-md text-[7px] font-black text-muted group-hover:text-white uppercase">VS</div>
+                                  </div>
+                                  <div className="flex-1 text-left font-black text-[10px] text-white uppercase italic truncate">
+                                     {m.away_team}
+                                  </div>
+                               </div>
+                            ))
                          )}
                       </div>
                    </div>
@@ -244,10 +249,10 @@ export default function DashboardClient({
                          <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted">Est. Rewards</h3>
                          <TrendingUp className="w-4 h-4 text-success" />
                       </div>
-                      <div className="p-12 bg-black/40 border border-white/5 rounded-xl text-center mb-12 relative overflow-hidden group">
-                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-12 h-12" /></div>
-                         <div className="text-muted text-[8px] font-black uppercase mb-4 tracking-widest">Streak Bonus</div>
-                         <div className="text-3xl font-black font-display text-white">₦25,000</div>
+                      <div className="p-8 bg-black/40 border border-white/5 rounded-xl text-center mb-10 relative overflow-hidden group">
+                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-10 h-10" /></div>
+                         <div className="text-muted text-[8px] font-black uppercase mb-3 tracking-widest leading-none">Streak Bonus</div>
+                         <div className="text-2xl font-black font-display text-white">{potentialReward}</div>
                       </div>
                       <button onClick={() => setActiveTab('referrals')} className="btn btn-blue w-full py-10 font-black uppercase tracking-widest text-[9px] shadow-lg shadow-blue-electric/20">Refer Network</button>
                    </div>
@@ -340,47 +345,57 @@ export default function DashboardClient({
               <div className="flex flex-col gap-6 animate-slide-up">
                 
                 {/* Financial Summary KPIs */}
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
-                  <div className="card p-20 bg-blue-electric/[0.02] border-blue-electric/20 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><WalletIcon className="w-10 h-10" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Available Balance</h3>
-                    <div className="text-2xl font-black font-display text-white italic truncate">₦{balance.toLocaleString()}</div>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
+                  <div className="card p-5 bg-blue-electric/[0.02] border-blue-electric/10 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><WalletIcon className="w-8 h-8" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Balance</h3>
+                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{balance.toLocaleString()}</div>
                   </div>
-                  <div className="card p-20 bg-danger/[0.02] border-danger/10 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Lock className="w-10 h-10" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Pending Payouts</h3>
-                    <div className="text-2xl font-black font-display text-white italic truncate">₦{pendingPayouts.toLocaleString()}</div>
+                  <div className="card p-5 bg-danger/[0.02] border-danger/10 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Lock className="w-8 h-8" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Pending</h3>
+                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{pendingPayouts.toLocaleString()}</div>
                   </div>
-                  <div className="card p-20 bg-white/[0.02] border-white/5 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><ArrowDownLeft className="w-10 h-10" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Total Withdrawn</h3>
-                    <div className="text-2xl font-black font-display text-white italic truncate">₦{txWithdrawn.toLocaleString()}</div>
+                  <div className="card p-5 bg-white/[0.02] border-white/5 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><ArrowDownLeft className="w-8 h-8" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Withdrawn</h3>
+                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{txWithdrawn.toLocaleString()}</div>
                   </div>
-                  <div className="card p-20 bg-gold/[0.02] border-gold/10 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-10 h-10" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Rewards Earned</h3>
-                    <div className="text-2xl font-black font-display text-white italic truncate">₦{txRewards.toLocaleString()}</div>
+                  <div className="card p-5 bg-gold/[0.03] border-gold/10 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-8 h-8" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Rewards</h3>
+                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{txRewards.toLocaleString()}</div>
                   </div>
-                  <div className="card p-20 bg-success/[0.02] border-success/10 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Users className="w-10 h-10" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-4">Referral Earnings</h3>
-                    <div className="text-2xl font-black font-display text-white italic truncate">₦{txReferrals.toLocaleString()}</div>
+                  <div className="card p-5 bg-success/[0.03] border-success/10 relative overflow-hidden group">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Users className="w-8 h-8" /></div>
+                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Network</h3>
+                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{txReferrals.toLocaleString()}</div>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6">
+                <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-6">
                   {/* Left Column: Transactions */}
                   <div className="flex flex-col gap-6">
                     <div className="card p-0 overflow-hidden">
-                      <div className="p-20 bg-white/[0.02] border-b border-white/5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6">
-                         <div className="flex items-center gap-10">
-                            <History className="w-5 h-5 text-blue-electric opacity-60" />
-                            <h3 className="font-display text-[10px] font-black uppercase tracking-widest">Financial Audit</h3>
+                      <div className="px-5 py-4 bg-white/[0.02] border-b border-white/5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+                         <div className="flex items-center gap-3">
+                            <History className="w-4 h-4 text-blue-electric opacity-60" />
+                            <h3 className="font-display text-[9px] font-black uppercase tracking-widest">Financial Audit</h3>
                          </div>
-                         <div className="flex bg-black/40 border border-white/5 rounded-lg p-2 gap-2 w-full sm:w-auto overflow-x-auto no-scrollbar">
-                           <button onClick={() => setWalletSubTab('transactions')} className={`px-10 py-4 text-[8px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === 'transactions' ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}>Recent Rx</button>
-                           <button onClick={() => setWalletSubTab('purchases')} className={`px-10 py-4 text-[8px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === 'purchases' ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}>Purchases</button>
-                           <button onClick={() => setWalletSubTab('payouts')} className={`px-10 py-4 text-[8px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === 'payouts' ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}>Payout Requests</button>
+                         <div className="flex bg-black/40 border border-white/5 rounded-lg p-1 gap-1 w-full sm:w-auto overflow-x-auto no-scrollbar">
+                            {[
+                              { id: 'transactions', label: 'History' },
+                              { id: 'purchases', label: 'Purchases' },
+                              { id: 'payouts', label: 'Payouts' }
+                            ].map(btn => (
+                              <button 
+                                key={btn.id}
+                                onClick={() => setWalletSubTab(btn.id as any)} 
+                                className={`px-4 py-1.5 text-[8px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === btn.id ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}
+                              >
+                                {btn.label}
+                              </button>
+                            ))}
                          </div>
                       </div>
                       

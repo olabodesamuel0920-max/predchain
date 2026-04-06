@@ -69,6 +69,12 @@ export default async function DashboardPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
+  // 8. Fetch all account tiers for reward context
+  const { data: tiers } = await supabase
+    .from('account_tiers')
+    .select('*')
+    .order('price_ngn', { ascending: true })
+
   return (
     <Suspense fallback={<div className="container py-80 text-center text-muted">Loading Dashboard...</div>}>
       <DashboardClient 
@@ -82,6 +88,7 @@ export default async function DashboardPage() {
         transactions={transactions || []}
         payoutRequests={payoutRequests || []}
         purchases={purchases || []}
+        tiers={tiers || []}
       />
     </Suspense>
   )

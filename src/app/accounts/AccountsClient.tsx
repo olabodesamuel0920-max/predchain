@@ -546,7 +546,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0 }: Acc
               { label: 'Network Cycles',     val: '142+',   icon: <Activity style={{ width: 13, height: 13 }} /> },
               { label: 'Active Nodes',       val: '1.2K',   icon: <Users    style={{ width: 13, height: 13 }} /> },
               { label: 'Security Queue',     val: '4.8K',   icon: <Shield   style={{ width: 13, height: 13 }} /> },
-              { label: 'Value Disseminated', val: '₦12.4M', icon: <Wallet   style={{ width: 13, height: 13 }} /> },
+              { label: 'Value Disseminated', val: '₦5.2M', icon: <Wallet   style={{ width: 13, height: 13 }} /> },
             ].map((s, i) => (
               <div key={i} className="card" style={{
                 padding: '20px 16px', background: 'rgba(255,255,255,0.015)',
