@@ -16,10 +16,16 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
   const pathname = usePathname();
 
   const navLinks = [
-    { href: '/dashboard', label: 'Dashboard', icon: Zap },
-    { href: '/live-challenges', label: 'Live Arena', icon: ShieldCheck },
-    { href: '/accounts', label: 'Account Tiers', icon: WalletIcon },
-    { href: '/referral', label: 'Referral Network', icon: Users },
+    { category: 'Mission Control', links: [
+      { href: '/dashboard', label: 'Command Center', icon: Zap },
+      { href: '/live-challenges', label: 'Live Arena', icon: ShieldCheck },
+      { href: '/accounts', label: 'Node Strategy', icon: WalletIcon },
+      { href: '/referral', label: 'Nexus Network', icon: Users },
+    ]},
+    { category: 'System Configuration', links: [
+      { href: '/dashboard/settings', label: 'Account Center', icon: Settings },
+      ...(profile?.role === 'admin' ? [{ href: '/admin', label: 'Admin Console', icon: Terminal }] : []),
+    ]}
   ];
 
   const secondaryLinks = [
@@ -29,6 +35,18 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
 
   const displayName = profile?.full_name || profile?.username || profile?.email?.split('@')[0] || 'Account';
   const displayInitial = displayName === 'Account' ? 'A' : displayName.charAt(0).toUpperCase();
+
+  const processStatus = (status: string) => {
+    switch (status) {
+      case 'active': return { label: 'Operational', color: 'success' };
+      case 'suspended': return { label: 'Suspended', color: 'danger' };
+      case 'under_review': return { label: 'Review', color: 'gold' };
+      case 'demo': return { label: 'Demo Node', color: 'blue-electric' };
+      default: return { label: 'Operational', color: 'success' };
+    }
+  };
+
+  const status = processStatus(profile?.status || 'active');
 
   return (
     <div className="flex min-h-screen bg-[#030508] text-white">
@@ -43,23 +61,28 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
           </Link>
         </div>
         
-        <nav className="flex-1 p-3 flex flex-col gap-1">
-          <div className="px-10 py-5 mb-2">
-             <span className="text-[8px] font-black text-muted uppercase tracking-[0.2em] opacity-30 italic">Governance Area</span>
-          </div>
-
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link key={link.href} href={link.href} className={`flex items-center justify-between gap-3 px-8 py-2.5 rounded-lg transition-all font-black uppercase text-[10px] tracking-widest group ${isActive ? 'bg-blue-electric/10 border border-blue-electric/20 text-white shadow-lg shadow-blue-electric/5' : 'hover:bg-white/[0.03] text-muted hover:text-white border border-transparent hover:border-white/5'}`}>
-                <div className="flex items-center gap-3">
-                   <link.icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-electric' : 'opacity-40 group-hover:opacity-100 transition-opacity'}`} />
-                   {link.label}
-                </div>
-                {isActive && <div className="w-1 h-1 rounded-full bg-blue-electric shadow-[0_0_8px_var(--blue-electric)]" />}
-              </Link>
-            );
-          })}
+        <nav className="flex-1 p-4 flex flex-col gap-24 overflow-y-auto no-scrollbar">
+          {navLinks.map((group) => (
+            <div key={group.category} className="flex flex-col gap-4">
+              <div className="px-10">
+                 <span className="text-[8px] font-black text-muted uppercase tracking-[0.2em] opacity-30 italic">{group.category}</span>
+              </div>
+              <div className="flex flex-col gap-1">
+                {group.links.map((link) => {
+                  const isActive = pathname === link.href;
+                  return (
+                    <Link key={link.href} href={link.href} className={`flex items-center justify-between gap-3 px-8 py-2 rounded-lg transition-all font-black uppercase text-[10px] tracking-widest group ${isActive ? 'bg-blue-electric/10 border border-blue-electric/20 text-white shadow-lg shadow-blue-electric/5' : 'hover:bg-white/[0.03] text-muted hover:text-white border border-transparent hover:border-white/5'}`}>
+                      <div className="flex items-center gap-3">
+                         <link.icon className={`w-3.5 h-3.5 ${isActive ? 'text-blue-electric' : 'opacity-40 group-hover:opacity-100 transition-opacity'}`} />
+                         {link.label}
+                      </div>
+                      {isActive && <div className="w-1 h-1 rounded-full bg-blue-electric shadow-[0_0_8px_var(--blue-electric)]" />}
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
 
           <div className="mt-auto border-t border-white/5 pt-10 flex flex-col gap-1">
             {secondaryLinks.map((link) => (
@@ -93,16 +116,25 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
               <button onClick={() => setIsOpen(false)} className="p-8 bg-white/5 rounded-full text-muted hover:text-white transition-colors"><X className="w-5 h-5" /></button>
             </div>
             
-            <nav className="flex-1 p-16 flex flex-col gap-4 overflow-y-auto">
-              {navLinks.map((link) => {
-                const isActive = pathname === link.href;
-                return (
-                  <Link key={link.href} href={link.href} onClick={() => setIsOpen(false)} className={`flex items-center gap-10 px-12 py-10 rounded-xl transition-all font-black uppercase text-[12px] tracking-widest ${isActive ? 'bg-blue-electric/10 text-white' : 'text-muted'}`}>
-                    <link.icon className={`w-5 h-5 ${isActive ? 'text-blue-electric' : 'opacity-40'}`} />
-                    {link.label}
-                  </Link>
-                );
-              })}
+            <nav className="flex-1 p-16 flex flex-col gap-24 overflow-y-auto">
+              {navLinks.map((group) => (
+                <div key={group.category} className="flex flex-col gap-8">
+                  <div className="px-12">
+                     <span className="text-[10px] font-black text-muted uppercase tracking-[0.2em] opacity-30 italic">{group.category}</span>
+                  </div>
+                  <div className="flex flex-col gap-4">
+                    {group.links.map((link) => {
+                      const isActive = pathname === link.href;
+                      return (
+                        <Link key={link.href} href={link.href} onClick={() => setIsOpen(false)} className={`flex items-center gap-10 px-12 py-10 rounded-xl transition-all font-black uppercase text-[12px] tracking-widest ${isActive ? 'bg-blue-electric/10 text-white' : 'text-muted'}`}>
+                          <link.icon className={`w-5 h-5 ${isActive ? 'text-blue-electric' : 'opacity-40'}`} />
+                          {link.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
               
               <div className="mt-auto flex flex-col gap-8 pt-16 border-t border-white/5">
                 {secondaryLinks.map((link) => (
@@ -134,9 +166,11 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
                <Menu className="w-5 h-5" />
              </button>
 
-             <div className="flex items-center gap-2 px-3 py-1 bg-success/5 border border-success/10 rounded-full shrink-0">
-                <span className="w-1 h-1 rounded-full bg-success animate-pulse shadow-[0_0_4px_var(--success)]" />
-                <span className="text-[9px] font-black text-success uppercase tracking-widest leading-none">Operational</span>
+             <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 rounded-full shrink-0">
+                <span className={`w-1 h-1 rounded-full animate-pulse shadow-[0_0_4px_var(--${status.color})] bg-${status.color}`} />
+                <span className={`text-[9px] font-black uppercase tracking-widest leading-none text-${status.color}`}>
+                   {status.label}
+                </span>
              </div>
              
              <div className="hidden xl:flex items-center gap-4 border-l border-white/10 pl-6 ml-2">
@@ -145,14 +179,7 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
           </div>
           
           <div className="flex items-center gap-3 lg:gap-6">
-            {profile?.role === 'admin' && (
-              <Link href="/admin" className="opacity-40 hover:opacity-100 transition-opacity p-2 hidden sm:flex items-center gap-2 text-muted hover:text-blue-electric group text-[8px] uppercase tracking-[0.4em] font-mono font-black mr-2">
-                <Terminal className="w-3.5 h-3.5" />
-                <span className="opacity-0 group-hover:opacity-100 transition-opacity">SYS_CTRL</span>
-              </Link>
-            )}
-            
-            <Link href="/dashboard/settings" title="Account Identity" className="flex items-center gap-4 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 hover:border-white/15 transition-all cursor-pointer group shrink-0">
+            <Link href="/dashboard/settings" title="Account Identity" className="flex items-center gap-3 px-3 py-1.5 rounded-full bg-white/5 border border-white/5 hover:border-white/15 transition-all cursor-pointer group shrink-0">
                <div className="w-6 h-6 rounded-full bg-blue-electric/20 flex items-center justify-center font-black text-[10px] text-blue-electric group-hover:bg-blue-electric/40 transition-colors uppercase">
                  {displayInitial}
                </div>

@@ -89,7 +89,19 @@ export default function DashboardClient({
   }, [searchParams, showSuccess, showError]);
 
   const displayName = profile?.full_name || profile?.username || user?.email?.split('@')[0] || 'Account';
-  const initial = displayName === 'Account' ? 'A' : displayName.charAt(0).toUpperCase();
+  const initial = displayName.charAt(0).toUpperCase();
+
+  const processStatus = (status: string) => {
+    switch (status) {
+      case 'active': return { label: 'Operational', color: 'success' };
+      case 'suspended': return { label: 'Suspended', color: 'danger' };
+      case 'under_review': return { label: 'Review', color: 'gold' };
+      case 'demo': return { label: 'Demo Node', color: 'blue-electric' };
+      default: return { label: 'Operational', color: 'success' };
+    }
+  };
+
+  const status = processStatus(profile?.status || 'active');
   const balance = wallet?.balance_ngn || 0;
   const streak = userEntry?.streak_count || 0;
 
@@ -200,10 +212,12 @@ export default function DashboardClient({
                             <span className="badge badge-blue py-1.5 px-6 text-[8px] font-black tracking-widest">Verified</span>
                          </div>
                          <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-1.5">Account Status</h3>
-                         <div className="text-lg font-black font-display text-white mb-6">Operational</div>
+                         <div className={`text-lg font-black font-display text-${status.color} mb-6 tracking-tight uppercase italic`}>
+                           {status.label}
+                         </div>
                          <div className="flex items-center gap-4">
-                            <div className="w-1.5 h-1.5 rounded-full bg-success shadow-[0_0_8px_var(--success)] animate-pulse" />
-                            <span className="text-[9px] text-muted font-bold uppercase tracking-widest italic opacity-60">Authentication Confirmed</span>
+                            <div className={`w-1.5 h-1.5 rounded-full bg-${status.color} shadow-[0_0_8px_var(--${status.color})] animate-pulse`} />
+                            <span className="text-[9px] text-muted font-bold uppercase tracking-widest italic opacity-60">Verified Link Established</span>
                          </div>
                       </div>
                    </div>

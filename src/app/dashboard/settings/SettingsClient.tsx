@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { User, Shield, KeyRound, Mail, Phone, Lock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
-import { updatePassword } from '@/app/actions/auth';
+import { updatePassword, updateProfile } from '@/app/actions/auth';
 import { Profile } from '@/types';
 
 interface SettingsClientProps {
@@ -13,8 +13,16 @@ export default function SettingsClient({ profile }: SettingsClientProps) {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isPending, setIsPending] = useState(false);
+  const [isProfilePending, setIsProfilePending] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [profileSuccess, setProfileSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [profileError, setProfileError] = useState<string | null>(null);
+
+  // Profile fields state
+  const [fullName, setFullName] = useState(profile.full_name || '');
+  const [username, setUsername] = useState(profile.username || '');
+  const [phone, setPhone] = useState(profile.phone || '');
 
   const handlePasswordUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,7 +52,43 @@ export default function SettingsClient({ profile }: SettingsClientProps) {
       setSuccess(true);
       setPassword('');
       setConfirmPassword('');
+      setTimeout(() => setSuccess(false), 5000);
     }
+  };
+
+  const handleProfileUpdate = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsProfilePending(true);
+    setProfileError(null);
+    setProfileSuccess(false);
+
+    const formData = new FormData(e.currentTarget);
+    const result = await updateProfile(formData);
+
+    setIsProfilePending(false);
+    if (result?.error) {
+      setProfileError(result.error);
+    } else {
+      setProfileSuccess(true);
+      setTimeout(() => setProfileSuccess(false), 5000);
+    }
+  };
+
+  const displayName = profile.full_name || profile.username || profile.email?.split('@')[0] || 'Account';
+  const initial = displayName.charAt(0).toUpperCase();
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'active': return 'success';
+      case 'suspended': return 'danger';
+      case 'under_review': return 'gold';
+      case 'demo': return 'blue-electric';
+      default: return 'success';
+    }
+  };
+
+  const statusLabel = (status: string) => {
+    return status.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
   };
 
   return (
@@ -70,22 +114,24 @@ export default function SettingsClient({ profile }: SettingsClientProps) {
                
                <div className="flex flex-col items-center text-center mb-32">
                   <div className="w-80 h-80 rounded-2xl bg-blue-electric/10 border border-blue-electric/20 flex items-center justify-center font-black text-3xl text-blue-electric mb-24 shadow-2xl shadow-blue-electric/10">
-                    {profile.username.charAt(0).toUpperCase()}
+                    {initial}
                   </div>
-                  <h2 className="text-xl font-black text-white uppercase italic tracking-tight">{profile.full_name || profile.username}</h2>
+                  <h2 className="text-xl font-black text-white uppercase italic tracking-tight">{displayName}</h2>
                   <span className="text-[10px] font-black text-blue-electric uppercase tracking-widest mt-4">Verified Nexus Node</span>
                </div>
 
                <div className="flex flex-col gap-12">
                   <div className="flex items-center justify-between p-12 bg-black/40 border border-white/5 rounded-xl">
                      <span className="text-[9px] font-black text-muted uppercase tracking-widest">Protocol ID</span>
-                     <span className="text-[10px] font-mono font-black text-white">{profile.username}</span>
+                     <span className="text-[10px] font-mono font-black text-white">@{profile.username}</span>
                   </div>
                   <div className="flex items-center justify-between p-12 bg-black/40 border border-white/5 rounded-xl">
                      <span className="text-[9px] font-black text-muted uppercase tracking-widest">Node Status</span>
                      <div className="flex items-center gap-6">
-                        <div className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
-                        <span className="text-[10px] font-black text-success uppercase tracking-widest">Active</span>
+                        <div className={`w-1.5 h-1.5 rounded-full bg-${getStatusColor(profile.status || 'active')} animate-pulse`} />
+                        <span className={`text-[10px] font-black text-${getStatusColor(profile.status || 'active')} uppercase tracking-widest`}>
+                          {statusLabel(profile.status || 'active')}
+                        </span>
                      </div>
                   </div>
                   <div className="flex items-center justify-between p-12 bg-black/40 border border-white/5 rounded-xl">
@@ -109,27 +155,85 @@ export default function SettingsClient({ profile }: SettingsClientProps) {
           {/* Settings Actions */}
           <div className="lg:col-span-2 flex flex-col gap-32">
             
-            {/* Identity Form (ReadOnly for now as per requests) */}
+            {/* Identity Form */}
             <div className="card p-32 border-white/5">
                <div className="flex items-center gap-12 mb-32 border-b border-white/5 pb-20">
-                  <Mail className="w-5 h-5 text-blue-electric" />
-                  <h3 className="text-[12px] font-black text-white uppercase tracking-widest">Account Identification</h3>
+                  <User className="w-5 h-5 text-blue-electric" />
+                  <h3 className="text-[12px] font-black text-white uppercase tracking-widest">Node Synchronization</h3>
                </div>
                
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
-                  <div className="flex flex-col gap-8">
-                    <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Authorized Email</label>
-                    <div className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-16 py-12 text-white/40 font-mono text-sm">
-                      {profile.email}
+               <form onSubmit={handleProfileUpdate} className="flex flex-col gap-24">
+                  {profileSuccess && (
+                    <div className="flex items-center gap-12 p-16 bg-success/10 border border-success/20 rounded-xl animate-fade-in">
+                      <CheckCircle2 className="w-5 h-5 text-success flex-shrink-0" />
+                      <p className="text-success text-[10px] font-black uppercase tracking-widest">Node Data Synchronized Correctly.</p>
+                    </div>
+                  )}
+                  
+                  {profileError && (
+                    <div className="flex items-center gap-12 p-16 bg-danger/10 border border-danger/20 rounded-xl animate-shake">
+                      <AlertCircle className="w-5 h-5 text-danger flex-shrink-0" />
+                      <p className="text-danger text-[10px] font-black uppercase tracking-widest">{profileError}</p>
+                    </div>
+                  )}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+                    <div className="flex flex-col gap-8">
+                       <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Full Identity Name</label>
+                       <input
+                         type="text"
+                         name="full_name"
+                         value={fullName}
+                         onChange={(e) => setFullName(e.target.value)}
+                         className="w-full bg-black/40 border border-white/5 rounded-xl py-14 px-16 text-white font-mono text-sm focus:outline-none focus:border-blue-electric/40 transition-all"
+                       />
+                    </div>
+                    <div className="flex flex-col gap-8">
+                       <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Nexus Username</label>
+                       <div className="relative group">
+                          <span className="absolute left-16 top-1/2 -translate-y-1/2 text-muted font-mono text-sm">@</span>
+                          <input
+                            type="text"
+                            name="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            className="w-full bg-black/40 border border-white/5 rounded-xl py-14 pl-32 pr-16 text-white font-mono text-sm focus:outline-none focus:border-blue-electric/40 transition-all uppercase"
+                          />
+                       </div>
                     </div>
                   </div>
-                  <div className="flex flex-col gap-8">
-                    <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Secure Phone</label>
-                    <div className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-16 py-12 text-white/40 font-mono text-sm">
-                      {profile.phone || 'Not Linked'}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-24">
+                    <div className="flex flex-col gap-8">
+                       <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Authorized Email (Locked)</label>
+                       <div className="w-full bg-white/[0.02] border border-white/5 rounded-xl px-16 py-14 text-white/20 font-mono text-sm cursor-not-allowed">
+                         {profile.email}
+                       </div>
+                    </div>
+                    <div className="flex flex-col gap-8">
+                       <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-4">Secure Phone Number</label>
+                       <input
+                         type="tel"
+                         name="phone"
+                         value={phone}
+                         onChange={(e) => setPhone(e.target.value)}
+                         className="w-full bg-black/40 border border-white/5 rounded-xl py-14 px-16 text-white font-mono text-sm focus:outline-none focus:border-blue-electric/40 transition-all"
+                       />
                     </div>
                   </div>
-               </div>
+
+                  <button
+                    type="submit"
+                    disabled={isProfilePending}
+                    className="btn btn-blue w-full md:w-fit px-32 py-16 font-black uppercase tracking-widest text-[11px] shadow-lg shadow-blue-electric/20 flex items-center justify-center gap-12 group mt-8"
+                  >
+                    {isProfilePending ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <>Update Node Identity</>
+                    )}
+                  </button>
+               </form>
             </div>
 
             {/* Password Reset Form */}

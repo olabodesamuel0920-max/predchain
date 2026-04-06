@@ -27,7 +27,8 @@ export default async function SettingsPage() {
   // Inject email from user object as it's more reliable than profile table for auth info
   const enrichedProfile: Profile = {
     ...profile,
-    email: user.email || profile.email || 'not available',
+    email: user.email || (profile as any).email || 'not available',
+    status: (profile as any).status || 'active',
   } as Profile;
 
   return (

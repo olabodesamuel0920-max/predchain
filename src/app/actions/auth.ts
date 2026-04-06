@@ -112,5 +112,35 @@ export async function updatePassword(formData: FormData) {
   }
 
   revalidatePath('/', 'layout')
-  redirect('/dashboard')
+  return { success: true }
+}
+
+export async function updateProfile(formData: FormData) {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  if (!user) return { error: 'Node unauthorized' }
+
+  const full_name = formData.get('full_name') as string
+  const username = formData.get('username') as string
+  const phone = formData.get('phone') as string
+
+  // Simple validation
+  if (username && username.length < 3) return { error: 'Username must be at least 3 characters' }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ 
+      full_name, 
+      username, 
+      phone 
+    })
+    .eq('id', user.id)
+
+  if (error) {
+    if (error.code === '23505') return { error: 'This username is already claimed by another node' }
+    return { error: error.message }
+  }
+
+  revalidatePath('/dashboard/settings')
+  return { success: true }
 }
