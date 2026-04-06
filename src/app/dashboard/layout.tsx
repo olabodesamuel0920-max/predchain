@@ -3,6 +3,8 @@ import { createClient } from '@/lib/supabase/server';
 import DashboardMenu from './DashboardMenu';
 import { redirect } from 'next/navigation';
 
+export const dynamic = 'force-dynamic';
+
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
