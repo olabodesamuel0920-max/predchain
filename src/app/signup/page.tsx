@@ -39,53 +39,53 @@ function SignupForm() {
   const loginUrl = returnTo ? `/login?returnTo=${encodeURIComponent(returnTo)}` : '/login';
 
   return (
-    <div className="w-full max-w-[390px] relative z-10 px-4">
-      <div className="mb-20 text-center">
-        <h2 className="font-display text-3xl font-black text-white mb-4 uppercase italic tracking-tight">Create Account</h2>
-        <p className="text-[10px] text-muted font-bold uppercase tracking-[0.2em] italic opacity-60">Join PredChain today.</p>
+    <div className="w-full max-w-[420px] relative z-10 px-6">
+      <div className="mb-12 text-center">
+        <h2 className="font-display text-4xl font-bold text-white mb-4 uppercase italic tracking-tighter bg-grad-gold bg-clip-text text-transparent">Onboarding</h2>
+        <p className="text-[10px] text-muted font-bold uppercase tracking-widest italic opacity-40">Protocol Access Authorization</p>
       </div>
 
-      <form action={signupAction} className="flex flex-col gap-3">
+      <form action={signupAction} className="flex flex-col gap-4">
         {errorMsg && (
-          <div className="p-10 mb-2 bg-danger/10 border border-danger/20 rounded-xl text-danger text-[9px] font-black uppercase tracking-widest text-center animate-slide-up">
+          <div className="p-4 bg-danger/5 border border-danger/20 rounded-xl text-danger text-[9px] font-bold uppercase tracking-widest text-center animate-slide-up italic">
             {errorMsg}
           </div>
         )}
-        <div className="grid grid-cols-2 gap-3 px-2">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em]">Full Name</label>
-            <input name="full_name" type="text" required placeholder="John Doe" className="input-premium py-11 px-12" />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-bold text-muted/40 uppercase tracking-widest italic ml-1">Full Name</label>
+            <input name="full_name" type="text" required placeholder="John Doe" className="input-premium py-3 px-4 text-sm" />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em]">Username</label>
-            <input name="username" type="text" required placeholder="striker1" className="input-premium py-11 px-12" />
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-bold text-muted/40 uppercase tracking-widest italic ml-1">Alias</label>
+            <input name="username" type="text" required placeholder="striker1" className="input-premium py-3 px-4 text-sm" />
           </div>
         </div>
 
-        <div className="flex flex-col gap-1.5 px-2">
-          <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em]">Email Address</label>
-          <input name="email" type="email" required placeholder="name@email.com" className="input-premium py-11 px-12" />
+        <div className="flex flex-col gap-2">
+          <label className="text-[10px] font-bold text-muted/40 uppercase tracking-widest italic ml-1">Email Address</label>
+          <input name="email" type="email" required placeholder="name@email.com" className="input-premium py-3 px-4 text-sm" />
         </div>
 
-        <div className="flex flex-col gap-1.5 px-2">
-          <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em]">Phone Number</label>
-          <input name="phone" type="tel" required placeholder="+234..." className="input-premium py-11 px-12" />
+        <div className="flex flex-col gap-2">
+          <label className="text-[10px] font-bold text-muted/40 uppercase tracking-widest italic ml-1">Secure Contact</label>
+          <input name="phone" type="tel" required placeholder="+234..." className="input-premium py-3 px-4 text-sm" />
         </div>
 
-        <div className="grid grid-cols-2 gap-3 px-2">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em]">Password</label>
-            <input name="password" type="password" required placeholder="••••••••" className="input-premium py-11 px-12" />
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-bold text-muted/40 uppercase tracking-widest italic ml-1">Access Key</label>
+            <input name="password" type="password" required placeholder="••••••••" className="input-premium py-3 px-4 text-sm" />
           </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em]">Referral Link</label>
+          <div className="flex flex-col gap-2">
+            <label className="text-[10px] font-bold text-muted/40 uppercase tracking-widest italic ml-1">Node Code</label>
             <input 
               name="referral_code" 
               type="text" 
               placeholder="Optional" 
               value={referralCode}
               onChange={(e) => setReferralCode(e.target.value)}
-              className="input-premium py-11 px-12" 
+              className="input-premium py-3 px-4 text-sm" 
             />
           </div>
         </div>
@@ -93,14 +93,14 @@ function SignupForm() {
         <button 
           type="submit" 
           disabled={isPending} 
-          className="btn btn-primary w-full mt-4 py-12 font-black uppercase tracking-[0.27em] text-[10px] shadow-xl shadow-gold/10"
+          className="btn btn-blue w-full mt-4 py-4 font-bold uppercase tracking-widest text-[11px] shadow-2xl shadow-blue-electric/10"
         >
-          {isPending ? 'Creating Account...' : 'Sign Up'}
+          {isPending ? 'Processing Onboarding...' : 'Finalize Registration'}
         </button>
       </form>
 
-      <p className="text-center text-[10px] text-muted font-bold uppercase tracking-widest mt-16">
-        Already have an account? <Link href={loginUrl} className="text-gold hover:text-white transition-colors">Sign In</Link>
+      <p className="text-center text-[10px] text-muted/30 font-bold uppercase tracking-widest mt-12 italic">
+        Existing associate? <Link href={loginUrl} className="text-gold hover:text-white transition-colors">Authorize Entry</Link>
       </p>
     </div>
   );
@@ -116,20 +116,18 @@ export default function SignupPage() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-grad-aurora filter blur-[140px] opacity-20 rounded-full z-1" />
         <div className="absolute inset-0 opacity-[0.03] z-1" style={{ backgroundImage: 'radial-gradient(#FFF 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
 
-        <div className="relative z-10 p-32 md:p-64 max-w-[600px]">
-          <Link href="/" className="inline-flex items-center gap-12 mb-32 group">
-            <div className="w-10 h-10 bg-grad-gold rounded-xl flex items-center justify-center text-black font-black text-lg shadow-lg group-hover:scale-105 transition-transform">P</div>
-            <span className="font-display text-xl font-black text-white uppercase tracking-tighter italic">PredChain</span>
+        <div className="relative z-10 p-16 md:p-24 max-w-[600px]">
+          <Link href="/" className="inline-flex items-center gap-3 mb-24 group">
+            <div className="w-8 h-8 bg-grad-gold rounded-lg flex items-center justify-center text-black font-bold text-base shadow-lg group-hover:scale-105 transition-transform">P</div>
+            <span className="font-display text-lg font-bold text-white uppercase tracking-tighter italic">PredChain</span>
           </Link>
           
-          <h1 className="font-display text-5xl font-black text-white leading-[1.05] mb-16 uppercase italic tracking-tighter">
+          <h1 className="font-display text-5xl md:text-6xl font-bold text-white leading-[1.05] mb-12 uppercase italic tracking-tighter">
             Join the <br />
-            <span className="text-gold">Platform.</span>
+            <span className="text-gradient-gold">Network.</span>
           </h1>
-          <p className="text-lg text-muted font-bold leading-relaxed uppercase tracking-widest italic opacity-60">
-            Build your streak. <br />
-            Unlock rewards. <br />
-            Master the arena.
+          <p className="text-xs text-muted font-bold leading-relaxed uppercase tracking-[0.2em] italic opacity-30">
+            Unified Prediction Network
           </p>
         </div>
       </div>

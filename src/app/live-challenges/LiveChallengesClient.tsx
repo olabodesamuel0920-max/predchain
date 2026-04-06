@@ -51,14 +51,14 @@ function CountdownTimer({ label, targetDate }: { label: string, targetDate?: str
   
   return (
     <div className="flex flex-col items-center">
-      <div className="font-mono text-3xl font-black text-white tracking-widest flex items-center gap-4">
-        <span>{pad(time.h)}</span>
-        <span className="opacity-30 text-xl">:</span>
-        <span>{pad(time.m)}</span>
-        <span className="opacity-30 text-xl">:</span>
-        <span>{pad(time.s)}</span>
+      <div className="font-mono text-2xl font-bold text-white tracking-widest flex items-center gap-3">
+        <span className="p-2 bg-white/5 rounded-lg border border-white/10">{pad(time.h)}</span>
+        <span className="opacity-30 text-lg">:</span>
+        <span className="p-2 bg-white/5 rounded-lg border border-white/10">{pad(time.m)}</span>
+        <span className="opacity-30 text-lg">:</span>
+        <span className="p-2 bg-white/5 rounded-lg border border-white/10">{pad(time.s)}</span>
       </div>
-      <div className="text-[10px] font-black text-muted/60 mt-6 uppercase tracking-[0.2em]">{label}</div>
+      <div className="text-[8px] font-bold text-muted/40 mt-4 uppercase tracking-widest italic">{label}</div>
     </div>
   );
 }
@@ -100,22 +100,21 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
         
         <div className="container relative z-10">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
-            <div className="max-w-600 animate-slide-right">
-              <div className="flex items-center gap-4 mb-6">
-                 <div className="flex items-center gap-3 px-4 py-1.5 bg-success/10 border border-success/20 rounded-full">
-                    <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse shadow-[0_0_8px_var(--success)]" />
-                    <span className="text-[9px] font-black text-success uppercase tracking-widest">Live Round</span>
+            <div className="max-w-xl animate-slide-right">
+              <div className="flex items-center gap-3 mb-6">
+                 <div className="flex items-center gap-2 px-3 py-1 bg-success/5 border border-success/15 rounded-full">
+                    <div className="w-1 h-1 bg-success rounded-full animate-pulse shadow-success" />
+                    <span className="text-[8px] font-bold text-success uppercase tracking-widest italic">Live Protocol</span>
                  </div>
-                 <div className="px-4 py-1.5 bg-blue-electric/10 border border-blue-electric/20 rounded-full">
-                    <span className="text-[9px] font-black text-blue-electric uppercase tracking-widest">Round R-{roundNumber}</span>
+                 <div className="px-3 py-1 bg-blue-electric/5 border border-blue-electric/15 rounded-full">
+                    <span className="text-[8px] font-bold text-blue-electric uppercase tracking-widest italic">Round R-{roundNumber}</span>
                  </div>
               </div>
-              <h1 className="font-display text-3xl md:text-4xl font-black text-white leading-tight mb-6 uppercase italic">
-                Active Match <span className="text-blue-electric">List</span>
+              <h1 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-4 uppercase italic">
+                Active <span className="text-gradient-blue">Challenges</span>
               </h1>
-              <p className="text-[10px] font-black text-muted leading-relaxed opacity-60 uppercase tracking-widest italic">
-                Predict match outcomes to complete your streak and earn 10X rewards.
-                <span className="block mt-2 text-white/20">All predictions are verified for fairness.</span>
+              <p className="text-[10px] font-bold text-secondary leading-relaxed opacity-40 uppercase tracking-wide italic">
+                Predict match outcomes to complete your 3-day sequence and unlock your 10X target reward.
               </p>
             </div>
 
@@ -131,20 +130,21 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
       {/* ─── STREAK PROGRESS ─── */}
       <section className="py-10 border-b border-white/5 bg-white/[0.01]">
         <div className="container">
-          <div className="flex flex-col md:flex-row md:items-center gap-10 p-5 bg-white/[0.01] rounded-xl border border-white/5 relative overflow-hidden group">
+          <div className="flex flex-col md:flex-row md:items-center gap-8 p-5 bg-white/[0.01] rounded-xl border border-white/5 relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp className="w-24 h-24" /></div>
-            <div className="flex items-center gap-4 shrink-0">
-               <div className="p-2 bg-gold/10 rounded-lg"><Zap className="w-4 h-4 text-gold" /></div>
-               <div className="font-display text-[9px] font-black text-muted uppercase tracking-widest">Streak Progress</div>
+            <div className="flex items-center gap-3 shrink-0">
+               <div className="p-2 bg-gold/5 rounded-lg border border-gold/15"><Zap className="w-3.5 h-3.5 text-gold" /></div>
+               <div className="font-display text-[9px] font-bold text-muted uppercase tracking-widest italic">Progress Hub</div>
             </div>
-            <div className="flex-1 h-2 bg-black/40 rounded-full border border-white/5 overflow-hidden">
+            <div className="flex-1 h-1.5 bg-black/60 rounded-full border border-white/5 overflow-hidden">
               <div 
-                className="h-full bg-grad-gold rounded-full transition-all duration-1000 shadow-[0_0_8px_var(--gold)]"
+                className="h-full bg-grad-gold rounded-full transition-all duration-1000 shadow-gold"
                 style={{ width: `${(streak / 3) * 100}%` }}
               />
             </div>
-            <div className="flex items-center gap-3 font-display font-black text-xl text-gold shrink-0 italic">
-               {streak} <span className="text-muted text-[10px] opacity-40 uppercase">/ 3 Matches</span>
+            <div className="flex items-center gap-2 font-display font-bold text-lg text-white shrink-0 italic">
+               <span className="text-gold tracking-tighter">{streak}</span>
+               <span className="text-muted text-[8px] opacity-40 uppercase tracking-widest">/ 3 Matches Verified</span>
             </div>
           </div>
         </div>
@@ -217,57 +217,58 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
                           )}
                        </div>
                        
-                       <div className="p-6 md:p-10">
-                          <div className="flex items-center justify-between gap-4 md:gap-12 mb-8 flex-col md:flex-row">
+                       <div className="p-6 md:p-8">
+                          <div className="flex items-center justify-between gap-6 md:gap-10 mb-8 flex-col md:flex-row">
                              <div className="flex-1 text-center md:text-right">
-                                <div className="text-lg md:text-xl font-black text-white uppercase tracking-tight italic mb-1">{m.home_team}</div>
-                                <div className="text-[8px] text-muted font-black uppercase tracking-[0.2em] opacity-30">Home</div>
+                                <div className="text-lg md:text-xl font-bold text-white uppercase tracking-tight italic mb-1">{m.home_team}</div>
+                                <div className="text-[7px] text-muted font-bold uppercase tracking-widest opacity-20">Prime Entry (Home)</div>
                              </div>
                              
-                             <div className="flex flex-col items-center gap-2 min-w-[80px]">
+                             <div className="flex flex-col items-center gap-2 min-w-[100px]">
                                 {m.status !== 'scheduled' ? (
-                                   <div className="font-display text-3xl md:text-4xl font-black text-white flex items-center gap-4">
+                                   <div className="font-display text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
                                       <span>{m.home_score}</span>
-                                      <span className="text-blue-electric opacity-20 text-xl font-mono">:</span>
+                                      <span className="text-blue-electric opacity-20 font-mono">:</span>
                                       <span>{m.away_score}</span>
                                    </div>
                                 ) : (
-                                   <div className="px-6 py-3 bg-white/[0.01] border border-white/5 rounded-xl flex flex-col items-center gap-2">
-                                      <Swords className="w-5 h-5 text-muted opacity-10" />
-                                      <span className="text-[8px] font-black text-muted/20 uppercase tracking-[0.3em]">VS</span>
+                                   <div className="flex flex-col items-center gap-1">
+                                      <div className="p-2.5 bg-white/5 border border-white/10 rounded-xl">
+                                         <Swords className="w-4 h-4 text-muted opacity-30" />
+                                      </div>
                                    </div>
                                 )}
-                                <div className={`text-[8px] font-black uppercase tracking-[0.2em] ${m.status === 'live' ? 'text-danger flex items-center gap-2' : 'text-muted opacity-30'}`}>
-                                   {m.status === 'live' && <div className="w-1 h-1 bg-danger rounded-full animate-pulse" />} {m.status}
+                                <div className={`px-2 py-0.5 rounded text-[7px] font-bold uppercase tracking-widest ${m.status === 'live' ? 'bg-danger/10 text-danger animate-pulse border border-danger/20' : 'bg-white/5 text-muted opacity-40 border border-white/10'}`}>
+                                   {m.status}
                                 </div>
                              </div>
 
                              <div className="flex-1 text-center md:text-left">
-                                <div className="text-lg md:text-xl font-black text-white uppercase tracking-tight italic mb-1">{m.away_team}</div>
-                                <div className="text-[8px] text-muted font-black uppercase tracking-[0.2em] opacity-30">Away</div>
+                                <div className="text-lg md:text-xl font-bold text-white uppercase tracking-tight italic mb-1">{m.away_team}</div>
+                                <div className="text-[7px] text-muted font-bold uppercase tracking-widest opacity-20">Rival Entry (Away)</div>
                              </div>
                           </div>
 
-                          <div className="flex gap-3">
+                          <div className="grid grid-cols-3 gap-2">
                              {['1', 'X', '2'].map((choice) => (
                                 <button
                                   key={choice}
                                   disabled={isLocked || isPending || !userEntry}
                                   onClick={() => handlePrediction(m.id, choice as '1' | 'X' | '2')}
-                                  className={`flex-1 py-3 rounded-lg border transition-all duration-300 font-black uppercase text-[9px] tracking-[0.2em] flex flex-col items-center justify-center gap-1.5 group relative overflow-hidden ${
+                                  className={`py-3 rounded-lg border transition-all duration-300 font-bold uppercase text-[9px] tracking-widest flex flex-col items-center justify-center gap-1 relative overflow-hidden ${
                                       userPred?.prediction === choice 
-                                      ? 'bg-blue-electric text-white border-blue-electric shadow-lg shadow-blue-electric/20 translate-y-[-2px]' 
-                                      : 'bg-white/[0.01] border-white/5 text-muted hover:border-white/20 hover:bg-white/[0.02]'
+                                      ? 'bg-blue-electric text-white border-blue-electric shadow-sm' 
+                                      : 'bg-white/[0.01] border-white/5 text-muted/60 hover:text-white hover:border-white/10'
                                     }`}
                                 >
                                    {userPred?.prediction === choice && (
-                                      <div className="absolute top-0 right-0 p-2 animate-fade-in"><Check className="w-3 h-3 text-white" /></div>
+                                      <div className="absolute top-0 right-0 p-1.5"><Check className="w-2.5 h-2.5" /></div>
                                    )}
-                                   <span className="text-[7px] font-black opacity-30 group-hover:opacity-100 transition-opacity">
-                                      {choice === '1' ? 'HOME WIN' : choice === '2' ? 'AWAY WIN' : 'DRAW'}
+                                   <span className="text-[7px] font-bold opacity-30 tracking-tight">
+                                      {choice === '1' ? 'HOME' : choice === '2' ? 'AWAY' : 'DRAW'}
                                    </span>
-                                   <span className="truncate max-w-full italic">
-                                      {choice === '1' ? m.home_team : choice === '2' ? m.away_team : 'DRAW'}
+                                   <span className="truncate max-w-full italic text-[10px]">
+                                      {choice === '1' ? '1' : choice === '2' ? '2' : 'X'}
                                    </span>
                                 </button>
                              ))}
