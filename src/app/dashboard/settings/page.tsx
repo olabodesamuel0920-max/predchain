@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import SettingsClient from './SettingsClient';
 import { Profile } from '@/types';
@@ -7,6 +7,7 @@ export const dynamic = 'force-dynamic';
 
 export default async function SettingsPage() {
   const supabase = await createClient();
+  const adminClient = await createAdminClient();
 
   const {
     data: { user },
@@ -17,8 +18,8 @@ export default async function SettingsPage() {
     return redirect('/login?error=Session+authentication+required&returnTo=/dashboard/settings');
   }
 
-  // Fetch the user's protocol profile
-  const { data: profile, error } = await supabase
+  // Fetch the user's protocol profile using Admin Override (Bypass RLS)
+  const { data: profile, error } = await adminClient
     .from('profiles')
     .select('*')
     .eq('id', user.id)
