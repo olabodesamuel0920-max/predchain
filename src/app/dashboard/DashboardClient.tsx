@@ -216,7 +216,10 @@ export default function DashboardClient({
                            {status.label}
                          </div>
                          <div className="flex items-center gap-4">
-                            <div className={`w-1.5 h-1.5 rounded-full bg-${status.color} shadow-[0_0_8px_var(--${status.color})] animate-pulse`} />
+                            <div 
+                               className={`w-1.5 h-1.5 rounded-full bg-${status.color} animate-pulse`} 
+                               style={{ boxShadow: `0 0 8px var(--${status.color})` }}
+                            />
                             <span className="text-[9px] text-muted font-bold uppercase tracking-widest italic opacity-60">Verified Link Established</span>
                          </div>
                       </div>

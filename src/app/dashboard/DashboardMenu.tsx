@@ -167,7 +167,10 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
              </button>
 
              <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/5 rounded-full shrink-0">
-                <span className={`w-1 h-1 rounded-full animate-pulse shadow-[0_0_4px_var(--${status.color})] bg-${status.color}`} />
+                <span 
+                  className={`w-1 h-1 rounded-full animate-pulse bg-${status.color}`}
+                  style={{ boxShadow: `0 0 4px var(--${status.color})` }}
+                />
                 <span className={`text-[9px] font-black uppercase tracking-widest leading-none text-${status.color}`}>
                    {status.label}
                 </span>
