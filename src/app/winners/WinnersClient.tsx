@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { CheckCircle2, TrendingUp, Trophy } from 'lucide-react';
+import { CheckCircle2, TrendingUp, Trophy, ArrowUpRight, Globe, ShieldCheck, Zap } from 'lucide-react';
 
 interface WinnersClientProps {
   winners: Array<{
@@ -17,90 +17,87 @@ export default function WinnersClient({ winners }: WinnersClientProps) {
   const totalPaid = winners.reduce((sum, w) => sum + w.payout_amount, 0);
 
   return (
-    <div style={{ paddingTop: '60px' }}>
+    <div className="relative min-h-screen bg-primary pt-32 pb-24">
+      {/* Background Decor */}
+      <div className="absolute top-0 left-0 w-full h-[600px] bg-grad-glow opacity-30 pointer-events-none z-0" />
 
       {/* Hero */}
-      <section className="py-10 md:py-16 bg-gradient-to-b from-[#0D1321] to-[#070B14] border-b border-white/5 relative overflow-hidden">
-        <div className="absolute -top-10 right-[10%] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.05)_0%,transparent_70%)] pointer-events-none" aria-hidden="true" />
-        <div className="container relative z-10">
-          <div className="flex flex-wrap items-center justify-between gap-10">
-            <div className="animate-slide-right">
-              <div className="text-gold font-black text-[9px] uppercase tracking-[0.2em] mb-3 italic">Verified Winners</div>
-              <h1 className="font-display text-4xl md:text-5xl font-black text-white italic uppercase tracking-tighter mb-4 leading-tight">
-                Top Challengers.<br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-[#F6D365]">Verified Rewards.</span>
+      <section className="relative z-10 mb-20">
+        <div className="container">
+          <div className="card-elite p-12 md:p-16 flex flex-col md:flex-row items-center justify-between gap-12 bg-grad-glow opacity-90 border-gold/20">
+            <div className="flex-1 text-center md:text-left">
+              <div className="badge-elite mb-8 !px-4">NETWORK SETTLEMENT RECORD</div>
+              <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight uppercase mb-6 leading-tight">
+                Verified <span className="text-gradient-gold">Winners.</span>
               </h1>
-              <p className="text-[11px] font-black text-muted/40 uppercase tracking-widest max-w-sm leading-relaxed italic">
-                Every winner listed here completed a perfect 3/3 streak and received their confirmed cash reward payout.
+              <p className="text-secondary text-sm font-medium opacity-60 max-w-md mx-auto md:mx-0">
+                A public ledger of successful operators who completed perfect arena cycles and received confirmed payouts.
               </p>
             </div>
-            <div className="p-6 bg-gold/5 border border-gold/10 rounded-xl text-center flex-shrink-0 animate-slide-left">
-              <div className="text-[9px] text-muted/40 font-black uppercase tracking-widest mb-1 italic">
-                Total Cash Paid
+            <div className="card-elite !bg-bg-primary/60 p-10 px-14 text-center min-w-[280px]">
+              <div className="text-[10px] text-muted font-bold uppercase mb-2 tracking-widest opacity-40">
+                Total Protocol Payouts
               </div>
-              <div className="font-display text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-gold to-[#F6D365] tracking-tighter italic">
+              <div className="text-5xl font-bold text-white font-mono tracking-tighter">
                 ₦{totalPaid.toLocaleString()}
               </div>
-              <div className="text-[8px] text-muted/20 mt-1 uppercase tracking-widest font-black italic">Across all challenges</div>
+              <div className="flex items-center justify-center gap-2 mt-4 text-[9px] text-success font-bold uppercase tracking-widest">
+                <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" />
+                Live Distribution
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Winners grid */}
-      <section className="py-12 md:py-20">
+      <section className="relative z-10 mb-24">
         <div className="container">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4 px-2">
-            <div className="flex items-center gap-3">
-               <Trophy className="w-4 h-4 text-gold opacity-40" />
-               <h2 className="font-display text-base font-black text-white uppercase italic tracking-tighter">
-                 Verified Winners
-               </h2>
-            </div>
-            <span className="badge badge-success px-4 py-1.5 text-[9px] items-center gap-2 flex w-fit italic">
-              <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" /> Real-time Payouts
-            </span>
+          <div className="flex items-center gap-4 mb-12 px-4">
+             <Trophy className="w-6 h-6 text-gold opacity-60" />
+             <h2 className="text-xl font-bold text-white uppercase tracking-tight">Active Hall of Fame</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {winners.length === 0 ? (
-               <div className="card p-20 text-center col-span-full border-dashed border-white/5 opacity-20">
-                  <p className="font-black uppercase tracking-widest text-[10px] italic">Loading verified winners...</p>
+               <div className="card-elite p-40 text-center col-span-full border-dashed border-white/10 opacity-30">
+                  <Zap className="w-12 h-12 mx-auto mb-6 text-muted" />
+                  <p className="text-[12px] font-bold uppercase tracking-widest">Synchronizing winner ledger...</p>
                </div>
             ) : (
                 winners.map((w) => {
-                  const name = w.profile?.username || w.profile?.full_name || 'Challenger';
+                  const name = w.profile?.username || w.profile?.full_name || 'Operator';
                   const initial = name.charAt(0).toUpperCase();
                   
                   return (
-                    <div key={w.id} className="card p-4 flex flex-col gap-4 group hover:border-gold/20 transition-all bg-white/[0.01]">
-                      <div className="flex items-center gap-4">
-                        <div className="w-10 h-10 rounded-lg bg-white/[0.02] border border-white/5 flex items-center justify-center font-display text-lg font-black text-gold italic group-hover:scale-105 transition-transform">
+                    <div key={w.id} className="card-elite p-6 flex flex-col gap-8 group hover:-translate-y-2 transition-all">
+                      <div className="flex items-center gap-6">
+                        <div className="w-12 h-12 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-xl font-black text-gold italic">
                           {initial}
                         </div>
-                        <div className="flex-1 overflow-hidden">
-                          <div className="font-display text-sm font-black text-white truncate uppercase italic">{name}</div>
-                          <div className="flex items-center gap-2">
-                             <CheckCircle2 className="w-2.5 h-2.5 text-success" />
-                             <span className="text-[9px] font-black text-muted/30 uppercase tracking-widest italic">Confirmed</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="text-base font-bold text-white uppercase tracking-tight truncate">{name}</div>
+                          <div className="flex items-center gap-2 opacity-50">
+                             <ShieldCheck className="w-3.5 h-3.5 text-success" />
+                             <span className="text-[9px] font-bold text-muted uppercase tracking-widest">VERIFIED</span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="p-3 bg-white/[0.01] border border-white/5 rounded-lg flex items-center justify-between">
-                        <div>
-                          <div className="text-[8px] text-muted/20 font-black uppercase tracking-widest mb-1 italic">Reward</div>
-                          <div className="font-display text-xl font-black text-white italic tracking-tighter">₦{w.payout_amount.toLocaleString()}</div>
+                      <div className="card-elite !p-5 bg-white/[0.02] flex items-center justify-between border-white/5">
+                        <div className="flex flex-col gap-1">
+                          <div className="text-[9px] text-muted font-bold uppercase tracking-widest opacity-20">SETTLEMENT</div>
+                          <div className="text-2xl font-bold text-white font-mono tracking-tighter">₦{w.payout_amount.toLocaleString()}</div>
                         </div>
                         <div className="text-right">
-                          <div className="text-[8px] text-muted/20 font-black uppercase tracking-widest mb-1 italic">Streak</div>
-                          <div className="text-lg font-black text-success italic">3/3 <CheckCircle2 className="w-3 h-3 inline ml-1 opacity-40" /></div>
+                          <div className="text-[9px] text-muted font-bold uppercase tracking-widest opacity-20">CYCLE</div>
+                          <div className="text-xl font-bold text-success font-mono">3/3</div>
                         </div>
                       </div>
 
-                      <div className="flex justify-between items-center text-[8px] font-black uppercase tracking-widest text-muted/20 italic">
-                        <span>Round {w.round?.round_number || 'N/A'}</span>
-                        <span>{new Date(w.created_at).toLocaleDateString()}</span>
+                      <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest text-muted opacity-30">
+                        <span>Round #{w.round?.round_number || 'X'}</span>
+                        <span className="font-mono">{new Date(w.created_at).toLocaleDateString()}</span>
                       </div>
                     </div>
                   );
@@ -111,18 +108,23 @@ export default function WinnersClient({ winners }: WinnersClientProps) {
       </section>
 
       {/* Bottom CTA */}
-      <section className="py-20 bg-white/[0.01] border-t border-white/5 text-center">
-        <div className="container">
-          <h2 className="font-display text-3xl md:text-4xl font-black text-white uppercase italic tracking-tighter mb-4">
-            Your Name Could Be Here
-          </h2>
-          <p className="text-[11px] font-black text-muted/40 uppercase tracking-[0.2em] max-w-sm mx-auto leading-relaxed mb-10 italic">
-            Buy an account, build the perfect streak, and join the verified winners list.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link href="/accounts" className="btn btn-primary px-10 py-4 text-[11px] font-black uppercase tracking-widest shadow-2xl shadow-gold/20">Buy Account Plan</Link>
-            <Link href="/how-it-works" className="btn btn-ghost px-10 py-4 text-[11px] font-black uppercase tracking-widest border-white/10">Learn More</Link>
-          </div>
+      <section className="relative z-10 container">
+        <div className="card-elite p-12 md:p-20 text-center relative overflow-hidden bg-grad-glow border-gold/10">
+           <div className="absolute top-0 right-0 p-16 opacity-[0.03] -rotate-12"><Globe className="w-48 h-48" /></div>
+           <div className="max-w-xl mx-auto relative z-10">
+              <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight uppercase mb-8 leading-tight">
+                Establish Your <br /> <span className="text-gradient-gold">Winning Streak.</span>
+              </h2>
+              <p className="text-secondary text-sm font-medium opacity-60 mb-12 uppercase tracking-wide leading-relaxed">
+                Connect your account protocol and compete for verified daily settlements.
+              </p>
+              <div className="flex flex-wrap gap-4 justify-center">
+                <Link href="/accounts" className="btn btn-primary px-12 py-4 rounded-2xl font-bold uppercase text-[11px] tracking-widest group">
+                  Connect Node <ArrowUpRight className="w-4 h-4 ml-3 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                </Link>
+                <Link href="/how-it-works" className="btn btn-ghost px-10 py-4 rounded-2xl font-bold uppercase text-[11px] tracking-widest border-white/10">How it Works</Link>
+              </div>
+           </div>
         </div>
       </section>
     </div>

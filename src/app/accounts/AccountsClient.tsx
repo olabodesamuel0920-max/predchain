@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import {
   Gem,
-  Shield,
   Star,
   Check,
   Users,
@@ -14,8 +13,9 @@ import {
   Activity,
   Wallet,
   ShieldCheck,
-  ChevronRight,
+  ArrowUpRight,
   AlertCircle,
+  Zap,
 } from 'lucide-react';
 import { initializePayment } from '@/app/actions/paystack';
 import { purchaseTierWithWallet } from '@/app/actions/wallet';
@@ -54,7 +54,7 @@ function getTierIcon(name: string) {
   switch (name) {
     case 'Premium': return <Gem className="w-4 h-4 text-gold" />;
     case 'Standard': return <Star className="w-4 h-4 text-blue-electric" />;
-    default: return <Shield className="w-4 h-4 text-muted" />;
+    default: return <Zap className="w-4 h-4 text-muted" />;
   }
 }
 
@@ -70,21 +70,21 @@ function buildDisplayTiers(tiers: AccountTier[]): DisplayTier[] {
       name: t.name,
       price: `₦${priceRaw.toLocaleString()}`,
       reward: `₦${rewardVal.toLocaleString()}`,
-      multiplier: '10X Rewards',
+      multiplier: '10X Multiplier',
       badge: isStandard ? 'POPULAR' : isPremium ? 'ELITE' : null,
       featured: isStandard,
       accentColor: isStandard ? 'text-blue-electric' : isPremium ? 'text-gold' : 'text-muted',
       accentBg: isStandard ? 'bg-blue-electric/5' : isPremium ? 'bg-gold/5' : 'bg-white/[0.02]',
       accentBorder: isStandard ? 'border-blue-electric/20' : isPremium ? 'border-gold/20' : 'border-white/10',
       features: [
-        { label: '3-Day Challenge Access' },
-        { label: '1 Daily Prediction' },
-        { label: 'Live Leaderboard' },
-        { label: `₦${(t.perks?.referral_bonus ?? 1000).toLocaleString()} Reward (Network)` },
-        { label: 'Verified Member Badge' },
+        { label: '3-Day Arena Cycle Access' },
+        { label: '1 Precision Daily Pick' },
+        { label: 'Live Ranking Console' },
+        { label: `₦${(t.perks?.referral_bonus ?? 1000).toLocaleString()} Referral Reward` },
+        { label: 'Verified Operator Badge' },
         ...(isPremium ? [
           { label: 'Priority Verification' },
-          { label: 'Elite Rank Badge' },
+          { label: 'Elite Node Status' },
         ] : []),
       ],
       cta: isPremium ? 'Get Premium' : 'Select Plan',
@@ -108,55 +108,55 @@ function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, wallet
   return (
     <motion.div
       whileHover={{ y: -4 }}
-      className={`relative flex flex-col gap-5 p-5 rounded-xl border ${displayTier.accentBorder} ${displayTier.accentBg} shrink-0 w-[280px] shadow-lg transition-all group`}
+      className={`relative flex flex-col gap-6 p-6 rounded-2xl border ${displayTier.accentBorder} ${displayTier.accentBg} shrink-0 w-[290px] shadow-2xl transition-all group backdrop-blur-md`}
     >
       {/* Badge */}
       {displayTier.badge && (
-        <span className={`absolute top-4 right-4 px-2 py-0.5 rounded text-[9px] font-extrabold tracking-widest ${displayTier.accentColor} bg-white/5 border ${displayTier.accentBorder}`}>
+        <span className={`absolute top-4 right-4 px-2 py-0.5 rounded text-[8px] font-bold tracking-widest ${displayTier.accentColor} bg-white/5 border ${displayTier.accentBorder}`}>
           {displayTier.badge}
         </span>
       )}
 
       {/* Header */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-center gap-2">
-          <div className="p-2 rounded-lg bg-white/5 flex items-center justify-center">
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-3">
+          <div className="p-2.5 rounded-xl bg-white/5 flex items-center justify-center border border-white/5">
             {getTierIcon(displayTier.name)}
           </div>
-          <span className="text-[10px] font-bold text-muted uppercase tracking-wider opacity-60">
-            {displayTier.name} Plan
+          <span className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-60">
+            {displayTier.name} Node
           </span>
         </div>
 
-        <div className="font-display text-3xl font-extrabold text-white italic tracking-tighter leading-none">
+        <div className="text-3xl font-bold text-white tracking-tight">
           {displayTier.price}
         </div>
       </div>
 
       {/* Yield box */}
-      <div className="p-3.5 rounded-lg bg-black/40 border border-white/5 flex flex-col gap-2 shadow-inner">
+      <div className="p-4 rounded-xl bg-bg-primary/60 border border-white/5 flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <span className="text-[9px] font-bold text-muted uppercase tracking-wide opacity-50">
-            Estimated Return
+          <span className="text-[9px] font-bold text-muted uppercase tracking-widest opacity-50">
+            Node Potential
           </span>
-          <div className="badge badge-success !text-[8px] !py-0.5">
+          <div className="badge-elite !text-success !border-success/20">
             {displayTier.multiplier}
           </div>
         </div>
         <div className="flex items-center justify-between">
-          <span className="font-mono text-lg font-bold text-white">
+          <span className="text-xl font-bold text-white tracking-tight">
             {displayTier.reward}
           </span>
-          <Trophy className="w-3.5 h-3.5 text-gold opacity-30" />
+          <Trophy className="w-4 h-4 text-gold opacity-30" />
         </div>
       </div>
 
       {/* Feature list */}
-      <ul className="flex flex-col gap-2.5 flex-1 pt-2">
+      <ul className="flex flex-col gap-3 flex-1 pt-2">
         {displayTier.features.map((f, i) => (
-          <li key={i} className="flex flex-start gap-2 items-center">
-            <Check className="w-3 h-3 text-success shrink-0 opacity-70" />
-            <span className="text-[11px] font-medium text-secondary tracking-tight">
+          <li key={i} className="flex gap-3 items-center">
+            <Check className="w-3.5 h-3.5 text-success/60 shrink-0" />
+            <span className="text-[11px] font-medium text-secondary leading-tight">
               {f.label}
             </span>
           </li>
@@ -164,52 +164,52 @@ function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, wallet
       </ul>
 
       {/* Action area */}
-      <div className="flex flex-col gap-2 pt-4 border-t border-white/5">
+      <div className="flex flex-col gap-3 pt-6 border-t border-white/5">
         {!isLoggedIn ? (
-          <button
-            onClick={() => onPurchase(tier.id, 'paystack')}
-            className="btn btn-blue w-full font-bold uppercase tracking-wide"
+          <Link
+            href="/login"
+            className="btn btn-blue w-full rounded-full"
           >
-            Sign In
-          </button>
+            Authenticate
+          </Link>
         ) : (
           <>
             {!isWalletEnough && (
-              <div className="flex flex-col items-center gap-1.5 mb-2 p-2 bg-danger/5 border border-danger/10 rounded-lg animate-fade-in">
+              <div className="flex flex-col items-center gap-1.5 mb-2 p-2.5 bg-danger/5 border border-danger/10 rounded-xl animate-fade-in">
                 <div className="flex items-center gap-1.5">
-                  <AlertCircle className="w-3 h-3 text-danger" />
-                  <span className="text-[9px] font-bold text-danger uppercase tracking-wide">Insufficient Funds</span>
+                  <AlertCircle className="w-3.5 h-3.5 text-danger" />
+                  <span className="text-[9px] font-bold text-danger uppercase tracking-widest leading-none">Incomplete Balance</span>
                 </div>
                 <Link href="/dashboard?tab=wallet" className="text-[9px] font-bold text-blue-electric uppercase tracking-widest hover:underline">
-                  Add Funds
+                  Top-up Dashboard
                 </Link>
               </div>
             )}
             <button
               disabled={isPending || !isWalletEnough}
               onClick={() => onPurchase(tier.id, 'wallet')}
-              className={`btn w-full font-bold uppercase tracking-wide gap-2 ${displayTier.featured ? 'btn-blue' : 'btn-ghost'}`}
+              className={`btn w-full rounded-full gap-2 ${displayTier.featured ? 'btn-blue' : 'btn-ghost'}`}
             >
-              {isPending ? <Activity className="animate-spin w-3.5 h-3.5" /> : (
+              {isPending ? <Activity className="animate-spin w-4 h-4" /> : (
                 <>
-                  <Wallet className="w-3.5 h-3.5" />
+                  <Wallet className="w-4 h-4" />
                   Wallet Entry
                 </>
               )}
             </button>
             <div className="relative h-6 flex items-center justify-center">
                <div className="h-[1px] w-full bg-white/5" />
-               <span className="absolute px-2 bg-transparent text-[8px] text-muted font-bold uppercase tracking-[0.2em] opacity-30">OR</span>
+               <span className="absolute px-3 bg-bg-secondary text-[8px] text-muted font-bold uppercase tracking-[0.3em] opacity-30">ALTERNATIVE</span>
             </div>
             <button
               disabled={isPending}
               onClick={() => onPurchase(tier.id, 'paystack')}
-              className="btn btn-ghost w-full py-2.5 text-[10px] font-bold uppercase tracking-wide gap-2 border-white/5 hover:bg-white/[0.04]"
+              className="btn btn-ghost w-full rounded-full text-xs gap-2 border-white/5"
             >
-              {isPending ? <Activity className="animate-spin w-3.5 h-3.5" /> : (
+              {isPending ? <Activity className="animate-spin w-4 h-4" /> : (
                 <>
-                  <ShieldCheck className="w-3.5 h-3.5 text-success/60" />
-                  Direct Pay
+                  <ShieldCheck className="w-4 h-4 text-success/50" />
+                  Direct Settlement
                 </>
               )}
             </button>
@@ -235,25 +235,24 @@ function TierCarousel({ tiers, displayTiers, isPending, onPurchase, isLoggedIn, 
 
   if (tiers.length === 0) {
     return (
-      <div className="card border-dashed py-16 flex flex-col items-center gap-4 text-center opacity-30">
-        <Activity className="w-8 h-8 animate-pulse text-muted" />
-        <p className="text-xs font-bold uppercase tracking-widest">Awaiting nodes...</p>
+      <div className="card-elite border-dashed py-20 flex flex-col items-center gap-6 text-center opacity-30 mx-6">
+        <Zap className="w-10 h-10 animate-pulse text-muted" />
+        <p className="text-[10px] font-bold uppercase tracking-[0.3em]">Awaiting node response...</p>
       </div>
     );
   }
 
   return (
     <div className="relative group/carousel">
-      {/* Horizontal Scroll Track */}
       <div
         ref={constraintsRef}
-        className="overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing px-6 md:px-0"
+        className="overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing px-6"
       >
         <motion.div
           drag="x"
           dragConstraints={constraintsRef}
           dragElastic={0.1}
-          className="flex gap-5 pb-8 pt-4 w-max px-4 md:px-12"
+          className="flex gap-6 pb-12 pt-6 w-max px-4 md:px-12"
         >
           {displayTiers.map((displayTier, idx) => (
             <TierCard
@@ -269,21 +268,20 @@ function TierCarousel({ tiers, displayTiers, isPending, onPurchase, isLoggedIn, 
         </motion.div>
       </div>
 
-      {/* Drag Indicator */}
-      <div className="flex justify-center items-center gap-8 mt-4 opacity-30 group-hover/carousel:opacity-100 transition-opacity">
-        <div className="h-[1px] w-12 bg-white/10 rounded-full overflow-hidden">
+      <div className="flex justify-center items-center gap-10 mt-4 opacity-40 group-hover/carousel:opacity-100 transition-opacity">
+        <div className="h-[1px] w-16 bg-white/10 rounded-full overflow-hidden">
           <motion.div
             className="h-full w-full bg-gold"
             animate={{ x: ['-100%', '100%'] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
-        <span className="text-[9px] font-bold text-muted uppercase tracking-[0.2em] italic">Slide to View Plans</span>
-        <div className="h-[1px] w-12 bg-white/10 rounded-full overflow-hidden">
+        <span className="text-[9px] font-bold text-muted uppercase tracking-[0.3em]">Swipe to Navigate Node Protocols</span>
+        <div className="h-[1px] w-16 bg-white/10 rounded-full overflow-hidden">
           <motion.div
             className="h-full w-full bg-blue-electric"
             animate={{ x: ['-100%', '100%'] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
           />
         </div>
       </div>
@@ -325,32 +323,32 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
 
   return (
     <div className="min-h-screen bg-primary pt-24 flex flex-col animate-fade-in">
-
       {/* ─── HERO ─── */}
-      <section className="relative py-12 md:py-20 border-b border-white/5 overflow-hidden">
-        <div className="absolute inset-0 bg-grad-aurora opacity-10 filter blur-[100px]" />
+      <section className="relative py-16 md:py-24 border-b border-white/5 overflow-hidden">
+        <div className="absolute inset-0 bg-grad-glow opacity-20 pointer-events-none" />
         
         <div className="container relative z-10 text-center">
-          <div className="flex flex-col items-center max-w-2xl mx-auto gap-4 animate-slide-up">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/5 border border-gold/15 rounded-full">
-              <ShieldCheck className="w-3.5 h-3.5 text-gold" />
-              <span className="text-[10px] font-bold text-gold uppercase tracking-widest">
-                Tier Verification Active
+          <div className="flex flex-col items-center max-w-2xl mx-auto gap-6 animate-slide-up">
+            <div className="glass-pill px-4 py-1.5 border-gold/15">
+              <span className="flex items-center gap-2 text-[10px] font-bold text-gold uppercase tracking-widest">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                Network Validation Protocol Active
               </span>
             </div>
 
-            <h1 className="font-display text-4xl md:text-5xl font-extrabold text-white leading-tight uppercase italic tracking-tight">
-              Choose Your <span className="text-gradient-gold">Account Plan</span>
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+              Activate Your <span className="text-gradient-gold">Operator Node</span>
             </h1>
 
-            <p className="text-sm font-medium text-secondary uppercase tracking-wide opacity-50 max-w-md italic">
-              Select a challenge tier to begin. Win 10X rewards by maintaining your prediction streak.
+            <p className="text-sm font-medium text-secondary max-w-md">
+              Synchronize with the arena network. Win 10X multiplier rewards 
+              by maintaining peak prediction streak performance.
             </p>
 
             {error && (
-              <div className="mt-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-danger/5 border border-danger/20 text-danger animate-slide-up">
+              <div className="mt-4 flex items-center gap-2 px-4 py-2 rounded-xl bg-danger/5 border border-danger/20 text-danger animate-slide-up">
                 <AlertCircle className="w-4 h-4" />
-                <span className="text-xs font-bold uppercase tracking-wider">{error}</span>
+                <span className="text-xs font-bold uppercase tracking-widest">{error}</span>
               </div>
             )}
           </div>
@@ -358,7 +356,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
       </section>
 
       {/* ─── CAROUSEL ─── */}
-      <section className="py-12 bg-primary relative overflow-hidden">
+      <section className="py-16 bg-primary relative overflow-hidden">
         <TierCarousel 
           tiers={tiers} 
           displayTiers={displayTiers}
@@ -370,35 +368,33 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
       </section>
 
       {/* ─── STATS GRID ─── */}
-      <section className="py-16 border-t border-white/5 bg-white/[0.01]">
+      <section className="py-20 border-t border-white/5 bg-bg-secondary/50">
         <div className="container text-center">
-          <h2 className="text-[10px] font-bold text-muted uppercase tracking-[0.3em] mb-12 opacity-30">
-            Platform Protocol Metrics
-          </h2>
+          <span className="section-label mb-16 opacity-40">NETWORK INTEGRITY METRICS</span>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
             {[
-              { label: 'Active Challenges', val: `${stats.roundsCompleted}`,   icon: <Activity className="w-3.5 h-3.5" /> },
-              { label: 'Verified Members', val: `${stats.activeChallengers.toLocaleString()}`,   icon: <Users    className="w-3.5 h-3.5" /> },
-              { label: 'Winning Streaks', val: `${stats.perfectStreaks}`,   icon: <Shield   className="w-3.5 h-3.5" /> },
-              { label: 'Total Payouts', val: `₦${(stats.totalCashPaid / 1000).toLocaleString()}K`, icon: <Wallet   className="w-3.5 h-3.5" /> },
+              { label: 'Network Cycles', val: `${stats.roundsCompleted}`,   icon: <Activity className="w-4 h-4" /> },
+              { label: 'Active Operators', val: `${stats.activeChallengers.toLocaleString()}`,   icon: <Users    className="w-4 h-4" /> },
+              { label: 'Streak Performance', val: `${stats.perfectStreaks}`,   icon: <Zap      className="w-4 h-4" /> },
+              { label: 'Total Distributed', val: `₦${(stats.totalCashPaid / 1000).toLocaleString()}K`, icon: <Wallet   className="w-4 h-4" /> },
             ].map((s, i) => (
-              <div key={i} className="card bg-white/[0.01] flex flex-col items-center gap-2 py-6 border-white/5">
-                <div className="p-2 bg-blue-electric/10 rounded-lg text-blue-electric">{s.icon}</div>
-                <div className="font-display text-2xl font-extrabold text-white italic tracking-tighter uppercase">{s.val}</div>
-                <div className="text-[9px] font-bold text-muted uppercase tracking-wider opacity-40 italic">{s.label}</div>
+              <div key={i} className="card-elite bg-bg-primary/40 flex flex-col items-center gap-4 py-8 border-white/5">
+                <div className="p-3 bg-blue-electric/10 rounded-xl text-blue-electric border border-blue-electric/10">{s.icon}</div>
+                <div className="text-3xl font-bold text-white tracking-tight">{s.val}</div>
+                <div className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-40">{s.label}</div>
               </div>
             ))}
           </div>
 
-          <div className="mt-16 flex flex-col items-center gap-4 animate-slide-up opacity-40">
-            <div className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-[0.2em] italic">
-              <ShieldCheck className="w-4 h-4" />
-              Automated Financial Settlement
+          <div className="mt-20 flex flex-col items-center gap-6 animate-slide-up opacity-50">
+            <div className="flex items-center gap-3 text-[10px] font-bold text-muted uppercase tracking-[0.3em]">
+              <ShieldCheck className="w-4 h-4 text-success/60" />
+              Automated Reward Settlement Engine
             </div>
-            <p className="text-[10px] font-medium text-muted uppercase tracking-wide max-w-md italic">
-              All rewards are atomically credited to member wallets upon round completion. 
-              Secure encryption protocols active.
+            <p className="text-[11px] font-medium text-muted max-w-md leading-relaxed">
+              All node returns are atomically credited to certified operator wallets upon cycle completion. 
+              Enterprise-grade encryption active across all transmission layers.
             </p>
           </div>
         </div>

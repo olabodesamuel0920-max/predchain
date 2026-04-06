@@ -14,18 +14,13 @@ import {
   Check,
   TrendingUp,
   Activity,
-  ArrowRight
+  ArrowRight,
+  Radio,
+  ArrowUpRight
 } from 'lucide-react';
 import { submitPrediction } from '@/app/actions/predictions';
 import { ChallengeRound, ChallengeMatch, ChallengeEntry, Prediction } from '@/types';
 import { useFeedback } from '@/hooks/useFeedback';
-
-interface LiveChallengesClientProps {
-  round: ChallengeRound | null;
-  matches: ChallengeMatch[];
-  userEntry: ChallengeEntry | null;
-  predictions: Prediction[];
-}
 
 function CountdownTimer({ label, targetDate }: { label: string, targetDate?: string }) {
   const calculateTime = () => {
@@ -51,16 +46,23 @@ function CountdownTimer({ label, targetDate }: { label: string, targetDate?: str
   
   return (
     <div className="flex flex-col items-center">
+      <div className="text-[10px] font-bold text-muted uppercase tracking-[0.2em] mb-4 opacity-40 italic">{label}</div>
       <div className="font-mono text-2xl font-bold text-white tracking-widest flex items-center gap-3">
-        <span className="p-2 bg-white/5 rounded-lg border border-white/10">{pad(time.h)}</span>
-        <span className="opacity-30 text-lg">:</span>
-        <span className="p-2 bg-white/5 rounded-lg border border-white/10">{pad(time.m)}</span>
-        <span className="opacity-30 text-lg">:</span>
-        <span className="p-2 bg-white/5 rounded-lg border border-white/10">{pad(time.s)}</span>
+        <span className="px-4 py-2 bg-black/40 rounded-xl border border-white/5">{pad(time.h)}</span>
+        <span className="opacity-20 text-lg">:</span>
+        <span className="px-4 py-2 bg-black/40 rounded-xl border border-white/5">{pad(time.m)}</span>
+        <span className="opacity-20 text-lg">:</span>
+        <span className="px-4 py-2 bg-black/40 rounded-xl border border-white/5">{pad(time.s)}</span>
       </div>
-      <div className="text-[8px] font-bold text-muted/40 mt-4 uppercase tracking-widest italic">{label}</div>
     </div>
   );
+}
+
+interface LiveChallengesClientProps {
+  round: ChallengeRound | null;
+  matches: ChallengeMatch[];
+  userEntry: ChallengeEntry | null;
+  predictions: Prediction[];
 }
 
 export default function LiveChallengesClient({ round, matches, userEntry, predictions }: LiveChallengesClientProps) {
@@ -68,11 +70,11 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
   const { success, error, showSuccess, showError, clear } = useFeedback();
 
   const streak = userEntry?.streak_count || 0;
-  const roundNumber = round?.round_number || 'N/A';
+  const roundNumber = round?.round_number || 'X';
 
   const handlePrediction = async (matchId: string, choice: '1' | 'X' | '2') => {
     if (!userEntry) {
-      showError('No active account found. Buy a plan to participate.');
+      showError('Authentication required. Initialize account protocol.');
       return;
     }
 
@@ -84,7 +86,7 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
     startTransition(async () => {
       try {
         await submitPrediction(formData);
-        showSuccess('Prediction saved. Good luck!');
+        showSuccess('Prediction synchronized.');
       } catch (err: unknown) {
         showError((err as Error).message);
       }
@@ -92,184 +94,159 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
   };
 
   return (
-    <div className="min-h-screen bg-primary pt-20 flex flex-col items-stretch overflow-x-hidden animate-fade-in">
-      {/* ─── DENSE ARENA HERO ─── */}
-      <section className="relative py-10 md:py-16 border-b border-white/5 overflow-hidden">
-        <div className="absolute inset-0 bg-[#0D1321] opacity-50" />
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_60%_at_50%_50%,black_40%,transparent_100%)]" />
-        
-        <div className="container relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-10">
-            <div className="max-w-xl animate-slide-right">
-              <div className="flex items-center gap-3 mb-6">
-                 <div className="flex items-center gap-2 px-3 py-1 bg-success/5 border border-success/15 rounded-full">
-                    <div className="w-1 h-1 bg-success rounded-full animate-pulse shadow-success" />
-                    <span className="text-[8px] font-bold text-success uppercase tracking-widest italic">Live Protocol</span>
-                 </div>
-                 <div className="px-3 py-1 bg-blue-electric/5 border border-blue-electric/15 rounded-full">
-                    <span className="text-[8px] font-bold text-blue-electric uppercase tracking-widest italic">Round R-{roundNumber}</span>
-                 </div>
+    <div className="relative min-h-screen bg-primary pt-32 pb-24">
+      {/* Background Decor */}
+      <div className="absolute top-0 left-0 w-full h-[600px] bg-grad-glow opacity-30 pointer-events-none z-0" />
+
+      {/* Hero */}
+      <section className="relative z-10 mb-16 px-4">
+        <div className="container">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-12">
+            <div className="max-w-xl">
+              <div className="flex items-center gap-3 mb-8">
+                 <div className="badge-elite !text-success !bg-success/5 border-success/20">LIVE ARENA</div>
+                 <div className="badge-elite !text-blue-electric !bg-blue-electric/5 border-blue-electric/10">CYCLE R-{roundNumber}</div>
               </div>
-              <h1 className="font-display text-4xl md:text-5xl font-bold text-white leading-tight mb-4 uppercase italic">
-                Active <span className="text-gradient-blue">Challenges</span>
+              <h1 className="text-4xl md:text-6xl font-bold text-white tracking-tight uppercase mb-6 leading-tight">
+                Active <span className="text-gradient-gold">Arena.</span>
               </h1>
-              <p className="text-[10px] font-bold text-secondary leading-relaxed opacity-40 uppercase tracking-wide italic">
-                Predict match outcomes to complete your 3-day sequence and unlock your 10X target reward.
+              <p className="text-secondary text-sm font-medium opacity-60 leading-relaxed uppercase tracking-wide">
+                Submit predictions and maintain integrity streaks to secure 10X reward settlement.
               </p>
             </div>
 
             {round && (
-              <div className="card p-5 md:p-8 bg-white/[0.02] border-blue-electric/10 shadow-2xl backdrop-blur-xl animate-slide-left min-w-[240px]">
-                <CountdownTimer label="Round Ends In" targetDate={round.end_date} />
+              <div className="card-elite p-8 bg-grad-glow opacity-90 border-blue-electric/10 min-w-[320px]">
+                <CountdownTimer label="Cycle Expiry" targetDate={round.end_date} />
               </div>
             )}
           </div>
         </div>
       </section>
 
-      {/* ─── STREAK PROGRESS ─── */}
-      <section className="py-10 border-b border-white/5 bg-white/[0.01]">
+      {/* Progress Monitor */}
+      <section className="relative z-10 mb-16 px-4">
         <div className="container">
-          <div className="flex flex-col md:flex-row md:items-center gap-8 p-5 bg-white/[0.01] rounded-xl border border-white/5 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp className="w-24 h-24" /></div>
-            <div className="flex items-center gap-3 shrink-0">
-               <div className="p-2 bg-gold/5 rounded-lg border border-gold/15"><Zap className="w-3.5 h-3.5 text-gold" /></div>
-               <div className="font-display text-[9px] font-bold text-muted uppercase tracking-widest italic">Progress Hub</div>
+          <div className="card-elite p-8 bg-white/[0.015] border-white/5 flex flex-col md:flex-row md:items-center gap-10">
+            <div className="flex items-center gap-4 shrink-0">
+               <div className="p-3 bg-gold/10 rounded-xl border border-gold/10"><TrendingUp className="w-5 h-5 text-gold" /></div>
+               <div className="text-[10px] font-bold text-white uppercase tracking-[0.2em]">INTEGRITY MONITOR</div>
             </div>
-            <div className="flex-1 h-1.5 bg-black/60 rounded-full border border-white/5 overflow-hidden">
+            <div className="flex-1 h-2 bg-black/60 rounded-full border border-white/5 overflow-hidden">
               <div 
-                className="h-full bg-grad-gold rounded-full transition-all duration-1000 shadow-gold"
+                className="h-full bg-grad-gold shadow-[0_0_15px_rgba(197,160,89,0.3)] transition-all duration-1000"
                 style={{ width: `${(streak / 3) * 100}%` }}
               />
             </div>
-            <div className="flex items-center gap-2 font-display font-bold text-lg text-white shrink-0 italic">
-               <span className="text-gold tracking-tighter">{streak}</span>
-               <span className="text-muted text-[8px] opacity-40 uppercase tracking-widest">/ 3 Matches Verified</span>
+            <div className="flex items-center gap-3 text-2xl font-bold text-white tracking-tighter italic">
+               <span className="text-gold">{streak}</span>
+               <span className="text-muted text-[10px] opacity-40 uppercase tracking-[0.2em] not-italic">/ 3 VERIFIED</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ─── Match grid CONTENT ─── */}
-      <section className="py-16 bg-primary relative">
+      {/* Match Grid */}
+      <section className="relative z-10 px-4">
         <div className="container max-w-4xl">
           
           {/* Notifications */}
           {(success || error) && (
-            <div className={`card p-4 mb-10 text-center border animate-slide-up flex items-center justify-center gap-3 shadow-xl ${
-                success ? 'bg-success/10 border-success/30 text-success' : 'bg-danger/10 border-danger/30 text-danger'
+            <div className={`fixed bottom-8 right-8 z-50 card-elite px-8 py-5 border shadow-2xl animate-slide-up flex items-center gap-6 ${
+                success ? 'bg-success/90 border-success/20 text-black' : 'bg-danger/90 border-danger/20 text-white'
               }`}>
-               {success ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-               <span className="text-[10px] font-black uppercase tracking-widest">{success || error}</span>
+               {success ? <Check className="w-5 h-5" /> : <AlertCircle className="w-5 h-5" />}
+               <span className="text-sm font-bold uppercase tracking-tight">{success || error}</span>
             </div>
           )}
 
           {!userEntry && (
-            <div className="card text-center p-12 md:p-20 mb-16 border-dashed border-blue-electric/20 bg-blue-electric/[0.01] animate-slide-up">
-              <div className="w-16 h-16 bg-blue-electric/10 border border-blue-electric/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                 <ShieldCheck className="w-8 h-8 text-blue-electric" />
-              </div>
-              <h3 className="font-display text-xl font-black text-white mb-4 uppercase italic">No Active Challenge Entry</h3>
-              <p className="text-[10px] font-black text-muted mb-8 max-w-sm mx-auto leading-relaxed uppercase tracking-widest opacity-40">An active account plan is required to start your streak and access live matches.</p>
-              <Link href="/accounts" className="btn btn-blue px-8 py-3 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20 flex items-center gap-3 mx-auto w-fit group">
-                Get Account Plan <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+            <div className="card-elite p-16 text-center bg-blue-electric/[0.02] border-blue-electric/10 mb-16">
+              <ShieldCheck className="w-12 h-12 text-blue-electric/40 mx-auto mb-8" />
+              <h3 className="text-2xl font-bold text-white mb-4 uppercase tracking-tight">Node Not Found</h3>
+              <p className="text-[10px] text-muted font-bold uppercase tracking-widest opacity-40 mb-12 max-w-xs mx-auto leading-relaxed">Initialization required. Activate an account plan to access the live arena protocol.</p>
+              <Link href="/accounts" className="btn btn-primary px-12 py-4 rounded-2xl font-bold uppercase text-[11px] tracking-widest group inline-flex items-center">
+                Initialize account <ArrowUpRight className="w-4 h-4 ml-3 group-hover:translate-y--1 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           )}
 
-          <div className="flex flex-col gap-6">
-            <div className="flex items-center gap-3 mb-4 px-4">
-               <Swords className="w-4 h-4 text-blue-electric opacity-40" />
-               <h2 className="font-display text-[9px] font-black uppercase tracking-[0.2em] text-white/40">Active Matches</h2>
+          <div className="flex flex-col gap-8">
+            <div className="flex items-center gap-4 px-4 opacity-40">
+               <Radio className="w-5 h-5 text-blue-electric" />
+               <h2 className="text-[10px] font-bold uppercase tracking-[0.2em] text-white">ARENA SYNCHRONIZATION</h2>
             </div>
 
             {matches.length === 0 ? (
-               <div className="card p-20 text-center flex flex-col items-center gap-4 border-dashed border-white/5 opacity-20">
-                  <Activity className="w-12 h-12 text-muted" />
-                  <p className="text-[9px] font-black uppercase tracking-widest font-mono italic">No matches found for Round {roundNumber}.</p>
+               <div className="card-elite p-40 text-center flex flex-col items-center gap-6 border-dashed border-white/5 opacity-30">
+                  <Activity className="w-16 h-16 text-muted" />
+                  <p className="text-[11px] font-bold uppercase tracking-widest italic">No arena events detected for R-{roundNumber}.</p>
                </div>
             ) : (
-               matches.map((m, i) => {
-                  const userPred = predictions.find(p => p.match_id === m.id);
+               matches.map((m: ChallengeMatch, i: number) => {
+                  const userPred = predictions.find((p: Prediction) => p.match_id === m.id);
                   const isLocked = m.status !== 'scheduled' || new Date(m.kickoff_time) < new Date();
                   
                   return (
-                    <div key={m.id} className={`card p-0 overflow-hidden transition-all duration-500 hover:border-white/10 ${isLocked ? 'grayscale-[0.5] opacity-80' : 'animate-slide-up shadow-xl shadow-black/20'}`}>
-                       <div className="px-5 py-3 flex justify-between items-center bg-white/[0.01] border-b border-white/5">
-                          <div className="flex items-center gap-4">
-                             <div className="w-6 h-6 bg-white/5 rounded-lg border border-white/10 flex items-center justify-center text-[9px] font-black font-mono text-muted">
-                                {i + 1}
+                    <div key={m.id} className={`card-elite p-0 overflow-hidden transition-all duration-500 hover:border-blue-electric/20 ${isLocked ? 'grayscale-[0.8] opacity-60' : 'shadow-[0_0_50px_rgba(30,58,138,0.1)]'}`}>
+                       <div className="px-8 py-4 flex justify-between items-center bg-white/[0.03] border-b border-white/5">
+                          <div className="flex items-center gap-6">
+                             <div className="w-8 h-8 bg-black/40 rounded-xl border border-white/5 flex items-center justify-center text-xs font-bold text-muted">
+                                {String(i + 1).padStart(2, '0')}
                              </div>
-                             <span className="font-mono text-[9px] font-black text-muted/40 uppercase tracking-widest">
-                                Kickoff {new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                             <span className="text-[10px] font-bold text-muted/50 uppercase tracking-widest">
+                                KICKOFF {new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                              </span>
                           </div>
                           {isLocked ? (
-                            <div className="flex items-center gap-2 px-3 py-1 bg-danger/10 border border-danger/20 rounded-md">
-                               <ShieldCheck className="w-2.5 h-2.5 text-danger" />
-                               <span className="text-[8px] font-black text-danger uppercase tracking-widest">Locked</span>
-                            </div>
+                            <div className="badge-elite !text-danger !bg-danger/5 border-danger/20">PROTOCOL LOCKED</div>
                           ) : (
-                            <div className="flex items-center gap-2 px-3 py-1 bg-success/10 border border-success/20 rounded-md animate-pulse">
-                               <Target className="w-2.5 h-2.5 text-success" />
-                               <span className="text-[8px] font-black text-success uppercase tracking-widest">Open</span>
-                            </div>
+                            <div className="badge-elite !text-success !bg-success/5 border-success/20 animate-pulse">SYNCHRONIZING</div>
                           )}
                        </div>
                        
-                       <div className="p-6 md:p-8">
-                          <div className="flex items-center justify-between gap-6 md:gap-10 mb-8 flex-col md:flex-row">
+                       <div className="p-10 md:p-12">
+                          <div className="flex flex-col md:flex-row items-center justify-between gap-12 mb-12">
                              <div className="flex-1 text-center md:text-right">
-                                <div className="text-lg md:text-xl font-bold text-white uppercase tracking-tight italic mb-1">{m.home_team}</div>
-                                <div className="text-[7px] text-muted font-bold uppercase tracking-widest opacity-20">Prime Entry (Home)</div>
+                                <div className="text-xl md:text-2xl font-bold text-white uppercase tracking-tight mb-2">{m.home_team}</div>
+                                <div className="text-[8px] text-muted font-bold uppercase tracking-[0.2em] opacity-20">ENTRY NODE PRIMARY</div>
                              </div>
                              
-                             <div className="flex flex-col items-center gap-2 min-w-[100px]">
+                             <div className="flex flex-col items-center gap-4">
                                 {m.status !== 'scheduled' ? (
-                                   <div className="font-display text-2xl md:text-3xl font-bold text-white flex items-center gap-3">
+                                   <div className="text-4xl font-bold text-white flex items-center gap-4 italic tracking-tighter">
                                       <span>{m.home_score}</span>
-                                      <span className="text-blue-electric opacity-20 font-mono">:</span>
+                                      <span className="opacity-10">:</span>
                                       <span>{m.away_score}</span>
                                    </div>
                                 ) : (
-                                   <div className="flex flex-col items-center gap-1">
-                                      <div className="p-2.5 bg-white/5 border border-white/10 rounded-xl">
-                                         <Swords className="w-4 h-4 text-muted opacity-30" />
-                                      </div>
-                                   </div>
+                                   <div className="p-4 bg-white/[0.02] border border-white/5 rounded-2xl"><Swords className="w-6 h-6 text-muted/20" /></div>
                                 )}
-                                <div className={`px-2 py-0.5 rounded text-[7px] font-bold uppercase tracking-widest ${m.status === 'live' ? 'bg-danger/10 text-danger animate-pulse border border-danger/20' : 'bg-white/5 text-muted opacity-40 border border-white/10'}`}>
+                                <div className={`badge-elite !text-[8px] uppercase tracking-widest ${m.status === 'live' ? '!bg-danger !text-white' : '!bg-white/5 !text-muted opacity-40'}`}>
                                    {m.status}
                                 </div>
                              </div>
 
                              <div className="flex-1 text-center md:text-left">
-                                <div className="text-lg md:text-xl font-bold text-white uppercase tracking-tight italic mb-1">{m.away_team}</div>
-                                <div className="text-[7px] text-muted font-bold uppercase tracking-widest opacity-20">Rival Entry (Away)</div>
+                                <div className="text-xl md:text-2xl font-bold text-white uppercase tracking-tight mb-2">{m.away_team}</div>
+                                <div className="text-[8px] text-muted font-bold uppercase tracking-[0.2em] opacity-20">ENTRY NODE SECONDARY</div>
                              </div>
                           </div>
 
-                          <div className="grid grid-cols-3 gap-2">
+                          <div className="grid grid-cols-3 gap-3">
                              {['1', 'X', '2'].map((choice) => (
                                 <button
                                   key={choice}
                                   disabled={isLocked || isPending || !userEntry}
                                   onClick={() => handlePrediction(m.id, choice as '1' | 'X' | '2')}
-                                  className={`py-3 rounded-lg border transition-all duration-300 font-bold uppercase text-[9px] tracking-widest flex flex-col items-center justify-center gap-1 relative overflow-hidden ${
+                                  className={`py-5 rounded-2xl border transition-all duration-300 font-bold uppercase text-[10px] tracking-widest flex flex-col items-center justify-center gap-1.5 relative overflow-hidden ${
                                       userPred?.prediction === choice 
-                                      ? 'bg-blue-electric text-white border-blue-electric shadow-sm' 
-                                      : 'bg-white/[0.01] border-white/5 text-muted/60 hover:text-white hover:border-white/10'
+                                      ? 'bg-blue-electric text-white border-blue-electric shadow-[0_0_30px_rgba(56,189,248,0.2)]' 
+                                      : 'bg-white/[0.01] border-white/5 text-muted/40 hover:text-white hover:border-white/10'
                                     }`}
                                 >
-                                   {userPred?.prediction === choice && (
-                                      <div className="absolute top-0 right-0 p-1.5"><Check className="w-2.5 h-2.5" /></div>
-                                   )}
-                                   <span className="text-[7px] font-bold opacity-30 tracking-tight">
-                                      {choice === '1' ? 'HOME' : choice === '2' ? 'AWAY' : 'DRAW'}
-                                   </span>
-                                   <span className="truncate max-w-full italic text-[10px]">
-                                      {choice === '1' ? '1' : choice === '2' ? '2' : 'X'}
-                                   </span>
+                                   <span className="text-[8px] font-bold opacity-30 italic">{choice === '1' ? 'HOME' : choice === '2' ? 'AWAY' : 'DRAW'}</span>
+                                   <span className="text-lg italic">{choice}</span>
                                 </button>
                              ))}
                           </div>
@@ -282,43 +259,33 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
         </div>
       </section>
 
-      {/* ─── Rules ─── */}
-      <section className="py-16 border-t border-white/5 bg-white/[0.01]">
+      {/* Procedural Directives */}
+      <section className="relative z-10 pt-24 mt-24 border-t border-white/5 bg-white/[0.01]">
          <div className="container">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-               <div className="card p-6 bg-white/[0.01] hover:border-blue-electric/20 transition-all border border-transparent">
-                  <div className="w-8 h-8 mb-4 rounded-lg bg-gold/10 flex items-center justify-center italic font-black text-[10px] text-gold">01</div>
-                  <h4 className="font-display text-[10px] font-black text-white uppercase tracking-widest mb-3 flex items-center gap-2">
-                     Streak Rules
-                  </h4>
-                  <p className="text-[10px] font-medium text-muted leading-relaxed uppercase tracking-wider opacity-35 italic">predict one match correctly every day for three consecutive days to unlock the reward.</p>
-               </div>
-               <div className="card p-6 bg-white/[0.01] hover:border-blue-electric/20 transition-all border border-transparent">
-                  <div className="w-8 h-8 mb-4 rounded-lg bg-gold/10 flex items-center justify-center italic font-black text-[10px] text-gold">02</div>
-                  <h4 className="font-display text-[10px] font-black text-white uppercase tracking-widest mb-3 flex items-center gap-2">
-                     Rules
-                  </h4>
-                  <p className="text-[10px] font-medium text-muted leading-relaxed uppercase tracking-wider opacity-35 italic">results are based on official match outcomes at full-time. predictions lock at kickoff.</p>
-               </div>
-               <div className="card p-6 bg-white/[0.01] hover:border-blue-electric/20 transition-all border border-transparent">
-                  <div className="w-8 h-8 mb-4 rounded-lg bg-gold/10 flex items-center justify-center italic font-black text-[10px] text-gold">03</div>
-                  <h4 className="font-display text-[10px] font-black text-white uppercase tracking-widest mb-3 flex items-center gap-2">
-                     Instant Payouts
-                  </h4>
-                  <p className="text-[10px] font-medium text-muted leading-relaxed uppercase tracking-wider opacity-35 italic">Upon verification of your streak, your 10X reward is settled instantly and credited to your wallet.</p>
-               </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20 px-4">
+               {[
+                 { id: '01', title: 'Streak Protocol', desc: 'Predict one outcome daily for three consecutive cycles to trigger reward.' },
+                 { id: '02', title: 'Data Integrity', desc: 'Results verified based on official 90-minute outcomes. Predictions lock at T-minus 0.' },
+                 { id: '03', title: 'Settlement Hub', desc: 'Verified streaks are processed for automated wallet settlement within 48-hour protocol.' }
+               ].map(rule => (
+                 <div key={rule.id} className="card-elite p-8 bg-white/[0.015] border-transparent hover:border-gold/20 transition-all flex flex-col gap-6 group">
+                   <div className="w-10 h-10 rounded-xl bg-gold/5 flex items-center justify-center text-[10px] font-bold text-gold border border-gold/10">{rule.id}</div>
+                   <h4 className="text-[11px] font-bold text-white uppercase tracking-widest">{rule.title}</h4>
+                   <p className="text-[10px] font-medium text-muted leading-relaxed uppercase tracking-widest opacity-30 italic">{rule.desc}</p>
+                 </div>
+               ))}
             </div>
             
-            <div className="mt-16 p-6 bg-blue-electric/[0.02] border border-blue-electric/10 rounded-xl flex flex-col md:flex-row items-center justify-between gap-6 animate-slide-up">
-               <div className="flex items-center gap-4">
-                  <div className="p-3 bg-blue-electric/10 rounded-lg"><Trophy className="w-5 h-5 text-blue-electric" /></div>
-                  <div>
-                    <h4 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Ready to start winning?</h4>
-                    <p className="text-[9px] font-bold text-muted uppercase tracking-[0.2em] mt-1 opacity-40">Join thousands of winners earning 10X rewards every 3 days.</p>
+            <div className="card-elite p-12 md:p-16 bg-blue-electric/[0.02] border-blue-electric/10 flex flex-col md:flex-row items-center justify-between gap-12 group">
+               <div className="flex items-center gap-8">
+                  <div className="p-4 bg-blue-electric/10 rounded-2xl group-hover:rotate-6 transition-transform"><Trophy className="w-8 h-8 text-blue-electric" /></div>
+                  <div className="text-center md:text-left">
+                    <h4 className="text-xl font-bold text-white uppercase tracking-tight mb-2">Initiate Winning Sequence?</h4>
+                    <p className="text-[10px] font-bold text-muted uppercase tracking-[0.2em] opacity-30">Connect your account node and establish your record today.</p>
                   </div>
                </div>
-               <Link href="/accounts" className="btn btn-blue px-8 py-3 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20 whitespace-nowrap">
-                 View Account Plans
+               <Link href="/accounts" className="btn btn-primary px-12 py-4 rounded-2xl font-bold uppercase text-[11px] tracking-widest group flex items-center">
+                 View Tiers <ArrowRight className="w-4 h-4 ml-3 group-hover:translate-x-1 transition-transform" />
                </Link>
             </div>
          </div>
