@@ -1,8 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
 import AccountsClient from './AccountsClient'
+import { fetchPlatformStats } from '@/lib/stats'
 
 export default async function AccountsPage() {
   const supabase = await createClient()
+  const stats = await fetchPlatformStats()
 
   // Fetch account tiers from the database
   const { data: tiers } = await supabase
@@ -22,5 +24,5 @@ export default async function AccountsPage() {
     walletBalance = wallet?.balance_ngn || 0;
   }
 
-  return <AccountsClient tiers={tiers || []} userId={user?.id} walletBalance={walletBalance} />
+  return <AccountsClient tiers={tiers || []} userId={user?.id} walletBalance={walletBalance} stats={stats} />
 }

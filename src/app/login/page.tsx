@@ -8,13 +8,15 @@ import { login } from '@/app/actions/auth';
 function LoginForm() {
   const searchParams = useSearchParams();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [infoMsg, setInfoMsg] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
   useEffect(() => {
     const errorParam = searchParams.get('error');
-    if (errorParam) {
-      setErrorMsg(decodeURIComponent(errorParam));
-    }
+    if (errorParam) setErrorMsg(decodeURIComponent(errorParam));
+
+    const messageParam = searchParams.get('message');
+    if (messageParam) setInfoMsg(decodeURIComponent(messageParam));
   }, [searchParams]);
 
   const loginAction = async (formData: FormData) => {
@@ -43,8 +45,13 @@ function LoginForm() {
 
       <form action={loginAction} className="flex flex-col gap-6">
         {errorMsg && (
-          <div className="p-4 bg-danger/10 border border-danger/20 rounded-xl text-danger text-xs font-black uppercase tracking-widest text-center shadow-lg shadow-danger/5">
+          <div className="p-16 mb-4 bg-danger/10 border border-danger/20 rounded-xl text-danger text-[10px] font-black uppercase tracking-widest text-center shadow-lg shadow-danger/5 animate-slide-up">
             {errorMsg}
+          </div>
+        )}
+        {infoMsg && (
+          <div className="p-16 mb-4 bg-blue-electric/10 border border-blue-electric/20 rounded-xl text-blue-electric text-[10px] font-black uppercase tracking-widest text-center shadow-lg shadow-blue-electric/5 animate-slide-up">
+            {infoMsg}
           </div>
         )}
         <div className="flex flex-col gap-2">

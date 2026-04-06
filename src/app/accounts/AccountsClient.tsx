@@ -19,7 +19,7 @@ import {
 } from 'lucide-react';
 import { initializePayment } from '@/app/actions/paystack';
 import { purchaseTierWithWallet } from '@/app/actions/wallet';
-import { AccountTier } from '@/types';
+import { AccountTier, PlatformStats } from '@/types';
 
 // ─── TYPES ───────────────────────────────────────────────────────────────────
 interface TierFeature {
@@ -45,6 +45,7 @@ interface AccountsClientProps {
   tiers: AccountTier[];
   userId?: string;
   walletBalance?: number;
+  stats: PlatformStats;
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
@@ -433,7 +434,7 @@ function TierCarousel({ tiers, displayTiers, isPending, onPurchase, isLoggedIn, 
 }
 
 // ─── MAIN CLIENT ─────────────────────────────────────────────────────────────
-export default function AccountsClient({ tiers, userId, walletBalance = 0 }: AccountsClientProps) {
+export default function AccountsClient({ tiers, userId, walletBalance = 0, stats }: AccountsClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
@@ -543,10 +544,10 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0 }: Acc
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
             {[
-              { label: 'Network Cycles',     val: '142+',   icon: <Activity style={{ width: 13, height: 13 }} /> },
-              { label: 'Active Nodes',       val: '1.2K',   icon: <Users    style={{ width: 13, height: 13 }} /> },
-              { label: 'Security Queue',     val: '4.8K',   icon: <Shield   style={{ width: 13, height: 13 }} /> },
-              { label: 'Value Disseminated', val: '₦5.2M', icon: <Wallet   style={{ width: 13, height: 13 }} /> },
+              { label: 'Network Cycles',     val: `${stats.roundsCompleted}+`,   icon: <Activity style={{ width: 13, height: 13 }} /> },
+              { label: 'Active Nodes',       val: `${(stats.activeChallengers / 1000).toFixed(1)}K`,   icon: <Users    style={{ width: 13, height: 13 }} /> },
+              { label: 'Security Queue',     val: `${stats.perfectStreaks}+`,   icon: <Shield   style={{ width: 13, height: 13 }} /> },
+              { label: 'Value Disseminated', val: `₦${(stats.totalCashPaid / 1000000).toFixed(1)}M`, icon: <Wallet   style={{ width: 13, height: 13 }} /> },
             ].map((s, i) => (
               <div key={i} className="card" style={{
                 padding: '20px 16px', background: 'rgba(255,255,255,0.015)',

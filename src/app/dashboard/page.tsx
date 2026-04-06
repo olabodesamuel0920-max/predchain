@@ -15,10 +15,13 @@ export default async function DashboardPage() {
   }
 
   // 1. Fetch Profile & Wallet
-  const [{ data: profile }, { data: wallet }] = await Promise.all([
+  const [{ data: profileData }, { data: wallet }] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase.from('wallets').select('*').eq('user_id', user.id).single(),
   ])
+
+  // Inject email from auth for identity resolution
+  const profile = profileData ? { ...profileData, email: user.email } : { id: user.id, email: user.email };
 
   // 2. Fetch Active Round
   const { data: activeRound } = await supabase

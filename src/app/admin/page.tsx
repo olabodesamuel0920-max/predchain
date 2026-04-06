@@ -1,5 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+import Link from 'next/link';
+import { ShieldCheck } from 'lucide-react';
 import AdminClient from './admin-client';
 
 export default async function AdminPage() {
@@ -7,7 +9,7 @@ export default async function AdminPage() {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect('/login');
+    redirect('/login?error=Admin+access+required&returnTo=/admin');
   }
 
   const { data: profile } = await supabase
@@ -19,9 +21,20 @@ export default async function AdminPage() {
   if (profile?.role !== 'admin') {
     return (
       <div className="flex items-center justify-center min-h-screen bg-primary">
-        <div className="card text-center p-8 max-w-md">
-          <h2 className="text-xl font-display font-bold text-white mb-2">Access Denied</h2>
-          <p className="text-muted text-sm">You do not have administrative privileges.</p>
+        <div className="absolute inset-0 bg-grad-aurora opacity-10 blur-[140px] pointer-events-none" />
+        <div className="flex flex-col items-center text-center gap-24 relative z-10 px-6">
+           <div className="w-20 h-20 rounded-2xl bg-danger/10 border border-danger/20 flex items-center justify-center text-danger">
+              <ShieldCheck className="w-10 h-10" />
+           </div>
+           <div>
+              <h2 className="font-display text-2xl font-black text-white uppercase italic tracking-tighter mb-8">Access Restricted</h2>
+              <p className="text-muted text-xs font-black uppercase tracking-[0.2em] italic max-w-sm mx-auto leading-relaxed opacity-60">
+                Administrative privileges are required to access this protocol node. Your attempt has been logged.
+              </p>
+           </div>
+           <Link href="/dashboard" className="btn btn-primary px-10 py-5 text-sm font-black uppercase tracking-widest">
+              Return to Command Center
+           </Link>
         </div>
       </div>
     )
