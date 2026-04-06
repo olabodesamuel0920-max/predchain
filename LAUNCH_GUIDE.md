@@ -7,9 +7,9 @@ This document contains the final systematic verification protocols to move PredC
 | Item | Action | Status |
 | :--- | :--- | :--- |
 | **Supabase** | URL and Anon Key correctly configured in production env | [ ] |
-| **Database** | SQL Migrations 0000-0005 executed in order | [ ] |
-| **Atomic Ops** | Verified `settle_round_winner_atomic`, `resolve_payout_atomic`, and `adjust_user_wallet_admin` RPCs exist | [ ] |
-| **Auth** | User Registration Trigger Active (`on_auth_user_created`) | [ ] |
+| **Database** | SQL Migrations 0000-0007 executed in order | [x] |
+| **Atomic Ops** | Verified `settle_round_winner_atomic`, `resolve_payout_atomic`, `purchase_tier_with_wallet_atomic`, and `process_referral_reward_atomic` exist | [x] |
+| **Auth** | User Registration Trigger Active (`on_auth_user_created`) | [x] |
 | **Payments** | Paystack Live Keys and Webhook URL configured | [ ] |
 | **Webhooks** | Endpoint `/api/webhooks/paystack` reachable by external POST | [ ] |
 | **Admin Setup** | First admin account manually promoted in `profiles` table | [ ] |

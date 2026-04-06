@@ -29,6 +29,8 @@ DROP FUNCTION IF EXISTS public.create_payout_request_atomic(uuid, integer, jsonb
 DROP FUNCTION IF EXISTS public.resolve_payout_request_atomic(uuid, uuid, text, text) CASCADE;
 DROP FUNCTION IF EXISTS public.settle_round_winner_atomic(uuid, uuid) CASCADE;
 DROP FUNCTION IF EXISTS public.adjust_user_wallet_admin(uuid, uuid, integer, text) CASCADE;
+DROP FUNCTION IF EXISTS public.purchase_tier_with_wallet_atomic(uuid, uuid, text) CASCADE;
+DROP FUNCTION IF EXISTS public.process_referral_reward_atomic(uuid, uuid, text, integer) CASCADE;
 
 -- -----------------------------------------------------------------------------
 -- 3. RE-CREATE EVERYTHING (Fresh Build)
@@ -649,3 +651,121 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
+
+-- 0006_wallet_purchases.sql
+-- Atomic RPCs to support wallet-funded tier purchases
+
+CREATE OR REPLACE FUNCTION public.purchase_tier_with_wallet_atomic(
+  p_user_id UUID,
+  p_tier_id UUID,
+  p_payment_reference TEXT
+) RETURNS VOID AS $$
+DECLARE
+  v_wallet_id UUID;
+  v_balance INTEGER;
+  v_tier_price INTEGER;
+  v_active_round_id UUID;
+BEGIN
+  -- 1. Lock wallet row
+  SELECT id, balance_ngn INTO v_wallet_id, v_balance
+  FROM public.wallets
+  WHERE user_id = p_user_id
+  FOR UPDATE;
+
+  IF v_wallet_id IS NULL THEN
+    RAISE EXCEPTION 'Wallet not found for user %', p_user_id;
+  END IF;
+
+  -- 2. Get Tier Pricing
+  SELECT price_ngn INTO v_tier_price
+  FROM public.account_tiers
+  WHERE id = p_tier_id;
+
+  IF v_tier_price IS NULL THEN
+    RAISE EXCEPTION 'Tier % not found', p_tier_id;
+  END IF;
+
+  -- 3. Verify Balance
+  IF v_balance < v_tier_price THEN
+    RAISE EXCEPTION 'Insufficient balance: % < %', v_balance, v_tier_price;
+  END IF;
+
+  -- 4. Deduct from Wallet
+  UPDATE public.wallets
+  SET balance_ngn = balance_ngn - v_tier_price
+  WHERE id = v_wallet_id;
+
+  -- 5. Record Transaction
+  INSERT INTO public.wallet_transactions (wallet_id, amount, type, reference)
+  VALUES (v_wallet_id, -v_tier_price, 'purchase', p_payment_reference);
+
+  -- 6. Create Purchase Record
+  INSERT INTO public.account_purchases (
+    user_id, tier_id, amount_paid, payment_reference, provider_reference, status, verified_at
+  ) VALUES (
+    p_user_id, p_tier_id, v_tier_price, p_payment_reference, 'wallet', 'completed', now()
+  );
+
+  -- 7. Auto-Enroll in Active Round (Prevent Duplicates)
+  SELECT id INTO v_active_round_id
+  FROM public.challenge_rounds
+  WHERE status = 'active'
+  LIMIT 1;
+
+  IF v_active_round_id IS NOT NULL THEN
+    INSERT INTO public.challenge_entries (user_id, round_id, tier_id, streak_count)
+    SELECT p_user_id, v_active_round_id, p_tier_id, 0
+    WHERE NOT EXISTS (
+      SELECT 1 FROM public.challenge_entries 
+      WHERE user_id = p_user_id AND round_id = v_active_round_id
+    );
+  END IF;
+
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- 0007_referral_atomicity.sql
+-- Atomic RPC for referral rewards
+
+CREATE OR REPLACE FUNCTION public.process_referral_reward_atomic(
+  p_referrer_id UUID,
+  p_referred_user_id UUID,
+  p_referral_code TEXT,
+  p_reward_amount INTEGER
+) RETURNS VOID AS $$
+DECLARE
+  v_wallet_id UUID;
+  v_referral_id UUID;
+BEGIN
+  -- 1. Idempotency Check
+  SELECT id INTO v_referral_id 
+  FROM public.referrals 
+  WHERE referrer_id = p_referrer_id AND referred_user_id = p_referred_user_id;
+
+  IF v_referral_id IS NOT NULL THEN
+    RETURN;
+  END IF;
+
+  -- 2. Create Referral Record
+  INSERT INTO public.referrals (referrer_id, referred_user_id, referral_code, status)
+  VALUES (p_referrer_id, p_referred_user_id, p_referral_code, 'qualified')
+  RETURNING id INTO v_referral_id;
+
+  -- 3. Create Reward Record
+  INSERT INTO public.referral_rewards (referral_id, amount, is_paid)
+  VALUES (v_referral_id, p_reward_amount, true);
+
+  -- 4. Credit Referrer Wallet
+  SELECT id INTO v_wallet_id FROM public.wallets WHERE user_id = p_referrer_id FOR UPDATE;
+
+  IF v_wallet_id IS NOT NULL THEN
+    UPDATE public.wallets
+    SET balance_ngn = balance_ngn + p_reward_amount
+    WHERE id = v_wallet_id;
+
+    INSERT INTO public.wallet_transactions (wallet_id, amount, type, reference)
+    VALUES (v_wallet_id, p_reward_amount, 'reward', 'referral_bonus_' || p_referred_user_id);
+  END IF;
+
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;

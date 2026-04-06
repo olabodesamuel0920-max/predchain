@@ -207,41 +207,16 @@ export async function verifyPayment(reference: string) {
       .single();
 
     if (referrer) {
-      const { data: existingRef } = await adminClient
-        .from('referrals')
-        .select('id')
-        .eq('referrer_id', referrer.id)
-        .eq('referred_user_id', userId)
-        .maybeSingle();
+      // 7. Atomic Referral Payout via RPC
+      const { error: rpcError } = await adminClient.rpc('process_referral_reward_atomic', {
+        p_referrer_id: referrer.id,
+        p_referred_user_id: userId,
+        p_referral_code: referredByCode,
+        p_reward_amount: 1000 // Standard referral bonus
+      });
 
-      if (!existingRef) {
-        const { data: newRef } = await adminClient.from('referrals').insert({
-          referrer_id: referrer.id,
-          referred_user_id: userId,
-          referral_code: referredByCode,
-          status: 'qualified'
-        }).select().single();
-
-        if (newRef) {
-          // Create Reward Record
-          await adminClient.from('referral_rewards').insert({
-            referral_id: newRef.id,
-            amount: 1000,
-            is_paid: true
-          });
-
-          // Credit Referrer Wallet
-          const { data: refWallet } = await adminClient.from('wallets').select('id, balance_ngn').eq('user_id', referrer.id).single();
-          if (refWallet) {
-              await adminClient.from('wallets').update({ balance_ngn: refWallet.balance_ngn + 1000 }).eq('id', refWallet.id);
-              await adminClient.from('wallet_transactions').insert({
-                wallet_id: refWallet.id,
-                amount: 1000,
-                type: 'reward',
-                reference: `referral_bonus_${userId}`
-              });
-          }
-        }
+      if (rpcError) {
+        console.error('Failed to process referral atomically:', rpcError);
       }
     }
   }
