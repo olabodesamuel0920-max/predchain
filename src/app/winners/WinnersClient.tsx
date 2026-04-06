@@ -25,130 +25,80 @@ export default function WinnersClient({ winners }: WinnersClientProps) {
     <div style={{ paddingTop: '80px' }}>
 
       {/* Hero */}
-      <section style={{
-        padding: '72px 0 56px',
-        background: 'linear-gradient(180deg, #0D1321 0%, #070B14 100%)',
-        borderBottom: '1px solid rgba(255,255,255,0.07)',
-        position: 'relative', overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute', top: '-80px', right: '10%',
-          width: '500px', height: '500px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} aria-hidden="true" />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px' }}>
+      <section className="py-20 md:py-24 bg-gradient-to-b from-[#0D1321] to-[#070B14] border-b border-white/5 relative overflow-hidden">
+        <div className="absolute -top-20 right-[10%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle,rgba(212,175,55,0.1)_0%,transparent_70%)] pointer-events-none" aria-hidden="true" />
+        <div className="container relative z-10">
+          <div className="flex flex-wrap items-center justify-between gap-8">
             <div>
-              <div className="section-label">Verified Winners</div>
-              <h1 className="section-title" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginBottom: '12px' }}>
+              <div className="text-gold font-black text-[10px] uppercase tracking-[0.2em] mb-4 italic">Verified Winners</div>
+              <h1 className="text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-6">
                 Real Challengers.<br />
-                <span style={{
-                  background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
-                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                }}>Verified Rewards.</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-[#F6D365]">Verified Rewards.</span>
               </h1>
-              <p className="section-subtitle">
+              <p className="text-muted text-lg max-w-lg">
                 Every winner listed here completed a perfect 3/3 streak, passed anti-fraud verification, and received their confirmed cash reward payout.
               </p>
             </div>
-            <div style={{
-              padding: '32px 40px',
-              background: 'rgba(212,175,55,0.08)',
-              border: '1px solid rgba(212,175,55,0.25)',
-              borderRadius: '20px',
-              textAlign: 'center',
-              flexShrink: 0,
-            }}>
-              <div style={{ fontSize: '0.8125rem', color: '#6E7A91', marginBottom: '8px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            <div className="p-8 bg-gold/5 border border-gold/20 rounded-2xl text-center flex-shrink-0">
+              <div className="text-[10px] text-muted font-black uppercase tracking-widest mb-2">
                 Total Cash Paid
               </div>
-              <div style={{
-                fontFamily: "'Space Grotesk', sans-serif",
-                fontSize: '2.5rem', fontWeight: 900,
-                background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
-                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                letterSpacing: '-0.03em',
-              }}>₦{totalPaid.toLocaleString()}</div>
-              <div style={{ fontSize: '0.8125rem', color: '#6E7A91', marginTop: '8px' }}>Across all rounds</div>
+              <div className="font-display text-5xl font-black text-transparent bg-clip-text bg-gradient-to-br from-gold to-[#F6D365] tracking-tighter">
+                ₦{totalPaid.toLocaleString()}
+              </div>
+              <div className="text-[10px] text-muted mt-2 uppercase tracking-widest font-black">Across all rounds</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Winners grid */}
-      <section className="section">
+      <section className="py-12 md:py-20 lg:py-32">
         <div className="container">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px', flexWrap: 'wrap', gap: '16px' }}>
-            <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.5rem', fontWeight: 700, color: '#F8FAFC' }}>
-              Recent Verified Winners
+          <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
+            <h2 className="font-display text-2xl font-black text-white uppercase italic tracking-tighter">
+              Verified Operatives
             </h2>
-            <span className="badge badge-success"><div className="live-dot" /> Updated Live</span>
+            <span className="badge badge-success px-4 py-1.5 text-[10px] items-center gap-2 flex w-fit">
+              <div className="live-dot" /> Live Synchronization
+            </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {winners.length === 0 ? (
-               <div className="card text-center" style={{ padding: '48px', gridColumn: '1/-1' }}>
-                  <p style={{ color: 'var(--text-secondary)' }}>Gathering winner data for the current season...</p>
+               <div className="card p-12 text-center col-span-full border-white/5 opacity-40">
+                  <p className="font-black uppercase tracking-widest text-xs italic">Gathering winner data for the current protocol...</p>
                </div>
             ) : (
                 winners.map((w) => {
-                  const name = w.profile?.username || w.profile?.full_name || 'Challenger';
+                  const name = w.profile?.username || w.profile?.full_name || 'Operative';
                   const initial = name.charAt(0).toUpperCase();
-                  const tier = 'Starter'; // Defaulting for UI display
+                  const tier = 'Starter';
                   
                   return (
-                    <div key={w.id} style={{
-                      background: 'var(--bg-card)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '20px',
-                      padding: '24px',
-                      boxShadow: 'var(--shadow-card)',
-                      display: 'flex', flexDirection: 'column', gap: '16px',
-                    }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                        <div style={{
-                          width: '48px', height: '48px', borderRadius: '14px', flexShrink: 0,
-                          background: `linear-gradient(135deg, ${tierColors[tier]}20, rgba(0,194,255,0.1))`,
-                          border: `1px solid ${tierColors[tier]}30`,
-                          display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          fontFamily: "'Space Grotesk', sans-serif",
-                          fontSize: '1.25rem', fontWeight: 800,
-                          color: tierColors[tier],
-                        }}>{initial}</div>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem', fontWeight: 700, color: '#F8FAFC' }}>{name}</div>
-                          <div style={{ fontSize: '0.75rem', color: '#6E7A91', marginTop: '2px' }}>
-                            <span style={{ color: tierColors[tier], fontWeight: 600 }}>Verified Challenger</span>
-                          </div>
+                    <div key={w.id} className="card p-6 flex flex-col gap-5 group hover:border-gold/30 transition-all">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-xl bg-secondary border border-white/10 flex items-center justify-center font-display text-xl font-black text-gold italic group-hover:scale-110 transition-transform">
+                          {initial}
                         </div>
-                        <span className="badge badge-success">✓ Verified</span>
+                        <div className="flex-1 overflow-hidden">
+                          <div className="font-display text-base font-black text-white truncate uppercase italic">{name}</div>
+                          <div className="text-[10px] font-black text-muted uppercase tracking-widest italic opacity-60">Verified</div>
+                        </div>
                       </div>
 
-                      <div style={{
-                        padding: '16px',
-                        background: 'rgba(212,175,55,0.06)',
-                        border: '1px solid rgba(212,175,55,0.15)',
-                        borderRadius: '12px',
-                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                      }}>
+                      <div className="p-4 bg-white/[0.02] border border-white/10 rounded-xl flex items-center justify-between">
                         <div>
-                          <div style={{ fontSize: '0.75rem', color: '#6E7A91', marginBottom: '4px' }}>Cash Reward Unlocked</div>
-                          <div style={{
-                            fontFamily: "'Space Grotesk', sans-serif",
-                            fontSize: '1.625rem', fontWeight: 800,
-                            background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
-                            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                            letterSpacing: '-0.02em',
-                          }}>₦{w.payout_amount.toLocaleString()}</div>
+                          <div className="text-[10px] text-muted font-black uppercase tracking-widest mb-1 italic">Reward</div>
+                          <div className="font-display text-2xl font-black text-white italic tracking-tighter">₦{w.payout_amount.toLocaleString()}</div>
                         </div>
-                        <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: '0.75rem', color: '#6E7A91', marginBottom: '4px' }}>Perfect Streak</div>
-                          <div style={{ fontSize: '1.375rem', fontWeight: 800, color: '#22C55E' }}>3/3 ✓</div>
+                        <div className="text-right">
+                          <div className="text-[10px] text-muted font-black uppercase tracking-widest mb-1 italic">Streak</div>
+                          <div className="text-xl font-black text-success italic">3/3 ✓</div>
                         </div>
                       </div>
 
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', color: '#6E7A91' }}>
+                      <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest text-muted italic opacity-40">
                         <span>Round {w.round?.round_number || 'N/A'}</span>
                         <span>{new Date(w.created_at).toLocaleDateString()}</span>
                       </div>

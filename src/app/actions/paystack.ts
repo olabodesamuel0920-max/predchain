@@ -151,14 +151,8 @@ export async function verifyPayment(reference: string) {
     .single();
 
   if (!tier || paystackAmount < tier.price_ngn) {
-    console.error('CRITICAL: Payment verification failed!', { 
-      expected: tier?.price_ngn, 
-      received: paystackAmount,
-      tierFound: !!tier,
-      tierId,
-      reference 
-    });
-    return { success: false, message: `Payment validation failed. Tier not recognized or mismatch in amount.` };
+    console.error('Payment mismatch:', { expected: tier?.price_ngn, received: paystackAmount });
+    return { success: false, message: `Payment validation failed. Incorrect amount or tier.` };
   }
 
   // 4. Create Purchase Record

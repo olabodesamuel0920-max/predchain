@@ -118,12 +118,28 @@ export async function purchaseTierWithWallet(tierId: string) {
 
   if (rpcError) throw new Error(rpcError.message);
 
-  // 3. Handle Referral Rewards (Mirror logic from paystack.ts)
-  // Note: For now, we manually trigger referral logic if needed, 
-  // but ideally we should extract this to a shared utility.
-  // For brevity in this pass, we'll keep it focused on the wallet flow.
+    // 5. Handle Referral Rewards
+    const { data: userData } = await adminClient.auth.admin.getUserById(user.id);
+    const referredByCode = userData.user?.user_metadata?.referred_by_code;
 
-  revalidatePath('/dashboard');
-  revalidatePath('/accounts');
-  return { success: true, reference };
+    if (referredByCode) {
+      const { data: referrer } = await adminClient
+        .from('profiles')
+        .select('id')
+        .eq('username', referredByCode.toLowerCase())
+        .single();
+
+      if (referrer) {
+        await adminClient.rpc('process_referral_reward_atomic', {
+          p_referrer_id: referrer.id,
+          p_referred_user_id: user.id,
+          p_referral_code: referredByCode,
+          p_reward_amount: 1000
+        });
+      }
+    }
+
+    revalidatePath('/dashboard');
+    revalidatePath('/accounts');
+    return { success: true, reference };
 }

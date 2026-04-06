@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { PlatformStats, HomeMatch } from '@/types';
+import { ArrowRight, Check } from 'lucide-react';
 
 /* ── Animated Counter ── */
 function Counter({ end, prefix = '', suffix = '', duration = 2000 }: { end: number; prefix?: string; suffix?: string; duration?: number }) {
@@ -55,128 +56,109 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
   ]);
 
   return (
-    <div style={{ paddingTop: '80px', position: 'relative' }}>
-        
-      
-
+    <div className="pt-20 relative overflow-hidden">
       {/* ──────────────────────── HERO ──────────────────────── */}
-      <section style={{
-        padding: '80px 0 100px',
-        background: 'var(--bg-primary)',
-        position: 'relative', overflow: 'hidden',
-        borderBottom: '1px solid rgba(255,255,255,0.05)',
-      }}>
-        <div style={{ position: 'absolute', top: '-20%', left: '-10%', width: '800px', height: '800px', background: 'var(--grad-aurora)', borderRadius: '50%', filter: 'blur(160px)', opacity: 0.6, pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ position: 'absolute', top: '40%', right: '-5%', width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(0,229,255,0.1), transparent 70%)', borderRadius: '50%', filter: 'blur(100px)', opacity: 0.8, pointerEvents: 'none', zIndex: 0 }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1px)', backgroundSize: '32px 32px', maskImage: 'linear-gradient(to bottom, black 40%, transparent 100%)', opacity: 0.5, zIndex: 0 }} />
+      <section className="relative py-12 md:py-24 bg-primary overflow-hidden border-b border-white/5">
+        <div className="absolute inset-0 bg-grad-aurora opacity-40 blur-[160px] pointer-events-none z-0" />
+        <div className="absolute inset-0 bg-blue-electric/5 blur-[100px] opacity-60 pointer-events-none z-0" />
+        <div className="absolute inset-0 opacity-40 z-0 bg-[radial-gradient(rgba(255,255,255,0.08)_1px,transparent_1px)] bg-[length:32px_32px] [mask-image:linear-gradient(to_bottom,black_40%,transparent_100%)]" />
 
-        <div className="container" style={{ position: 'relative', zIndex: 1, display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '64px', alignItems: 'center' }}>
-          
-          <div>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 'var(--radius-full)', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '32px', backdropFilter: 'blur(12px)' }}>
-              <div className="live-dot" />
+        <div className="container relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="flex flex-col items-center lg:items-start text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-5 py-2.5 bg-white/[0.03] border border-white/10 rounded-full text-[13px] font-black text-white mb-8 backdrop-blur-xl uppercase tracking-widest">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
               Round {stats.roundsCompleted + 1} is Now Live
             </div>
 
-            <h1 className="section-title" style={{ fontSize: 'clamp(3.5rem, 6vw, 5rem)', letterSpacing: '-0.04em', lineHeight: 1.05, marginBottom: '24px' }}>
-              Precision meets <br />
-              <span className="text-gradient-gold">Perfection.</span>
+            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[1.05] tracking-tighter mb-8 uppercase italic">
+              Precision <br />
+              <span className="text-gold">Perfection.</span>
             </h1>
 
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: '1.25rem', color: 'var(--text-secondary)', lineHeight: 1.6, marginBottom: '40px', maxWidth: '520px', fontWeight: 400 }}>
-              The elite 3-day football prediction challenge. Secure your account, predict 1 match daily, complete a perfect 3/3 streak, and instantly unlock the guaranteed 10X cash reward.
+            <p className="text-lg md:text-xl text-muted font-bold leading-relaxed mb-10 max-w-xl uppercase tracking-widest italic opacity-60">
+              The elite 3-day football prediction challenge. Secure your account, follow the protocol, and unlock the guaranteed 10X reward.
             </p>
 
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap' }}>
-              <Link href="/accounts" className="btn btn-primary btn-pulse">
+            <div className="flex flex-wrap gap-5 justify-center lg:justify-start">
+              <Link href="/accounts" className="btn btn-primary btn-pulse px-10 py-5 text-sm font-black uppercase tracking-widest flex items-center gap-2">
                 Join Challenge
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <ArrowRight className="w-5 h-5" />
               </Link>
-              <Link href="/how-it-works" className="btn btn-ghost">
-                How it Works
+              <Link href="/how-it-works" className="btn btn-ghost px-10 py-5 text-sm font-black uppercase tracking-widest">
+                Protocol
               </Link>
             </div>
             
-            <div style={{ marginTop: '56px', display: 'flex', gap: '32px', alignItems: 'center' }}>
-              <div style={{ display: 'flex' }}>
+            <div className="mt-14 flex items-center gap-8 justify-center lg:justify-start">
+              <div className="flex -space-x-3">
                 {['M','A','C','J'].map((l, i) => (
-                  <div key={i} style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'linear-gradient(135deg, #1E283C, #0A0E17)', border: '2px solid var(--bg-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.875rem', fontWeight: 700, marginLeft: i > 0 ? '-12px' : 0, boxShadow: '0 4px 12px rgba(0,0,0,0.4)', fontFamily: "var(--font-display)" }}>{l}</div>
+                  <div key={i} className="w-10 h-10 rounded-full bg-secondary border-2 border-primary flex items-center justify-center text-xs font-black text-white shadow-xl italic">{l}</div>
                 ))}
               </div>
-              <div>
-                <div style={{ display: 'flex', gap: '4px', color: 'var(--gold)', marginBottom: '4px' }}>
-                  ★ ★ ★ ★ ★
-                </div>
-                <div style={{ fontSize: '0.8125rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-                  <strong style={{ color: 'var(--text-primary)' }}>{stats.activeChallengers.toLocaleString()}</strong> Active Challengers
+              <div className="text-left">
+                <div className="flex gap-1 text-gold text-xs">★ ★ ★ ★ ★</div>
+                <div className="text-[11px] text-muted font-black uppercase tracking-widest opacity-60">
+                  <span className="text-white">{stats.activeChallengers.toLocaleString()}</span> Active Operatives
                 </div>
               </div>
             </div>
           </div>
 
           {/* Right Simulation */}
-          <div style={{ position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '10%', right: '0%', width: '100%', height: '80%', background: 'var(--grad-aurora)', filter: 'blur(90px)', zIndex: 0, opacity: 0.7 }} />
+          <div className="relative w-full max-w-[500px] mx-auto lg:max-w-none">
+            <div className="absolute inset-0 bg-grad-aurora filter blur-[90px] opacity-40 z-0" />
             
-            <div className="flex flex-col gap-6 relative z-10">
-              <div className="card p-8">
+            <div className="flex flex-col gap-6 relative z-10 animate-slide-up">
+              <div className="card p-6 md:p-8">
                 <div className="flex justify-between items-center mb-6">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center">⚽</div>
-                    <span className="font-display text-lg font-bold">Live Prediction</span>
+                    <div className="w-8 h-8 rounded-lg bg-blue-electric/10 flex items-center justify-center text-blue-electric">⚽</div>
+                    <span className="font-display text-lg font-black uppercase italic tracking-tighter text-white">Live Prediction</span>
                   </div>
-                  <span className="badge badge-blue">Round {stats.roundsCompleted + 1}</span>
+                  <span className="badge badge-blue px-3 py-1 text-[10px] font-black uppercase tracking-widest">Round {stats.roundsCompleted + 1}</span>
                 </div>
                 
                 <div className="flex flex-col gap-4 mb-8">
                   {matches.map((m, i) => (
-                    <div key={i} className="flex items-center justify-between p-4 rounded-2xl" style={{
-                      background: m.status === 'open' ? 'rgba(0,229,255,0.06)' : m.status === 'pending' ? 'rgba(242,201,76,0.06)' : 'rgba(255,255,255,0.02)',
-                      border: `1px solid ${m.status === 'correct' ? 'rgba(0,230,118,0.3)' : m.status === 'open' ? 'rgba(0,229,255,0.4)' : m.status === 'pending' ? 'rgba(242,201,76,0.4)' : 'rgba(255,255,255,0.05)'}`,
-                    }}>
-                      <div className="flex items-center gap-4">
-                        <span className={`badge px-2 py-1 text-[10px] ${m.status === 'correct' ? 'badge-success' : m.status === 'open' ? 'badge-blue' : m.status === 'pending' ? 'badge-gold' : 'badge-muted'}`}>{m.day}</span>
-                        <span className="font-display text-base font-semibold" style={{ color: m.status === 'locked' ? 'var(--text-muted)' : '#FFF' }}>{m.match}</span>
+                    <div key={i} className={`flex items-center justify-between p-4 rounded-xl border ${
+                      m.status === 'open' ? 'bg-blue-electric/[0.03] border-blue-electric/30' : 
+                      m.status === 'pending' ? 'bg-gold/[0.03] border-gold/30' : 
+                      'bg-white/[0.02] border-white/5'
+                    }`}>
+                      <div className="flex items-center gap-3 truncate">
+                        <span className={`badge px-2 py-0.5 text-[9px] font-black uppercase tracking-widest ${m.status === 'correct' ? 'badge-success' : m.status === 'open' ? 'badge-blue' : m.status === 'pending' ? 'badge-gold' : 'badge-muted'}`}>{m.day}</span>
+                        <span className={`font-display font-black text-sm uppercase italic truncate ${m.status === 'locked' ? 'text-muted' : 'text-white'}`}>{m.match}</span>
                       </div>
-                      <div style={{ fontSize: '0.8125rem', fontWeight: 600 }}>
-                        {m.status === 'correct' && <span style={{ color: 'var(--success)' }}>✓ Verified</span>}
+                      <div className="text-[10px] font-black uppercase tracking-widest whitespace-nowrap">
+                        {m.status === 'correct' && <span className="text-success flex items-center gap-1"><Check className="w-3 h-3" /> Verified</span>}
                         {m.status === 'open' && (
-                          <Link 
-                            href="/login"
-                            style={{ background: 'var(--blue-electric)', color: '#000', padding: '6px 16px', borderRadius: '99px', fontSize: '0.75rem', fontWeight: 700, cursor: 'pointer', display: 'inline-block' }}
-                          >
+                          <Link href="/login" className="bg-blue-electric text-black px-4 py-1.5 rounded-full text-[9px] font-black hover:scale-105 transition-transform">
                             Predict
                           </Link>
                         )}
-                        {m.status === 'pending' && <span style={{ color: 'var(--gold)' }}>Picked: {m.pick}</span>}
-                        {m.status === 'locked' && <span style={{ color: 'var(--text-muted)' }}>Locked</span>}
+                        {m.status === 'pending' && <span className="text-gold">Picked: {m.pick}</span>}
+                        {m.status === 'locked' && <span className="text-muted opacity-40">Locked</span>}
                       </div>
                     </div>
                   ))}
                 </div>
                 
-                <div style={{ background: 'rgba(255,255,255,0.02)', padding: '16px', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '12px' }}>
-                    <span>Streak Progress</span>
-                    <span style={{ color: 'var(--gold)' }}>1 / 3 Complete</span>
+                <div className="bg-white/[0.02] p-4 rounded-xl border border-white/5">
+                  <div className="flex justify-between text-[10px] font-black uppercase tracking-widest mb-3">
+                    <span className="text-muted italic">Streak Progress</span>
+                    <span className="text-gold italic">1 / 3 Completed</span>
                   </div>
-                  <div style={{ height: '8px', background: 'rgba(255,255,255,0.08)', borderRadius: '999px', overflow: 'hidden' }}>
-                    <div style={{ width: '33%', height: '100%', background: 'var(--grad-gold)', borderRadius: '999px' }} />
+                  <div className="h-2 bg-white/5 rounded-full overflow-hidden border border-white/5">
+                    <div className="h-full bg-grad-gold" style={{ width: '33.33%' }} />
                   </div>
                 </div>
               </div>
 
-              <div style={{
-                position: 'absolute', bottom: '-20px', right: '-20px',
-                background: 'linear-gradient(135deg, rgba(20,26,38,0.9), rgba(5,10,15,0.95))',
-                border: '1px solid var(--border-gold)', borderRadius: '24px', padding: '24px',
-                backdropFilter: 'blur(32px)', boxShadow: 'var(--shadow-lg), 0 0 40px rgba(242,201,76,0.15)',
-                display: 'flex', alignItems: 'center', gap: '20px'
-              }}>
-                <div style={{ width: '56px', height: '56px', borderRadius: '16px', background: 'rgba(242,201,76,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.75rem' }}>💰</div>
+              <div className="absolute -bottom-6 -right-4 sm:-right-8 bg-black/80 border border-gold/40 rounded-2xl p-6 backdrop-blur-2xl shadow-2xl flex items-center gap-5">
+                <div className="w-14 h-14 rounded-xl bg-gold/10 flex items-center justify-center text-2xl">💰</div>
                 <div>
-                  <div style={{ fontSize: '0.75rem', color: 'var(--gold)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '4px' }}>Reward Multiplier</div>
-                  <div style={{ fontFamily: "var(--font-display)", fontSize: '1.75rem', fontWeight: 800, color: '#FFF', lineHeight: 1 }}>10X Unlock</div>
+                  <div className="text-[10px] text-gold font-black uppercase tracking-widest mb-1 italic">Reward Multiplier</div>
+                  <div className="font-display text-2xl font-black text-white italic tracking-tighter uppercase leading-none">10X UNLOCK</div>
                 </div>
               </div>
             </div>
@@ -185,20 +167,20 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
       </section>
 
       {/* ──────────────────────── TRUST METRICS ──────────────────────── */}
-      <section style={{ padding: '64px 0', borderBottom: '1px solid var(--border)', background: 'var(--bg-secondary)', position: 'relative' }}>
+      <section className="py-12 md:py-20 bg-secondary border-b border-white/5">
         <div className="container">
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '32px' }}>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center lg:text-left">
             {[
-              { label: 'Active Challengers', value: stats.activeChallengers, suffix: '' },
-              { label: 'Rounds Completed', value: stats.roundsCompleted, suffix: '' },
-              { label: 'Perfect Streaks', value: stats.perfectStreaks, suffix: '' },
-              { label: 'Cash Paid Out', prefix: '₦', value: stats.totalCashPaid, suffix: '' },
+              { label: 'Verified Members', value: stats.activeChallengers, suffix: '' },
+              { label: 'Rounds Settled', value: stats.roundsCompleted, suffix: '' },
+              { label: 'Winning Streaks', value: stats.perfectStreaks, suffix: '' },
+              { label: 'Guaranteed Payouts', prefix: '₦', value: stats.totalCashPaid, suffix: '' },
             ].map((m, i) => (
-              <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <div style={{ fontFamily: "var(--font-display)", fontSize: '2.5rem', fontWeight: 800, color: '#FFF' }}>
-                  <Counter end={m.value} prefix={m.prefix} suffix={m.suffix} duration={2000 + i * 200} />
+              <div key={i} className="flex flex-col gap-2">
+                <div className="font-display text-3xl md:text-5xl font-black text-white italic tracking-tighter">
+                  <Counter end={m.value} prefix={m.prefix} suffix={m.suffix} />
                 </div>
-                <div style={{ fontSize: '0.875rem', fontWeight: 500, color: 'var(--text-secondary)' }}>{m.label}</div>
+                <div className="text-[11px] text-muted font-black uppercase tracking-widest opacity-60 italic">{m.label}</div>
               </div>
             ))}
           </div>
@@ -206,22 +188,22 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
       </section>
 
       {/* ──────────────────────── THE PROTOCOL ──────────────────────── */}
-      <section className="section">
+      <section className="section py-20 md:py-32">
         <div className="container">
-          <div className="text-center" style={{ marginBottom: '80px' }}>
-            <div className="section-label" style={{ justifyContent: 'center' }}>How It Works</div>
-            <h2 className="section-title" style={{ margin: '0 auto', maxWidth: '700px' }}>A clear path to reward.</h2>
-            <p className="section-subtitle" style={{ margin: '0 auto' }}>Select your tier, predict precisely, and hit a 3/3 streak.</p>
+          <div className="text-center mb-16 md:mb-24">
+            <div className="inline-flex items-center gap-2 px-4 py-1 bg-blue-electric/10 border border-blue-electric/20 rounded-full text-[10px] font-black text-blue-electric uppercase tracking-[0.3em] mb-4">THE PROTOCOL</div>
+            <h2 className="section-title text-4xl md:text-6xl max-w-2xl mx-auto uppercase italic font-black leading-tight mb-6">A clear path to <span className="text-gold">Guaranteed Reward.</span></h2>
+            <p className="section-subtitle text-muted font-black uppercase tracking-widest italic opacity-40 max-w-xl mx-auto">Follow the synchronization steps to secure your 10X payout.</p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '24px' }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
             {STEPS.map((step, i) => (
-              <div key={i} className="card" style={{ padding: '32px 24px', textAlign: 'center' }}>
-                <div style={{ width: '48px', height: '48px', margin: '0 auto 20px', borderRadius: '12px', background: 'var(--bg-elevated)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: "var(--font-mono)", fontSize: '1rem', fontWeight: 700, color: 'var(--blue-electric)', border: '1px solid rgba(0,229,255,0.2)' }}>
+              <div key={i} className="card p-8 flex flex-col items-center text-center group hover:border-gold/30 transition-all">
+                <div className="w-14 h-14 mb-6 rounded-xl bg-secondary border border-white/5 flex items-center justify-center font-display text-xl font-black text-gold italic group-hover:scale-110 transition-transform">
                   0{i + 1}
                 </div>
-                <h3 style={{ fontFamily: "var(--font-display)", fontSize: '1.25rem', fontWeight: 700, color: '#FFF', marginBottom: '12px' }}>{step.label}</h3>
-                <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.desc}</p>
+                <h3 className="font-display text-lg font-black text-white uppercase italic mb-4 tracking-tighter">{step.label}</h3>
+                <p className="text-[11px] text-muted font-black uppercase tracking-widest italic opacity-40 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -229,18 +211,19 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
       </section>
 
       {/* ──────────────────────── FINAL CTA ──────────────────────── */}
-      <section className="section text-center" style={{ padding: '160px 0' }}>
-        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '800px', height: '500px', background: 'var(--grad-aurora)', opacity: 0.3, filter: 'blur(120px)', zIndex: 0, pointerEvents: 'none' }} />
+      <section className="section text-center relative py-32 md:py-48 overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[500px] bg-grad-aurora opacity-30 filter blur-[120px] pointer-events-none" />
         
-        <div className="container relative">
-          <div className="section-label" style={{ justifyContent: 'center' }}>Take Control</div>
-          <h2 className="section-title" style={{ fontSize: 'clamp(3.5rem, 6vw, 4.5rem)', marginBottom: '32px' }}>Build your <span className="text-gradient-gold">Streak.</span></h2>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '24px' }}>
-            <Link href="/accounts" className="btn btn-primary btn-pulse">Get Started Now</Link>
+        <div className="container relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1 bg-gold/10 border border-gold/20 rounded-full text-[10px] font-black text-gold uppercase tracking-[0.3em] mb-8">SECURE ACCESS</div>
+          <h2 className="section-title text-5xl md:text-8xl font-black uppercase italic tracking-tighter mb-12">Build your <span className="text-gold">Streak.</span></h2>
+          <div className="flex justify-center">
+            <Link href="/accounts" className="btn btn-primary btn-pulse px-16 py-6 text-lg font-black uppercase tracking-widest shadow-2xl shadow-gold/20">
+              Start Challenge
+            </Link>
           </div>
         </div>
       </section>
-
     </div>
   );
 }

@@ -36,7 +36,7 @@ const FooterLogo = () => (
         </defs>
       </svg>
     </div>
-    <span className="font-display text-base font-black text-white uppercase tracking-tight">Pred<span className="text-grad-gold italic">Chain</span></span>
+    <span className="font-display text-base font-black text-white uppercase tracking-tight">Pred<span className="text-gold italic">Chain</span></span>
   </div>
 );
 
@@ -56,7 +56,7 @@ export default function Footer() {
           <div className="md:col-span-4 lg:col-span-5 flex flex-col items-start gap-24">
             <FooterLogo />
             <p className="text-[11px] font-medium text-muted/60 leading-relaxed uppercase tracking-widest max-w-400 italic">
-              PredChain utilizes high-frequency settlement protocols to ensure a premium, secure, and transparent 3-day football prediction experience for all verified network operatives.
+              PredChain provides a premium, secure, and transparent 3-day football prediction experience with instant rewards for all members.
             </p>
             <div className="flex gap-16">
               <a href="#" className="p-10 rounded-xl bg-white/[0.03] border border-white/5 hover:border-white/20 hover:bg-white/5 transition-all text-muted hover:text-white shadow-lg" aria-label="Twitter">
@@ -124,13 +124,13 @@ export default function Footer() {
           </div>
         </div>
 
-        {/* Dense Trust Framework */}
+        {/* Trust Indicators */}
         <div className="grid grid-2 md:grid-4 gap-12 p-20 md:p-16 bg-white/[0.02] border border-white/5 rounded-2xl mb-48 shadow-2xl">
           {[
-            { icon: <ShieldCheck className="w-14 h-14" />, label: 'Sentinel Verified' },
-            { icon: <CheckCircle2 className="w-14 h-14" />, label: 'Protocol Settled' },
-            { icon: <Lock className="w-14 h-14" />, label: 'AES-256 Encrypted' },
-            { icon: <Clock className="w-14 h-14" />, label: 'Real-time Feeds' },
+            { icon: <ShieldCheck className="w-14 h-14" />, label: 'Verified Security' },
+            { icon: <CheckCircle2 className="w-14 h-14" />, label: 'Instant Settlement' },
+            { icon: <Lock className="w-14 h-14" />, label: 'Secure Encryption' },
+            { icon: <Clock className="w-14 h-14" />, label: 'Live Data Feeds' },
           ].map((item, i) => (
             <div key={i} className="flex items-center justify-center gap-10 py-10 border-r border-white/5 last:border-none group">
               <div className="text-blue-electric/40 group-hover:text-blue-electric transition-colors">{item.icon}</div>
@@ -139,18 +139,18 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Terminal Bar */}
+        {/* Operational Status */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-24 pt-24 border-t border-white/5">
           <p className="text-[9px] font-black text-muted/30 uppercase tracking-[0.3em] flex items-center gap-8 italic">
-            <Check className="w-10 h-10 text-success" /> System Operational /// Node R26-X Active
+            <Check className="w-10 h-10 text-success" /> System Operational
           </p>
           <p className="text-[9px] font-black text-muted/30 uppercase tracking-[0.2em]">
-            © 2026 PREDCHAIN INFRASTRUCTURE. ALL RIGHTS RESERVED.
+            © 2026 PREDCHAIN. ALL RIGHTS RESERVED.
           </p>
           <div className="flex gap-20">
-            {['TERMS', 'PRIVACY', 'RULES', 'COOKIES'].map(l => (
-              <Link key={l} href="/terms" className="text-[9px] font-black text-muted/30 hover:text-blue-electric uppercase tracking-widest transition-colors">{l}</Link>
-            ))}
+            <Link href="/terms" className="text-[9px] font-black text-muted/30 hover:text-blue-electric uppercase tracking-widest transition-colors">TERMS</Link>
+            <Link href="/privacy" className="text-[9px] font-black text-muted/30 hover:text-blue-electric uppercase tracking-widest transition-colors">PRIVACY</Link>
+            <Link href="/rules" className="text-[9px] font-black text-muted/30 hover:text-blue-electric uppercase tracking-widest transition-colors">RULES</Link>
           </div>
         </div>
       </div>

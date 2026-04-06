@@ -147,17 +147,17 @@ export default function DashboardClient({
         <div className="container">
           
           {/* Internal Navigation Tabs */}
-          <div className="flex items-center gap-4 mb-24 overflow-x-auto no-scrollbar pb-4 border-b border-white/5">
+          <div className="flex items-center gap-2 mb-8 overflow-x-auto no-scrollbar pb-3 border-b border-white/5">
              {[
                { id: 'overview',   label: 'Overview',   icon: Layout },
                { id: 'challenge',  label: 'Challenge',  icon: Zap },
                { id: 'wallet',     label: 'Wallet',     icon: WalletIcon },
-               { id: 'referrals',  label: 'Network',    icon: Users }
+               { id: 'referrals',  label: 'Referrals',  icon: Users }
              ].map((tab) => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-16 py-10 rounded-xl transition-all whitespace-nowrap border ${
+                  className={`flex items-center gap-2 px-6 py-3 rounded-lg transition-all whitespace-nowrap border ${
                     activeTab === tab.id 
                     ? 'bg-blue-electric/10 border-blue-electric/30 text-white shadow-lg shadow-blue-electric/10' 
                     : 'bg-transparent border-transparent text-muted hover:text-white hover:bg-white/5'
@@ -171,34 +171,34 @@ export default function DashboardClient({
 
           <div className="animate-slide-up">
             {activeTab === 'overview' && (
-              <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6">
-                <div className="flex flex-col gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div className="lg:col-span-8 flex flex-col gap-6">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="card p-24 relative overflow-hidden group">
+                      <div className="card p-6 relative overflow-hidden group">
                          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp className="w-12 h-12" /></div>
-                         <div className="flex justify-between items-start mb-24">
+                         <div className="flex justify-between items-start mb-12">
                             <div className="p-10 bg-gold/10 rounded-xl"><Activity className="w-5 h-5 text-gold" /></div>
                             <span className="badge badge-gold py-2 px-10 text-[8px] font-black tracking-widest">Active Round</span>
                          </div>
                          <h3 className="text-muted text-[9px] font-black uppercase tracking-widest mb-2">Round Progression</h3>
-                         <div className="text-xl font-black font-display text-white mb-12">
+                         <div className="text-xl font-black font-display text-white mb-8">
                              {userEntry ? `Step ${streak + 1} / 3` : `Round ${activeRound?.round_number || ''} Entry`}
                          </div>
-                         <div className="w-full h-2 bg-white/[0.05] rounded-full overflow-hidden border border-white/5">
+                         <div className="w-full h-1.5 bg-white/[0.05] rounded-full overflow-hidden border border-white/5">
                             <div className="h-full bg-grad-gold" style={{ width: `${(streak / 3) * 100}%` }} />
                          </div>
                       </div>
-                      <div className="card p-24 relative overflow-hidden group">
+                      <div className="card p-6 relative overflow-hidden group">
                         <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><ShieldCheck className="w-12 h-12" /></div>
-                        <div className="flex justify-between items-start mb-24">
+                        <div className="flex justify-between items-start mb-12">
                             <div className="p-10 bg-blue-electric/10 rounded-xl"><ShieldCheck className="w-5 h-5 text-blue-electric" /></div>
-                            <span className="badge badge-blue py-2 px-10 text-[8px] font-black tracking-widest">Security Active</span>
+                            <span className="badge badge-blue py-2 px-10 text-[8px] font-black tracking-widest">Verified</span>
                          </div>
-                         <h3 className="text-muted text-[9px] font-black uppercase tracking-widest mb-2">Account State</h3>
-                         <div className="text-xl font-black font-display text-white mb-12">Verified</div>
+                         <h3 className="text-muted text-[9px] font-black uppercase tracking-widest mb-2">Account Status</h3>
+                         <div className="text-xl font-black font-display text-white mb-8">System Active</div>
                          <div className="flex items-center gap-6">
-                            <div className="w-2.5 h-2.5 rounded-full bg-success shadow-[0_0_8px_var(--success)] animate-pulse" />
-                            <span className="text-[9px] text-muted font-bold uppercase tracking-widest">Sync Active</span>
+                            <div className="w-2 h-2 rounded-full bg-success shadow-[0_0_8px_var(--success)] animate-pulse" />
+                            <span className="text-[9px] text-muted font-bold uppercase tracking-widest">Connected</span>
                          </div>
                       </div>
                    </div>
@@ -238,27 +238,27 @@ export default function DashboardClient({
                    </div>
                 </div>
 
-                <div className="flex flex-col gap-6">
-                   <div className="card p-24 border-blue-electric/20 bg-blue-electric/[0.02]">
-                      <div className="flex justify-between items-center mb-16">
-                         <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted">Est. Earnings</h3>
+                <div className="lg:col-span-4 flex flex-col gap-6">
+                   <div className="card p-6 border-blue-electric/20 bg-blue-electric/[0.02]">
+                      <div className="flex justify-between items-center mb-8">
+                         <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted">Est. Rewards</h3>
                          <TrendingUp className="w-4 h-4 text-success" />
                       </div>
-                      <div className="p-20 bg-black/40 border border-white/5 rounded-2xl text-center mb-16 relative overflow-hidden group">
+                      <div className="p-12 bg-black/40 border border-white/5 rounded-xl text-center mb-12 relative overflow-hidden group">
                          <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-12 h-12" /></div>
-                         <div className="text-muted text-[8px] font-black uppercase mb-4 tracking-widest">Cycle Reward</div>
+                         <div className="text-muted text-[8px] font-black uppercase mb-4 tracking-widest">Streak Bonus</div>
                          <div className="text-3xl font-black font-display text-white">₦25,000</div>
                       </div>
-                      <button onClick={() => setActiveTab('referrals')} className="btn btn-blue w-full py-12 font-black uppercase tracking-widest text-[9px] shadow-lg shadow-blue-electric/20">Refer Network</button>
+                      <button onClick={() => setActiveTab('referrals')} className="btn btn-blue w-full py-10 font-black uppercase tracking-widest text-[9px] shadow-lg shadow-blue-electric/20">Refer Network</button>
                    </div>
                    
-                   <div className="card p-24 bg-danger/[0.02] border-danger/20">
-                      <h3 className="text-[9px] font-black text-danger uppercase tracking-[0.2em] mb-12 flex items-center gap-6">
-                         <ShieldAlert className="w-4 h-4" /> Priority Alert
+                   <div className="card p-6 bg-danger/[0.02] border-danger/20">
+                      <h3 className="text-[9px] font-black text-danger uppercase tracking-[0.2em] mb-4 flex items-center gap-6">
+                         <ShieldAlert className="w-4 h-4" /> Final Notice
                       </h3>
                       <p className="text-[10px] text-muted leading-relaxed font-black uppercase tracking-wider italic">
                         Round {activeRound?.round_number || ''} is ending soon. 
-                        Finalize all predictions to secure current points.
+                        Authorize your final prediction.
                       </p>
                    </div>
                 </div>
@@ -267,17 +267,17 @@ export default function DashboardClient({
 
             {activeTab === 'challenge' && (
               <div className="flex flex-col gap-6">
-                <div className="card bg-blue-electric/[0.03] border-blue-electric/20 p-24 flex flex-col md:flex-row justify-between items-center gap-24 relative overflow-hidden">
-                   <div className="flex items-center gap-20 relative z-10">
-                      <div className="p-12 bg-blue-electric/10 rounded-2xl border border-blue-electric/20"><Zap className="w-6 h-6 text-blue-electric" /></div>
+                <div className="card bg-blue-electric/[0.03] border-blue-electric/20 p-8 flex flex-col md:flex-row justify-between items-center gap-12 relative overflow-hidden">
+                   <div className="flex items-center gap-12 relative z-10">
+                      <div className="p-10 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Zap className="w-6 h-6 text-blue-electric" /></div>
                       <div>
-                         <h3 className="font-display text-xl font-black text-white italic tracking-tight uppercase">PredChain Arena</h3>
-                         <p className="text-muted text-[10px] font-black uppercase tracking-widest">Active Verification Cycle /// Round {activeRound?.round_number || ''}</p>
+                         <h3 className="font-display text-xl font-black text-white italic tracking-tight uppercase">Challenge Arena</h3>
+                         <p className="text-muted text-[10px] font-black uppercase tracking-widest">Active Round /// {activeRound?.round_number || ''}</p>
                       </div>
                    </div>
-                   <div className="relative z-10">
-                      <div className="text-center p-12 px-20 bg-black/40 border border-white/10 rounded-xl">
-                         <div className="text-[8px] text-muted font-black uppercase mb-2 tracking-widest">Remaining Time</div>
+                   <div className="relative z-10 w-full md:w-auto">
+                      <div className="text-center p-10 px-16 bg-black/40 border border-white/10 rounded-xl">
+                         <div className="text-[8px] text-muted font-black uppercase mb-2 tracking-widest">Round Timer</div>
                          <div className="text-lg font-black font-mono text-white tracking-widest italic">{activeRound?.end_date ? new Date(activeRound.end_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'OFFLINE'}</div>
                       </div>
                    </div>
@@ -616,21 +616,21 @@ export default function DashboardClient({
                     </div>
                  </div>
 
-                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="card p-32 bg-white/[0.02]">
-                       <div className="marker:flex items-center gap-12 mb-24">
+                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                    <div className="card p-8 bg-white/[0.02] lg:col-span-8">
+                       <div className="flex items-center gap-12 mb-16">
                           <div className="p-10 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Users className="w-5 h-5 text-blue-electric" /></div>
                           <h4 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Referral Link</h4>
                        </div>
-                       <div className="flex gap-4 p-4 bg-black/40 border border-white/10 rounded-xl group focus-within:border-blue-electric/40 transition-all">
-                          <input readOnly value={`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`} className="flex-1 bg-transparent px-16 py-12 font-mono text-[11px] text-blue-electric font-black focus:outline-none" />
-                          <button onClick={() => { navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`); showSuccess('Synchronization link copied.'); }} className="btn btn-blue px-20 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-blue-electric/20">COPY</button>
+                       <div className="flex gap-4 p-4 bg-black/40 border border-white/10 rounded-xl group focus-within:border-blue-electric/40 transition-all overflow-hidden">
+                          <input readOnly value={`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`} className="flex-1 bg-transparent px-10 py-10 font-mono text-[11px] text-blue-electric font-black focus:outline-none truncate" />
+                          <button onClick={() => { navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`); showSuccess('Link copied to clipboard.'); }} className="btn btn-blue px-16 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-blue-electric/20">COPY</button>
                        </div>
-                       <p className="mt-16 text-[9px] text-muted font-black uppercase tracking-widest italic ml-4 opacity-40">Identifier: {profile.username?.toUpperCase() || 'NONE'}</p>
+                       <p className="mt-8 text-[9px] text-muted font-black uppercase tracking-widest italic ml-4 opacity-40">User ID: {profile.username?.toUpperCase() || 'NONE'}</p>
                     </div>
-                    <div className="card p-32 bg-white/[0.02] flex flex-col justify-between">
+                    <div className="card p-8 bg-white/[0.02] flex flex-col justify-between lg:col-span-4">
                        <div>
-                          <div className="flex items-center gap-12 mb-24">
+                          <div className="flex items-center gap-12 mb-8">
                              <div className="p-10 bg-gold/10 rounded-xl border border-gold/20"><Activity className="w-5 h-5 text-gold" /></div>
                              <h4 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Bonus Structure</h4>
                           </div>

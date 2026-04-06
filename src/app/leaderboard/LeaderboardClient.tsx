@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 
 interface LeaderboardClientProps {
   rankings: Array<{
@@ -31,72 +32,42 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
   return (
     <div style={{ paddingTop: '80px' }}>
       {/* Hero */}
-      <section style={{
-        padding: '72px 0 56px',
-        background: 'linear-gradient(180deg, #0D1321 0%, #070B14 100%)',
-        borderBottom: '1px solid rgba(255,255,255,0.07)',
-        textAlign: 'center', position: 'relative', overflow: 'hidden',
-      }}>
-        <div style={{
-          position: 'absolute', top: '-100px', left: '50%', transform: 'translateX(-50%)',
-          width: '600px', height: '400px', borderRadius: '50%',
-          background: 'radial-gradient(ellipse, rgba(212,175,55,0.08) 0%, transparent 70%)',
-          pointerEvents: 'none',
-        }} aria-hidden="true" />
-        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
-          <div className="section-label" style={{ justifyContent: 'center' }}>Rankings</div>
-          <h1 className="section-title" style={{ margin: '0 auto 12px', fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>
+      <section className="py-20 md:py-24 bg-gradient-to-b from-[#0D1321] to-[#070B14] border-b border-white/5 relative overflow-hidden">
+        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[600px] h-[400px] rounded-full bg-[radial-gradient(ellipse,rgba(212,175,55,0.08)_0%,transparent_70%)] pointer-events-none" aria-hidden="true" />
+        <div className="container relative z-10 text-center">
+          <div className="text-gold font-black text-[10px] uppercase tracking-[0.3em] mb-4 italic">Rankings</div>
+          <h1 className="text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-4">
             Global Leaderboard
           </h1>
-          <p className="section-subtitle" style={{ margin: '0 auto' }}>
+          <p className="text-muted text-lg max-w-lg mx-auto italic font-bold opacity-60 uppercase tracking-widest text-[11px]">
             Top challengers ranked by streak performance and verified wins.
           </p>
         </div>
       </section>
 
       {/* Top 3 Spotlight */}
-      <section className="section-sm" style={{ background: 'var(--bg-primary)' }}>
+      <section className="py-12 md:py-20 bg-primary">
         <div className="container">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '48px' }}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
             {top3.map((player, i) => {
               const badge = i === 0 ? 'gold' : i === 1 ? 'silver' : 'bronze';
               const name = player.profile?.username || player.profile?.full_name || 'Challenger';
+              const colorClass = i === 0 ? 'text-gold' : i === 1 ? 'text-slate-400' : 'text-orange-700';
               return (
-                <div key={player.id} style={{
-                  background: 'var(--bg-card)',
-                  border: `1px solid ${BADGE_COLORS[badge] + '40'}`,
-                  borderRadius: '20px', padding: '28px',
-                  textAlign: 'center',
-                  boxShadow: i === 0 ? '0 0 60px rgba(212,175,55,0.15)' : 'var(--shadow-card)',
-                  position: 'relative',
-                  transform: i === 0 ? 'scale(1.04)' : 'scale(1)',
-                }}>
+                <div key={player.id} className={`card p-8 text-center relative overflow-hidden transition-all hover:scale-[1.02] border-white/5 ${i === 0 ? 'md:scale-110 shadow-2xl shadow-gold/10 z-10 border-gold/40' : ''}`}>
                   {i === 0 && (
-                    <div style={{
-                      position: 'absolute', top: 0, left: 0, right: 0, height: '3px',
-                      borderRadius: '20px 20px 0 0',
-                      background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
-                    }} aria-hidden="true" />
+                    <div className="absolute top-0 left-0 right-0 h-1 bg-grad-gold" aria-hidden="true" />
                   )}
-                  <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>
+                  <div className="text-4xl mb-4">
                     {i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}
                   </div>
-                  <div style={{
-                    fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.875rem', fontWeight: 700,
-                    letterSpacing: '0.06em', textTransform: 'uppercase',
-                    color: BADGE_COLORS[badge],
-                    marginBottom: '4px',
-                  }}>#{i + 1}</div>
-                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.125rem', fontWeight: 800, color: '#F8FAFC', marginBottom: '16px' }}>
+                  <div className={`font-black text-[10px] uppercase tracking-widest mb-1 ${colorClass}`}>#{i + 1} Rank</div>
+                  <div className="font-display text-xl font-black text-white italic mb-4 uppercase tracking-tighter">
                     {name}
                   </div>
-                  <div style={{
-                    fontFamily: "'Space Grotesk', sans-serif",
-                    fontSize: '1.75rem', fontWeight: 900,
-                    background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
-                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-                    letterSpacing: '-0.03em', marginBottom: '8px',
-                  }}>{player.streak_count}/3 Streak</div>
+                  <div className="font-display text-3xl font-black text-white italic tracking-tighter mb-4">
+                    <span className="text-gold">{player.streak_count}/3</span> Streak
+                  </div>
                 </div>
               );
             })}
@@ -154,14 +125,14 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                       </span>
                     </td>
                     <td>
-                      <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: '#F8FAFC' }}>
+                      <span className="font-display font-bold text-white">
                         {row.profile?.username || row.profile?.full_name || 'Guest Challenger'}
                       </span>
                     </td>
                     <td>
-                      <span style={{ color: row.streak_count === 3 ? '#22C55E' : '#D4AF37', fontWeight: 700 }}>{row.streak_count}/3</span>
+                      <span className="font-display font-black" style={{ color: row.streak_count === 3 ? '#22C55E' : '#D4AF37' }}>{row.streak_count}/3</span>
                     </td>
-                    <td style={{ color: '#A7B0C0', fontWeight: 600 }}>{row.tier?.name || 'Starter'}</td>
+                    <td className="font-display font-bold text-slate-400">{row.tier?.name || 'Starter'}</td>
                     <td>
                       {row.is_winner
                         ? <span className="badge badge-success">Verified</span>
@@ -172,6 +143,23 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      {/* Bottom CTA */}
+      <section className="py-20 md:py-32 text-center relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-grad-aurora opacity-20 filter blur-[120px] pointer-events-none" />
+        <div className="container relative z-10">
+          <h2 className="font-display text-4xl md:text-6xl font-black text-white italic uppercase tracking-tighter mb-8 leading-tight">
+            Your Name <br /> Could Be Here
+          </h2>
+          <p className="text-muted font-bold uppercase tracking-widest italic opacity-60 text-xs mb-10 max-w-sm mx-auto">
+            Buy an account, build the perfect streak, and join the verified winners protocol.
+          </p>
+          <div className="flex flex-wrap gap-6 justify-center">
+            <Link href="/accounts" className="btn btn-primary px-12 py-5 text-sm font-black uppercase tracking-widest">Buy Account</Link>
+            <Link href="/how-it-works" className="btn btn-ghost px-12 py-5 text-sm font-black uppercase tracking-widest">Protocol</Link>
           </div>
         </div>
       </section>

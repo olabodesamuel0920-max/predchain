@@ -220,7 +220,13 @@ input, textarea, select {
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 0 16px;
+  }
 }
 
 .section {
@@ -580,4 +586,20 @@ input, textarea, select {
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* Auth Responsive Primitives */
+.auth-pane-left {
+  display: none;
+  position: relative;
+  flex: 1.1;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+@media (min-width: 1024px) {
+  .auth-pane-left {
+    display: flex;
+  }
 }
