@@ -33,8 +33,10 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
     { href: '/faq', label: '❓ Support / FAQ' },
   ];
 
-  const displayName = profile?.full_name || profile?.username || profile?.email?.split('@')[0] || 'Account';
-  const displayInitial = displayName === 'Account' ? 'A' : displayName.charAt(0).toUpperCase();
+  // Unified Identity Resolver Protocol
+  // Full Name -> Username -> Email Prefix -> "Account" Fallback
+  const displayName = profile?.full_name || (profile?.username ? `@${profile.username}`.toUpperCase() : null) || profile?.email?.split('@')[0] || 'Account';
+  const displayInitial = profile?.full_name ? profile.full_name.charAt(0).toUpperCase() : (profile?.username ? profile.username.charAt(0).toUpperCase() : 'A');
 
   const processStatus = (status: string) => {
     switch (status) {
@@ -177,7 +179,7 @@ export default function DashboardMenu({ profile, children }: DashboardMenuProps)
              </div>
              
              <div className="hidden xl:flex items-center gap-4 border-l border-white/10 pl-6 ml-2">
-                <span className="text-[9px] font-black text-muted uppercase italic tracking-tighter opacity-40">PredChain Sentinel Protocol</span>
+                <span className="text-[9px] font-black text-muted uppercase italic tracking-tighter opacity-40">PredChain Protocol Sentinel</span>
              </div>
           </div>
           

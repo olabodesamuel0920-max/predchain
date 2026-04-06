@@ -1,8 +1,20 @@
-'use client';
-
 import { useState } from 'react';
-import { User, Shield, KeyRound, Mail, Phone, Lock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
-import { updatePassword, updateProfile } from '@/app/actions/auth';
+import { 
+  User, 
+  Shield, 
+  KeyRound, 
+  Mail, 
+  Phone, 
+  Lock, 
+  CheckCircle2, 
+  AlertCircle, 
+  Loader2, 
+  LogOut, 
+  Copy, 
+  Calendar,
+  Globe
+} from 'lucide-react';
+import { updatePassword, updateProfile, logout } from '@/app/actions/auth';
 import { Profile } from '@/types';
 
 interface SettingsClientProps {
@@ -16,6 +28,7 @@ export default function SettingsClient({ profile }: SettingsClientProps) {
   const [isProfilePending, setIsProfilePending] = useState(false);
   const [success, setSuccess] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState(false);
+  const [copySuccess, setCopySuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [profileError, setProfileError] = useState<string | null>(null);
 
@@ -74,34 +87,54 @@ export default function SettingsClient({ profile }: SettingsClientProps) {
     }
   };
 
-  const displayName = profile.full_name || profile.username || profile.email?.split('@')[0] || 'Account';
-  const initial = displayName.charAt(0).toUpperCase();
+  const handleCopyReferral = () => {
+    const link = `${window.location.origin}/signup?ref=${profile.username}`;
+    navigator.clipboard.writeText(link);
+    setCopySuccess(true);
+    setTimeout(() => setCopySuccess(false), 2000);
+  };
 
-  const getStatusColor = (status: string) => {
+  // Unified Identity Resolver Protocol
+  const displayName = profile.full_name || (profile.username ? `@${profile.username}`.toUpperCase() : null) || profile.email?.split('@')[0] || 'Account';
+  const initial = profile.full_name ? profile.full_name.charAt(0).toUpperCase() : (profile.username ? profile.username.charAt(0).toUpperCase() : 'A');
+
+  const getStatus = (status: string) => {
     switch (status) {
-      case 'active': return 'success';
-      case 'suspended': return 'danger';
-      case 'under_review': return 'gold';
-      case 'demo': return 'blue-electric';
-      default: return 'success';
+      case 'active': return { label: 'Operational', color: 'success' };
+      case 'suspended': return { label: 'Suspended', color: 'danger' };
+      case 'under_review': return { label: 'Review', color: 'gold' };
+      case 'demo': return { label: 'Demo Node', color: 'blue-electric' };
+      default: return { label: 'Operational', color: 'success' };
     }
   };
 
-  const statusLabel = (status: string) => {
-    return status.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-  };
+  const status = getStatus(profile.status || 'active');
+  const joinedDate = new Date(profile.created_at).toLocaleDateString(undefined, { 
+    year: 'numeric', 
+    month: 'long', 
+    day: 'numeric' 
+  });
 
   return (
     <div className="container py-40 animate-fade-in">
       <div className="flex flex-col gap-32">
         {/* Header */}
-        <div>
-          <h1 className="font-display text-4xl font-black text-white italic uppercase tracking-tight mb-8">
-            Account <span className="text-grad-gold">Sentinel</span>
-          </h1>
-          <p className="text-muted text-[11px] font-bold uppercase tracking-[0.2em] opacity-60">
-            Node Identity & Security Protocol Synchronization
-          </p>
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-24">
+          <div>
+            <h1 className="font-display text-4xl font-black text-white italic uppercase tracking-tight mb-8">
+              Account <span className="text-grad-gold">Sentinel</span>
+            </h1>
+            <p className="text-muted text-[11px] font-bold uppercase tracking-[0.2em] opacity-60">
+              Identity Resolver & Protocol Configuration
+            </p>
+          </div>
+          
+          <form action={logout}>
+            <button type="submit" className="flex items-center gap-8 px-16 py-8 bg-danger/10 border border-danger/20 rounded-xl text-danger text-[10px] font-black uppercase tracking-widest hover:bg-danger/20 transition-all group">
+              <LogOut className="w-4 h-4 opacity-70 group-hover:opacity-100" />
+              Terminate Session
+            </button>
+          </form>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-32">
@@ -128,9 +161,9 @@ export default function SettingsClient({ profile }: SettingsClientProps) {
                   <div className="flex items-center justify-between p-12 bg-black/40 border border-white/5 rounded-xl">
                      <span className="text-[9px] font-black text-muted uppercase tracking-widest">Node Status</span>
                      <div className="flex items-center gap-6">
-                        <div className={`w-1.5 h-1.5 rounded-full bg-${getStatusColor(profile.status || 'active')} animate-pulse`} />
-                        <span className={`text-[10px] font-black text-${getStatusColor(profile.status || 'active')} uppercase tracking-widest`}>
-                          {statusLabel(profile.status || 'active')}
+                        <div className={`w-1.5 h-1.5 rounded-full bg-${status.color} animate-pulse`} style={{ boxShadow: `0 0 4px var(--${status.color})` }} />
+                        <span className={`text-[10px] font-black text-${status.color} uppercase tracking-widest`}>
+                          {status.label}
                         </span>
                      </div>
                   </div>
@@ -138,9 +171,38 @@ export default function SettingsClient({ profile }: SettingsClientProps) {
                      <span className="text-[9px] font-black text-muted uppercase tracking-widest">Access Role</span>
                      <span className="text-[10px] font-black text-gold uppercase tracking-widest">{profile.role}</span>
                   </div>
+                  <div className="flex items-center justify-between p-12 bg-black/40 border border-white/5 rounded-xl">
+                     <span className="text-[9px] font-black text-muted uppercase tracking-widest">Joined Date</span>
+                     <div className="flex items-center gap-6">
+                        <Calendar className="w-3 h-3 text-muted" />
+                        <span className="text-[10px] font-black text-white/60 uppercase tracking-widest">
+                          {joinedDate}
+                        </span>
+                     </div>
+                  </div>
                </div>
             </div>
 
+            {/* Referral Info */}
+            <div className="card p-24 border-blue-electric/10 bg-blue-electric/[0.02]">
+               <div className="flex items-center gap-12 mb-16">
+                  <Globe className="w-5 h-5 text-blue-electric" />
+                  <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em]">Network Nexus</h3>
+               </div>
+               <p className="text-muted text-[10px] font-bold uppercase tracking-widest leading-relaxed opacity-60 mb-16">
+                 Recruit new operators to the PredChain network and claim synchronization rewards.
+               </p>
+               <button 
+                 onClick={handleCopyReferral}
+                 className="w-full flex items-center justify-between gap-12 p-12 bg-black/40 border border-white/10 rounded-xl hover:border-blue-electric/40 transition-all group"
+               >
+                 <span className="text-[10px] font-mono font-black text-blue-electric truncate">
+                    {copySuccess ? 'Link Copied To Clipboard' : `predchain.com/ref=${profile.username}`}
+                 </span>
+                 <Copy className={`w-4 h-4 ${copySuccess ? 'text-success' : 'text-blue-electric'}`} />
+               </button>
+            </div>
+            {/* Security Notice */}
             <div className="card p-24 bg-gold/[0.02] border-gold/10">
                <div className="flex items-center gap-12 mb-16">
                   <Shield className="w-5 h-5 text-gold" />

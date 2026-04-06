@@ -581,7 +581,7 @@ export default function DashboardClient({
                             type="text" 
                             value={bankInfo.bank}
                             onChange={(e) => setBankInfo({...bankInfo, bank: e.target.value})}
-                            placeholder="Bank Name" 
+                            placeholder="Bank Name (e.g. Zenith, GTB)" 
                             className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-10 text-[10px] font-bold text-white focus:outline-none focus:border-white/20 transition-all"
                             required
                           />
@@ -589,8 +589,16 @@ export default function DashboardClient({
                             type="text" 
                             value={bankInfo.account}
                             onChange={(e) => setBankInfo({...bankInfo, account: e.target.value})}
-                            placeholder="Account Number" 
+                            placeholder="Account Number (10 digits)" 
                             className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-10 text-[10px] font-mono font-black text-white focus:outline-none focus:border-white/20 transition-all"
+                            required
+                          />
+                          <input 
+                            type="text" 
+                            value={bankInfo.name}
+                            onChange={(e) => setBankInfo({...bankInfo, name: e.target.value})}
+                            placeholder="Account Holder Name" 
+                            className="w-full bg-black/40 border border-white/5 rounded-xl px-16 py-10 text-[10px] font-bold text-white focus:outline-none focus:border-white/20 transition-all uppercase"
                             required
                           />
                         </div>

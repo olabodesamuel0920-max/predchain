@@ -6,6 +6,7 @@ export async function updateSession(request: NextRequest) {
     request,
   })
 
+  // Initialize Supabase Client
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -27,41 +28,34 @@ export async function updateSession(request: NextRequest) {
     }
   )
 
-  // refreshing the auth token
+  // 1. Synchronize the Auth Token (Refresh Session)
+  // This validates the JWT and refreshes it if needed.
   const { data: { user } } = await supabase.auth.getUser()
 
-  // ─── AUTH PROTECTION ───
-  // Handle Dashboard Protection
-  if (request.nextUrl.pathname.startsWith('/dashboard') && !user) {
+  const pathname = request.nextUrl.pathname
+  const isProtectedPath = pathname.startsWith('/dashboard') || pathname.startsWith('/admin')
+
+  // 2. Enforce Authentication Guard
+  // If the user attempts to reach a protected node without an authorized session,
+  // we redirect them to the terminal login with a returnTo pointer.
+  if (isProtectedPath && !user) {
     const url = request.nextUrl.clone()
     url.pathname = '/login'
-    url.searchParams.set('error', 'Authentication required.')
+    
+    // Clear existing params to avoid confusion, but preserve 'error' if it came from page level
+    const currentError = url.searchParams.get('error')
+    if (!currentError) {
+       url.searchParams.set('error', 'Authorized session required.')
+    }
+    
+    url.searchParams.set('returnTo', pathname)
     return NextResponse.redirect(url)
   }
 
-  // Handle Admin Protection
-  if (request.nextUrl.pathname.startsWith('/admin')) {
-    if (!user) {
-      const url = request.nextUrl.clone()
-      url.pathname = '/login'
-      url.searchParams.set('error', 'Authentication required.')
-      return NextResponse.redirect(url)
-    }
-
-    // Role-based check
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
-
-    if (profile?.role !== 'admin' && user.email !== 'olabodesamuel0920@gmail.com') {
-      const url = request.nextUrl.clone()
-      url.pathname = '/dashboard'
-      url.searchParams.set('error', 'Unauthorized: Admin access only.')
-      return NextResponse.redirect(url)
-    }
-  }
-
+  // 3. Admin Access Protocol
+  // We allow authenticated users to reach the admin page, where the page-level 
+  // Identity Resolver will determine whether to load the console or show Restricted Access.
+  // This ensures the "Access Restricted" screen is properly rendered instead of a raw redirect.
+  
   return supabaseResponse
 }

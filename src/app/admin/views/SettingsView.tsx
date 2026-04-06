@@ -29,7 +29,7 @@ export default function SettingsView() {
     referral_bonus: 1000,
     announcement_banner: { text: '', active: false },
     trust_stats_mode: 'real',
-    tier_pricing: { starter: 5000, standard: 10000, premium: 25000 }
+    tier_pricing: { starter: 5000, standard: 10000, premium: 20000 }
   });
 
   useEffect(() => {

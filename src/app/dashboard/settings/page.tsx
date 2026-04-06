@@ -10,25 +10,34 @@ export default async function SettingsPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // If no user session is found, we redirect to login but preserve the returnTo location.
   if (!user) {
-    return redirect('/login');
+    return redirect('/login?error=Session+authentication+required&returnTo=/dashboard/settings');
   }
 
-  const { data: profile } = await supabase
+  // Fetch the user's protocol profile
+  const { data: profile, error } = await supabase
     .from('profiles')
     .select('*')
     .eq('id', user.id)
     .single();
 
-  if (!profile) {
-    return redirect('/login');
-  }
+  // If profile is missing, we don't kick them out immediately. 
+  // We provide a fallback identity so the account center remains accessible for recovery/support.
+  const fallbackProfile: Partial<Profile> = {
+    id: user.id,
+    full_name: 'Protocol Member',
+    username: user.email?.split('@')[0] || 'member',
+    email: user.email || '',
+    role: 'user', // Match UserRole type
+    status: 'active',
+    created_at: user.created_at
+  };
 
-  // Inject email from user object as it's more reliable than profile table for auth info
   const enrichedProfile: Profile = {
-    ...profile,
-    email: user.email || (profile as any).email || 'not available',
-    status: (profile as any).status || 'active',
+    ...(profile || fallbackProfile),
+    email: user.email || (profile as any)?.email || 'not available',
+    status: (profile as any)?.status || 'active',
   } as Profile;
 
   return (
