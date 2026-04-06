@@ -49,11 +49,12 @@ interface AccountsClientProps {
 }
 
 // ─── HELPERS ─────────────────────────────────────────────────────────────────
+// ─── HELPERS ─────────────────────────────────────────────────────────────────
 function getTierIcon(name: string) {
   switch (name) {
-    case 'Premium': return <Gem style={{ width: 18, height: 18, color: 'var(--gold)' }} />;
-    case 'Standard': return <Star style={{ width: 18, height: 18, color: 'var(--blue-electric)' }} />;
-    default: return <Shield style={{ width: 18, height: 18, color: 'var(--text-muted)' }} />;
+    case 'Premium': return <Gem className="w-4 h-4 text-gold" />;
+    case 'Standard': return <Star className="w-4 h-4 text-blue-electric" />;
+    default: return <Shield className="w-4 h-4 text-muted" />;
   }
 }
 
@@ -61,40 +62,37 @@ function buildDisplayTiers(tiers: AccountTier[]): DisplayTier[] {
   return tiers.map(t => {
     const isStandard = t.name === 'Standard';
     const isPremium  = t.name === 'Premium';
+    const priceRaw = t.price_ngn;
+    const rewardVal = priceRaw * 10;
+    
     return {
       id: t.id,
       name: t.name,
-      price: `₦${t.price_ngn.toLocaleString()}`,
-      reward: t.perks?.reward || '₦0',
-      multiplier: '10X',
+      price: `₦${priceRaw.toLocaleString()}`,
+      reward: `₦${rewardVal.toLocaleString()}`,
+      multiplier: '10X Rewards',
       badge: isStandard ? 'POPULAR' : isPremium ? 'ELITE' : null,
       featured: isStandard,
-      accentColor: isStandard ? 'var(--blue-electric)' : isPremium ? 'var(--gold)' : 'var(--text-muted)',
-      accentBg: isStandard ? 'rgba(0,229,255,0.06)' : isPremium ? 'rgba(242,201,76,0.04)' : 'rgba(255,255,255,0.015)',
-      accentBorder: isStandard ? 'rgba(0,229,255,0.25)' : isPremium ? 'rgba(242,201,76,0.25)' : 'rgba(255,255,255,0.07)',
+      accentColor: isStandard ? 'text-blue-electric' : isPremium ? 'text-gold' : 'text-muted',
+      accentBg: isStandard ? 'bg-blue-electric/5' : isPremium ? 'bg-gold/5' : 'bg-white/[0.02]',
+      accentBorder: isStandard ? 'border-blue-electric/20' : isPremium ? 'border-gold/20' : 'border-white/10',
       features: [
         { label: '3-Day Challenge Access' },
-        { label: '1 Prediction Per Day' },
-        { label: `${t.perks?.predictions_per_round ?? 3} Predictions Per Round` },
-        { label: 'Leaderboard Access' },
-        { label: `₦${(t.perks?.referral_bonus ?? 1000).toLocaleString()} Referral Bonus` },
+        { label: '1 Daily Prediction' },
+        { label: 'Live Leaderboard' },
+        { label: `₦${(t.perks?.referral_bonus ?? 1000).toLocaleString()} Reward (Network)` },
         { label: 'Verified Member Badge' },
-        { label: 'History Tracking' },
-        ...(t.perks?.priority ? [{ label: 'Priority Verification' }] : []),
         ...(isPremium ? [
-          { label: 'Premium Profile' },
-          { label: 'Winner Spotlight' },
+          { label: 'Priority Verification' },
           { label: 'Elite Rank Badge' },
         ] : []),
       ],
-      cta: isPremium ? 'BUY PREMIUM' : isStandard ? 'BUY STANDARD' : 'GET STARTED',
+      cta: isPremium ? 'Get Premium' : 'Select Plan',
     };
   });
 }
 
 // ─── TIER CARD ────────────────────────────────────────────────────────────────
-// NOTE: ALL spacing uses inline `style` to avoid conflict between the codebase's
-// custom px-based class names (globals.css) and Tailwind's 4px-scale utilities.
 interface TierCardProps {
   tier: AccountTier;
   displayTier: DisplayTier;
@@ -107,128 +105,58 @@ interface TierCardProps {
 function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, walletBalance }: TierCardProps) {
   const isWalletEnough = walletBalance >= tier.price_ngn;
 
-  const cardStyle: React.CSSProperties = {
-    position: 'relative',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 16,
-    padding: 20,
-    borderRadius: 12,
-    border: `1px solid ${displayTier.accentBorder}`,
-    background: displayTier.accentBg,
-    flexShrink: 0,
-    width: 260,
-    cursor: 'default',
-    boxShadow: displayTier.featured ? `0 12px 40px rgba(0,229,255,0.04)` : '0 4px 24px rgba(0,0,0,0.4)',
-    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-  };
-
-  const badgeStyle: React.CSSProperties = {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    padding: '3px 8px',
-    borderRadius: 4,
-    fontSize: '0.55rem',
-    fontWeight: 900,
-    letterSpacing: '0.1em',
-    textTransform: 'uppercase',
-    color: displayTier.accentColor,
-    background: `${displayTier.accentColor}12`,
-    border: `1px solid ${displayTier.accentBorder}`,
-  };
-
   return (
     <motion.div
-      style={cardStyle}
-      whileHover={{ y: -4, borderColor: `${displayTier.accentColor}50` }}
+      whileHover={{ y: -4 }}
+      className={`relative flex flex-col gap-5 p-5 rounded-xl border ${displayTier.accentBorder} ${displayTier.accentBg} shrink-0 w-[280px] shadow-lg transition-all group`}
     >
       {/* Badge */}
-      {displayTier.badge && <span style={badgeStyle}>{displayTier.badge}</span>}
+      {displayTier.badge && (
+        <span className={`absolute top-4 right-4 px-2 py-0.5 rounded text-[9px] font-extrabold tracking-widest ${displayTier.accentColor} bg-white/5 border ${displayTier.accentBorder}`}>
+          {displayTier.badge}
+        </span>
+      )}
 
-      {/* Header: Icon + name + price */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <div style={{
-            padding: 6,
-            borderRadius: 6,
-            background: `${displayTier.accentColor}10`,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-          }}>
+      {/* Header */}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <div className="p-2 rounded-lg bg-white/5 flex items-center justify-center">
             {getTierIcon(displayTier.name)}
           </div>
-          <span style={{
-            fontSize: '0.55rem',
-            fontWeight: 900,
-            color: 'var(--text-muted)',
-            textTransform: 'uppercase',
-            letterSpacing: '0.15em',
-            opacity: 0.6
-          }}>
+          <span className="text-[10px] font-bold text-muted uppercase tracking-wider opacity-60">
             {displayTier.name} Plan
           </span>
         </div>
 
-        <div style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '1.75rem',
-          fontWeight: 900,
-          color: '#fff',
-          letterSpacing: '-0.02em',
-          fontStyle: 'italic',
-          lineHeight: 1,
-        }}>
+        <div className="font-display text-3xl font-extrabold text-white italic tracking-tighter leading-none">
           {displayTier.price}
         </div>
       </div>
 
       {/* Yield box */}
-      <div style={{
-        padding: '10px 12px',
-        borderRadius: 8,
-        background: 'rgba(0,0,0,0.2)',
-        border: '1px solid rgba(255,255,255,0.03)',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 6,
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '0.55rem', fontWeight: 900, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.1em', opacity: 0.5 }}>
-            Total Reward
+      <div className="p-3.5 rounded-lg bg-black/40 border border-white/5 flex flex-col gap-2 shadow-inner">
+        <div className="flex items-center justify-between">
+          <span className="text-[9px] font-bold text-muted uppercase tracking-wide opacity-50">
+            Estimated Return
           </span>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 4,
-            padding: '2px 6px', borderRadius: 4,
-            background: 'rgba(0,230,118,0.06)',
-            border: '1px solid rgba(0,230,118,0.15)',
-          }}>
-            <div style={{ width: 4, height: 4, borderRadius: '50%', background: 'var(--success)' }} />
-            <span style={{ fontSize: '0.5rem', fontWeight: 900, color: 'var(--success)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              {displayTier.multiplier}
-            </span>
+          <div className="badge badge-success !text-[8px] !py-0.5">
+            {displayTier.multiplier}
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontFamily: 'var(--font-mono)', fontSize: '1rem', fontWeight: 900, color: '#fff' }}>
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-lg font-bold text-white">
             {displayTier.reward}
           </span>
-          <Trophy style={{ width: 12, height: 12, color: 'var(--gold)', opacity: 0.3 }} />
+          <Trophy className="w-3.5 h-3.5 text-gold opacity-30" />
         </div>
       </div>
 
       {/* Feature list */}
-      <ul style={{ display: 'flex', flexDirection: 'column', gap: 6, flex: 1 }}>
+      <ul className="flex flex-col gap-2.5 flex-1 pt-2">
         {displayTier.features.map((f, i) => (
-          <li key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
-            <Check style={{ width: 10, height: 10, color: 'var(--success)', flexShrink: 0, marginTop: 2, opacity: 0.6 }} />
-            <span style={{
-              fontSize: '0.6rem',
-              fontWeight: 600,
-              color: 'rgba(255,255,255,0.4)',
-              textTransform: 'uppercase',
-              letterSpacing: '0.05em',
-              lineHeight: 1.3,
-            }}>
+          <li key={i} className="flex flex-start gap-2 items-center">
+            <Check className="w-3 h-3 text-success shrink-0 opacity-70" />
+            <span className="text-[11px] font-medium text-secondary tracking-tight">
               {f.label}
             </span>
           </li>
@@ -236,81 +164,52 @@ function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, wallet
       </ul>
 
       {/* Action area */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+      <div className="flex flex-col gap-2 pt-4 border-t border-white/5">
         {!isLoggedIn ? (
           <button
             onClick={() => onPurchase(tier.id, 'paystack')}
-            className="btn btn-blue"
-            style={{ width: '100%', padding: '10px', fontSize: '0.6rem', fontWeight: 900, letterSpacing: '0.15em', textTransform: 'uppercase', justifyContent: 'center' }}
+            className="btn btn-blue w-full font-bold uppercase tracking-wide"
           >
-            SIGN IN
+            Sign In
           </button>
         ) : (
           <>
             {!isWalletEnough && (
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, marginBottom: 8, padding: '8px', background: 'rgba(255,23,68,0.03)', border: '1px solid rgba(255,23,68,0.08)', borderRadius: 8 }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                  <AlertCircle style={{ width: 10, height: 10, color: 'var(--danger)' }} />
-                  <span style={{ fontSize: '0.55rem', fontWeight: 900, color: 'var(--danger)', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                    Low Balance
-                  </span>
+              <div className="flex flex-col items-center gap-1.5 mb-2 p-2 bg-danger/5 border border-danger/10 rounded-lg animate-fade-in">
+                <div className="flex items-center gap-1.5">
+                  <AlertCircle className="w-3 h-3 text-danger" />
+                  <span className="text-[9px] font-bold text-danger uppercase tracking-wide">Insufficient Funds</span>
                 </div>
-                <Link 
-                  href="/dashboard?tab=wallet" 
-                  style={{ fontSize: '0.5rem', fontWeight: 900, color: 'var(--blue-electric)', letterSpacing: '0.05em', textTransform: 'uppercase', textDecoration: 'underline', cursor: 'pointer' }}
-                >
-                  Top up wallet
+                <Link href="/dashboard?tab=wallet" className="text-[9px] font-bold text-blue-electric uppercase tracking-widest hover:underline">
+                  Add Funds
                 </Link>
               </div>
             )}
             <button
               disabled={isPending || !isWalletEnough}
               onClick={() => onPurchase(tier.id, 'wallet')}
-              className={displayTier.featured ? 'btn btn-blue' : 'btn btn-outline'}
-              style={{
-                width: '100%',
-                padding: '10px',
-                fontSize: '0.6rem',
-                fontWeight: 900,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                justifyContent: 'center',
-                gap: 6,
-                opacity: isWalletEnough ? 1 : 0.3,
-              }}
+              className={`btn w-full font-bold uppercase tracking-wide gap-2 ${displayTier.featured ? 'btn-blue' : 'btn-ghost'}`}
             >
-              {isPending ? <Activity className="animate-spin w-3 h-3" /> : (
+              {isPending ? <Activity className="animate-spin w-3.5 h-3.5" /> : (
                 <>
-                  <Wallet style={{ width: 11, height: 11 }} />
-                  USE WALLET
+                  <Wallet className="w-3.5 h-3.5" />
+                  Wallet Entry
                 </>
               )}
             </button>
-            <div style={{ position: 'relative', height: 8, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-               <div style={{ height: 1, width: '100%', background: 'rgba(255,255,255,0.03)' }} />
-               <span style={{ position: 'absolute', padding: '0 6px', background: displayTier.accentBg, fontSize: '7px', color: 'rgba(255,255,255,0.1)', fontWeight: 900 }}>OR</span>
+            <div className="relative h-6 flex items-center justify-center">
+               <div className="h-[1px] w-full bg-white/5" />
+               <span className="absolute px-2 bg-transparent text-[8px] text-muted font-bold uppercase tracking-[0.2em] opacity-30">OR</span>
             </div>
             <button
               disabled={isPending}
               onClick={() => onPurchase(tier.id, 'paystack')}
-              className="btn btn-ghost"
-              style={{
-                width: '100%',
-                padding: '10px',
-                fontSize: '0.6rem',
-                fontWeight: 900,
-                letterSpacing: '0.15em',
-                textTransform: 'uppercase',
-                justifyContent: 'center',
-                gap: 6,
-                background: 'rgba(255,255,255,0.01)',
-                border: '1px solid rgba(255,255,255,0.05)',
-              }}
+              className="btn btn-ghost w-full py-2.5 text-[10px] font-bold uppercase tracking-wide gap-2 border-white/5 hover:bg-white/[0.04]"
             >
-              {isPending ? <Activity className="animate-spin w-3 h-3" /> : (
+              {isPending ? <Activity className="animate-spin w-3.5 h-3.5" /> : (
                 <>
-                  <Activity style={{ width: 11, height: 11, color: 'var(--success)' }} />
-                  PAY NOW
+                  <ShieldCheck className="w-3.5 h-3.5 text-success/60" />
+                  Direct Pay
                 </>
               )}
             </button>
@@ -336,51 +235,25 @@ function TierCarousel({ tiers, displayTiers, isPending, onPurchase, isLoggedIn, 
 
   if (tiers.length === 0) {
     return (
-      <div className="card" style={{ padding: 48, textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12, borderStyle: 'dashed' }}>
-        <Activity style={{ width: 32, height: 32, color: 'var(--text-muted)', opacity: 0.1 }} className="animate-pulse" />
-        <p style={{ fontSize: '0.55rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.2em', color: 'var(--text-muted)', fontStyle: 'italic', opacity: 0.4 }}>
-          Loading accounts...
-        </p>
+      <div className="card border-dashed py-16 flex flex-col items-center gap-4 text-center opacity-30">
+        <Activity className="w-8 h-8 animate-pulse text-muted" />
+        <p className="text-xs font-bold uppercase tracking-widest">Awaiting nodes...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ position: 'relative' }}>
-      {/* Left & right fade masks */}
-      <div style={{
-        position: 'absolute', left: 0, top: 0, bottom: 0, width: 40, zIndex: 10,
-        pointerEvents: 'none',
-        background: 'linear-gradient(to right, #030508 0%, transparent 100%)',
-      }} />
-      <div style={{
-        position: 'absolute', right: 0, top: 0, bottom: 0, width: 40, zIndex: 10,
-        pointerEvents: 'none',
-        background: 'linear-gradient(to left, #030508 0%, transparent 100%)',
-      }} />
-
-      {/* Overflow track */}
+    <div className="relative group/carousel">
+      {/* Horizontal Scroll Track */}
       <div
         ref={constraintsRef}
-        className="no-scrollbar"
-        style={{ overflowX: 'auto', overflowY: 'hidden', cursor: 'grab' }}
+        className="overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing px-6 md:px-0"
       >
         <motion.div
           drag="x"
           dragConstraints={constraintsRef}
-          dragElastic={0.06}
-          dragMomentum
-          whileDrag={{ cursor: 'grabbing' }}
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
-          style={{
-            display: 'flex',
-            gap: 16,
-            padding: '8px 48px 24px',
-            width: 'max-content',
-            userSelect: 'none',
-          }}
+          dragElastic={0.1}
+          className="flex gap-5 pb-8 pt-4 w-max px-4 md:px-12"
         >
           {displayTiers.map((displayTier, idx) => (
             <TierCard
@@ -396,23 +269,21 @@ function TierCarousel({ tiers, displayTiers, isPending, onPurchase, isLoggedIn, 
         </motion.div>
       </div>
 
-      {/* Slide indicator */}
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 12, marginTop: 12 }}>
-        <div style={{ height: 1, width: 32, background: 'rgba(255,255,255,0.03)', borderRadius: 99, overflow: 'hidden' }}>
+      {/* Drag Indicator */}
+      <div className="flex justify-center items-center gap-8 mt-4 opacity-30 group-hover/carousel:opacity-100 transition-opacity">
+        <div className="h-[1px] w-12 bg-white/10 rounded-full overflow-hidden">
           <motion.div
-            style={{ height: '100%', width: '50%', background: 'rgba(242,201,76,0.3)', borderRadius: 99 }}
-            animate={{ x: ['0%', '200%'] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: 'linear' }}
+            className="h-full w-full bg-gold"
+            animate={{ x: ['-100%', '100%'] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           />
         </div>
-        <span style={{ fontSize: '0.5rem', fontWeight: 900, color: 'rgba(255,255,255,0.15)', textTransform: 'uppercase', letterSpacing: '0.25em' }}>
-          Drag to explore
-        </span>
-        <div style={{ height: 1, width: 32, background: 'rgba(255,255,255,0.03)', borderRadius: 99, overflow: 'hidden' }}>
+        <span className="text-[9px] font-bold text-muted uppercase tracking-[0.2em] italic">Slide to View Plans</span>
+        <div className="h-[1px] w-12 bg-white/10 rounded-full overflow-hidden">
           <motion.div
-            style={{ height: '100%', width: '50%', background: 'rgba(242,201,76,0.3)', borderRadius: 99 }}
-            animate={{ x: ['0%', '200%'] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: 'linear', delay: 1.25 }}
+            className="h-full w-full bg-blue-electric"
+            animate={{ x: ['-100%', '100%'] }}
+            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
           />
         </div>
       </div>
@@ -453,60 +324,41 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: 'var(--bg-primary)', paddingTop: 64, display: 'flex', flexDirection: 'column' }} className="animate-fade-in">
+    <div className="min-h-screen bg-primary pt-24 flex flex-col animate-fade-in">
 
       {/* ─── HERO ─── */}
-      <section style={{ position: 'relative', padding: '32px 0', borderBottom: '1px solid rgba(255,255,255,0.05)', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, background: '#0D1321', opacity: 0.5 }} />
+      <section className="relative py-12 md:py-20 border-b border-white/5 overflow-hidden">
+        <div className="absolute inset-0 bg-grad-aurora opacity-10 filter blur-[100px]" />
         
-        <div className="container" style={{ position: 'relative', zIndex: 1, textAlign: 'center' }}>
-          <div className="animate-slide-up" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', maxWidth: 600, margin: '0 auto', gap: 12 }}>
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 6,
-              padding: '4px 10px', background: 'rgba(242,201,76,0.06)',
-              border: '1px solid rgba(242,201,76,0.15)', borderRadius: 99,
-            }}>
-              <ShieldCheck style={{ width: 11, height: 11, color: 'var(--gold)' }} />
-              <span style={{ fontSize: '0.55rem', fontWeight: 900, color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
-                Official Membership
+        <div className="container relative z-10 text-center">
+          <div className="flex flex-col items-center max-w-2xl mx-auto gap-4 animate-slide-up">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-gold/5 border border-gold/15 rounded-full">
+              <ShieldCheck className="w-3.5 h-3.5 text-gold" />
+              <span className="text-[10px] font-bold text-gold uppercase tracking-widest">
+                Tier Verification Active
               </span>
             </div>
 
-            <h1 style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: 'clamp(1.75rem, 5vw, 2.5rem)',
-              fontWeight: 900,
-              color: '#fff',
-              lineHeight: 1.1,
-              letterSpacing: '-0.02em',
-              margin: 0,
-              textTransform: 'uppercase',
-              fontStyle: 'italic'
-            }}>
+            <h1 className="font-display text-4xl md:text-5xl font-extrabold text-white leading-tight uppercase italic tracking-tight">
               Choose Your <span className="text-gradient-gold">Account Plan</span>
             </h1>
 
-            <p style={{ fontSize: '0.65rem', fontWeight: 500, color: 'var(--text-muted)', maxWidth: 400, lineHeight: 1.6, textTransform: 'uppercase', letterSpacing: '0.05em', opacity: 0.6 }}>
-              Select a plan to start earning rewards. All transactions are 
-              processed through our secure payment gateway.
+            <p className="text-sm font-medium text-secondary uppercase tracking-wide opacity-50 max-w-md italic">
+              Select a challenge tier to begin. Win 10X rewards by maintaining your prediction streak.
             </p>
 
             {error && (
-              <div className="animate-slide-up" style={{
-                display: 'flex', alignItems: 'center', gap: 6,
-                padding: '8px 12px', borderRadius: 8,
-                background: 'rgba(255,23,68,0.05)', border: '1px solid rgba(255,23,68,0.2)',
-                color: 'var(--danger)',
-              }}>
-                <AlertCircle style={{ width: 11, height: 11 }} />
-                <span style={{ fontSize: '0.6rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.1em' }}>{error}</span>
+              <div className="mt-4 flex items-center gap-2 px-4 py-2 rounded-lg bg-danger/5 border border-danger/20 text-danger animate-slide-up">
+                <AlertCircle className="w-4 h-4" />
+                <span className="text-xs font-bold uppercase tracking-wider">{error}</span>
               </div>
             )}
           </div>
         </div>
       </section>
 
-      <section style={{ padding: '24px 0', background: 'var(--bg-primary)', position: 'relative', overflow: 'hidden' }}>
+      {/* ─── CAROUSEL ─── */}
+      <section className="py-12 bg-primary relative overflow-hidden">
         <TierCarousel 
           tiers={tiers} 
           displayTiers={displayTiers}
@@ -517,43 +369,36 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
         />
       </section>
 
-      {/* ─── INFRASTRUCTURE STATS ─── */}
-      <section style={{ padding: '32px 0', borderTop: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.005)' }}>
-        <div className="container" style={{ textAlign: 'center' }}>
-          <h2 style={{
-            fontFamily: 'var(--font-display)', fontSize: '0.65rem', fontWeight: 900,
-            color: 'rgba(255,255,255,0.2)', textTransform: 'uppercase', letterSpacing: '0.3em', marginBottom: 24,
-          }}>
-            Platform Performance
+      {/* ─── STATS GRID ─── */}
+      <section className="py-16 border-t border-white/5 bg-white/[0.01]">
+        <div className="container text-center">
+          <h2 className="text-[10px] font-bold text-muted uppercase tracking-[0.3em] mb-12 opacity-30">
+            Platform Protocol Metrics
           </h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
             {[
-              { label: 'Challenges',     val: `${stats.roundsCompleted}+`,   icon: <Activity style={{ width: 11, height: 11 }} /> },
-              { label: 'Members',       val: `${(stats.activeChallengers / 1000).toFixed(1)}K`,   icon: <Users    style={{ width: 11, height: 11 }} /> },
-              { label: 'Successful Streaks',     val: `${stats.perfectStreaks}+`,   icon: <Shield   style={{ width: 11, height: 11 }} /> },
-              { label: 'Total Paid Out', val: `₦${(stats.totalCashPaid / 1000000).toFixed(1)}M`, icon: <Wallet   style={{ width: 11, height: 11 }} /> },
+              { label: 'Active Challenges', val: `${stats.roundsCompleted}`,   icon: <Activity className="w-3.5 h-3.5" /> },
+              { label: 'Verified Members', val: `${stats.activeChallengers.toLocaleString()}`,   icon: <Users    className="w-3.5 h-3.5" /> },
+              { label: 'Winning Streaks', val: `${stats.perfectStreaks}`,   icon: <Shield   className="w-3.5 h-3.5" /> },
+              { label: 'Total Payouts', val: `₦${(stats.totalCashPaid / 1000).toLocaleString()}K`, icon: <Wallet   className="w-3.5 h-3.5" /> },
             ].map((s, i) => (
-              <div key={i} className="card" style={{
-                padding: '16px 12px', background: 'rgba(255,255,255,0.01)',
-                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6,
-                borderRadius: 12, border: '1px solid rgba(255,255,255,0.03)'
-              }}>
-                <div style={{ padding: 6, background: 'rgba(0,229,255,0.05)', borderRadius: 6, color: 'var(--blue-electric)' }}>{s.icon}</div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem', fontWeight: 900, color: '#fff', letterSpacing: '-0.02em', fontStyle: 'italic' }}>{s.val}</div>
-                <div style={{ fontSize: '0.55rem', fontWeight: 900, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.12em', opacity: 0.5 }}>{s.label}</div>
+              <div key={i} className="card bg-white/[0.01] flex flex-col items-center gap-2 py-6 border-white/5">
+                <div className="p-2 bg-blue-electric/10 rounded-lg text-blue-electric">{s.icon}</div>
+                <div className="font-display text-2xl font-extrabold text-white italic tracking-tighter uppercase">{s.val}</div>
+                <div className="text-[9px] font-bold text-muted uppercase tracking-wider opacity-40 italic">{s.label}</div>
               </div>
             ))}
           </div>
 
-          <div className="animate-slide-up" style={{ marginTop: 32, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.55rem', fontWeight: 900, color: 'rgba(255,255,255,0.15)', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
-              <ShieldCheck style={{ width: 11, height: 11 }} />
-              Secure Payouts
+          <div className="mt-16 flex flex-col items-center gap-4 animate-slide-up opacity-40">
+            <div className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-[0.2em] italic">
+              <ShieldCheck className="w-4 h-4" />
+              Automated Financial Settlement
             </div>
-            <p style={{ fontSize: '0.55rem', fontWeight: 500, color: 'rgba(160,171,192,0.4)', maxWidth: 400, lineHeight: 1.6, textTransform: 'uppercase', letterSpacing: '0.08em', fontStyle: 'italic' }}>
-              PredChain ensures secure and fast payouts to all members. All transactions 
-              are encrypted and verified for security.
+            <p className="text-[10px] font-medium text-muted uppercase tracking-wide max-w-md italic">
+              All rewards are atomically credited to member wallets upon round completion. 
+              Secure encryption protocols active.
             </p>
           </div>
         </div>

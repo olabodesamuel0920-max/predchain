@@ -164,7 +164,7 @@ export default function DashboardClient({
         <div className="container">
           
           {/* Internal Navigation Tabs */}
-          <div className="flex items-center gap-2 mb-6 overflow-x-auto no-scrollbar pb-2 border-b border-white/5">
+          <div className="flex items-center gap-1.5 mb-6 overflow-x-auto no-scrollbar pb-2 border-b border-white/5">
              {[
                { id: 'overview',   label: 'Overview',   icon: Layout },
                { id: 'challenge',  label: 'Challenge',  icon: Zap },
@@ -174,14 +174,14 @@ export default function DashboardClient({
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap border ${
+                  className={`flex items-center gap-2.5 px-4 py-2 rounded-lg transition-all whitespace-nowrap border ${
                     activeTab === tab.id 
-                    ? 'bg-blue-electric/10 border-blue-electric/30 text-white shadow-lg shadow-blue-electric/5' 
+                    ? 'bg-white/5 border-white/10 text-white shadow-sm' 
                     : 'bg-transparent border-transparent text-muted hover:text-white hover:bg-white/5'
                   }`}
                 >
-                   <tab.icon className={`w-3.5 h-3.5 ${activeTab === tab.id ? 'text-blue-electric' : 'opacity-40'}`} />
-                   <span className="text-[10px] font-black uppercase tracking-widest">{tab.label}</span>
+                   <tab.icon className={`w-3.5 h-3.5 ${activeTab === tab.id ? 'text-blue-electric' : 'opacity-30'}`} />
+                   <span className="text-[10px] font-bold uppercase tracking-wide">{tab.label}</span>
                 </button>
              ))}
           </div>
@@ -191,35 +191,35 @@ export default function DashboardClient({
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 <div className="lg:col-span-8 flex flex-col gap-5">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div className="card p-4 relative overflow-hidden group">
+                      <div className="card p-5 relative overflow-hidden group">
                          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp className="w-8 h-8" /></div>
-                         <div className="flex justify-between items-start mb-4">
+                         <div className="flex justify-between items-start mb-5">
                             <div className="p-2 bg-gold/10 rounded-lg"><Activity className="w-3.5 h-3.5 text-gold" /></div>
-                            <span className="badge badge-gold py-1 px-4 text-[7px] font-black tracking-widest">Active Round</span>
+                            <span className="badge badge-gold !text-[7px] font-bold tracking-wider">Active Protocol</span>
                          </div>
-                         <h3 className="text-muted text-[7px] font-black uppercase tracking-widest mb-1">Status</h3>
-                         <div className="text-base font-black font-display text-white mb-4">
-                             {userEntry ? `Step ${streak + 1} of 3` : `Round ${activeRound?.round_number || ''}`}
+                         <h3 className="text-muted text-[8px] font-bold uppercase tracking-wide mb-1 opacity-50">Status</h3>
+                         <div className="text-lg font-bold font-display text-white mb-4">
+                             {userEntry ? `${streak} / 3 Daily Wins` : `Round ${activeRound?.round_number || ''}`}
                          </div>
-                         <div className="w-full h-1 bg-white/[0.05] rounded-full overflow-hidden border border-white/5">
-                            <div className="h-full bg-grad-gold shadow-[0_0_8px_var(--gold)]" style={{ width: `${(streak / 3) * 100}%` }} />
+                         <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-full bg-grad-gold shadow-gold" style={{ width: `${(streak / 3) * 100}%` }} />
                          </div>
                       </div>
-                      <div className="card p-4 relative overflow-hidden group">
+                      <div className="card p-5 relative overflow-hidden group">
                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><ShieldCheck className="w-8 h-8" /></div>
-                        <div className="flex justify-between items-start mb-4">
+                        <div className="flex justify-between items-start mb-5">
                             <div className="p-2 bg-blue-electric/10 rounded-lg"><ShieldCheck className="w-3.5 h-3.5 text-blue-electric" /></div>
-                            <span className="badge badge-blue py-1 px-4 text-[7px] font-black tracking-widest">Verified</span>
+                            <span className="badge badge-blue !text-[7px] font-bold tracking-wider">Verified</span>
                          </div>
-                         <h3 className="text-muted text-[7px] font-black uppercase tracking-widest mb-1">Account</h3>
-                         <div className={`text-base font-black font-display text-${status.color} mb-4 tracking-tight uppercase italic`}>
+                         <h3 className="text-muted text-[8px] font-bold uppercase tracking-wide mb-1 opacity-50">Identity</h3>
+                         <div className={`text-lg font-bold font-display text-${status.color} mb-4 tracking-tight uppercase italic`}>
                            {status.label} Member
                          </div>
-                         <div className="flex items-center gap-3">
+                         <div className="flex items-center gap-2">
                             <div 
-                               className={`w-1.5 h-1.5 rounded-full bg-${status.color} opacity-50`} 
+                               className={`w-1.5 h-1.5 rounded-full bg-${status.color} opacity-40`} 
                             />
-                            <span className="text-[8px] text-muted font-bold uppercase tracking-widest italic opacity-40">Account Active</span>
+                            <span className="text-[9px] text-muted font-bold uppercase tracking-wider opacity-30 italic">Encryption Active</span>
                          </div>
                       </div>
                    </div>
@@ -258,31 +258,31 @@ export default function DashboardClient({
                       </div>
                    </div>
                 </div>
-
-                <div className="lg:col-span-4 flex flex-col gap-6">
-                   <div className="card p-4 border-blue-electric/20 bg-blue-electric/[0.01]">
+                 <div className="lg:col-span-4 flex flex-col gap-5">
+                   <div className="card p-5 border-blue-electric/20 bg-blue-electric/[0.01]">
                       <div className="flex justify-between items-center mb-6">
-                         <h3 className="text-[8px] font-black uppercase tracking-[0.2em] text-muted">Potential Rewards</h3>
-                         <TrendingUp className="w-3.5 h-3.5 text-success" />
+                         <h3 className="text-[9px] font-bold uppercase tracking-widest text-muted opacity-50">Settlement Protocol</h3>
+                         <TrendingUp className="w-3.5 h-3.5 text-success/60" />
                       </div>
                       <div className="p-6 bg-black/40 border border-white/5 rounded-lg text-center mb-6 relative overflow-hidden group">
                          <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-8 h-8" /></div>
-                         <div className="text-muted text-[7px] font-black uppercase mb-2 tracking-widest leading-none">Est. Earnings</div>
-                         <div className="text-xl font-black font-display text-white">{potentialReward}</div>
+                         <div className="text-muted text-[8px] font-bold uppercase mb-1 tracking-wider leading-none opacity-40 italic">Potential Reward</div>
+                         <div className="text-2xl font-bold font-display text-white italic tracking-tighter">10X REWARD</div>
                       </div>
-                      <button onClick={() => setActiveTab('referrals')} className="btn btn-blue w-full py-2.5 font-black uppercase tracking-widest text-[8px] shadow-lg shadow-blue-electric/20">Refer Details</button>
+                      <button onClick={() => setActiveTab('wallet')} className="btn btn-blue w-full font-bold uppercase tracking-wide text-xs">Wallet Hub</button>
                    </div>
                    
-                   <div className="card p-4 bg-danger/[0.01] border-danger/10">
-                      <h3 className="text-[8px] font-black text-danger uppercase tracking-[0.2em] mb-3 flex items-center gap-4">
-                         <ShieldAlert className="w-3.5 h-3.5" /> Alert
+                   <div className="card p-5 bg-white/[0.015] border-white/5">
+                      <h3 className="text-[9px] font-bold text-blue-electric uppercase tracking-widest mb-3 flex items-center gap-2">
+                         <ShieldAlert className="w-3.5 h-3.5 opacity-60" /> System Note
                       </h3>
-                      <p className="text-[9px] text-muted leading-relaxed font-black uppercase tracking-wider italic opacity-60">
-                        Round {activeRound?.round_number || ''} is in progress. 
-                        Complete your predictions.
+                      <p className="text-[10px] text-secondary leading-relaxed font-medium uppercase tracking-wide italic opacity-40">
+                        Round {activeRound?.round_number || ''} protocol is active. 
+                        Ensure all daily predictions are submitted.
                       </p>
                    </div>
                 </div>
+
               </div>
             )}
 
@@ -314,39 +314,39 @@ export default function DashboardClient({
                     matches.map(m => {
                       const pred = predictions.find(p => p.match_id === m.id);
                       return (
-                        <div key={m.id} className="card p-24 hover:border-blue-electric/30 transition-all flex flex-col gap-24 group">
-                           <div className="flex justify-between items-center pb-12 border-b border-white/5">
-                              <span className="text-[10px] font-black text-muted font-mono tracking-widest">{new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        <div key={m.id} className="card p-5 hover:border-blue-electric/30 transition-all flex flex-col gap-6 bg-white/[0.01]">
+                           <div className="flex justify-between items-center pb-3 border-b border-white/5">
+                              <span className="text-[10px] font-bold text-muted font-mono tracking-widest opacity-40">{new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
                               {pred ? (
-                                <div className="flex items-center gap-6 px-10 py-4 bg-success/10 border border-success/20 rounded-lg">
-                                   <Target className="w-3.5 h-3.5 text-success" />
-                                   <span className="text-[9px] font-black text-success uppercase tracking-widest italic">Locked</span>
+                                <div className="flex items-center gap-2 px-3 py-1 bg-success/5 border border-success/15 rounded-full">
+                                   <Target className="w-3 h-3 text-success" />
+                                   <span className="text-[8px] font-bold text-success uppercase tracking-wider italic">Locked</span>
                                 </div>
                               ) : (
-                                <div className="flex items-center gap-6 px-10 py-4 bg-white/5 border border-white/10 rounded-lg opacity-40">
-                                   <Lock className="w-3.5 h-3.5 text-muted" />
-                                   <span className="text-[9px] font-black text-muted uppercase tracking-widest italic">Open</span>
+                                <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full opacity-40">
+                                   <Activity className="w-3 h-3 text-muted" />
+                                   <span className="text-[8px] font-bold text-muted uppercase tracking-wider italic">Pending</span>
                                 </div>
                               )}
                            </div>
-                           <div className="flex flex-col gap-10 text-center py-12">
-                              <div className="text-sm font-black text-white uppercase tracking-tight italic">{m.home_team}</div>
-                              <div className="text-[9px] font-black text-muted/30 uppercase tracking-[0.4em]">VS</div>
-                              <div className="text-sm font-black text-white uppercase tracking-tight italic">{m.away_team}</div>
+                           <div className="flex flex-col gap-2 text-center py-4">
+                              <div className="text-sm font-bold text-white uppercase tracking-tight truncate">{m.home_team}</div>
+                              <div className="text-[8px] font-bold text-muted/20 uppercase tracking-[0.3em]">VS</div>
+                              <div className="text-sm font-bold text-white uppercase tracking-tight truncate">{m.away_team}</div>
                            </div>
-                           <div className="grid grid-cols-3 gap-3">
+                           <div className="grid grid-cols-3 gap-2">
                               {['1', 'X', '2'].map(choice => (
                                  <button 
                                    key={choice}
                                    onClick={() => handlePrediction(m.id, choice as '1' | 'X' | '2')}
                                    disabled={isPending || !!pred}
-                                   className={`py-12 rounded-xl text-[9px] font-black transition-all border uppercase tracking-widest ${
+                                   className={`py-3 rounded-lg text-[9px] font-bold transition-all border uppercase tracking-wider ${
                                      pred?.prediction === choice 
-                                     ? 'bg-blue-electric text-white border-blue-electric shadow-lg shadow-blue-electric/20' 
-                                     : 'bg-white/[0.02] border-white/5 text-muted hover:text-white hover:border-white/20'
+                                     ? 'bg-blue-electric text-white border-blue-electric shadow-sm' 
+                                     : 'bg-white/[0.02] border-white/5 text-muted/60 hover:text-white hover:border-white/20'
                                    }`}
                                  >
-                                   {choice === '1' ? 'HOME' : choice === '2' ? 'AWAY' : 'DRAW'}
+                                   {choice === '1' ? '1' : choice === '2' ? '2' : 'X'}
                                  </button>
                               ))}
                            </div>
@@ -361,32 +361,25 @@ export default function DashboardClient({
               <div className="flex flex-col gap-6 animate-slide-up">
                 
                 {/* Financial Summary KPIs */}
-                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
-                  <div className="card p-5 bg-blue-electric/[0.02] border-blue-electric/10 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><WalletIcon className="w-8 h-8" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Balance</h3>
-                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{balance.toLocaleString()}</div>
-                  </div>
-                  <div className="card p-5 bg-danger/[0.02] border-danger/10 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Lock className="w-8 h-8" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Pending</h3>
-                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{pendingPayouts.toLocaleString()}</div>
-                  </div>
-                  <div className="card p-5 bg-white/[0.02] border-white/5 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><ArrowDownLeft className="w-8 h-8" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Withdrawn</h3>
-                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{txWithdrawn.toLocaleString()}</div>
-                  </div>
-                  <div className="card p-5 bg-gold/[0.03] border-gold/10 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-8 h-8" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Rewards</h3>
-                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{txRewards.toLocaleString()}</div>
-                  </div>
-                  <div className="card p-5 bg-success/[0.03] border-success/10 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Users className="w-8 h-8" /></div>
-                    <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-3">Network</h3>
-                    <div className="text-xl font-black font-display text-white italic truncate tracking-tight">₦{txReferrals.toLocaleString()}</div>
-                  </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+                  {[
+                    { label: 'Available Balance', val: balance, icon: WalletIcon, color: 'text-blue-electric', bg: 'bg-blue-electric/5' },
+                    { label: 'Pending Settlement', val: pendingPayouts, icon: Lock, color: 'text-gold', bg: 'bg-gold/5' },
+                    { label: 'Total Withdrawn', val: txWithdrawn, icon: ArrowDownLeft, color: 'text-muted', bg: 'bg-white/5' },
+                    { label: 'Protocol Rewards', val: txRewards, icon: Trophy, color: 'text-success', bg: 'bg-success/5' },
+                    { label: 'Network Bonus', val: txReferrals, icon: Users, color: 'text-blue-electric', bg: 'bg-blue-electric/5' },
+                  ].map((kpi, i) => (
+                    <div key={i} className="card p-4 relative overflow-hidden group border-white/5 bg-white/[0.01]">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className={`p-2 rounded-lg ${kpi.bg} ${kpi.color}`}>
+                          <kpi.icon className="w-3.5 h-3.5" />
+                        </div>
+                        <div className="text-[7px] font-bold text-muted uppercase tracking-widest opacity-30 italic">Live</div>
+                      </div>
+                      <h3 className="text-muted text-[8px] font-bold uppercase tracking-wider mb-1 opacity-50">{kpi.label}</h3>
+                      <div className="text-lg font-bold font-display text-white italic tracking-tighter">₦{kpi.val.toLocaleString()}</div>
+                    </div>
+                  ))}
                 </div>
 
 <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-6">
@@ -433,26 +426,25 @@ export default function DashboardClient({
                                            <ArrowDownLeft className="w-4 h-4" />;
                               
                               return (
-                                <div key={tx.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-16 gap-12 sm:gap-4 hover:bg-white/[0.01] transition-colors group">
-                                  <div className="flex items-center gap-10 min-w-[180px]">
-                                    <div className={`p-8 rounded-lg ${isPositive ? 'bg-success/10 text-success' : 'bg-danger/10 text-danger'}`}>
+                                <div key={tx.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 gap-4 hover:bg-white/[0.015] transition-colors group">
+                                  <div className="flex items-center gap-4 min-w-[200px]">
+                                    <div className={`p-2.5 rounded-lg ${isPositive ? 'bg-success/5 text-success' : 'bg-danger/5 text-danger'} border border-current/10`}>
                                       {txIcon}
                                     </div>
-                                    <div className="flex flex-col gap-1">
-                                      <span className="font-black text-[11px] text-white uppercase italic">{tx.type.replace('_', ' ')}</span>
-                                      <span className="text-[8px] text-muted font-bold uppercase tracking-widest truncate max-w-[140px]">{tx.reference}</span>
+                                    <div className="flex flex-col">
+                                      <span className="font-bold text-xs text-white uppercase italic tracking-tight">{tx.type.replace('_', ' ')}</span>
+                                      <span className="text-[8px] text-muted font-bold uppercase tracking-widest opacity-30">{tx.reference.slice(0, 12)}...</span>
                                     </div>
                                   </div>
                                   
-                                  <div className="flex items-center justify-between sm:justify-end flex-1 gap-6 pl-12 sm:pl-0 border-l border-white/5 sm:border-l-0">
+                                  <div className="flex items-center justify-between sm:justify-end flex-1 gap-6">
                                      <div className="flex items-center gap-4">
-                                        <div className="flex items-center gap-4 px-6 py-2 bg-success/10 border border-success/20 rounded-md">
-                                           <Check className="w-3 h-3 text-success" />
-                                           <span className="text-[7px] font-black text-success uppercase tracking-widest hidden sm:block">Verified</span>
+                                        <div className="flex items-center gap-2 px-2 py-0.5 bg-white/5 border border-white/10 rounded text-[7px] font-bold text-muted uppercase tracking-wider opacity-60">
+                                           <Check className="w-2.5 h-2.5" /> Verified
                                         </div>
-                                        <span className="text-muted font-mono text-[9px]">{new Date(tx.created_at).toLocaleDateString()}</span>
+                                        <span className="text-muted font-mono text-[9px] opacity-40">{new Date(tx.created_at).toLocaleDateString()}</span>
                                      </div>
-                                     <div className={`font-black font-display italic text-lg ${isPositive ? 'text-success' : 'text-danger'}`}>
+                                     <div className={`font-bold font-display italic text-lg tracking-tighter ${isPositive ? 'text-success' : 'text-white'}`}>
                                         {isPositive ? '+' : '-'}₦{Math.abs(tx.amount).toLocaleString()}
                                      </div>
                                   </div>
@@ -634,51 +626,50 @@ export default function DashboardClient({
 
             {activeTab === 'referrals' && (
               <div className="animate-slide-up flex flex-col gap-6">
-                 <div className="card p-6 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden group">
-                     <div className="absolute top-0 right-0 p-6 opacity-5"><Globe className="w-10 h-10" /></div>
+                 <div className="card p-8 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden bg-white/[0.01] border-white/5">
+                     <div className="absolute top-0 right-0 p-8 opacity-5"><Globe className="w-12 h-12" /></div>
                      <div className="flex-1 relative z-10">
-                        <div className="flex items-center gap-3 mb-4 px-3 py-1 bg-blue-electric/10 border border-blue-electric/20 rounded-full w-fit">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 bg-blue-electric/5 border border-blue-electric/15 rounded-full mb-6">
                            <TrendingUp className="w-3.5 h-3.5 text-blue-electric" />
-                           <span className="text-[8px] font-black text-blue-electric uppercase tracking-widest">Referrals</span>
+                           <span className="text-[8px] font-bold text-blue-electric uppercase tracking-wider">Network Rewards</span>
                         </div>
-                        <h3 className="font-display text-3xl font-black text-white italic tracking-tight mb-4 uppercase">Referral Rewards</h3>
-                        <p className="text-muted text-[10px] font-black leading-relaxed max-w-[500px] uppercase tracking-widest italic opacity-40">
-                          Refer your friends and earn rewards for every successful referral.
+                        <h3 className="font-display text-4xl font-extrabold text-white italic tracking-tight mb-4 uppercase">Refer & <span className="text-gradient-gold">Earn</span></h3>
+                        <p className="text-secondary text-[11px] font-medium leading-relaxed max-w-md uppercase tracking-wide italic opacity-40">
+                          Scale your portfolio by referring associates. Earn instant yield protocols for every verified onboarding.
                         </p>
                      </div>
-                     <div className="flex flex-col items-center gap-4 relative z-10">
-                        <div className="text-center p-6 px-10 bg-black/40 border border-white/5 rounded-xl shadow-xl backdrop-blur-xl group hover:border-gold/40 transition-all">
-                           <div className="text-[8px] text-muted font-black uppercase mb-1 tracking-widest">Total Referrals</div>
-                           <div className="text-3xl font-black font-display text-white italic">{(profile?.referral_count || 0).toString().padStart(2, '0')}</div>
-                           <div className="mt-4 px-4 py-1.5 bg-white/5 rounded-md text-[7px] font-black text-muted uppercase tracking-widest">Referral Link</div>
+                     <div className="relative z-10">
+                        <div className="text-center p-8 px-12 bg-black/40 border border-white/5 rounded-2xl shadow-xl backdrop-blur-xl group hover:border-blue-electric/30 transition-all">
+                           <div className="text-[9px] text-muted font-bold uppercase mb-1 tracking-widest opacity-40">Verified Referrals</div>
+                           <div className="text-4xl font-extrabold font-display text-white italic">{(profile?.referral_count || 0)}</div>
                         </div>
                      </div>
                   </div>
 
                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                    <div className="card p-8 bg-white/[0.02] lg:col-span-8">
-                       <div className="flex items-center gap-12 mb-16">
-                          <div className="p-10 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Users className="w-5 h-5 text-blue-electric" /></div>
-                          <h4 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Referral Link</h4>
+                    <div className="card p-6 bg-white/[0.01] border-white/5 lg:col-span-8">
+                       <div className="flex items-center gap-3 mb-8">
+                          <div className="p-2 bg-blue-electric/5 rounded-lg border border-blue-electric/10"><Users className="w-4 h-4 text-blue-electric opacity-60" /></div>
+                          <h4 className="font-display text-[10px] font-bold text-white uppercase tracking-widest">Identification Protocol</h4>
                        </div>
-                       <div className="flex gap-4 p-4 bg-black/40 border border-white/10 rounded-xl group focus-within:border-blue-electric/40 transition-all overflow-hidden">
-                          <input readOnly value={`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`} className="flex-1 bg-transparent px-10 py-10 font-mono text-[11px] text-blue-electric font-black focus:outline-none truncate" />
-                          <button onClick={() => { navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`); showSuccess('Link copied to clipboard.'); }} className="btn btn-blue px-16 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-blue-electric/20">COPY</button>
+                       <div className="flex gap-2 p-2 bg-black/40 border border-white/5 rounded-xl focus-within:border-blue-electric/20 transition-all">
+                          <input readOnly value={`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`} className="flex-1 bg-transparent px-4 py-3 font-mono text-xs text-blue-electric font-bold focus:outline-none truncate" />
+                          <button onClick={() => { navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`); showSuccess('Link copied to clipboard.'); }} className="btn btn-blue px-8 font-bold uppercase text-[10px] tracking-wide">COPY</button>
                        </div>
-                       <p className="mt-8 text-[9px] text-muted font-black uppercase tracking-widest italic ml-4 opacity-40">User ID: {profile.username?.toUpperCase() || 'NONE'}</p>
+                       <p className="mt-6 text-[8px] text-muted font-bold uppercase tracking-widest italic ml-2 opacity-30">Account Signature: {profile.username?.toUpperCase() || 'NONE'}</p>
                     </div>
-                    <div className="card p-8 bg-white/[0.02] flex flex-col justify-between lg:col-span-4">
+                    <div className="card p-6 bg-white/[0.015] border-white/5 flex flex-col justify-between lg:col-span-4">
                        <div>
-                          <div className="flex items-center gap-12 mb-8">
-                             <div className="p-10 bg-gold/10 rounded-xl border border-gold/20"><Activity className="w-5 h-5 text-gold" /></div>
-                             <h4 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Bonus Structure</h4>
+                          <div className="flex items-center gap-3 mb-4">
+                             <div className="p-2 bg-gold/5 rounded-lg border border-gold/10"><Activity className="w-4 h-4 text-gold opacity-60" /></div>
+                             <h4 className="font-display text-[10px] font-bold text-white uppercase tracking-widest">Bonus Yield</h4>
                           </div>
-                          <p className="text-[10px] text-muted font-black uppercase tracking-widest leading-relaxed mb-20 italic opacity-60">
-                             Each successful referral credits <strong>₦1,000</strong> to your balance. No upper threshold defined.
+                          <p className="text-[10px] text-secondary font-medium uppercase tracking-wide leading-relaxed mb-12 italic opacity-40">
+                             Each verification credits <strong>₦1,000</strong> to your active balance hub.
                           </p>
                        </div>
-                       <div className="w-full h-2 bg-black/40 rounded-full border border-white/5 overflow-hidden">
-                          <div className="h-full bg-grad-gold opacity-10 animate-pulse" style={{ width: '10%' }} />
+                       <div className="w-full h-1 bg-black/40 rounded-full border border-white/5 overflow-hidden">
+                          <div className="h-full bg-grad-gold opacity-20 animate-pulse" style={{ width: '20%' }} />
                        </div>
                     </div>
                  </div>
@@ -688,15 +679,17 @@ export default function DashboardClient({
 
           {/* Toast Notifications */}
           {(successMsg || errorMsg) && (
-            <div className={`fixed bottom-6 right-6 z-[100] px-5 py-4 rounded-xl backdrop-blur-xl border flex items-center gap-4 shadow-2xl animate-slide-up ${
+            <div className={`fixed bottom-6 right-6 z-[100] px-5 py-3 rounded-xl backdrop-blur-2xl border flex items-center gap-4 shadow-2xl animate-slide-up ${
               successMsg ? 'bg-success/90 border-success/20 text-black' : 'bg-danger/90 border-danger/20 text-white'
             }`}>
-               {successMsg ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
-               <div className="flex flex-col">
-                  <span className="text-[8px] font-black uppercase tracking-widest opacity-40">{successMsg ? 'Verified' : 'Alert'}</span>
-                  <span className="text-xs font-bold">{successMsg || errorMsg}</span>
+               <div className="p-1.5 bg-black/5 rounded-lg">
+                 {successMsg ? <Check className="w-3.5 h-3.5" /> : <AlertCircle className="w-3.5 h-3.5" />}
                </div>
-               <button onClick={clear} className="ml-12 p-4 hover:bg-black/10 rounded-lg opacity-40 hover:opacity-100 transition-all font-black">×</button>
+               <div className="flex flex-col">
+                  <span className="text-[8px] font-bold uppercase tracking-widest opacity-40">{successMsg ? 'Protocol Success' : 'System Alert'}</span>
+                  <span className="text-[11px] font-bold tracking-tight">{successMsg || errorMsg}</span>
+               </div>
+               <button onClick={clear} className="ml-8 p-2 hover:bg-black/10 rounded-lg opacity-40 hover:opacity-100 transition-all font-bold text-sm">×</button>
             </div>
           )}
 
