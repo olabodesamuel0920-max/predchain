@@ -123,9 +123,9 @@ export default function Footer() {
         {/* Status Bar */}
         <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-6 opacity-30">
           <div className="flex items-center gap-6">
-            <p className="text-[8px] font-bold text-muted uppercase tracking-widest flex items-center gap-1.5 italic">
+            <div className="text-[8px] font-bold text-muted uppercase tracking-widest flex items-center gap-1.5 italic">
               <div className="w-1.5 h-1.5 bg-success rounded-full animate-pulse" /> Protocol Online
-            </p>
+            </div>
             <p className="text-[8px] font-bold text-muted uppercase tracking-widest">
               © 2026 PREDCHAIN.
             </p>
