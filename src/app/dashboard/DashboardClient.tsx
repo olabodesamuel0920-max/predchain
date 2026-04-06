@@ -93,11 +93,11 @@ export default function DashboardClient({
 
   const processStatus = (status: string) => {
     switch (status) {
-      case 'active': return { label: 'Operational', color: 'success' };
+      case 'active': return { label: 'Active', color: 'success' };
       case 'suspended': return { label: 'Suspended', color: 'danger' };
-      case 'under_review': return { label: 'Review', color: 'gold' };
-      case 'demo': return { label: 'Demo Node', color: 'blue-electric' };
-      default: return { label: 'Operational', color: 'success' };
+      case 'under_review': return { label: 'Under Review', color: 'gold' };
+      case 'demo': return { label: 'Trial', color: 'blue-electric' };
+      default: return { label: 'Active', color: 'success' };
     }
   };
 
@@ -191,36 +191,35 @@ export default function DashboardClient({
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
                 <div className="lg:col-span-8 flex flex-col gap-5">
                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                      <div className="card p-5 relative overflow-hidden group">
-                         <div className="absolute top-0 right-0 p-5 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp className="w-10 h-10" /></div>
-                         <div className="flex justify-between items-start mb-6">
-                            <div className="p-8 bg-gold/10 rounded-xl"><Activity className="w-4 h-4 text-gold" /></div>
-                            <span className="badge badge-gold py-1.5 px-6 text-[8px] font-black tracking-widest">Active Round</span>
+                      <div className="card p-4 relative overflow-hidden group">
+                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><TrendingUp className="w-8 h-8" /></div>
+                         <div className="flex justify-between items-start mb-4">
+                            <div className="p-2 bg-gold/10 rounded-lg"><Activity className="w-3.5 h-3.5 text-gold" /></div>
+                            <span className="badge badge-gold py-1 px-4 text-[7px] font-black tracking-widest">Active Round</span>
                          </div>
-                         <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-1.5">Progression</h3>
-                         <div className="text-lg font-black font-display text-white mb-6">
-                             {userEntry ? `Step ${streak + 1} / 3` : `Round ${activeRound?.round_number || ''} Entry`}
+                         <h3 className="text-muted text-[7px] font-black uppercase tracking-widest mb-1">Status</h3>
+                         <div className="text-base font-black font-display text-white mb-4">
+                             {userEntry ? `Step ${streak + 1} of 3` : `Round ${activeRound?.round_number || ''}`}
                          </div>
                          <div className="w-full h-1 bg-white/[0.05] rounded-full overflow-hidden border border-white/5">
                             <div className="h-full bg-grad-gold shadow-[0_0_8px_var(--gold)]" style={{ width: `${(streak / 3) * 100}%` }} />
                          </div>
                       </div>
-                      <div className="card p-5 relative overflow-hidden group">
-                        <div className="absolute top-0 right-0 p-5 opacity-5 group-hover:opacity-10 transition-opacity"><ShieldCheck className="w-10 h-10" /></div>
-                        <div className="flex justify-between items-start mb-6">
-                            <div className="p-8 bg-blue-electric/10 rounded-xl"><ShieldCheck className="w-4 h-4 text-blue-electric" /></div>
-                            <span className="badge badge-blue py-1.5 px-6 text-[8px] font-black tracking-widest">Verified</span>
+                      <div className="card p-4 relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><ShieldCheck className="w-8 h-8" /></div>
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="p-2 bg-blue-electric/10 rounded-lg"><ShieldCheck className="w-3.5 h-3.5 text-blue-electric" /></div>
+                            <span className="badge badge-blue py-1 px-4 text-[7px] font-black tracking-widest">Verified</span>
                          </div>
-                         <h3 className="text-muted text-[8px] font-black uppercase tracking-widest mb-1.5">Account Status</h3>
-                         <div className={`text-lg font-black font-display text-${status.color} mb-6 tracking-tight uppercase italic`}>
-                           {status.label}
+                         <h3 className="text-muted text-[7px] font-black uppercase tracking-widest mb-1">Account</h3>
+                         <div className={`text-base font-black font-display text-${status.color} mb-4 tracking-tight uppercase italic`}>
+                           {status.label} Member
                          </div>
-                         <div className="flex items-center gap-4">
+                         <div className="flex items-center gap-3">
                             <div 
-                               className={`w-1.5 h-1.5 rounded-full bg-${status.color} animate-pulse`} 
-                               style={{ boxShadow: `0 0 8px var(--${status.color})` }}
+                               className={`w-1.5 h-1.5 rounded-full bg-${status.color} opacity-50`} 
                             />
-                            <span className="text-[9px] text-muted font-bold uppercase tracking-widest italic opacity-60">Verified Link Established</span>
+                            <span className="text-[8px] text-muted font-bold uppercase tracking-widest italic opacity-40">Account Active</span>
                          </div>
                       </div>
                    </div>
@@ -261,26 +260,26 @@ export default function DashboardClient({
                 </div>
 
                 <div className="lg:col-span-4 flex flex-col gap-6">
-                   <div className="card p-6 border-blue-electric/20 bg-blue-electric/[0.02]">
-                      <div className="flex justify-between items-center mb-8">
-                         <h3 className="text-[9px] font-black uppercase tracking-[0.2em] text-muted">Est. Rewards</h3>
-                         <TrendingUp className="w-4 h-4 text-success" />
+                   <div className="card p-4 border-blue-electric/20 bg-blue-electric/[0.01]">
+                      <div className="flex justify-between items-center mb-6">
+                         <h3 className="text-[8px] font-black uppercase tracking-[0.2em] text-muted">Potential Rewards</h3>
+                         <TrendingUp className="w-3.5 h-3.5 text-success" />
                       </div>
-                      <div className="p-8 bg-black/40 border border-white/5 rounded-xl text-center mb-10 relative overflow-hidden group">
-                         <div className="absolute top-0 right-0 p-6 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-10 h-10" /></div>
-                         <div className="text-muted text-[8px] font-black uppercase mb-3 tracking-widest leading-none">Streak Bonus</div>
-                         <div className="text-2xl font-black font-display text-white">{potentialReward}</div>
+                      <div className="p-6 bg-black/40 border border-white/5 rounded-lg text-center mb-6 relative overflow-hidden group">
+                         <div className="absolute top-0 right-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity"><Trophy className="w-8 h-8" /></div>
+                         <div className="text-muted text-[7px] font-black uppercase mb-2 tracking-widest leading-none">Est. Earnings</div>
+                         <div className="text-xl font-black font-display text-white">{potentialReward}</div>
                       </div>
-                      <button onClick={() => setActiveTab('referrals')} className="btn btn-blue w-full py-10 font-black uppercase tracking-widest text-[9px] shadow-lg shadow-blue-electric/20">Refer Network</button>
+                      <button onClick={() => setActiveTab('referrals')} className="btn btn-blue w-full py-2.5 font-black uppercase tracking-widest text-[8px] shadow-lg shadow-blue-electric/20">Refer Details</button>
                    </div>
                    
-                   <div className="card p-6 bg-danger/[0.02] border-danger/20">
-                      <h3 className="text-[9px] font-black text-danger uppercase tracking-[0.2em] mb-4 flex items-center gap-6">
-                         <ShieldAlert className="w-4 h-4" /> Final Notice
+                   <div className="card p-4 bg-danger/[0.01] border-danger/10">
+                      <h3 className="text-[8px] font-black text-danger uppercase tracking-[0.2em] mb-3 flex items-center gap-4">
+                         <ShieldAlert className="w-3.5 h-3.5" /> Alert
                       </h3>
-                      <p className="text-[10px] text-muted leading-relaxed font-black uppercase tracking-wider italic">
-                        Round {activeRound?.round_number || ''} is ending soon. 
-                        Authorize your final prediction.
+                      <p className="text-[9px] text-muted leading-relaxed font-black uppercase tracking-wider italic opacity-60">
+                        Round {activeRound?.round_number || ''} is in progress. 
+                        Complete your predictions.
                       </p>
                    </div>
                 </div>
@@ -289,18 +288,18 @@ export default function DashboardClient({
 
             {activeTab === 'challenge' && (
               <div className="flex flex-col gap-6">
-                <div className="card bg-blue-electric/[0.03] border-blue-electric/20 p-8 flex flex-col md:flex-row justify-between items-center gap-12 relative overflow-hidden">
-                   <div className="flex items-center gap-12 relative z-10">
-                      <div className="p-10 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Zap className="w-6 h-6 text-blue-electric" /></div>
+                <div className="card bg-blue-electric/[0.02] border-blue-electric/10 p-5 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden">
+                   <div className="flex items-center gap-6 relative z-10">
+                      <div className="p-3 bg-blue-electric/10 rounded-lg border border-blue-electric/20"><Zap className="w-5 h-5 text-blue-electric" /></div>
                       <div>
-                         <h3 className="font-display text-xl font-black text-white italic tracking-tight uppercase">Challenge Arena</h3>
-                         <p className="text-muted text-[10px] font-black uppercase tracking-widest">Active Round /// {activeRound?.round_number || ''}</p>
+                         <h3 className="font-display text-lg font-black text-white italic tracking-tight uppercase">Live Challenges</h3>
+                         <p className="text-muted text-[8px] font-black uppercase tracking-widest opacity-60">Round {activeRound?.round_number || ''}</p>
                       </div>
                    </div>
                    <div className="relative z-10 w-full md:w-auto">
-                      <div className="text-center p-10 px-16 bg-black/40 border border-white/10 rounded-xl">
-                         <div className="text-[8px] text-muted font-black uppercase mb-2 tracking-widest">Round Timer</div>
-                         <div className="text-lg font-black font-mono text-white tracking-widest italic">{activeRound?.end_date ? new Date(activeRound.end_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'OFFLINE'}</div>
+                      <div className="text-center p-3 px-8 bg-black/40 border border-white/5 rounded-lg">
+                         <div className="text-[7px] text-muted font-black uppercase mb-1 tracking-widest">Time Remaining</div>
+                         <div className="text-base font-black font-mono text-white tracking-widest italic">{activeRound?.end_date ? new Date(activeRound.end_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'OFFLINE'}</div>
                       </div>
                    </div>
                 </div>
@@ -390,25 +389,25 @@ export default function DashboardClient({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-6">
+<div className="grid grid-cols-1 xl:grid-cols-[1fr_300px] gap-6">
                   {/* Left Column: Transactions */}
                   <div className="flex flex-col gap-6">
                     <div className="card p-0 overflow-hidden">
                       <div className="px-5 py-4 bg-white/[0.02] border-b border-white/5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                          <div className="flex items-center gap-3">
-                            <History className="w-4 h-4 text-blue-electric opacity-60" />
-                            <h3 className="font-display text-[9px] font-black uppercase tracking-widest">Financial Audit</h3>
+                            <History className="w-3.5 h-3.5 text-blue-electric opacity-60" />
+                            <h3 className="font-display text-[8px] font-black uppercase tracking-widest">Transaction History</h3>
                          </div>
                          <div className="flex bg-black/40 border border-white/5 rounded-lg p-1 gap-1 w-full sm:w-auto overflow-x-auto no-scrollbar">
                             {[
                               { id: 'transactions', label: 'History' },
-                              { id: 'purchases', label: 'Purchases' },
-                              { id: 'payouts', label: 'Payouts' }
+                              { id: 'purchases', label: 'Orders' },
+                              { id: 'payouts', label: 'Withdraw' }
                             ].map(btn => (
                               <button 
                                 key={btn.id}
                                 onClick={() => setWalletSubTab(btn.id as any)} 
-                                className={`px-4 py-1.5 text-[8px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === btn.id ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}
+                                className={`px-3 py-1 text-[7px] font-black uppercase tracking-widest rounded transition-all whitespace-nowrap ${walletSubTab === btn.id ? 'bg-white/10 text-white' : 'text-muted hover:text-white'}`}
                               >
                                 {btn.label}
                               </button>
@@ -531,22 +530,22 @@ export default function DashboardClient({
                   {/* Right Column: Actions */}
                   <div className="flex flex-col gap-6">
                     {/* Top Up Panel */}
-                    <div className="card p-24 bg-blue-electric/[0.02] border-blue-electric/10 relative overflow-hidden">
-                      <div className="absolute top-0 right-0 p-6 opacity-5"><Zap className="w-16 h-16" /></div>
-                      <div className="flex items-center gap-12 mb-20 relative z-10">
-                         <div className="p-10 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Zap className="w-4 h-4 text-blue-electric" /></div>
+                    <div className="card p-5 bg-blue-electric/[0.01] border-blue-electric/10 relative overflow-hidden">
+                      <div className="absolute top-0 right-0 p-4 opacity-5"><Zap className="w-12 h-12" /></div>
+                      <div className="flex items-center gap-4 mb-5 relative z-10">
+                         <div className="p-2 bg-blue-electric/10 rounded-lg border border-blue-electric/20"><Zap className="w-3.5 h-3.5 text-blue-electric" /></div>
                          <div>
-                            <h3 className="font-display text-[11px] font-black text-white uppercase tracking-widest">Top Up Wallet</h3>
-                            <p className="text-[8px] text-muted font-black uppercase tracking-widest mt-1">Instant Funding</p>
+                            <h3 className="font-display text-[9px] font-black text-white uppercase tracking-widest">Add Funds</h3>
+                            <p className="text-[7px] text-muted font-black uppercase tracking-widest mt-0.5 opacity-60">Top Up</p>
                          </div>
                       </div>
-                      <div className="grid grid-cols-2 gap-3 relative z-10">
+                      <div className="grid grid-cols-2 gap-2 relative z-10">
                          {[2500, 5000, 10000, 25000].map(amt => (
                            <button 
                              key={amt}
                              onClick={() => handleTopUp(amt)}
                              disabled={isPending}
-                             className="py-12 bg-white/[0.02] border border-white/5 rounded-xl text-[9px] font-black text-white hover:bg-blue-electric/10 hover:border-blue-electric/30 transition-all uppercase tracking-widest flex items-center justify-center pointer-events-auto"
+                             className="py-2.5 bg-white/[0.02] border border-white/5 rounded-lg text-[8px] font-black text-white hover:bg-blue-electric/10 hover:border-blue-electric/30 transition-all uppercase tracking-widest flex items-center justify-center"
                            >
                              + ₦{amt.toLocaleString()}
                            </button>
@@ -619,15 +618,15 @@ export default function DashboardClient({
                     </div>
                     
                     {/* Integrity Label */}
-                    <div className="card p-24 bg-gold/[0.02] border-gold/20 shadow-xl shadow-gold/5 flex flex-col items-center text-center">
-                       <div className="flex items-center gap-8 mb-8">
-                          <ShieldCheck className="w-4 h-4 text-gold" />
-                          <span className="text-[9px] text-white font-black uppercase tracking-widest">Verified Integrity</span>
-                       </div>
-                       <p className="text-[9px] text-muted font-bold italic opacity-60 uppercase tracking-widest leading-relaxed">
-                         Node Verified & Settled in 48 Business Hours.
-                       </p>
-                    </div>
+                    <div className="card p-5 bg-gold/[0.01] border-gold/10 flex flex-col items-center text-center">
+                        <div className="flex items-center gap-3 mb-2">
+                           <ShieldCheck className="w-3.5 h-3.5 text-gold" />
+                           <span className="text-[8px] text-white font-black uppercase tracking-widest">Payment Security</span>
+                        </div>
+                        <p className="text-[8px] text-muted font-bold italic opacity-40 uppercase tracking-widest leading-relaxed">
+                          Withdrawals are processed within 48 hours.
+                        </p>
+                     </div>
                   </div>
                 </div>
               </div>
@@ -635,26 +634,26 @@ export default function DashboardClient({
 
             {activeTab === 'referrals' && (
               <div className="animate-slide-up flex flex-col gap-6">
-                 <div className="card p-24 flex flex-col md:flex-row justify-between items-center gap-24 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 p-8 opacity-5"><Globe className="w-12 h-12" /></div>
-                    <div className="flex-1 relative z-10">
-                       <div className="flex items-center gap-10 mb-20 px-12 py-6 bg-blue-electric/10 border border-blue-electric/20 rounded-full w-fit">
-                          <TrendingUp className="w-4 h-4 text-blue-electric" />
-                          <span className="text-[9px] font-black text-blue-electric uppercase tracking-widest">Referral Program</span>
-                       </div>
-                       <h3 className="font-display text-4xl font-black text-white italic tracking-tight mb-16 uppercase">Network Rewards</h3>
-                       <p className="text-muted text-xs font-black leading-relaxed max-w-[500px] uppercase tracking-widest italic opacity-60">
-                         Invite members to the PredChain network and receive automated financial bonuses for every verified synchronization.
-                       </p>
-                    </div>
-                    <div className="flex flex-col items-center gap-16 relative z-10">
-                       <div className="text-center p-24 px-32 bg-black/40 border border-white/10 rounded-2xl shadow-xl backdrop-blur-xl group hover:border-gold/40 transition-all">
-                          <div className="text-[9px] text-muted font-black uppercase mb-4 tracking-widest">Total Referrals</div>
-                          <div className="text-5xl font-black font-display text-white italic">{(profile?.referral_count || 0).toString().padStart(2, '0')}</div>
-                          <div className="mt-8 px-12 py-4 bg-white/5 rounded-lg text-[8px] font-black text-muted uppercase tracking-widest">Invite Members</div>
-                       </div>
-                    </div>
-                 </div>
+                 <div className="card p-6 flex flex-col md:flex-row justify-between items-center gap-6 relative overflow-hidden group">
+                     <div className="absolute top-0 right-0 p-6 opacity-5"><Globe className="w-10 h-10" /></div>
+                     <div className="flex-1 relative z-10">
+                        <div className="flex items-center gap-3 mb-4 px-3 py-1 bg-blue-electric/10 border border-blue-electric/20 rounded-full w-fit">
+                           <TrendingUp className="w-3.5 h-3.5 text-blue-electric" />
+                           <span className="text-[8px] font-black text-blue-electric uppercase tracking-widest">Referrals</span>
+                        </div>
+                        <h3 className="font-display text-3xl font-black text-white italic tracking-tight mb-4 uppercase">Referral Rewards</h3>
+                        <p className="text-muted text-[10px] font-black leading-relaxed max-w-[500px] uppercase tracking-widest italic opacity-40">
+                          Refer your friends and earn rewards for every successful referral.
+                        </p>
+                     </div>
+                     <div className="flex flex-col items-center gap-4 relative z-10">
+                        <div className="text-center p-6 px-10 bg-black/40 border border-white/5 rounded-xl shadow-xl backdrop-blur-xl group hover:border-gold/40 transition-all">
+                           <div className="text-[8px] text-muted font-black uppercase mb-1 tracking-widest">Total Referrals</div>
+                           <div className="text-3xl font-black font-display text-white italic">{(profile?.referral_count || 0).toString().padStart(2, '0')}</div>
+                           <div className="mt-4 px-4 py-1.5 bg-white/5 rounded-md text-[7px] font-black text-muted uppercase tracking-widest">Referral Link</div>
+                        </div>
+                     </div>
+                  </div>
 
                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                     <div className="card p-8 bg-white/[0.02] lg:col-span-8">

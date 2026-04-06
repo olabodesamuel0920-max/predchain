@@ -20,7 +20,7 @@ export default async function AdminPage() {
     .single();
 
   // Strict role enforcement
-  if (profile?.role !== 'admin' && user.email !== 'olabodesamuel0920@gmail.com') {
+  if (profile?.role !== 'admin' && user.email?.toLowerCase() !== 'olabodesamuel0920@gmail.com') {
     return (
       <div className="flex items-center justify-center min-h-screen bg-primary">
         <div className="absolute inset-0 bg-blue-electric/5 blur-[120px] pointer-events-none" />
