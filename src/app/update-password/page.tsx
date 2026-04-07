@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Shield, KeyRound, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react';
+import { Shield, KeyRound, CheckCircle2, AlertCircle, Loader2, ArrowLeft } from 'lucide-react';
 import { updatePassword } from '@/app/actions/auth';
 
 export default function UpdatePasswordPage() {
@@ -37,43 +37,40 @@ export default function UpdatePasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030508] flex items-center justify-center p-12 md:p-24 overflow-y-auto">
+    <div className="min-h-screen bg-[#030508] flex items-center justify-center p-6 relative overflow-hidden">
       {/* Background Glows */}
-      <div className="absolute top-1/4 left-1/4 w-[300px] h-[300px] bg-blue-electric/5 blur-[120px] pointer-events-none hidden md:block" />
-      <div className="absolute bottom-1/4 right-1/4 w-[300px] h-[300px] bg-gold/5 blur-[120px] pointer-events-none hidden md:block" />
-
-      <div className="w-full max-w-sm relative z-10 py-24">
-        <div className="card p-24 md:p-32 border-white/5 bg-white/[0.02] backdrop-blur-xl shadow-2xl relative overflow-hidden">
-          <div className="absolute top-0 left-0 w-full h-[2px] bg-grad-gold opacity-50" />
-          
-          <div className="mb-24 flex flex-col items-center text-center">
-            <div className="w-12 h-12 rounded-lg bg-blue-electric/10 border border-blue-electric/20 flex items-center justify-center mb-16">
-              <Shield className="w-6 h-6 text-blue-electric" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-electric/5 blur-[120px] pointer-events-none" />
+      
+      <div className="w-full max-w-[340px] relative z-10 py-12">
+        <div className="card-elite !bg-black/60 p-8 md:p-10 border-white/5 shadow-2xl relative overflow-hidden">
+          <div className="mb-10 text-center md:text-left">
+            <div className="w-10 h-10 rounded-xl bg-blue-electric/10 border border-blue-electric/20 flex items-center justify-center mb-6 shadow-glow-blue">
+              <Shield className="w-5 h-5 text-blue-electric" />
             </div>
-            <h1 className="font-display text-2xl font-black text-white italic uppercase tracking-tight mb-8">
-              Update <span className="text-grad-gold">Password</span>
+            <h1 className="font-display text-3xl md:text-4xl font-black text-white italic uppercase tracking-tighter mb-3">
+              Update <span className="text-gradient-blue">Access</span>
             </h1>
-            <p className="text-muted text-[10px] font-bold uppercase tracking-widest opacity-60 leading-relaxed max-w-[280px]">
-              Enter your new password below to secure your account.
+            <p className="text-muted text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed opacity-30 italic">
+              credential update protocol
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="flex flex-col gap-16">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             {error && (
-              <div className="flex items-center gap-10 p-12 bg-danger/10 border border-danger/20 rounded-xl animate-shake">
+              <div className="flex items-center gap-4 p-4 bg-danger/5 border border-danger/10 rounded-xl animate-shake">
                 <AlertCircle className="w-4 h-4 text-danger flex-shrink-0" />
-                <p className="text-danger text-[9px] font-black uppercase tracking-widest leading-tight">
+                <p className="text-danger text-[9px] font-black uppercase tracking-[0.2em] leading-tight italic">
                   {error}
                 </p>
               </div>
             )}
 
-            <div className="flex flex-col gap-6">
-              <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-2">
-                New Password
+            <div className="flex flex-col gap-2.5">
+              <label className="text-[9px] font-black text-muted uppercase tracking-[0.3em] ml-1 opacity-40 italic">
+                New Access Key
               </label>
               <div className="relative group">
-                <KeyRound className="absolute left-16 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted group-focus-within:text-blue-electric transition-colors" />
+                <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted/20 group-focus-within:text-blue-electric transition-colors" />
                 <input
                   type="password"
                   name="password"
@@ -81,24 +78,24 @@ export default function UpdatePasswordPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-black/40 border border-white/5 rounded-xl py-12 pl-44 pr-16 text-white font-mono text-xs focus:outline-none focus:border-blue-electric/40 transition-all placeholder:text-white/10"
+                  className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-4 pl-12 pr-5 text-white text-sm focus:outline-none focus:border-blue-electric/30 focus:bg-white/[0.04] transition-all placeholder:text-white/10"
                 />
               </div>
             </div>
 
-            <div className="flex flex-col gap-6">
-              <label className="text-[9px] font-black text-muted uppercase tracking-[0.2em] ml-2">
-                Confirm Password
+            <div className="flex flex-col gap-2.5">
+              <label className="text-[9px] font-black text-muted uppercase tracking-[0.3em] ml-1 opacity-40 italic">
+                Confirm Access Key
               </label>
               <div className="relative group">
-                <KeyRound className="absolute left-16 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted group-focus-within:text-blue-electric transition-colors" />
+                <KeyRound className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted/20 group-focus-within:text-blue-electric transition-colors" />
                 <input
                   type="password"
                   required
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-black/40 border border-white/5 rounded-xl py-12 pl-44 pr-16 text-white font-mono text-xs focus:outline-none focus:border-blue-electric/40 transition-all placeholder:text-white/10"
+                  className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-4 pl-12 pr-5 text-white text-sm focus:outline-none focus:border-blue-electric/30 focus:bg-white/[0.04] transition-all placeholder:text-white/10"
                 />
               </div>
             </div>
@@ -106,13 +103,14 @@ export default function UpdatePasswordPage() {
             <button
               type="submit"
               disabled={isPending}
-              className="btn btn-blue w-full py-12 font-black uppercase tracking-[0.2em] text-[10px] shadow-lg shadow-blue-electric/20 flex items-center justify-center gap-10 group"
+              className="btn btn-blue w-full py-4.5 italic text-[11px] shadow-2xl shadow-blue-electric/5 flex items-center justify-center gap-3 group mt-4"
             >
               {isPending ? (
-                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
                 <>
-                  Update Password
+                  Secure Credentials
+                  <ArrowLeft className="w-3.5 h-3.5 rotate-180 transition-transform group-hover:translate-x-1" />
                 </>
               )}
             </button>

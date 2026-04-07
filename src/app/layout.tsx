@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
-import { Outfit, Space_Grotesk, Space_Mono } from "next/font/google";
+import { Sora, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const outfit = Outfit({
+const sora = Sora({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-sora",
   display: "swap",
+  weight: ["400", "500", "600", "700", "800"],
 });
 
-const spaceGrotesk = Space_Grotesk({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-inter",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 const spaceMono = Space_Mono({
@@ -24,12 +26,12 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PredChain — Premium Football Prediction Challenge Platform",
-  description: "Buy an account, enter a 3-day live football challenge, predict 1 live match per day, and complete the full 3/3 perfect streak to unlock the 10X cash reward. Premium. Elite. Verified.",
+  title: "PredChain — Elite Football Prediction Arena",
+  description: "Secure your node account, analyze the arena, and maintain a perfect 3-day streak to unlock 10X reward multipliers. Premium. High-Integrity. Verified.",
   keywords: "football prediction, challenge platform, cash reward, perfect streak, live matches, leaderboard",
   openGraph: {
-    title: "PredChain — Premium Football Prediction Challenge",
-    description: "Build the perfect 3-match streak. Unlock the 10X cash reward.",
+    title: "PredChain — Elite Football Prediction Arena",
+    description: "Maintain the 3-day perfect streak. Unlock the 10X reward multiplier.",
     type: "website",
   },
 };
@@ -40,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} ${spaceGrotesk.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${sora.variable} ${inter.variable} ${spaceMono.variable}`}>
       <body>
         <div className="noise-overlay" aria-hidden="true" />
         <Navbar />

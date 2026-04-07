@@ -1,45 +1,12 @@
 'use client';
 
-import { useState, useTransition, useRef } from 'react';
-import Link from 'next/link';
+import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import {
-  Gem,
-  Star,
-  Check,
-  Users,
-  Trophy,
-  Activity,
-  Wallet,
-  ShieldCheck,
-  ArrowUpRight,
-  AlertCircle,
-  Zap,
-} from 'lucide-react';
+import Link from 'next/link';
+import { Shield, Target, Zap, Check, ShieldCheck, Activity, Wallet, Globe, ArrowUpRight, AlertCircle, Trophy, Star, Gem } from 'lucide-react';
 import { initializePayment } from '@/app/actions/paystack';
 import { purchaseTierWithWallet } from '@/app/actions/wallet';
 import { AccountTier, PlatformStats } from '@/types';
-
-// ─── TYPES ───────────────────────────────────────────────────────────────────
-interface TierFeature {
-  label: string;
-}
-
-interface DisplayTier {
-  id: string;
-  name: string;
-  price: string;
-  reward: string;
-  multiplier: string;
-  badge: string | null;
-  featured: boolean;
-  features: TierFeature[];
-  cta: string;
-  accentColor: string;
-  accentBg: string;
-  accentBorder: string;
-}
 
 interface AccountsClientProps {
   tiers: AccountTier[];
@@ -48,253 +15,11 @@ interface AccountsClientProps {
   stats: PlatformStats;
 }
 
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-// ─── HELPERS ─────────────────────────────────────────────────────────────────
-function getTierIcon(name: string) {
-  switch (name) {
-    case 'Premium': return <Gem className="w-4 h-4 text-gold" />;
-    case 'Standard': return <Star className="w-4 h-4 text-blue-electric" />;
-    default: return <Zap className="w-4 h-4 text-muted" />;
-  }
-}
-
-function buildDisplayTiers(tiers: AccountTier[]): DisplayTier[] {
-  return tiers.map(t => {
-    const isStandard = t.name === 'Standard';
-    const isPremium  = t.name === 'Premium';
-    const priceRaw = t.price_ngn;
-    const rewardVal = priceRaw * 10;
-    
-    return {
-      id: t.id,
-      name: t.name,
-      price: `₦${priceRaw.toLocaleString()}`,
-      reward: `₦${rewardVal.toLocaleString()}`,
-      multiplier: '10X Multiplier',
-      badge: isStandard ? 'POPULAR' : isPremium ? 'ELITE' : null,
-      featured: isStandard,
-      accentColor: isStandard ? 'text-blue-electric' : isPremium ? 'text-gold' : 'text-muted',
-      accentBg: isStandard ? 'bg-blue-electric/5' : isPremium ? 'bg-gold/5' : 'bg-white/[0.02]',
-      accentBorder: isStandard ? 'border-blue-electric/20' : isPremium ? 'border-gold/20' : 'border-white/10',
-      features: [
-        { label: '3-Day Arena Cycle Access' },
-        { label: '1 Precision Daily Pick' },
-        { label: 'Live Ranking Console' },
-        { label: `₦${(t.perks?.referral_bonus ?? 1000).toLocaleString()} Referral Reward` },
-        { label: 'Verified Operator Badge' },
-        ...(isPremium ? [
-          { label: 'Priority Verification' },
-          { label: 'Elite Node Status' },
-        ] : []),
-      ],
-      cta: isPremium ? 'Get Premium' : 'Select Plan',
-    };
-  });
-}
-
-// ─── TIER CARD ────────────────────────────────────────────────────────────────
-interface TierCardProps {
-  tier: AccountTier;
-  displayTier: DisplayTier;
-  isPending: boolean;
-  onPurchase: (id: string, method: 'wallet' | 'paystack') => void;
-  isLoggedIn: boolean;
-  walletBalance: number;
-}
-
-function TierCard({ tier, displayTier, isPending, onPurchase, isLoggedIn, walletBalance }: TierCardProps) {
-  const isWalletEnough = walletBalance >= tier.price_ngn;
-
-  return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      className={`relative flex flex-col gap-6 p-6 rounded-2xl border ${displayTier.accentBorder} ${displayTier.accentBg} shrink-0 w-[290px] shadow-2xl transition-all group backdrop-blur-md`}
-    >
-      {/* Badge */}
-      {displayTier.badge && (
-        <span className={`absolute top-4 right-4 px-2 py-0.5 rounded text-[8px] font-bold tracking-widest ${displayTier.accentColor} bg-white/5 border ${displayTier.accentBorder}`}>
-          {displayTier.badge}
-        </span>
-      )}
-
-      {/* Header */}
-      <div className="flex flex-col gap-3">
-        <div className="flex items-center gap-3">
-          <div className="p-2.5 rounded-xl bg-white/5 flex items-center justify-center border border-white/5">
-            {getTierIcon(displayTier.name)}
-          </div>
-          <span className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-60">
-            {displayTier.name} Node
-          </span>
-        </div>
-
-        <div className="text-3xl font-bold text-white tracking-tight">
-          {displayTier.price}
-        </div>
-      </div>
-
-      {/* Yield box */}
-      <div className="p-4 rounded-xl bg-bg-primary/60 border border-white/5 flex flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <span className="text-[9px] font-bold text-muted uppercase tracking-widest opacity-50">
-            Node Potential
-          </span>
-          <div className="badge-elite !text-success !border-success/20">
-            {displayTier.multiplier}
-          </div>
-        </div>
-        <div className="flex items-center justify-between">
-          <span className="text-xl font-bold text-white tracking-tight">
-            {displayTier.reward}
-          </span>
-          <Trophy className="w-4 h-4 text-gold opacity-30" />
-        </div>
-      </div>
-
-      {/* Feature list */}
-      <ul className="flex flex-col gap-3 flex-1 pt-2">
-        {displayTier.features.map((f, i) => (
-          <li key={i} className="flex gap-3 items-center">
-            <Check className="w-3.5 h-3.5 text-success/60 shrink-0" />
-            <span className="text-[11px] font-medium text-secondary leading-tight">
-              {f.label}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      {/* Action area */}
-      <div className="flex flex-col gap-3 pt-6 border-t border-white/5">
-        {!isLoggedIn ? (
-          <Link
-            href="/login"
-            className="btn btn-blue w-full rounded-full"
-          >
-            Authenticate
-          </Link>
-        ) : (
-          <>
-            {!isWalletEnough && (
-              <div className="flex flex-col items-center gap-1.5 mb-2 p-2.5 bg-danger/5 border border-danger/10 rounded-xl animate-fade-in">
-                <div className="flex items-center gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5 text-danger" />
-                  <span className="text-[9px] font-bold text-danger uppercase tracking-widest leading-none">Incomplete Balance</span>
-                </div>
-                <Link href="/dashboard?tab=wallet" className="text-[9px] font-bold text-blue-electric uppercase tracking-widest hover:underline">
-                  Top-up Dashboard
-                </Link>
-              </div>
-            )}
-            <button
-              disabled={isPending || !isWalletEnough}
-              onClick={() => onPurchase(tier.id, 'wallet')}
-              className={`btn w-full rounded-full gap-2 ${displayTier.featured ? 'btn-blue' : 'btn-ghost'}`}
-            >
-              {isPending ? <Activity className="animate-spin w-4 h-4" /> : (
-                <>
-                  <Wallet className="w-4 h-4" />
-                  Wallet Entry
-                </>
-              )}
-            </button>
-            <div className="relative h-6 flex items-center justify-center">
-               <div className="h-[1px] w-full bg-white/5" />
-               <span className="absolute px-3 bg-bg-secondary text-[8px] text-muted font-bold uppercase tracking-[0.3em] opacity-30">ALTERNATIVE</span>
-            </div>
-            <button
-              disabled={isPending}
-              onClick={() => onPurchase(tier.id, 'paystack')}
-              className="btn btn-ghost w-full rounded-full text-xs gap-2 border-white/5"
-            >
-              {isPending ? <Activity className="animate-spin w-4 h-4" /> : (
-                <>
-                  <ShieldCheck className="w-4 h-4 text-success/50" />
-                  Direct Settlement
-                </>
-              )}
-            </button>
-          </>
-        )}
-      </div>
-    </motion.div>
-  );
-}
-
-// ─── TIER CAROUSEL ────────────────────────────────────────────────────────────
-interface TierCarouselProps {
-  tiers: AccountTier[];
-  displayTiers: DisplayTier[];
-  isPending: boolean;
-  onPurchase: (id: string, method: 'wallet' | 'paystack') => void;
-  isLoggedIn: boolean;
-  walletBalance: number;
-}
-
-function TierCarousel({ tiers, displayTiers, isPending, onPurchase, isLoggedIn, walletBalance }: TierCarouselProps) {
-  const constraintsRef = useRef<HTMLDivElement>(null);
-
-  if (tiers.length === 0) {
-    return (
-      <div className="card-elite border-dashed py-20 flex flex-col items-center gap-6 text-center opacity-30 mx-6">
-        <Zap className="w-10 h-10 animate-pulse text-muted" />
-        <p className="text-[10px] font-bold uppercase tracking-[0.3em]">Awaiting node response...</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="relative group/carousel">
-      <div
-        ref={constraintsRef}
-        className="overflow-x-auto no-scrollbar cursor-grab active:cursor-grabbing px-6"
-      >
-        <motion.div
-          drag="x"
-          dragConstraints={constraintsRef}
-          dragElastic={0.1}
-          className="flex gap-6 pb-12 pt-6 w-max px-4 md:px-12"
-        >
-          {displayTiers.map((displayTier, idx) => (
-            <TierCard
-              key={displayTier.id}
-              tier={tiers[idx]}
-              displayTier={displayTier}
-              isPending={isPending}
-              onPurchase={onPurchase}
-              isLoggedIn={isLoggedIn}
-              walletBalance={walletBalance}
-            />
-          ))}
-        </motion.div>
-      </div>
-
-      <div className="flex justify-center items-center gap-10 mt-4 opacity-40 group-hover/carousel:opacity-100 transition-opacity">
-        <div className="h-[1px] w-16 bg-white/10 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full w-full bg-gold"
-            animate={{ x: ['-100%', '100%'] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          />
-        </div>
-        <span className="text-[9px] font-bold text-muted uppercase tracking-[0.3em]">Swipe to Navigate Node Protocols</span>
-        <div className="h-[1px] w-16 bg-white/10 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full w-full bg-blue-electric"
-            animate={{ x: ['-100%', '100%'] }}
-            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut', delay: 1.5 }}
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// ─── MAIN CLIENT ─────────────────────────────────────────────────────────────
 export default function AccountsClient({ tiers, userId, walletBalance = 0, stats }: AccountsClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
-  const displayTiers = buildDisplayTiers(tiers);
+  const [activeTierId, setActiveTierId] = useState<string | null>(null);
 
   const handlePurchase = async (tierId: string, method: 'wallet' | 'paystack') => {
     if (!userId) {
@@ -303,103 +28,190 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
     }
 
     setError(null);
+    setActiveTierId(tierId);
+    
     startTransition(async () => {
       try {
         if (method === 'wallet') {
           await purchaseTierWithWallet(tierId);
-          router.push('/dashboard?success=Plan+purchased+successfully');
+          router.push('/dashboard?success=Node+activated+successfully');
         } else {
           const result = await initializePayment(tierId);
           if (result.authorization_url) {
             window.location.href = result.authorization_url;
           }
         }
-      } catch (err: unknown) {
-        const e = err as Error;
-        setError(e.message || 'Transaction failed. Please try again.');
+      } catch (err: any) {
+        setError(err.message || 'Transmission failed. Please try again.');
+        setActiveTierId(null);
       }
     });
   };
 
   return (
-    <div className="min-h-screen bg-primary pt-24 flex flex-col animate-fade-in">
-      {/* ─── HERO ─── */}
-      <section className="relative py-16 md:py-24 border-b border-white/5 overflow-hidden">
-        <div className="absolute inset-0 bg-grad-glow opacity-20 pointer-events-none" />
-        
-        <div className="container relative z-10 text-center">
-          <div className="flex flex-col items-center max-w-2xl mx-auto gap-6 animate-slide-up">
-            <div className="glass-pill px-4 py-1.5 border-gold/15">
-              <span className="flex items-center gap-2 text-[10px] font-bold text-gold uppercase tracking-widest">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                Network Validation Protocol Active
-              </span>
+    <div className="relative min-h-screen bg-primary pt-32 pb-24 md:pt-48">
+      {/* Cinematic Ambience */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[700px] bg-grad-glow opacity-30 blur-[140px]" />
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-electric/5 blur-[120px]" />
+      </div>
+
+      <div className="container relative z-10">
+        {/* Elite Header */}
+        <div className="text-center mb-24 animate-slide-up">
+          <div className="badge-elite !text-gold !px-5 !py-1.5 mb-10 border-gold/10 !text-[9px]">PLAN CONFIGURATION</div>
+          <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-10 leading-[0.9] italic">
+            Elite <br /><span className="text-gradient-gold">Clusters.</span>
+          </h1>
+          <p className="text-muted text-[11px] md:text-xs font-black opacity-30 max-w-xl mx-auto uppercase tracking-[0.3em] leading-relaxed italic">
+            Select your operational cluster. <br /> Maintain 3-day integrity to secure verified 10X yield settlement.
+          </p>
+
+          {error && (
+            <div className="mt-12 flex items-center justify-center gap-3 text-danger animate-slide-up italic">
+              <AlertCircle className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">{error}</span>
             </div>
-
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-              Activate Your <span className="text-gradient-gold">Operator Node</span>
-            </h1>
-
-            <p className="text-sm font-medium text-secondary max-w-md">
-              Synchronize with the arena network. Win 10X multiplier rewards 
-              by maintaining peak prediction streak performance.
-            </p>
-
-            {error && (
-              <div className="mt-4 flex items-center gap-2 px-4 py-2 rounded-xl bg-danger/5 border border-danger/20 text-danger animate-slide-up">
-                <AlertCircle className="w-4 h-4" />
-                <span className="text-xs font-bold uppercase tracking-widest">{error}</span>
-              </div>
-            )}
-          </div>
+          )}
         </div>
-      </section>
 
-      {/* ─── CAROUSEL ─── */}
-      <section className="py-16 bg-primary relative overflow-hidden">
-        <TierCarousel 
-          tiers={tiers} 
-          displayTiers={displayTiers}
-          isPending={isPending} 
-          onPurchase={handlePurchase} 
-          isLoggedIn={!!userId}
-          walletBalance={walletBalance}
-        />
-      </section>
+        {/* High-Density Tier Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 mb-32 max-w-6xl mx-auto">
+          {tiers.map((tier, i) => {
+            const isStandard = tier.name === 'Standard';
+            const isPremium = tier.name === 'Premium';
+            const rewardVal = tier.price_ngn * 10;
+            const isWalletEnough = walletBalance >= tier.price_ngn;
+            const isLoading = isPending && activeTierId === tier.id;
 
-      {/* ─── STATS GRID ─── */}
-      <section className="py-20 border-t border-white/5 bg-bg-secondary/50">
-        <div className="container text-center">
-          <span className="section-label mb-16 opacity-40">NETWORK INTEGRITY METRICS</span>
+            return (
+              <div 
+                key={tier.id}
+                className={`card-elite group flex flex-col p-10 md:p-12 transition-all duration-700 hover:-translate-y-3 !bg-black/60 relative ${
+                  isStandard ? 'border-gold/20 shadow-glow-gold/5' : 'border-white/5 shadow-2xl'
+                }`}
+                style={{ animationDelay: `${i * 0.1}s` }}
+              >
+                {isStandard && (
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 badge-elite !bg-gold !text-black !px-5 !py-1 !text-[9px] font-black italic shadow-2xl">
+                    MOST ACTIVE
+                  </div>
+                )}
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-            {[
-              { label: 'Network Cycles', val: `${stats.roundsCompleted}`,   icon: <Activity className="w-4 h-4" /> },
-              { label: 'Active Operators', val: `${stats.activeChallengers.toLocaleString()}`,   icon: <Users    className="w-4 h-4" /> },
-              { label: 'Streak Performance', val: `${stats.perfectStreaks}`,   icon: <Zap      className="w-4 h-4" /> },
-              { label: 'Total Distributed', val: `₦${(stats.totalCashPaid / 1000).toLocaleString()}K`, icon: <Wallet   className="w-4 h-4" /> },
-            ].map((s, i) => (
-              <div key={i} className="card-elite bg-bg-primary/40 flex flex-col items-center gap-4 py-8 border-white/5">
-                <div className="p-3 bg-blue-electric/10 rounded-xl text-blue-electric border border-blue-electric/10">{s.icon}</div>
-                <div className="text-3xl font-bold text-white tracking-tight">{s.val}</div>
-                <div className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-40">{s.label}</div>
+                <div className="flex flex-col items-center text-center mb-10">
+                  <div className={`w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/5 flex items-center justify-center mb-8 shadow-inner group-hover:scale-110 transition-transform ${isPremium ? 'text-gold' : isStandard ? 'text-blue-electric' : 'text-white/40'}`}>
+                    {isPremium ? <Gem className="w-8 h-8" /> : isStandard ? <Star className="w-8 h-8" /> : <Zap className="w-8 h-8" />}
+                  </div>
+                  <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-4 italic leading-tight">{tier.name} Plan</h2>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-3xl font-black text-white italic tracking-tighter leading-none">₦{tier.price_ngn.toLocaleString()}</span>
+                    <span className="text-[9px] font-black text-muted uppercase tracking-[0.3em] opacity-20 italic">Activation Fee</span>
+                  </div>
+                </div>
+
+                <div className="w-full h-px bg-white/5 mb-10" />
+
+                <ul className="flex flex-col gap-4 mb-12 flex-1">
+                  {[
+                    '3-Day Arena Cycle Access',
+                    '1 Precision Daily Pick',
+                    `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} Reward Yield`
+                  ].map((feat, idx) => (
+                    <li key={idx} className="flex items-center gap-4 group/item">
+                      <div className="w-4 h-4 rounded-full bg-success/5 border border-success/20 flex items-center justify-center shrink-0">
+                        <Check className="w-3 h-3 text-success" />
+                      </div>
+                      <span className="text-[10px] font-black text-muted uppercase tracking-widest leading-none opacity-40 group-hover/item:opacity-100 group-hover/item:text-white transition-all italic">{feat}</span>
+                    </li>
+                  ))}
+                  {isPremium && (
+                    <li className="flex items-center gap-4 group/item border-t border-white/5 pt-4">
+                      <div className="w-4 h-4 rounded-full bg-gold/5 border border-gold/20 flex items-center justify-center shrink-0">
+                        <Star className="w-3 h-3 text-gold" />
+                      </div>
+                      <span className="text-[10px] font-black text-gold uppercase tracking-widest leading-none italic">Priority Settlement</span>
+                    </li>
+                  )}
+                </ul>
+
+                <div className="mt-auto flex flex-col gap-8 w-full pt-10 border-t border-white/5">
+                  <div className="flex flex-col items-center gap-3">
+                     <span className="text-[8px] font-black text-gold uppercase tracking-[0.4em] opacity-30 italic">Cycle Target Recovery</span>
+                     <div className="flex items-baseline gap-2">
+                        <span className="text-2xl font-black text-white tracking-tighter italic">₦{rewardVal.toLocaleString()}</span>
+                        <div className="badge-elite !px-2 !py-0.5 !text-[8px] !bg-success/5 !text-success !border-success/10 italic">10X YIELD</div>
+                     </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <button
+                      onClick={() => handlePurchase(tier.id, 'wallet')}
+                      disabled={!!(isLoading || (userId && !isWalletEnough))}
+                      className={`btn w-full py-4 !rounded-xl italic font-black text-[12px] tracking-widest shadow-2xl transition-all ${
+                        isStandard ? 'btn-primary' : 'btn-ghost'
+                      }`}
+                    >
+                      {isLoading ? <Activity className="w-4 h-4 animate-spin" /> : 
+                       (userId && !isWalletEnough) ? 'INSUFFICIENT FUNDS' : 'WALLET ACTIVATION'}
+                    </button>
+                    
+                    <button
+                      onClick={() => handlePurchase(tier.id, 'paystack')}
+                      disabled={isLoading}
+                      className="text-[9px] font-black text-muted hover:text-white transition-all py-2 uppercase tracking-[0.3em] opacity-30 hover:opacity-100 italic"
+                    >
+                      Direct Secure Settlement
+                    </button>
+                  </div>
+                </div>
               </div>
-            ))}
-          </div>
+            );
+          })}
+        </div>
 
-          <div className="mt-20 flex flex-col items-center gap-6 animate-slide-up opacity-50">
-            <div className="flex items-center gap-3 text-[10px] font-bold text-muted uppercase tracking-[0.3em]">
-              <ShieldCheck className="w-4 h-4 text-success/60" />
-              Automated Reward Settlement Engine
+        {/* Premium Trust Footnote */}
+        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 border-t border-white/5 pt-24 mb-32">
+          {[
+            { 
+              icon: <ShieldCheck className="w-6 h-6 text-success" />, 
+              title: 'NODE INTEGRITY', 
+              desc: 'Every arena prediction is logged on the permanent settlement layer for full verification.' 
+            },
+            { 
+              icon: <Activity className="w-6 h-6 text-blue-electric" />, 
+              title: 'MATCH ACCURACY', 
+              desc: 'Real-time synchronization with global oddsmakers ensures 1:1 outcome precision.' 
+            },
+            { 
+              icon: <Globe className="w-6 h-6 text-gold" />, 
+              title: 'GLOBAL ACCESS', 
+              desc: 'Deploy authorized nodes from any network node and settle rewards instantly.' 
+            }
+          ].map((item, i) => (
+            <div key={i} className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 shadow-inner">{item.icon}</div>
+              <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">{item.title}</h3>
+              <p className="text-[11px] font-bold text-muted uppercase leading-relaxed tracking-wider opacity-30">{item.desc}</p>
             </div>
-            <p className="text-[11px] font-medium text-muted max-w-md leading-relaxed">
-              All node returns are atomically credited to certified operator wallets upon cycle completion. 
-              Enterprise-grade encryption active across all transmission layers.
-            </p>
-          </div>
+          ))}
         </div>
-      </section>
+
+        {/* High-Impact CTA */}
+        <div className="card-elite !p-12 md:p-32 text-center !bg-black/40 border-white/5 relative overflow-hidden group">
+           <div className="absolute top-0 right-0 p-24 opacity-[0.01] group-hover:opacity-[0.03] transition-opacity -rotate-12 pointer-events-none">
+              <Trophy className="w-72 h-72" />
+           </div>
+           <div className="max-w-2xl mx-auto relative z-10">
+              <div className="badge-elite !text-gold mb-10 border-gold/10 !px-5 !py-1 italic">OPERATIONAL PIPELINE</div>
+              <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter mb-10 leading-[0.9] italic">The Arena <br /><span className="text-gradient-gold">Awaits.</span></h2>
+              <p className="text-muted text-[11px] md:text-xs font-black opacity-30 mb-16 uppercase tracking-[0.3em] leading-relaxed max-w-sm mx-auto italic">Build your legacy on the permanent ledger.</p>
+              <div className="flex flex-wrap gap-5 justify-center">
+                 <Link href="/live-challenges" className="btn btn-primary !px-12 !rounded-xl !py-4 font-black italic shadow-2xl">Arena Status</Link>
+                 <Link href="/dashboard" className="btn btn-ghost !px-10 !rounded-xl !py-4 border-white/5 font-black italic">Operator Console</Link>
+              </div>
+           </div>
+        </div>
+      </div>
     </div>
   );
 }
-
