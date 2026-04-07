@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Sora, Inter, Space_Mono } from "next/font/google";
+import { Outfit, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const sora = Sora({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-sora",
+  variable: "--font-outfit",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 const inter = Inter({
@@ -26,12 +26,12 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PredChain — Elite Football Prediction Arena",
-  description: "Secure your node account, analyze the arena, and maintain a perfect 3-day streak to unlock 10X reward multipliers. Premium. High-Integrity. Verified.",
-  keywords: "football prediction, challenge platform, cash reward, perfect streak, live matches, leaderboard",
+  title: "PredChain | Elite Football Prediction Arena",
+  description: "Join the premier arena for top-tier football predictions. Build a 3-day sequence to unlock 10X reward multipliers. Premium, verified, and high-performance.",
+  keywords: "football prediction, premium sports tech, cash reward, perfect streak, live matches, analytics",
   openGraph: {
-    title: "PredChain — Elite Football Prediction Arena",
-    description: "Maintain the 3-day perfect streak. Unlock the 10X reward multiplier.",
+    title: "PredChain | Predict. Perform. Prevail.",
+    description: "Maintain a 3-day sequence. Unlock the 10X reward multiplier.",
     type: "website",
   },
 };
@@ -42,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sora.variable} ${inter.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${inter.variable} ${spaceMono.variable}`}>
       <body>
         <div className="noise-overlay" aria-hidden="true" />
         <Navbar />

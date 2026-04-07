@@ -3,10 +3,15 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Shield, Target, Zap, Check, ShieldCheck, Activity, Wallet, Globe, ArrowUpRight, AlertCircle, Trophy, Star, Gem } from 'lucide-react';
+import { Shield, Target, Zap, Check, ShieldCheck, Activity, Wallet, Globe, ArrowUpRight, AlertCircle, Trophy, Star, Gem, ArrowRight, CreditCard } from 'lucide-material-react';
+import * as Icons from 'lucide-react';
 import { initializePayment } from '@/app/actions/paystack';
 import { purchaseTierWithWallet } from '@/app/actions/wallet';
 import { AccountTier, PlatformStats } from '@/types';
+import { useFeedback } from '@/hooks/useFeedback';
+
+// Correcting icon import reference
+const { Star: StarIcon, Gem: GemIcon, Zap: ZapIcon, Trophy: TrophyIcon, Check: CheckIcon, AlertCircle: AlertIcon, ShieldCheck: ShieldIcon, Activity: ActivityIcon } = Icons;
 
 interface AccountsClientProps {
   tiers: AccountTier[];
@@ -18,7 +23,7 @@ interface AccountsClientProps {
 export default function AccountsClient({ tiers, userId, walletBalance = 0, stats }: AccountsClientProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [error, setError] = useState<string | null>(null);
+  const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback(5000);
   const [activeTierId, setActiveTierId] = useState<string | null>(null);
 
   const handlePurchase = async (tierId: string, method: 'wallet' | 'paystack') => {
@@ -27,14 +32,13 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
       return;
     }
 
-    setError(null);
     setActiveTierId(tierId);
     
     startTransition(async () => {
       try {
         if (method === 'wallet') {
           await purchaseTierWithWallet(tierId);
-          router.push('/dashboard?success=Node+activated+successfully');
+          router.push('/dashboard?success=Account+activated+successfully');
         } else {
           const result = await initializePayment(tierId);
           if (result.authorization_url) {
@@ -42,7 +46,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
           }
         }
       } catch (err: any) {
-        setError(err.message || 'Transmission failed. Please try again.');
+        showError(err.message || 'Transaction failed. Please try again.');
         setActiveTierId(null);
       }
     });
@@ -50,36 +54,34 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
 
   return (
     <div className="relative min-h-screen bg-primary pt-32 pb-24 md:pt-48">
-      {/* Cinematic Ambience */}
+      {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[700px] bg-grad-glow opacity-30 blur-[140px]" />
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-blue-electric/5 blur-[120px]" />
+        <div className="absolute top-0 right-0 w-full h-[600px] bg-gold-glow blur-[140px] opacity-20" />
       </div>
 
-      <div className="container relative z-10">
-        {/* Elite Header */}
-        <div className="text-center mb-24 animate-slide-up">
-          <div className="badge-elite !text-gold !px-5 !py-1.5 mb-10 border-gold/10 !text-[9px]">PLAN CONFIGURATION</div>
-          <h1 className="text-5xl md:text-8xl font-black uppercase tracking-tighter mb-10 leading-[0.9] italic">
-            Elite <br /><span className="text-gradient-gold">Clusters.</span>
-          </h1>
-          <p className="text-muted text-[11px] md:text-xs font-black opacity-30 max-w-xl mx-auto uppercase tracking-[0.3em] leading-relaxed italic">
-            Select your operational cluster. <br /> Maintain 3-day integrity to secure verified 10X yield settlement.
+      <div className="container relative z-10 px-6">
+        {/* Section Header */}
+        <div className="text-center mb-20 max-w-2xl mx-auto">
+          <div className="badge-elite !text-gold mb-8 px-5 py-1 bg-white/[0.03] border-gold/10 italic">ELITE PLANS</div>
+          <h1 className="mb-6 leading-tight">Choose Your <span className="text-gradient-gold">Tier.</span></h1>
+          <p className="text-muted text-sm md:text-base font-medium opacity-60 max-w-lg mx-auto uppercase tracking-widest leading-relaxed">
+            Select an account tier to synchronize with the live arena and secure your 10X reward sequence.
           </p>
 
-          {error && (
-            <div className="mt-12 flex items-center justify-center gap-3 text-danger animate-slide-up italic">
-              <AlertCircle className="w-4 h-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">{error}</span>
+          {errorMsg && (
+            <div className="mt-8 flex items-center justify-center gap-2 text-danger animate-slide-up bg-danger/10 p-3 rounded-xl border border-danger/10">
+              <AlertIcon className="w-4 h-4" />
+              <span className="text-[10px] font-black uppercase tracking-widest">{errorMsg}</span>
             </div>
           )}
         </div>
 
-        {/* High-Density Tier Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 mb-32 max-w-6xl mx-auto">
+        {/* Pricing Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-32 max-w-6xl mx-auto">
           {tiers.map((tier, i) => {
-            const isStandard = tier.name === 'Standard';
-            const isPremium = tier.name === 'Premium';
+            const isStandard = i === 0;
+            const isMidTier = i === 1;
+            const isPremium = i === 2;
             const rewardVal = tier.price_ngn * 10;
             const isWalletEnough = walletBalance >= tier.price_ngn;
             const isLoading = isPending && activeTierId === tier.id;
@@ -87,129 +89,96 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             return (
               <div 
                 key={tier.id}
-                className={`card-elite group flex flex-col p-10 md:p-12 transition-all duration-700 hover:-translate-y-3 !bg-black/60 relative ${
-                  isStandard ? 'border-gold/20 shadow-glow-gold/5' : 'border-white/5 shadow-2xl'
+                className={`card-elite !p-10 bg-[#080a0f] border-white/5 transition-all duration-700 hover:-translate-y-2 relative shadow-2xl group flex flex-col ${
+                  isMidTier ? 'border-gold/30 shadow-glow-gold/5' : 'border-white/5'
                 }`}
-                style={{ animationDelay: `${i * 0.1}s` }}
+                style={{ animationDelay: `${i * 0.15}s` }}
               >
-                {isStandard && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 badge-elite !bg-gold !text-black !px-5 !py-1 !text-[9px] font-black italic shadow-2xl">
-                    MOST ACTIVE
+                {isMidTier && (
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 badge-elite !bg-gold !text-black !px-4 !py-1.5 italic shadow-lg font-black text-[9px]">
+                    PLATFORM CHOICE
                   </div>
                 )}
 
                 <div className="flex flex-col items-center text-center mb-10">
-                  <div className={`w-16 h-16 rounded-2xl bg-white/[0.04] border border-white/5 flex items-center justify-center mb-8 shadow-inner group-hover:scale-110 transition-transform ${isPremium ? 'text-gold' : isStandard ? 'text-blue-electric' : 'text-white/40'}`}>
-                    {isPremium ? <Gem className="w-8 h-8" /> : isStandard ? <Star className="w-8 h-8" /> : <Zap className="w-8 h-8" />}
-                  </div>
-                  <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-4 italic leading-tight">{tier.name} Plan</h2>
-                  <div className="flex flex-col gap-1">
-                    <span className="text-3xl font-black text-white italic tracking-tighter leading-none">₦{tier.price_ngn.toLocaleString()}</span>
-                    <span className="text-[9px] font-black text-muted uppercase tracking-[0.3em] opacity-20 italic">Activation Fee</span>
-                  </div>
+                   <div className="w-16 h-16 rounded-2xl bg-white/[0.03] flex items-center justify-center mb-6 text-gold shadow-inner group-hover:scale-110 transition-transform duration-700">
+                      {isPremium ? <GemIcon className="w-7 h-7" /> : isMidTier ? <StarIcon className="w-7 h-7" /> : <ZapIcon className="w-7 h-7" />}
+                   </div>
+                   <h3 className="text-xl font-black text-white italic tracking-tight mb-2 uppercase">{tier.name} Account</h3>
+                   <div className="flex items-baseline gap-1.5">
+                      <span className="text-3xl font-black text-white italic tracking-tighter leading-none">₦{tier.price_ngn.toLocaleString()}</span>
+                      <span className="text-[9px] font-bold text-muted uppercase tracking-widest opacity-20">/ entry</span>
+                   </div>
                 </div>
 
                 <div className="w-full h-px bg-white/5 mb-10" />
 
-                <ul className="flex flex-col gap-4 mb-12 flex-1">
-                  {[
-                    '3-Day Arena Cycle Access',
-                    '1 Precision Daily Pick',
-                    `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} Reward Yield`
-                  ].map((feat, idx) => (
-                    <li key={idx} className="flex items-center gap-4 group/item">
-                      <div className="w-4 h-4 rounded-full bg-success/5 border border-success/20 flex items-center justify-center shrink-0">
-                        <Check className="w-3 h-3 text-success" />
+                <div className="space-y-4 mb-12 flex-1">
+                   {[
+                      '3-Day Sequence Access',
+                      'Full Arena Monitor',
+                      `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} Associate Reward`,
+                      '24/7 Verified Settlement'
+                   ].map((feat, idx) => (
+                      <div key={idx} className="flex items-center gap-3">
+                         <div className="w-5 h-5 rounded-lg bg-white/[0.03] border border-white/5 flex items-center justify-center shrink-0">
+                            <CheckIcon className="w-3 h-3 text-gold opacity-60" />
+                         </div>
+                         <span className="text-[10px] font-bold text-muted uppercase tracking-widest leading-none opacity-40 group-hover:opacity-100 transition-all italic">{feat}</span>
                       </div>
-                      <span className="text-[10px] font-black text-muted uppercase tracking-widest leading-none opacity-40 group-hover/item:opacity-100 group-hover/item:text-white transition-all italic">{feat}</span>
-                    </li>
-                  ))}
-                  {isPremium && (
-                    <li className="flex items-center gap-4 group/item border-t border-white/5 pt-4">
-                      <div className="w-4 h-4 rounded-full bg-gold/5 border border-gold/20 flex items-center justify-center shrink-0">
-                        <Star className="w-3 h-3 text-gold" />
+                   ))}
+                </div>
+
+                <div className="pt-10 border-t border-white/5 space-y-6">
+                   <div className="text-center">
+                      <span className="text-[10px] font-black text-gold uppercase tracking-widest opacity-30 italic block mb-2">Verified Yield</span>
+                      <div className="flex items-center justify-center gap-2">
+                         <span className="text-3xl font-black text-white italic tracking-tighter leading-none">₦{rewardVal.toLocaleString()}</span>
+                         <div className="badge-elite !py-0.5 !px-3 font-bold !bg-success/10 !text-success border-success/10 italic text-[8px]">10X MULTIPLIER</div>
                       </div>
-                      <span className="text-[10px] font-black text-gold uppercase tracking-widest leading-none italic">Priority Settlement</span>
-                    </li>
-                  )}
-                </ul>
+                   </div>
 
-                <div className="mt-auto flex flex-col gap-8 w-full pt-10 border-t border-white/5">
-                  <div className="flex flex-col items-center gap-3">
-                     <span className="text-[8px] font-black text-gold uppercase tracking-[0.4em] opacity-30 italic">Cycle Target Recovery</span>
-                     <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-black text-white tracking-tighter italic">₦{rewardVal.toLocaleString()}</span>
-                        <div className="badge-elite !px-2 !py-0.5 !text-[8px] !bg-success/5 !text-success !border-success/10 italic">10X YIELD</div>
-                     </div>
-                  </div>
-
-                  <div className="flex flex-col gap-3">
-                    <button
-                      onClick={() => handlePurchase(tier.id, 'wallet')}
-                      disabled={!!(isLoading || (userId && !isWalletEnough))}
-                      className={`btn w-full py-4 !rounded-xl italic font-black text-[12px] tracking-widest shadow-2xl transition-all ${
-                        isStandard ? 'btn-primary' : 'btn-ghost'
-                      }`}
-                    >
-                      {isLoading ? <Activity className="w-4 h-4 animate-spin" /> : 
-                       (userId && !isWalletEnough) ? 'INSUFFICIENT FUNDS' : 'WALLET ACTIVATION'}
-                    </button>
-                    
-                    <button
-                      onClick={() => handlePurchase(tier.id, 'paystack')}
-                      disabled={isLoading}
-                      className="text-[9px] font-black text-muted hover:text-white transition-all py-2 uppercase tracking-[0.3em] opacity-30 hover:opacity-100 italic"
-                    >
-                      Direct Secure Settlement
-                    </button>
-                  </div>
+                   <div className="flex flex-col gap-3">
+                      <button
+                        onClick={() => handlePurchase(tier.id, 'wallet')}
+                        disabled={!!(isLoading || (userId && !isWalletEnough))}
+                        className={`btn w-full py-4 rounded-xl italic font-black shadow-2xl transition-all hover:scale-105 ${
+                          isMidTier ? 'btn-primary' : 'bg-white/[0.03] text-white border-white/10 hover:bg-white/[0.06]'
+                        }`}
+                      >
+                         {isLoading ? <ActivityIcon className="w-4 h-4 animate-spin" /> : 
+                          (userId && !isWalletEnough) ? 'INSUFFICIENT BALANCE' : 'PAY FROM WALLET'}
+                      </button>
+                      
+                      <button
+                        onClick={() => handlePurchase(tier.id, 'paystack')}
+                        disabled={isLoading}
+                        className="text-[10px] font-black text-gold/40 hover:text-gold transition-all text-center uppercase tracking-widest italic pt-2"
+                      >
+                         Online Transaction
+                      </button>
+                   </div>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Premium Trust Footnote */}
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-16 border-t border-white/5 pt-24 mb-32">
-          {[
-            { 
-              icon: <ShieldCheck className="w-6 h-6 text-success" />, 
-              title: 'NODE INTEGRITY', 
-              desc: 'Every arena prediction is logged on the permanent settlement layer for full verification.' 
-            },
-            { 
-              icon: <Activity className="w-6 h-6 text-blue-electric" />, 
-              title: 'MATCH ACCURACY', 
-              desc: 'Real-time synchronization with global oddsmakers ensures 1:1 outcome precision.' 
-            },
-            { 
-              icon: <Globe className="w-6 h-6 text-gold" />, 
-              title: 'GLOBAL ACCESS', 
-              desc: 'Deploy authorized nodes from any network node and settle rewards instantly.' 
-            }
-          ].map((item, i) => (
-            <div key={i} className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-6">
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/5 shadow-inner">{item.icon}</div>
-              <h3 className="text-xs font-black text-white uppercase tracking-[0.2em]">{item.title}</h3>
-              <p className="text-[11px] font-bold text-muted uppercase leading-relaxed tracking-wider opacity-30">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* High-Impact CTA */}
-        <div className="card-elite !p-12 md:p-32 text-center !bg-black/40 border-white/5 relative overflow-hidden group">
-           <div className="absolute top-0 right-0 p-24 opacity-[0.01] group-hover:opacity-[0.03] transition-opacity -rotate-12 pointer-events-none">
-              <Trophy className="w-72 h-72" />
-           </div>
-           <div className="max-w-2xl mx-auto relative z-10">
-              <div className="badge-elite !text-gold mb-10 border-gold/10 !px-5 !py-1 italic">OPERATIONAL PIPELINE</div>
-              <h2 className="text-4xl md:text-7xl font-black uppercase tracking-tighter mb-10 leading-[0.9] italic">The Arena <br /><span className="text-gradient-gold">Awaits.</span></h2>
-              <p className="text-muted text-[11px] md:text-xs font-black opacity-30 mb-16 uppercase tracking-[0.3em] leading-relaxed max-w-sm mx-auto italic">Build your legacy on the permanent ledger.</p>
-              <div className="flex flex-wrap gap-5 justify-center">
-                 <Link href="/live-challenges" className="btn btn-primary !px-12 !rounded-xl !py-4 font-black italic shadow-2xl">Arena Status</Link>
-                 <Link href="/dashboard" className="btn btn-ghost !px-10 !rounded-xl !py-4 border-white/5 font-black italic">Operator Console</Link>
+        {/* Global Security Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto py-24 border-t border-white/5 mb-24">
+           {[
+              { icon: ShieldIcon, title: 'Network Security', desc: 'All arena fees are secured until match verification is completed.' },
+              { icon: Globe, title: 'Verified Feeds', desc: 'Match results are synchronized with official high-integrity data nodes.' },
+              { icon: ActivityIcon, title: 'Instant Yield', desc: 'Success sequences trigger automated reward distributions instantly.' }
+           ].map((item, i) => (
+              <div key={i} className="flex flex-col items-center text-center space-y-4 group">
+                 <div className="w-12 h-12 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-gold shadow-inner group-hover:scale-110 transition-transform">
+                    <item.icon className="w-6 h-6 opacity-40 group-hover:opacity-100" />
+                 </div>
+                 <h4 className="text-[11px] font-black text-white uppercase tracking-widest italic">{item.title}</h4>
+                 <p className="text-[10px] font-bold text-muted uppercase tracking-widest leading-loose opacity-30 italic">{item.desc}</p>
               </div>
-           </div>
+           ))}
         </div>
       </div>
     </div>

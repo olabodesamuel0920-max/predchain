@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { login } from '@/app/actions/auth';
+import { ArrowRight, Lock, Mail, ShieldCheck } from 'lucide-react';
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -37,89 +38,105 @@ function LoginForm() {
   const signupUrl = returnTo ? `/signup?returnTo=${encodeURIComponent(returnTo)}` : '/signup';
 
   return (
-    <div className="w-full max-w-[340px] relative z-10 px-4 md:px-0">
-      <div className="mb-12 text-center md:text-left">
-        <h2 className="font-display text-4xl md:text-5xl font-black text-white mb-3 uppercase tracking-tighter italic">Welcome back</h2>
-        <p className="text-[10px] text-muted font-bold uppercase tracking-[0.2em] opacity-30 italic">Secure entry protocol initiated</p>
+    <div className="w-full max-w-[360px] animate-fade-in px-6">
+      <div className="text-center mb-10">
+        <h2 className="mb-2">Welcome <span className="text-gradient-gold">Back.</span></h2>
+        <p className="text-[10px] font-bold text-muted uppercase tracking-[0.2em] opacity-40">Please enter your account details</p>
       </div>
 
-      <form action={loginAction} className="flex flex-col gap-6">
+      <form action={loginAction} className="space-y-5">
         {errorMsg && (
-          <div className="p-4 bg-danger/5 border border-danger/10 rounded-xl text-danger text-[9px] font-black uppercase tracking-[0.2em] text-center animate-slide-up italic">
+          <div className="p-3 bg-danger/10 border border-danger/20 rounded-xl text-danger text-[10px] font-bold uppercase tracking-widest text-center animate-slide-up">
             {errorMsg}
           </div>
         )}
         {infoMsg && (
-          <div className="p-4 bg-blue-electric/5 border border-blue-electric/10 rounded-xl text-blue-electric text-[9px] font-black uppercase tracking-[0.2em] text-center animate-slide-up italic">
+          <div className="p-3 bg-blue-electric/10 border border-blue-electric/20 rounded-xl text-blue-electric text-[10px] font-bold uppercase tracking-widest text-center animate-slide-up">
             {infoMsg}
           </div>
         )}
         
-        <div className="flex flex-col gap-2.5">
-          <label className="text-[9px] font-black text-muted uppercase tracking-[0.3em] ml-1 opacity-40 italic">Registry Email</label>
-          <input name="email" type="email" required placeholder="operator@predchain.arena" className="bg-white/[0.02] border border-white/5 rounded-xl py-4 px-5 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 focus:bg-white/[0.04] transition-all shadow-inner" />
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
+            <Mail className="w-3 h-3" /> Email Address
+          </label>
+          <input 
+            name="email" 
+            type="email" 
+            required 
+            placeholder="name@example.com" 
+            className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3.5 px-4 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
+          />
         </div>
 
-        <div className="flex flex-col gap-2.5">
+        <div className="space-y-2">
           <div className="flex justify-between items-center ml-1">
-            <label className="text-[9px] font-black text-muted uppercase tracking-[0.3em] opacity-40 italic">Access Key</label>
-            <Link href="/forgot-password" title="Recover Password" className="text-[9px] text-gold/40 font-black uppercase tracking-[0.2em] hover:text-gold transition-colors italic">Lost Key?</Link>
+            <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest opacity-40">
+              <Lock className="w-3 h-3" /> Password
+            </label>
+            <Link href="/forgot-password" title="Recover Password" className="text-[9px] text-gold/60 font-bold uppercase tracking-widest hover:text-gold transition-colors">Forgot?</Link>
           </div>
-          <input name="password" type="password" required placeholder="••••••••" className="bg-white/[0.02] border border-white/5 rounded-xl py-4 px-5 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 focus:bg-white/[0.04] transition-all shadow-inner" />
+          <input 
+            name="password" 
+            type="password" 
+            required 
+            placeholder="••••••••" 
+            className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3.5 px-4 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
+          />
         </div>
 
         <button 
           type="submit" 
           disabled={isPending} 
-          className="btn btn-primary w-full mt-6 py-4.5 !rounded-xl italic"
+          className="btn btn-primary w-full py-4 shadow-xl mt-4"
         >
           {isPending ? 'Authenticating...' : 'Sign In'}
         </button>
       </form>
 
-      <p className="text-center md:text-left text-[9px] text-muted font-black uppercase tracking-[0.25em] mt-12 opacity-30 italic">
-        New operator? <Link href={signupUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white">Create Profile</Link>
-      </p>
+      <div className="mt-10 text-center">
+        <p className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-30">
+          Don't have an account? <Link href={signupUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-0.5">Create One</Link>
+        </p>
+      </div>
     </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <div className="min-h-screen flex bg-[#030508] overflow-hidden">
+    <div className="min-h-screen flex bg-[#020406] overflow-hidden">
       
-      {/* LEFT: CINEMATIC ART */}
-      <div className="auth-pane-left bg-[#020406] border-r border-white/5">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/5 filter blur-[150px] opacity-20 rounded-full z-1" />
-        <div className="absolute inset-0 opacity-[0.02] z-1" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.2) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-
-        <div className="relative z-10 p-20 max-w-[600px]">
-          <Link href="/" className="inline-flex items-center gap-3 mb-24 group">
-             <div className="w-8 h-8 transition-transform group-hover:scale-110 duration-700">
-                <svg width="32" height="32" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M14 2L24 8V20L14 26L4 20V8L14 2Z" fill="var(--gold)" fillOpacity="0.9"/>
-                  <path d="M14 8L18 11V17L14 20L10 17V11L14 8Z" fill="#FFF"/>
-                </svg>
-             </div>
-             <span className="font-display text-xl font-black text-white uppercase tracking-tighter italic">PredChain</span>
-          </Link>
-          
-          <h1 className="font-display text-6xl md:text-7xl font-black text-white leading-[0.95] mb-12 uppercase tracking-tighter italic">
+      {/* LEFT: Branding */}
+      <div className="hidden lg:flex flex-1 flex-col justify-between p-16 bg-[#030508] border-r border-white/5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-glow blur-[120px] opacity-10 pointer-events-none" />
+        
+        <Link href="/" className="relative z-10 flex items-center gap-2 group">
+           <span className="font-display text-2xl font-black text-white uppercase tracking-tighter italic">Pred<span className="text-gradient-gold">Chain</span></span>
+        </Link>
+        
+        <div className="relative z-10 max-w-sm">
+          <h1 className="mb-6 leading-tight">
             Predict. <br />
             <span className="text-gradient-gold">Perform.</span> <br />
             Win.
           </h1>
-          <p className="text-[10px] text-muted font-black leading-relaxed uppercase tracking-[0.4em] opacity-30 italic">
-            High-Yield Football Challenge Arena
+          <p className="text-[10px] font-black text-muted uppercase tracking-[0.4em] opacity-30 leading-loose">
+            High-Yield Sports Prediction Arena
           </p>
+        </div>
+
+        <div className="relative z-10 flex items-center gap-4 text-muted opacity-20">
+           <ShieldCheck className="w-5 h-5" />
+           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Verified Payout Protocols Active</span>
         </div>
       </div>
 
-      {/* RIGHT: AUTH FORM */}
-      <div className="flex-1 flex items-center justify-center p-8 relative z-10">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-gold/5 filter blur-[120px] pointer-events-none" />
+      {/* RIGHT: Form */}
+      <div className="flex-1 flex items-center justify-center p-6 relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-gold-glow blur-[100px] opacity-10 pointer-events-none" />
         
-        <Suspense fallback={<div className="text-muted font-black uppercase tracking-[0.2em] text-[9px] animate-pulse italic">Connecting to Arena...</div>}>
+        <Suspense fallback={<div className="text-[10px] font-bold text-muted uppercase tracking-widest animate-pulse">Connecting...</div>}>
           <LoginForm />
         </Suspense>
       </div>
