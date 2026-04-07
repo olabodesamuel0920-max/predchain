@@ -119,32 +119,46 @@ export default function UsersView() {
         </div>
       )}
 
-      {/* SEARCH HEADER */}
-      <div className="card p-4">
-        <div className="flex justify-between items-center gap-4">
-          <div className="flex items-center gap-3">
-             <div className="p-10 bg-blue-electric/10 rounded-lg"><Users className="w-5 h-5 text-blue-electric" /></div>
-             <h2 className="font-display text-lg font-bold tracking-tight">User Management</h2>
+      <div className="bg-[#030508] border border-white/5 rounded-2xl p-4 md:p-6 shadow-xl">
+        <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-6">
+          <div className="flex items-center gap-3 shrink-0">
+             <div className="p-2.5 bg-blue-electric/10 rounded-xl border border-blue-electric/20">
+                <Users className="w-5 h-5 text-blue-electric" />
+             </div>
+             <h2 className="font-display text-xl font-black italic tracking-tighter text-white uppercase">User <span className="text-gradient-gold">Management.</span></h2>
           </div>
-          <div className="flex flex-1 max-w-[500px] gap-3 items-center">
-            <div className="relative flex-1">
-               <Search className="absolute left-10 top-1/2 -translate-y-1/2 w-4 h-4 text-muted opacity-40" />
+          
+          <div className="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center w-full xl:max-w-2xl">
+            <div className="relative flex-1 group">
+               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted group-focus-within:text-blue-electric transition-colors opacity-40 shrink-0" />
                <input 
                  type="text" 
                  placeholder="Search by username, email, or ID..." 
                  value={query}
                  onChange={(e) => setQuery(e.target.value)}
                  onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                 className="input-premium pl-32 py-10"
+                 className="input-premium pl-12 py-3.5 text-xs font-black italic tracking-widest placeholder:italic"
                />
             </div>
-            <button onClick={handleSearch} disabled={isPending} className="btn btn-blue btn-xs px-6 h-10 font-black uppercase tracking-widest text-[10px]">
-              {isPending ? 'SEARCHING...' : 'SEARCH'}
-            </button>
-            <div className="h-24 w-px bg-white/10 mx-4" />
-            <button onClick={() => setShowDemoModal(true)} className="btn btn-primary btn-xs px-6 h-10 font-black uppercase tracking-widest text-[10px] flex items-center gap-2">
-              <UserPlus className="w-4 h-4" /> CREATE DEMO
-            </button>
+            
+            <div className="flex items-center gap-3">
+               <button 
+                 onClick={handleSearch} 
+                 disabled={isPending} 
+                 className="btn btn-blue grow sm:grow-0 !px-8 !py-3.5 text-[10px] h-auto font-black shadow-lg shadow-blue-electric/10"
+               >
+                 {isPending ? 'SYNCING...' : 'SEARCH'}
+               </button>
+               
+               <div className="hidden sm:block h-8 w-px bg-white/10 mx-2" />
+               
+               <button 
+                 onClick={() => setShowDemoModal(true)} 
+                 className="btn btn-primary grow sm:grow-0 !px-8 !py-3.5 text-[10px] h-auto font-black shadow-xl shadow-gold/10 flex items-center gap-2"
+               >
+                 <UserPlus className="w-4 h-4" /> <span className="hidden sm:inline">DEMO</span>
+               </button>
+            </div>
           </div>
         </div>
       </div>

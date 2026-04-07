@@ -57,7 +57,7 @@ export default function SupportView() {
   };
 
   return (
-    <div className="flex flex-col gap-8 animate-slide-up">
+    <div className="flex flex-col gap-6 animate-slide-up">
       {/* Notifications */}
       {(successMsg || errorMsg) && (
         <div className={`fixed bottom-6 right-6 z-[100] px-5 py-3 rounded-xl backdrop-blur-xl border flex items-center gap-3 shadow-2xl animate-slide-up ${
@@ -65,42 +65,42 @@ export default function SupportView() {
         }`}>
            {successMsg ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
            <span className="text-xs font-bold">{successMsg || errorMsg}</span>
-           <button onClick={clear} className="ml-12 p-4 hover:bg-black/10 rounded-lg opacity-40 hover:opacity-100 transition-all font-black">×</button>
+           <button onClick={clear} className="ml-12 p-3 hover:bg-black/10 rounded-lg opacity-40 hover:opacity-100 transition-all font-black text-xs">×</button>
         </div>
       )}
 
       {/* ─── FILTER HEADER ─── */}
-      <div className="card p-4 flex justify-between items-center gap-6">
-        <div className="flex items-center gap-12">
-           <div className="p-10 bg-blue-electric/10 rounded-lg"><HelpCircle className="w-5 h-5 text-blue-electric" /></div>
-           <div>
-              <h2 className="font-display text-lg font-black tracking-tight">Support Center</h2>
-              <p className="text-[9px] text-muted font-bold uppercase tracking-widest opacity-60">Ticket Management</p>
+      <div className="bg-[#030508] border border-white/5 rounded-2xl p-4 md:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shadow-xl">
+        <div className="flex items-center gap-4">
+           <div className="p-2.5 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><HelpCircle className="w-5 h-5 text-blue-electric" /></div>
+           <div className="leading-tight">
+              <h2 className="font-display text-base font-black tracking-tight text-white uppercase italic">Support <span className="text-gradient-gold">Matrix.</span></h2>
+              <p className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-40 italic">Queue synchronization active</p>
            </div>
         </div>
-        <div className="flex items-center gap-12">
-            <Filter className="w-4 h-4 text-muted opacity-40" />
+        <div className="flex items-center gap-4 w-full sm:w-auto">
+            <Filter className="w-3.5 h-3.5 text-muted opacity-40" />
             <select 
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-12 py-8 rounded-lg focus:outline-none focus:border-blue-electric transition-all"
+              className="bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2.5 rounded-xl focus:outline-none focus:border-blue-electric transition-all grow sm:grow-0"
             >
-              <option value="all" className="bg-primary">All Tickets</option>
-              <option value="open" className="bg-primary">Open</option>
-              <option value="in_progress" className="bg-primary">In Progress</option>
-              <option value="resolved" className="bg-primary">Resolved</option>
-              <option value="closed" className="bg-primary">Closed</option>
+              <option value="all" className="bg-primary">GLOBAL STREAM</option>
+              <option value="open" className="bg-primary">OPEN PROTOCOLS</option>
+              <option value="in_progress" className="bg-primary">ACTIVE REVIEW</option>
+              <option value="resolved" className="bg-primary">RESOLVED</option>
+              <option value="closed" className="bg-primary">ARCHIVED</option>
             </select>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] xl:grid-cols-[1fr_420px] gap-6">
         {/* ─── TICKET STREAM ─── */}
-        <div className="flex flex-col gap-10">
+        <div className="flex flex-col gap-3">
           {tickets.length === 0 ? (
-            <div className="card py-60 text-center flex flex-col items-center gap-4 opacity-30">
+            <div className="card py-16 text-center flex flex-col items-center gap-4 opacity-20 border-dashed bg-transparent shadow-none">
                <Archive className="w-10 h-10 text-muted" />
-               <p className="text-[10px] font-black uppercase tracking-widest font-mono italic">No tickets found for this filter.</p>
+               <p className="text-[10px] font-black uppercase tracking-[0.2em] italic">No active protocols detected.</p>
             </div>
           ) : (
             tickets.map(t => (
@@ -110,34 +110,34 @@ export default function SupportView() {
                   setSelectedTicket(t);
                   setInternalNotes(t.internal_notes || '');
                 }}
-                className={`card p-16 cursor-pointer transition-all border outline-none ${
+                className={`p-4 rounded-xl cursor-pointer transition-all border outline-none ${
                     selectedTicket?.id === t.id 
-                    ? 'border-blue-electric bg-blue-electric/[0.03] shadow-lg shadow-blue-electric/10' 
+                    ? 'border-blue-electric/40 bg-blue-electric/[0.04] shadow-md shadow-blue-electric/5 scale-[1.01]' 
                     : 'border-white/5 bg-white/[0.02] hover:border-white/10'
                   }`}
               >
-                <div className="flex justify-between items-center gap-24">
-                  <div className="flex items-center gap-16 flex-1 min-w-0">
-                    <span className={`badge text-[9px] uppercase border whitespace-nowrap px-6 py-1 ${
-                      t.status === 'open' ? 'badge-danger' : 
-                      t.status === 'in_progress' ? 'badge-blue' : 
-                      t.status === 'resolved' ? 'badge-success' : 'badge-muted'
+                <div className="flex justify-between items-center gap-6">
+                  <div className="flex items-center gap-4 flex-1 min-w-0">
+                    <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase tracking-tighter shrink-0 border ${
+                      t.status === 'open' ? 'bg-danger/10 text-danger border-danger/20' : 
+                      t.status === 'in_progress' ? 'bg-blue-electric/10 text-blue-electric border-blue-electric/20' : 
+                      t.status === 'resolved' ? 'bg-success/10 text-success border-success/20' : 'bg-white/5 text-muted border-white/5'
                     }`}>
                       {t.status.toUpperCase().replace('_', ' ')}
                     </span>
-                    <div className="min-w-0 truncate">
-                      <div className="font-black text-xs text-white truncate max-w-[300px]">{t.subject}</div>
-                      <div className="text-[9px] text-muted font-bold tracking-widest uppercase opacity-40 mt-1 flex items-center gap-6">
-                        @{t.profiles?.username || 'user'} <ChevronRight className="w-3 h-3" /> 
-                        <span className={t.priority === 'urgent' || t.priority === 'high' ? 'text-danger font-black' : 'text-success'}>
-                           {t.priority}
+                    <div className="min-w-0">
+                      <div className="font-black text-[13px] text-white truncate group-hover:text-blue-electric transition-colors">{t.subject}</div>
+                      <div className="text-[9px] text-muted font-black tracking-widest uppercase opacity-40 mt-1 flex items-center gap-2">
+                        @{t.profiles?.username || 'member'} <ChevronRight className="w-3 h-3 opacity-20" /> 
+                        <span className={t.priority === 'urgent' || t.priority === 'high' ? 'text-danger font-black italic' : 'text-success/60 italic'}>
+                           {t.priority} priority
                         </span>
                       </div>
                     </div>
                   </div>
-                  <div className="text-right flex flex-col items-end gap-2">
-                     <div className="text-[9px] text-muted font-mono">{new Date(t.created_at).toLocaleDateString()}</div>
-                     <div className="text-[8px] text-white/40 uppercase font-black tracking-widest">{t.category}</div>
+                  <div className="text-right flex flex-col items-end gap-1 shrink-0">
+                     <div className="text-[9px] text-muted font-mono opacity-30">{new Date(t.created_at).toLocaleDateString([], { month: 'short', day: 'numeric' })}</div>
+                     <div className="text-[8px] text-white/20 uppercase font-black tracking-widest italic">{t.category}</div>
                   </div>
                 </div>
               </div>
@@ -146,92 +146,96 @@ export default function SupportView() {
         </div>
         
         {/* ─── RESOLUTION PANEL ─── */}
-        <div className="sticky top-24">
+        <div className="h-fit lg:sticky lg:top-6">
           {!selectedTicket ? (
-            <div className="card h-96 flex flex-col items-center justify-center border-dashed border-white/10 opacity-20 bg-transparent shadow-none">
-              <MessageSquare className="w-8 h-8 mb-8 opacity-40" />
-              <p className="text-[9px] font-black uppercase tracking-widest text-center max-w-[150px] leading-relaxed italic">Select a ticket to begin resolution</p>
+            <div className="card h-64 flex flex-col items-center justify-center border-dashed border-white/10 opacity-20 bg-transparent shadow-none">
+              <MessageSquare className="w-6 h-6 mb-4 opacity-40" />
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-center max-w-[150px] leading-relaxed italic">Synchronize Protocol to Resolve</p>
             </div>
           ) : (
-            <div className="card p-0 animate-slide-up flex flex-col overflow-hidden">
-              <div className="p-24 border-b border-white/5 bg-white/[0.01]">
-                <div className="flex justify-between items-start mb-24">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-12 mb-8 text-white">
-                      <span className="badge badge-muted text-[8px] px-2 py-0.5">ID:{selectedTicket.id.split('-')[0]}</span>
-                      <h3 className="font-display text-lg font-black tracking-tight leading-tight">{selectedTicket.subject}</h3>
+            <div className="card p-0 animate-slide-up flex flex-col overflow-hidden shadow-xl border-blue-electric/10 bg-[#05070a]">
+              <div className="p-5 border-b border-white/5 bg-white/[0.01]">
+                <div className="flex justify-between items-start mb-6">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="bg-white/5 text-white/30 text-[8px] font-mono px-1.5 py-0.5 rounded leading-none">ID:{selectedTicket.id.split('-')[0]}</span>
+                      <h3 className="font-display text-base font-black tracking-tight leading-tight text-white uppercase italic truncate pr-4">{selectedTicket.subject}</h3>
                     </div>
-                    <div className="flex items-center gap-10 text-[9px] text-muted font-bold tracking-widest uppercase opacity-60">
-                       <User className="w-3.5 h-3.5" /> {selectedTicket.profiles?.username} 
-                       <span className="mx-2 opacity-30">|</span>
-                       <Clock className="w-3.5 h-3.5" /> {new Date(selectedTicket.created_at).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
+                    <div className="flex items-center gap-3 text-[9px] text-muted font-black tracking-widest uppercase opacity-30 italic">
+                       <User className="w-3 h-3" /> @{selectedTicket.profiles?.username} 
+                       <span className="opacity-30">|</span>
+                       <Clock className="w-3 h-3" /> {new Date(selectedTicket.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                     </div>
                   </div>
                 </div>
 
-                <div className="p-16 bg-white/[0.03] rounded-xl border border-white/5 mb-24">
-                  <div className="text-[9px] text-muted uppercase font-black mb-10 tracking-widest flex items-center gap-6">
-                     <MessageSquare className="w-4 h-4" /> Message Content
+                <div className="p-4 bg-white/[0.03] rounded-2xl border border-white/5 mb-6 relative overflow-hidden group">
+                  <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:scale-110 transition-transform"><MessageSquare className="w-10 h-10" /></div>
+                  <div className="text-[9px] text-muted uppercase font-black mb-4 tracking-widest flex items-center gap-2 opacity-40 italic">
+                     User Transmission:
                   </div>
-                  <div className="text-[12px] text-white leading-relaxed font-medium italic">"{selectedTicket.message}"</div>
+                  <div className="text-[13px] text-white leading-relaxed font-bold italic opacity-85">"{selectedTicket.message}"</div>
                 </div>
 
-                <div className="flex flex-col gap-8">
-                  <div className="text-[9px] text-muted uppercase font-black tracking-widest ml-4 mb-4">Resolution Notes</div>
+                <div className="flex flex-col gap-6">
+                  <div className="flex justify-between items-center px-1">
+                     <div className="text-[9px] text-muted uppercase font-black tracking-widest opacity-40 italic leading-none">Management Notation</div>
+                     <span className="text-[8px] text-muted font-bold opacity-30">INTERNAL ONLY</span>
+                  </div>
                   <textarea 
                     value={internalNotes}
                     onChange={(e) => setInternalNotes(e.target.value)}
-                    placeholder="Document internal actions or notes..."
-                    className="input-premium h-24 text-xs font-medium py-12"
+                    placeholder="Document system reconciliation..."
+                    className="input-premium h-28 text-[11px] font-black py-3 px-4 italic placeholder:opacity-20 transition-all resize-none"
                   />
                 </div>
               </div>
 
-              <div className="p-24 bg-white/[0.01] flex flex-col gap-16">
-                <div className="grid grid-cols-2 gap-6">
+              <div className="p-5 bg-white/[0.01] flex flex-col gap-4">
+                <div className="grid grid-cols-2 gap-3">
                    <button 
                     onClick={() => handleUpdateStatus('in_progress')}
                     disabled={isPending || selectedTicket.status === 'in_progress'}
-                    className={`btn btn-xs py-10 font-black uppercase text-[10px] tracking-widest ${selectedTicket.status === 'in_progress' ? 'bg-blue-electric text-white' : 'btn-ghost border-dashed'}`}
+                    className={`h-11 rounded-xl text-[9px] font-black uppercase tracking-[0.15em] transition-all border ${selectedTicket.status === 'in_progress' ? 'bg-blue-electric text-white border-blue-electric shadow-lg shadow-blue-electric/20' : 'btn-ghost border-white/5 opacity-40 hover:opacity-100 hover:border-white/20'}`}
                    >
-                     {selectedTicket.status === 'in_progress' ? 'Reviewing' : 'Mark Review'}
+                     {selectedTicket.status === 'in_progress' ? 'ACTIVE REVIEW' : 'MARK REVIEW'}
                    </button>
                    <button 
                     onClick={() => handleUpdateStatus('resolved')}
                     disabled={isPending || selectedTicket.status === 'resolved'}
-                    className={`btn btn-xs py-10 font-black uppercase text-[10px] tracking-widest ${selectedTicket.status === 'resolved' ? 'bg-success/20 text-success border-success/30' : 'btn-success text-black shadow-lg shadow-success/10'}`}
+                    className={`h-11 rounded-xl text-[9px] font-black uppercase tracking-[0.15em] transition-all shadow-xl shadow-success/10 ${selectedTicket.status === 'resolved' ? 'bg-success/10 text-success border-success/20 cursor-default' : 'bg-success text-black border-success hover:scale-[1.02]'}`}
                    >
-                     Resolve
+                     RESOLVE
                    </button>
                 </div>
                 
-                <div className="grid grid-cols-2 gap-6">
+                <div className="grid grid-cols-2 gap-3 mb-2">
                    <button 
                     onClick={() => handleUpdateStatus('open')}
                     disabled={isPending || selectedTicket.status === 'open'}
-                    className="btn btn-ghost btn-xs py-10 font-black uppercase text-[9px] tracking-widest opacity-60 hover:opacity-100"
-                   >Re-Open</button>
+                    className="h-10 rounded-xl text-[8px] font-black uppercase tracking-widest text-muted hover:text-white border border-transparent hover:border-white/5 transition-all opacity-40 hover:opacity-100 italic"
+                   >Re-Open Sequence</button>
                    <button 
                     onClick={() => handleUpdateStatus('closed')}
                     disabled={isPending || selectedTicket.status === 'closed'}
-                    className="btn btn-ghost btn-xs py-10 font-black uppercase text-[9px] tracking-widest opacity-60 hover:opacity-100"
-                   >Close Permanently</button>
+                    className="h-10 rounded-xl text-[8px] font-black uppercase tracking-widest text-muted hover:text-danger border border-transparent hover:border-danger/10 transition-all opacity-40 hover:opacity-100 italic"
+                   >Close Protocol</button>
                 </div>
 
-                <div className="p-16 bg-white/[0.03] border border-white/5 rounded-xl flex items-center justify-between mt-8">
-                   <div className="flex items-center gap-12">
-                      <div className="p-8 bg-white/5 rounded-lg text-muted"><History className="w-5 h-5 opacity-40" /></div>
+                <div className="p-4 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-between group hover:border-blue-electric/20 transition-all">
+                   <div className="flex items-center gap-4">
+                      <div className="p-2 bg-white/5 rounded-xl text-muted group-hover:text-blue-electric transition-colors"><History className="w-4 h-4 opacity-40" /></div>
                       <div>
-                        <div className="text-[9px] text-muted font-black uppercase tracking-widest mb-1">Audit Data</div>
-                        <div className="text-[10px] font-bold text-white uppercase">{selectedTicket.category} • <span className={selectedTicket.priority === 'urgent' ? 'text-danger' : 'text-white'}>{selectedTicket.priority}</span></div>
+                        <div className="text-[8px] text-muted font-black uppercase tracking-[0.2em] mb-1 opacity-30">Metadata Analysis</div>
+                        <div className="text-[10px] font-black text-white uppercase italic">{selectedTicket.category} • <span className={selectedTicket.priority === 'urgent' ? 'text-danger shadow-[0_0_8px_var(--danger)]/20' : 'text-success/60'}>{selectedTicket.priority} SEVERITY</span></div>
                       </div>
                    </div>
                    <button 
                     onClick={() => handleUpdateStatus(selectedTicket.status)}
                     disabled={isPending}
-                    className="btn btn-blue btn-xs px-6 font-black uppercase tracking-widest text-[8px] h-10"
+                    className="h-9 !px-4 btn btn-blue text-[8px] font-black shadow-lg shadow-blue-electric/10 rounded-lg"
                    >
-                     Update Notes
+                     SAVE NOTES
                   </button>
                 </div>
               </div>

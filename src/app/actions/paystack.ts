@@ -120,13 +120,22 @@ export async function verifyPayment(reference: string) {
 
   // 3. Handle Wallet Funding
   if (type === 'wallet_funding') {
-    const { data: wallet } = await adminClient
+    let { data: wallet } = await adminClient
       .from('wallets')
       .select('id, balance_ngn')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
 
-    if (!wallet) throw new Error('Wallet not found');
+    if (!wallet) {
+      const { data: newWallet, error: createError } = await adminClient
+        .from('wallets')
+        .insert({ user_id: userId, balance_ngn: 0 })
+        .select('id, balance_ngn')
+        .single();
+        
+      if (createError) throw new Error('Failed to synchronize wallet state.');
+      wallet = newWallet;
+    }
 
     await adminClient.from('wallets').update({ 
       balance_ngn: wallet.balance_ngn + paystackAmount 

@@ -57,7 +57,7 @@ export async function searchUsers(query: string): Promise<AdminSearchProfile[]> 
   let q = supabase.from('profiles').select('*, wallets(balance_ngn)');
 
   if (query) {
-    q = q.or(`username.ilike.%${query}%,full_name.ilike.%${query}%,phone.ilike.%${query}%`);
+    q = q.or(`username.ilike.%${query}%,full_name.ilike.%${query}%,phone.ilike.%${query}%,email.ilike.%${query}%,id.eq.${query}`);
   }
 
   const { data, error } = await q.limit(50);

@@ -85,7 +85,7 @@ export default function DashboardClient({
 
     const errorParam = searchParams.get('error');
     const successParam = searchParams.get('success');
-    if (errorParam) showError(decodeURIComponent(errorParam));
+    if (errorParam && errorParam !== 'NEXT_REDIRECT') showError(decodeURIComponent(errorParam));
     if (successParam) showSuccess(decodeURIComponent(successParam));
   }, [searchParams, showError, showSuccess]);
 

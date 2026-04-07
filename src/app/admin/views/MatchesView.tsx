@@ -135,10 +135,10 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
 
   return (
     <>
-    <div className="flex flex-col gap-24 animate-slide-up">
+    <div className="flex flex-col gap-6 animate-slide-up">
       {/* Toast Notifications */}
       {(successMsg || errorMsg) && (
-        <div className={`fixed bottom-24 right-24 z-[150] px-5 py-3 rounded-xl backdrop-blur-xl border flex items-center gap-3 shadow-2xl animate-slide-up ${
+        <div className={`fixed bottom-6 right-6 z-[150] px-5 py-3 rounded-xl backdrop-blur-xl border flex items-center gap-3 shadow-2xl animate-slide-up ${
           successMsg ? 'bg-success/90 border-success/20 text-black' : 'bg-danger/90 border-danger/20 text-white'
         }`}>
            {successMsg ? <Check className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
@@ -147,54 +147,52 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
       )}
 
       {/* ─── ROUNDS OVERVIEW ─── */}
-      <div className="card p-6 bg-white/[0.02]">
-        <div className="flex justify-between items-center mb-6 px-4">
-          <div className="flex items-center gap-10">
-             <Calendar className="w-5 h-5 text-blue-electric opacity-60" />
-             <h2 className="font-display text-lg font-black uppercase tracking-widest">Platform Rounds</h2>
+      <div className="card p-0 bg-white/[0.02] overflow-hidden shadow-sm">
+        <div className="p-4 md:p-5 border-b border-white/5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.01]">
+          <div className="flex items-center gap-3">
+             <Calendar className="w-4 h-4 text-blue-electric opacity-60" />
+             <h2 className="font-display text-xs font-black uppercase tracking-widest leading-none">Platform Rounds</h2>
           </div>
-          <div className="flex gap-3">
+          <div className="flex items-center gap-3 w-full sm:w-auto">
              <button 
               onClick={() => setShowRoundModal(true)}
-              className="btn btn-ghost btn-xs px-6 h-10 font-black uppercase tracking-widest text-[10px] flex items-center gap-2 border border-white/10"
+              className="btn btn-ghost !px-4 !py-2.5 h-auto text-[9px] font-black uppercase tracking-widest flex items-center gap-2 border border-white/10 grow sm:grow-0"
             >
-              <Calendar className="w-4 h-4" /> CREATE ROUND
+              <Plus className="w-3.5 h-3.5" /> ROUND
             </button>
             <button 
               onClick={() => setShowMatchModal(true)}
               disabled={!selectedRoundId}
-              className="btn btn-primary btn-xs px-6 h-10 font-black uppercase tracking-widest text-[10px] flex items-center gap-2"
+              className="btn btn-primary !px-4 !py-2.5 h-auto text-[9px] font-black uppercase tracking-widest flex items-center gap-2 grow sm:grow-0"
             >
-              <Plus className="w-4 h-4" /> ADD MATCH TO ROUND
+              <Sword className="w-3.5 h-3.5" /> MATCH
             </button>
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="p-4 md:p-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
           {rounds.length === 0 ? (
-            <div className="md:col-span-4 py-32 text-center flex flex-col items-center gap-8 opacity-20 italic">
+            <div className="col-span-full py-16 text-center flex flex-col items-center gap-4 opacity-20 italic">
                <Calendar className="w-8 h-8 text-muted" />
-               <p className="text-[10px] uppercase font-black tracking-widest font-mono">No challenge rounds initialized.</p>
+               <p className="text-[10px] uppercase font-black font-mono">No rounds initialized.</p>
             </div>
           ) : (
             rounds.map(r => (
               <div 
                 key={r.id} 
                 onClick={() => setSelectedRoundId(r.id)}
-                className={`p-16 rounded-xl border transition-all cursor-pointer group ${
+                className={`p-3.5 rounded-xl border transition-all cursor-pointer group relative overflow-hidden ${
                   selectedRoundId === r.id 
                   ? 'bg-blue-electric/[0.05] border-blue-electric/40 shadow-lg shadow-blue-electric/5' 
                   : 'bg-white/[0.02] border-white/5 hover:border-white/10'
                 }`}
               >
-                <div className="flex justify-between items-center mb-10">
-                  <span className={`text-[9px] font-black uppercase tracking-[0.2em] ${selectedRoundId === r.id ? 'text-blue-electric' : 'text-muted'}`}>Round {r.round_number}</span>
-                  <div className={`w-3 h-3 rounded-full ${r.status === 'active' ? 'bg-success animate-pulse' : r.status === 'completed' ? 'bg-blue-electric' : 'bg-muted opacity-20'}`} />
+                <div className="flex justify-between items-start mb-4">
+                  <div className={`px-2 py-0.5 rounded text-[8px] font-black font-mono uppercase leading-none ${selectedRoundId === r.id ? 'bg-blue-electric text-white' : 'bg-white/5 text-muted'}`}>R{r.round_number}</div>
+                  <div className={`w-2 h-2 rounded-full ${r.status === 'active' ? 'bg-success shadow-[0_0_8px_var(--success)] animate-pulse' : r.status === 'completed' ? 'bg-blue-electric opacity-40' : 'bg-white/5'}`} />
                 </div>
-                <div className="text-[10px] text-white font-black font-mono uppercase tracking-tighter">
-                   {r.status}
-                </div>
-                <div className="text-[9px] text-muted font-bold mt-4 opacity-40 font-mono">
-                   {new Date(r.start_date).toLocaleDateString()} — Logged
+                <div className="text-[10px] text-white font-black font-mono uppercase leading-none truncate">{r.status}</div>
+                <div className="text-[8px] text-muted font-bold mt-4 opacity-20 font-mono truncate">
+                   {new Date(r.start_date).toLocaleDateString([], { month: 'short', day: 'numeric' })}
                 </div>
               </div>
             ))
@@ -203,138 +201,134 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
       </div>
 
       {selectedRound && (
-        <div className="card border-blue-electric/20 p-6 bg-blue-electric/[0.03] animate-fade-in relative overflow-hidden group">
-           <div className="absolute top-0 right-0 p-8 opacity-5 text-blue-electric"><Trophy className="w-12 h-12" /></div>
-           <div className="flex justify-between items-center relative z-10">
-              <div className="flex items-center gap-12">
-                <div className="p-10 bg-blue-electric/10 rounded-xl"><Settings2 className="w-5 h-5 text-blue-electric" /></div>
+        <div className="p-4 md:p-5 bg-blue-electric/[0.03] border border-blue-electric/10 rounded-2xl animate-fade-in relative overflow-hidden group shadow-sm">
+           <div className="absolute top-0 right-0 p-6 opacity-5 text-blue-electric pointer-events-none transform -rotate-12 group-hover:rotate-0 transition-transform"><Trophy className="w-10 h-10" /></div>
+           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 relative z-10">
+              <div className="flex items-center gap-4">
+                <div className="shrink-0 p-2.5 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Settings2 className="w-4 h-4 text-blue-electric" /></div>
                 <div>
-                  <h3 className="font-black text-sm text-white uppercase tracking-widest">Management: Round {selectedRound.round_number}</h3>
-                  <p className="text-[9px] text-muted font-bold uppercase tracking-widest opacity-60 flex items-center gap-6">
-                     Platform Settings <ChevronRight className="w-3 h-3" /> Management Mode
-                  </p>
+                  <h3 className="font-black text-xs text-white uppercase tracking-widest leading-none">Management: Round {selectedRound.round_number}</h3>
+                  <div className="text-[9px] text-muted font-black uppercase tracking-widest mt-2 flex items-center gap-2 opacity-40">
+                     SYSTEM <ChevronRight className="w-3 h-3" /> SETTINGS
+                  </div>
                 </div>
               </div>
-              <div className="flex gap-8">
+              <div className="flex gap-3 w-full sm:w-auto">
                  <button 
                   disabled={isPending || selectedRound.status === 'active'}
                   onClick={() => handleRoundStatusChange(selectedRound.id, 'active')}
-                  className={`btn btn-xs px-16 py-8 font-black uppercase text-[9px] tracking-widest ${selectedRound.status === 'active' ? 'bg-success/20 text-success border-success/30' : 'btn-ghost border-dashed opacity-40 hover:opacity-100'}`}
+                  className={`grow sm:grow-0 !px-6 !py-2.5 h-auto text-[9px] font-black uppercase tracking-[0.15em] rounded-lg transition-all border ${selectedRound.status === 'active' ? 'bg-success/10 text-success border-success/20 cursor-default' : 'btn-ghost border-white/5 opacity-40 hover:opacity-100 hover:border-white/20'}`}
                  >Activate</button>
                  <button 
                   disabled={isPending || selectedRound.status === 'completed'}
                   onClick={() => handleRoundStatusChange(selectedRound.id, 'completed')}
-                  className={`btn btn-xs px-16 py-8 font-black uppercase text-[9px] tracking-widest ${selectedRound.status === 'completed' ? 'bg-blue-electric text-white border-blue-electric/40 shadow-lg shadow-blue-electric/20' : 'btn-ghost border-dashed opacity-40 hover:opacity-100'}`}
-                 >Settle Round</button>
+                  className={`grow sm:grow-0 !px-6 !py-2.5 h-auto text-[9px] font-black uppercase tracking-[0.15em] rounded-lg transition-all border ${selectedRound.status === 'completed' ? 'bg-blue-electric/10 text-blue-electric border-blue-electric/20 cursor-default' : 'btn-ghost border-white/5 opacity-40 hover:opacity-100 hover:border-white/20'}`}
+                 >Complete</button>
               </div>
            </div>
         </div>
       )}
 
       {/* ─── MATCH SETTLEMENT GRID ─── */}
-      <div className="card p-6 bg-white/[0.02]">
-        <div className="flex justify-between items-center mb-6 px-4">
-          <div className="flex items-center gap-10">
-             <Trophy className="w-5 h-5 text-gold opacity-60" />
-             <h2 className="font-display text-lg font-black uppercase tracking-widest text-white">Match Management</h2>
-          </div>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-3 px-2">
+           <Trophy className="w-4 h-4 text-gold opacity-60" />
+           <h2 className="font-display text-xs font-black uppercase tracking-widest text-white">Live Operations</h2>
         </div>
         
-        <div className="flex flex-col gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {filteredMatches.length === 0 ? (
-            <div className="py-60 text-center flex flex-col items-center gap-4 opacity-30">
+            <div className="col-span-full py-24 text-center flex flex-col items-center gap-4 bg-white/[0.01] border border-white/5 rounded-2xl opacity-20">
                <Sword className="w-10 h-10 text-muted" />
-               <p className="text-[10px] text-muted font-black uppercase tracking-widest font-mono italic">No matches scheduled in this round.</p>
+               <p className="text-[10px] text-muted font-black uppercase font-mono italic">No matches scheduled in this sequence.</p>
             </div>
           ) : (
             filteredMatches.map(m => (
-              <div key={m.id} className={`card p-16 transition-all border outline-none ${
+              <div key={m.id} className={`p-4 rounded-2xl border transition-all ${
                   m.status === 'live' 
-                  ? 'border-danger/30 bg-danger/[0.03] shadow-lg shadow-danger/5' 
+                  ? 'border-danger/20 bg-danger/[0.02] shadow-lg shadow-danger/5' 
                   : 'border-white/5 bg-white/[0.02] hover:border-white/10'
                 }`}
               >
-                <div className="flex justify-between items-center gap-24 flex-wrap md:flex-nowrap">
-                  <div className="min-w-[120px]">
-                    <div className="flex items-center gap-8 mb-2">
-                       <div className={`w-3 h-3 rounded-full ${m.status === 'live' ? 'bg-danger animate-pulse shadow-[0_0_6px_var(--danger)]' : 'bg-muted opacity-40'}`} />
-                       <div className={`text-[9px] font-black uppercase tracking-[0.2em] ${m.status === 'live' ? 'text-danger' : 'text-muted'}`}>
+                <div className="flex flex-col gap-6">
+                  <div className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                       <div className={`w-2 h-2 rounded-full ${m.status === 'live' ? 'bg-danger animate-pulse' : m.status === 'finished' ? 'bg-blue-electric' : 'bg-white/10'}`} />
+                       <div className={`text-[8px] font-black uppercase tracking-widest ${m.status === 'live' ? 'text-danger' : 'text-muted opacity-40'}`}>
                          {m.status === 'live' ? 'LIVE NOW' : m.status}
                        </div>
                     </div>
-                    <div className="text-[10px] text-muted font-black font-mono uppercase tracking-tighter opacity-60 flex items-center gap-6">
-                       <Activity className="w-3.5 h-3.5" /> {new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <div className="text-[9px] text-muted font-black font-mono uppercase tracking-tighter opacity-40 flex items-center gap-2">
+                       {new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} UTC
                     </div>
                   </div>
 
-                  <div className="flex-1 flex items-center gap-16 md:gap-24 min-w-[250px] justify-center">
-                    <div className="flex-1 text-right font-display text-base font-black tracking-tight text-white uppercase italic truncate">
+                  <div className="flex items-center gap-4 justify-center">
+                    <div className="flex-1 text-right font-display text-sm font-black tracking-tight text-white uppercase italic truncate">
                        {m.home_team}
                     </div>
                     
-                    <div className="flex items-center gap-4 bg-black/40 p-4 rounded-xl border border-white/10">
+                    <div className="flex items-center gap-2 bg-black/40 p-1.5 rounded-xl border border-white/5">
                         <input 
                           type="number" 
-                          disabled={m.status === 'finished'}
+                          disabled={m.status === 'finished' || isPending}
                           value={editingScores[m.id]?.home ?? m.home_score ?? 0} 
                           onChange={(e) => handleScoreChange(m.id, 'home', Number(e.target.value))}
-                          className="w-10 h-10 bg-white/5 border border-white/10 rounded-lg text-center text-sm font-black font-display text-white focus:outline-none focus:border-blue-electric transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg text-center text-sm font-black font-display text-white focus:outline-none focus:border-blue-electric transition-colors"
                         />
-                        <div className="flex flex-col items-center opacity-20 ml-2 mr-2">
-                           <span className="text-[8px] font-black uppercase tracking-tighter">VS</span>
-                        </div>
+                        <div className="w-4 h-px bg-white/10" />
                         <input 
                           type="number" 
-                          disabled={m.status === 'finished'}
+                          disabled={m.status === 'finished' || isPending}
                           value={editingScores[m.id]?.away ?? m.away_score ?? 0} 
                           onChange={(e) => handleScoreChange(m.id, 'away', Number(e.target.value))}
-                          className="w-10 h-10 bg-white/5 border border-white/10 rounded-lg text-center text-sm font-black font-display text-white focus:outline-none focus:border-blue-electric transition-colors [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          className="w-9 h-9 bg-white/5 border border-white/10 rounded-lg text-center text-sm font-black font-display text-white focus:outline-none focus:border-blue-electric transition-colors"
                         />
                     </div>
                     
-                    <div className="flex-1 text-left font-display text-base font-black tracking-tight text-white uppercase italic truncate">
+                    <div className="flex-1 text-left font-display text-sm font-black tracking-tight text-white uppercase italic truncate">
                        {m.away_team}
                     </div>
                   </div>
 
-                  <div className="flex flex-col gap-4 min-w-[180px]">
+                  <div className="flex gap-3">
                     {m.status !== 'finished' ? (
-                      <>
+                      <div className="flex flex-col w-full gap-2">
                         <button 
                           disabled={isPending}
                           onClick={() => onSettle(m.id)}
-                          className="btn btn-blue w-full py-10 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-blue-electric/20 flex items-center justify-center gap-8"
+                          className="btn btn-blue w-full py-2.5 font-black uppercase text-[10px] tracking-widest shadow-lg shadow-blue-electric/10 flex items-center justify-center gap-2"
                         >
-                           <ShieldCheck className="w-4 h-4" />
-                           {isPending ? 'SAVING...' : 'SAVE RESULT'}
+                           <ShieldCheck className="w-3.5 h-3.5" />
+                           {isPending ? 'SYNC' : 'SETTLE RESULT'}
                         </button>
-                        <div className="flex gap-4 mt-1">
+                        <div className="grid grid-cols-2 gap-2">
                            <button 
                             disabled={isPending || m.status === 'live'}
                             onClick={() => handleStatusChange(m.id, 'live')}
-                            className="bg-white/5 hover:bg-danger/10 text-muted hover:text-danger border border-white/5 hover:border-danger/20 p-8 rounded-lg flex-1 text-[8px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-4 group"
+                            className="bg-white/5 hover:bg-danger/10 text-muted hover:text-danger border border-white/5 hover:border-danger/20 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 group"
                            >
-                              <Play className="w-3 h-3 group-hover:fill-danger" /> GO LIVE
+                              <Play className="w-3 h-3" /> LIVE
                            </button>
                            <button 
-                            disabled={isPending || m.status === 'scheduled'}
-                            onClick={() => handleStatusChange(m.id, 'scheduled')}
-                            className="bg-white/5 hover:bg-white/10 border border-white/5 p-8 rounded-lg flex-1 text-[8px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-4"
+                            disabled={isPending}
+                            onClick={() => handleStatusChange(m.id, m.status === 'live' ? 'scheduled' : 'finished')}
+                            className="bg-white/5 hover:bg-white/10 border border-white/5 py-2 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2"
                            >
-                              <RotateCcw className="w-3 h-3 opacity-40" /> RESET
+                              <RotateCcw className="w-3 h-3 opacity-40" /> {m.status === 'live' ? 'RESET' : 'FINISH'}
                            </button>
                         </div>
-                      </>
+                      </div>
                     ) : (
-                      <div className="flex flex-col gap-4">
-                         <div className="flex items-center justify-center gap-8 py-10 rounded-xl bg-success/10 border border-success/30 text-success text-[10px] font-black uppercase tracking-widest shadow-lg shadow-success/10">
-                            <CheckCircle2 className="w-4 h-4 font-black" /> Finalized
+                      <div className="w-full">
+                         <div className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-blue-electric/10 border border-blue-electric/10 text-blue-electric text-[9px] font-black uppercase tracking-widest">
+                            <CheckCircle2 className="w-3.5 h-3.5" /> AUDITED
                          </div>
                          <button 
                           disabled={isPending}
                           onClick={() => handleStatusChange(m.id, 'scheduled')}
-                          className="text-[8px] text-muted hover:text-white transition-colors underline uppercase font-black tracking-widest mt-4 opacity-40 text-center"
-                         >Undo Settlement</button>
+                          className="w-full text-[8px] text-muted hover:text-white transition-colors underline uppercase font-black tracking-[0.2em] mt-3 opacity-20 text-center"
+                         >Undo settlement sequence</button>
                       </div>
                     )}
                   </div>
@@ -348,71 +342,63 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
 
     {/* ADD ROUND MODAL */}
     {showRoundModal && (
-      <div className="fixed inset-0 z-[110] flex items-center justify-center p-24">
+      <div className="fixed inset-0 z-[110] flex items-center justify-center p-6">
         <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => !isPending && setShowRoundModal(false)} />
-        <div className="card w-full max-w-[500px] p-0 relative z-10 animate-slide-up bg-zinc-950 border-white/10 shadow-2xl">
-           <div className="p-16 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
-              <div className="flex items-center gap-3">
-                 <div className="p-8 bg-blue-electric/10 rounded-xl"><Calendar className="w-4 h-4 text-blue-electric" /></div>
-                 <div>
-                    <h3 className="font-display font-black text-white uppercase tracking-widest leading-none">Create New Round</h3>
-                    <p className="text-[9px] text-muted font-bold uppercase tracking-widest mt-4 opacity-60">Initialize Global Challenge</p>
-                 </div>
-              </div>
+        <div className="card w-full max-w-[440px] p-0 relative z-10 animate-slide-up bg-[#05070a] border-white/10 shadow-2xl">
+           <div className="p-5 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
+                <div className="p-2.5 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Calendar className="w-4 h-4 text-blue-electric" /></div>
+                <div>
+                  <h3 className="font-display font-black text-white uppercase tracking-widest leading-none text-sm">Sequence Initialization</h3>
+                  <p className="text-[9px] text-muted font-bold uppercase tracking-widest mt-2 opacity-40">Create Platform Round</p>
+                </div>
            </div>
            
-           <div className="p-16 flex flex-col gap-12">
-              <div className="flex flex-col gap-4">
-                 <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Round Number</label>
+           <div className="p-5 flex flex-col gap-5">
+              <div className="flex flex-col gap-2">
+                 <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-1 opacity-60 italic">Sequence Indicator (Number)</label>
                  <input 
                    type="number" 
                    value={roundData.round_number || ''} 
                    onChange={e => setRoundData(prev => ({ ...prev, round_number: e.target.value ? parseInt(e.target.value) : 0 }))}
-                   className="input-premium py-10 text-xs font-bold" 
+                   className="input-premium py-3 px-4 text-xs font-black italic tracking-widest" 
                    placeholder="e.g. 1" 
                  />
               </div>
 
-              <div className="grid grid-cols-2 gap-8">
-                 <div className="flex flex-col gap-4">
-                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Start Date</label>
+              <div className="grid grid-cols-2 gap-4">
+                 <div className="flex flex-col gap-2">
+                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-1 opacity-60 italic">Genesis</label>
                     <input 
                       type="datetime-local" 
                       value={roundData.start_date} 
                       onChange={e => setRoundData(prev => ({ ...prev, start_date: e.target.value }))}
-                      className="input-premium py-10 px-12 text-[11px] font-mono" 
+                      className="input-premium py-3 px-4 text-[10px] font-mono" 
                     />
                  </div>
-                 <div className="flex flex-col gap-4">
-                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">End Date</label>
+                 <div className="flex flex-col gap-2">
+                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-1 opacity-60 italic">Expiration</label>
                     <input 
                       type="datetime-local" 
                       value={roundData.end_date} 
                       onChange={e => setRoundData(prev => ({ ...prev, end_date: e.target.value }))}
-                      className="input-premium py-10 px-12 text-[11px] font-mono" 
+                      className="input-premium py-3 px-4 text-[10px] font-mono" 
                     />
                  </div>
               </div>
            </div>
 
-           <div className="p-16 border-t border-white/5 flex flex-col gap-12 bg-white/[0.01]">
-              {errorMsg && (
-                <div className="px-12 py-8 bg-danger/10 border border-danger/20 rounded-lg flex items-center gap-8 text-danger text-[9px] font-bold uppercase tracking-widest animate-shake">
-                   <AlertCircle className="w-3.5 h-3.5" />
-                   {errorMsg}
-                </div>
-              )}
-              <div className="flex gap-12">
+           <div className="p-5 border-t border-white/5 flex flex-col gap-4 bg-white/[0.01]">
+              <div className="flex gap-3">
                  <button 
                    onClick={() => setShowRoundModal(false)}
-                   className="btn btn-ghost flex-1 py-10 font-black uppercase text-[10px] tracking-widest opacity-60 hover:opacity-100"
-                 >Cancel</button>
+                   className="flex-1 py-3 text-[9px] font-black uppercase text-muted hover:text-white transition-colors"
+                 >CANCEL</button>
                  <button 
                    onClick={handleCreateRound}
                    disabled={isPending || !roundData.round_number || !roundData.start_date || !roundData.end_date}
-                   className="btn btn-blue flex-1 py-10 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20"
+                   className="btn btn-blue flex-1 py-3 font-black uppercase text-[10px] tracking-[0.15em] shadow-xl shadow-blue-electric/10"
                  >
-                   {isPending ? 'CREATING...' : 'CREATE ROUND'}
+                   {isPending ? 'PROCESSING' : 'INITIATE'}
                  </button>
               </div>
            </div>
@@ -422,70 +408,63 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
 
     {/* ADD MATCH MODAL */}
     {showMatchModal && (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-24">
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
         <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => !isPending && setShowMatchModal(false)} />
-        <div className="card w-full max-w-[500px] p-0 relative z-10 animate-slide-up bg-zinc-950 border-white/10 shadow-2xl">
-           <div className="p-16 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
-              <div className="flex items-center gap-3">
-                 <div className="p-8 bg-blue-electric/10 rounded-xl"><Plus className="w-5 h-5 text-blue-electric" /></div>
-                 <div>
-                    <h3 className="font-display font-black text-white uppercase tracking-widest leading-none">Schedule Match</h3>
-                    <p className="text-[9px] text-muted font-bold uppercase tracking-widest mt-4 opacity-60">Round {selectedRound?.round_number} Assignment</p>
-                 </div>
-              </div>
+        <div className="card w-full max-w-[440px] p-0 relative z-10 animate-slide-up bg-[#05070a] border-white/10 shadow-2xl">
+           <div className="p-5 border-b border-white/5 flex items-center gap-4 bg-white/[0.01]">
+                <div className="p-2.5 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Plus className="w-5 h-5 text-blue-electric" /></div>
+                <div>
+                  <h3 className="font-display font-black text-white uppercase tracking-widest leading-none text-sm">Asset Deployment</h3>
+                  <p className="text-[9px] text-muted font-bold uppercase tracking-widest mt-2 opacity-40">Schedule Round Match</p>
+                </div>
            </div>
            
-           <div className="p-16 flex flex-col gap-12">
-              <div className="grid grid-cols-2 gap-12">
-                 <div className="flex flex-col gap-4">
-                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Home Team</label>
+           <div className="p-5 flex flex-col gap-5">
+              <div className="grid grid-cols-2 gap-4">
+                 <div className="flex flex-col gap-2">
+                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-1 opacity-60 italic">Protagonist (Home)</label>
                     <input 
                       type="text" 
                       value={matchData.home_team} 
                       onChange={e => setMatchData(prev => ({ ...prev, home_team: e.target.value }))}
-                      className="input-premium py-10 text-xs font-bold" 
-                      placeholder="e.g. Arsenal" 
+                      className="input-premium py-3 px-4 text-xs font-black italic tracking-widest" 
+                      placeholder="e.g. ARSENAL" 
                     />
                  </div>
-                 <div className="flex flex-col gap-4">
-                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Away Team</label>
+                 <div className="flex flex-col gap-2">
+                    <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-1 opacity-60 italic">Opponent (Away)</label>
                     <input 
                       type="text" 
                       value={matchData.away_team} 
                       onChange={e => setMatchData(prev => ({ ...prev, away_team: e.target.value }))}
-                      className="input-premium py-10 text-xs font-bold" 
-                      placeholder="e.g. Chelsea" 
+                      className="input-premium py-3 px-4 text-xs font-black italic tracking-widest" 
+                      placeholder="e.g. CHELSEA" 
                     />
                  </div>
               </div>
 
-              <div className="flex flex-col gap-4">
-                 <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-4">Kickoff Time</label>
+              <div className="flex flex-col gap-2">
+                 <label className="text-[9px] font-black text-muted uppercase tracking-widest ml-1 opacity-60 italic">Temporal Offset (Kickoff)</label>
                  <input 
                    type="datetime-local" 
                    value={matchData.kickoff_time} 
                    onChange={e => setMatchData(prev => ({ ...prev, kickoff_time: e.target.value }))}
-                   className="input-premium py-10 px-12 text-[11px] font-mono" 
+                   className="input-premium py-3 px-4 text-[10px] font-mono" 
                  />
-              </div>
-
-              <div className="p-8 bg-blue-electric/5 border border-blue-electric/10 rounded-xl flex items-center gap-8 mt-4">
-                 <AlertCircle className="w-4 h-4 text-blue-electric opacity-40" />
-                 <p className="text-[9px] text-muted leading-relaxed font-bold uppercase tracking-tight">Predictions will open immediately upon scheduling.</p>
               </div>
            </div>
 
-           <div className="p-16 border-t border-white/5 flex gap-12 bg-white/[0.01]">
+           <div className="p-5 border-t border-white/5 flex gap-4 bg-white/[0.01]">
               <button 
                 onClick={() => setShowMatchModal(false)}
-                className="btn btn-ghost flex-1 py-10 font-black uppercase text-[10px] tracking-widest opacity-60 hover:opacity-100"
-              >Cancel</button>
+                className="flex-1 py-3 text-[9px] font-black uppercase text-muted hover:text-white transition-colors"
+              >CANCEL</button>
               <button 
                 onClick={handleCreateMatch}
                 disabled={isPending || !matchData.home_team || !matchData.away_team || !matchData.kickoff_time}
-                className="btn btn-blue flex-1 py-10 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/20"
+                className="btn btn-blue flex-1 py-3 font-black uppercase text-[10px] tracking-[0.15em] shadow-xl shadow-blue-electric/10"
               >
-                {isPending ? 'SCHEDULING...' : 'CONFIRM MATCH'}
+                {isPending ? 'DEPLOYING' : 'CONFIRM'}
               </button>
            </div>
         </div>

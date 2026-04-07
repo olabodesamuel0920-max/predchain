@@ -216,6 +216,30 @@ h3 { font-size: clamp(1.25rem, 2.5vw, 1.75rem); }
   color: var(--text-secondary);
 }
 
+/* Form Controls */
+.input-premium {
+  width: 100%;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: inherit;
+  transition: all 0.3s ease;
+  outline: none;
+  appearance: none;
+}
+
+.input-premium:focus {
+  border-color: var(--blue-electric);
+  box-shadow: 0 0 20px var(--blue-glow);
+  background: #0a0d14;
+}
+
+.input-premium::placeholder {
+  color: var(--text-muted);
+  opacity: 0.4;
+}
+
 /* =============================================
    UTILITIES
    ============================================= */
