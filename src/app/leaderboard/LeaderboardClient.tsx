@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Trophy, Gem, Search, ChevronRight, Globe, TrendingUp, ShieldCheck } from 'lucide-react';
+import { Trophy, Gem, Search, ChevronRight, Globe, TrendingUp, ShieldCheck, ArrowUpRight } from 'lucide-react';
 
 interface LeaderboardClientProps {
   rankings: Array<{
