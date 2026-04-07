@@ -28,7 +28,8 @@ import {
   Target,
   Settings,
   CreditCard,
-  User
+  User,
+  Gift
 } from 'lucide-react';
 import { submitPrediction } from '@/app/actions/predictions';
 import { requestPayout } from '@/app/actions/wallet';
@@ -74,6 +75,7 @@ export default function DashboardClient({
 
   const totalRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
   const totalReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
+  const pendingPayouts = payoutRequests.filter(r => r.status === 'pending').reduce((acc, r) => acc + r.amount, 0);
 
   useEffect(() => {
     const tabParam = searchParams.get('tab');

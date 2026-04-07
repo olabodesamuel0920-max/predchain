@@ -7,9 +7,6 @@ import {
   Globe,
   Activity,
   Send,
-  Twitter,
-  Instagram,
-  Facebook,
   Monitor,
   Heart
 } from 'lucide-react';
@@ -43,9 +40,9 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
                {[
-                  { icon: Twitter, href: '#' },
                   { icon: Send, href: '#' },
-                  { icon: Instagram, href: '#' }
+                  { icon: Globe, href: '#' },
+                  { icon: Activity, href: '#' }
                ].map((social, i) => (
                   <Link key={i} href={social.href} className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-muted hover:text-gold hover:border-gold/20 transition-all shadow-inner group">
                      <social.icon className="w-4 h-4 group-hover:scale-110 transition-transform" />

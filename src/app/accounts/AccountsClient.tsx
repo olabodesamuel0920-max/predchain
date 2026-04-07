@@ -3,15 +3,37 @@
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Shield, Target, Zap, Check, ShieldCheck, Activity, Wallet, Globe, ArrowUpRight, AlertCircle, Trophy, Star, Gem, ArrowRight, CreditCard } from 'lucide-material-react';
-import * as Icons from 'lucide-react';
+import { 
+  Shield, 
+  Target, 
+  Zap, 
+  Check, 
+  ShieldCheck, 
+  Activity, 
+  Wallet, 
+  Globe, 
+  ArrowUpRight, 
+  AlertCircle, 
+  Trophy, 
+  Star, 
+  Gem, 
+  ArrowRight, 
+  CreditCard 
+} from 'lucide-react';
 import { initializePayment } from '@/app/actions/paystack';
 import { purchaseTierWithWallet } from '@/app/actions/wallet';
 import { AccountTier, PlatformStats } from '@/types';
 import { useFeedback } from '@/hooks/useFeedback';
 
-// Correcting icon import reference
-const { Star: StarIcon, Gem: GemIcon, Zap: ZapIcon, Trophy: TrophyIcon, Check: CheckIcon, AlertCircle: AlertIcon, ShieldCheck: ShieldIcon, Activity: ActivityIcon } = Icons;
+// Unified icons
+const StarIcon = Star;
+const GemIcon = Gem;
+const ZapIcon = Zap;
+const TrophyIcon = Trophy;
+const CheckIcon = Check;
+const AlertIcon = AlertCircle;
+const ShieldIcon = ShieldCheck;
+const ActivityIcon = Activity;
 
 interface AccountsClientProps {
   tiers: AccountTier[];
