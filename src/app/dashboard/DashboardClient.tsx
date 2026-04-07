@@ -68,6 +68,11 @@ export default function DashboardClient({
   const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback(5000);
   const [activeTab, setActiveTab] = useState<'overview' | 'arena' | 'wallet' | 'network'>('overview');
   const [walletSubTab, setWalletSubTab] = useState<'transactions' | 'payouts'>('transactions');
+
+  const formatDate = (dateStr: string) => {
+    const d = new Date(dateStr);
+    return `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()}`;
+  };
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const [payoutAmount, setPayoutAmount] = useState('');
@@ -294,7 +299,7 @@ export default function DashboardClient({
                                 </div>
                                 <div className="flex flex-col">
                                    <span className="text-xs font-bold text-white uppercase tracking-tight italic">{tx.type.split('_').join(' ')}</span>
-                                   <span className="text-[8px] font-bold text-muted opacity-40 uppercase tracking-widest italic">{new Date(tx.created_at).toLocaleDateString()} — {tx.reference.slice(0, 6)}</span>
+                                   <span suppressHydrationWarning className="text-[8px] font-bold text-muted opacity-40 uppercase tracking-widest italic">{formatDate(tx.created_at)} — {tx.reference.slice(0, 6)}</span>
                                 </div>
                              </div>
                              <span className={`text-lg font-black italic tracking-tighter ${tx.amount > 0 ? 'text-success' : 'text-white/40'}`}>
@@ -448,7 +453,7 @@ export default function DashboardClient({
                                      </div>
                                      <div className="space-y-1">
                                         <div className="text-xs font-bold text-white uppercase tracking-tight italic">{tx.type.split('_').join(' ')}</div>
-                                        <div className="text-[8px] font-bold text-muted opacity-30 uppercase tracking-widest italic">{tx.reference.slice(0, 10)} — {new Date(tx.created_at).toLocaleDateString()}</div>
+                                        <div className="text-[8px] font-bold text-muted opacity-30 uppercase tracking-widest italic">{tx.reference.slice(0, 10)} — {formatDate(tx.created_at)}</div>
                                      </div>
                                   </div>
                                   <span className={`text-xl font-black italic tracking-tighter ${tx.amount > 0 ? 'text-success' : 'text-white'}`}>₦{Math.abs(tx.amount).toLocaleString()}</span>
