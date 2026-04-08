@@ -3,18 +3,18 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User, LogOut, Menu, X, ArrowUpRight, ChevronRight } from 'lucide-react';
+import { User, LogOut, Menu, X, ArrowUpRight, ChevronRight, Shield } from 'lucide-react';
 import { logout } from '@/app/actions/auth';
 import { createClient } from '@/lib/supabase/client';
 import styles from './Navbar.module.css';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/how-it-works', label: 'Guide' },
-  { href: '/accounts', label: 'Plans' },
+  { href: '/how-it-works', label: 'How it Works' },
+  { href: '/accounts', label: 'Tiers' },
   { href: '/arena', label: 'Arena' },
   { href: '/winners', label: 'Winners' },
-  { href: '/referral', label: 'Referral' },
+  { href: '/referral', label: 'Affiliates' },
 ];
 
 export default function Navbar() {
@@ -56,57 +56,58 @@ export default function Navbar() {
   return (
     <>
       <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`} role="navigation">
-        <div className={styles.navContainer}>
-          <div className={`${styles.navPill} glass-pill`}>
-            {/* Logo */}
-            <Link href="/" className={styles.logo} aria-label="PredChain Home">
-              <span className="font-display text-lg font-black text-white uppercase tracking-tighter italic">
-                Pred<span className="text-gradient-gold">Chain</span>
-              </span>
-            </Link>
+        <div className="container">
+          <div className="flex justify-center">
+            <div className="glass-nav rounded-full px-6 py-2 flex items-center gap-24 relative shadow-2xl">
+              {/* Logo */}
+              <Link href="/" className="flex items-center gap-8 group" aria-label="PredChain Home">
+                <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 group-hover:scale-105 transition-transform">
+                  <Shield className="w-4 h-4 text-gold" />
+                </div>
+                <span className="font-display text-base font-bold text-white tracking-tighter italic">
+                  PRED<span className="text-gold">CHAIN</span>
+                </span>
+              </Link>
 
-            <div className={styles.divider} />
+              {/* Desktop Links */}
+              <ul className="hidden lg:flex items-center gap-12" role="list">
+                {navLinks.map(({ href, label }) => (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      className={`text-[10px] font-bold uppercase tracking-widest italic transition-colors ${pathname === href ? 'text-gold' : 'text-muted hover:text-white'}`}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
 
-            {/* Desktop Links */}
-            <ul className={styles.navLinks} role="list">
-              {navLinks.map(({ href, label }) => (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className={`${styles.navLink} ${pathname === href ? styles.active : ''}`}
-                  >
-                    {label}
+              {/* Actions */}
+              <div className="flex items-center gap-12">
+                {!user ? (
+                  <>
+                    <Link href="/login" className="hidden lg:block text-[10px] font-bold text-muted hover:text-white transition-colors uppercase tracking-widest italic">Sign In</Link>
+                    <Link href="/accounts" className="btn btn-primary !py-2 !px-6 !text-[10px] !rounded-full shadow-lg">
+                      JOIN ARENA
+                    </Link>
+                  </>
+                ) : (
+                  <Link href="/dashboard" className="btn btn-secondary !py-2 !px-6 !text-[10px] !rounded-full gap-8">
+                    COMMAND CENTER <ArrowUpRight className="w-3 h-3" />
                   </Link>
-                </li>
-              ))}
-            </ul>
+                )}
 
-            <div className={styles.divider} />
-
-            {/* Actions */}
-            <div className="flex items-center gap-2">
-              {!user ? (
-                <>
-                  <Link href="/login" className="hidden lg:block text-[10px] font-bold text-muted hover:text-white px-3 transition-colors uppercase tracking-widest italic">Sign In</Link>
-                  <Link href="/accounts" className="btn btn-primary !py-2 !px-5 !text-[10px] !rounded-lg font-bold shadow-xl">
-                    JOIN ARENA
-                  </Link>
-                </>
-              ) : (
-                <Link href="/dashboard" className="btn btn-blue !py-2 !px-5 !text-[10px] !rounded-lg gap-2 font-bold shadow-xl">
-                  DASHBOARD <ArrowUpRight className="w-3 h-3" />
-                </Link>
-              )}
+                {/* Mobile Toggle */}
+                <button
+                  className="lg:hidden p-2 text-white/60 hover:text-white transition-colors"
+                  onClick={() => setMenuOpen(true)}
+                  aria-label="Open menu"
+                >
+                  <Menu className="w-5 h-5" />
+                </button>
+              </div>
             </div>
-
-            {/* Mobile Toggle */}
-            <button
-              className={styles.menuToggle}
-              onClick={() => setMenuOpen(true)}
-              aria-label="Open menu"
-            >
-              <Menu className="w-5 h-5" />
-            </button>
           </div>
         </div>
       </nav>
@@ -122,49 +123,47 @@ export default function Navbar() {
         className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}
         role="dialog"
       >
-        <div className={styles.mobileMenuHeader}>
+        <div className="p-8 flex justify-between items-center border-b border-white/5 bg-bg-secondary">
           <div className="flex items-center gap-2">
-             <span className="font-display text-sm font-black text-white uppercase italic tracking-tighter">PredChain</span>
+             <span className="font-display text-xs font-bold text-white uppercase italic tracking-tighter">PRED<span className="text-gold">CHAIN</span></span>
           </div>
-          <button onClick={closeMenu} className={styles.closeBtn}>
-            <X className="w-5 h-5" />
+          <button onClick={closeMenu} className="p-2 text-muted hover:text-white transition-colors">
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        <div className={styles.mobileMenuInner}>
-          <div className="text-[10px] font-black text-muted uppercase tracking-[0.2em] mb-8 opacity-40 italic px-2">Main Menu</div>
-          <ul className="flex flex-col gap-3" role="list">
+        <div className="flex-1 flex flex-col p-8 overflow-y-auto bg-grad-dark">
+          <nav className="flex flex-col gap-4">
             {navLinks.map(({ href, label }) => (
-              <li key={href}>
-                <Link
-                  href={href}
-                  onClick={closeMenu}
-                  className={`flex items-center justify-between px-4 py-4 rounded-xl text-xs font-bold uppercase tracking-widest transition-all ${pathname === href ? 'bg-white/5 text-gold' : 'text-muted hover:text-white hover:bg-white/[0.02]'}`}
-                >
-                  {label}
-                  <ChevronRight className="w-4 h-4 opacity-30" />
-                </Link>
-              </li>
+              <Link
+                key={href}
+                href={href}
+                onClick={closeMenu}
+                className={`flex items-center justify-between px-6 py-5 rounded-2xl text-[11px] font-bold uppercase tracking-widest transition-all ${pathname === href ? 'bg-gold/10 text-gold border border-gold/10' : 'text-muted hover:text-white hover:bg-white/[0.03] border border-transparent'}`}
+              >
+                {label}
+                <ChevronRight className="w-4 h-4 opacity-20" />
+              </Link>
             ))}
-          </ul>
+          </nav>
 
-          <div className="mt-auto pt-8 border-t border-white/5 flex flex-col gap-3">
+          <div className="mt-auto pt-10 flex flex-col gap-4">
             {!user ? (
               <>
-                <Link href="/accounts" onClick={closeMenu} className="btn btn-primary w-full py-4 text-xs font-bold shadow-xl">
+                <Link href="/accounts" onClick={closeMenu} className="btn btn-primary w-full py-5 text-xs font-bold">
                   GET STARTED
                 </Link>
-                <Link href="/login" onClick={closeMenu} className="btn btn-ghost w-full py-4 text-xs font-bold">
+                <Link href="/login" onClick={closeMenu} className="btn btn-secondary w-full py-5 text-xs font-bold border-white/10">
                   SIGN IN
                 </Link>
               </>
             ) : (
               <>
-                <Link href="/dashboard" onClick={closeMenu} className="btn btn-blue w-full py-4 text-xs font-bold shadow-xl gap-2">
-                  DASHBOARD <ArrowUpRight className="w-4 h-4" />
+                <Link href="/dashboard" onClick={closeMenu} className="btn btn-primary w-full py-5 text-xs font-bold gap-3">
+                  ACCESS DASHBOARD <ArrowUpRight className="w-4 h-4" />
                 </Link>
-                <button onClick={() => { logout(); closeMenu(); }} className="text-[10px] font-black text-muted hover:text-danger uppercase tracking-[0.2em] py-4 transition-all italic text-center">
-                  SIGN OUT
+                <button onClick={() => { logout(); closeMenu(); }} className="text-[10px] font-bold text-muted hover:text-rose-500 uppercase tracking-widest py-6 transition-all italic text-center">
+                  DISCONNECT SESSION
                 </button>
               </>
             )}

@@ -60,14 +60,14 @@ export default function AdminClient({
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       <div className="mb-12">
-        <div className="flex items-center gap-3 mb-4">
-           <Shield className="w-5 h-5 text-gold opacity-80" />
-           <span className="text-[10px] font-black text-gold uppercase tracking-widest italic">System Admin</span>
+        <div className="flex items-center gap-3 mb-6">
+           <Shield className="w-4 h-4 text-gold opacity-60" />
+           <span className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] font-display">System Integrity</span>
         </div>
-        <h2 className="text-xl font-black text-white italic tracking-tighter uppercase whitespace-nowrap">Pred<span className="text-gradient-gold">Chain.</span></h2>
+        <h2 className="text-2xl font-bold text-white tracking-tighter uppercase font-display">Pred<span className="text-gradient-gold">Chain.</span></h2>
       </div>
 
-      <nav className="flex-1 space-y-2">
+      <nav className="flex-1 space-y-3">
         {navItems.map(item => (
           <button 
             key={item.id}
@@ -75,27 +75,27 @@ export default function AdminClient({
               setActiveView(item.id);
               setIsSidebarOpen(false);
             }}
-            className={`w-full flex items-center gap-3 py-3 px-4 rounded-xl transition-all text-[11px] font-black uppercase tracking-widest group ${
+            className={`w-full flex items-center gap-4 py-4 px-5 rounded-2xl transition-all text-[11px] font-bold uppercase tracking-widest font-display group ${
               activeView === item.id 
-                ? 'bg-white/[0.04] text-white border border-white/10 shadow-lg' 
-                : 'text-muted hover:text-white hover:bg-white/[0.02] border border-transparent hover:border-white/5'
+                ? 'bg-white/10 text-white shadow-xl' 
+                : 'text-secondary hover:text-white hover:bg-white/[0.03]'
             }`}
           >
-            <item.icon className={`w-4 h-4 transition-opacity ${activeView === item.id ? 'opacity-100 text-gold' : 'opacity-20 group-hover:opacity-100'}`} />
+            <item.icon className={`w-4 h-4 transition-all ${activeView === item.id ? 'text-gold' : 'opacity-30 group-hover:opacity-100'}`} />
             <span className="italic">{item.label}</span>
             {item.id === 'finance' && initialMetrics.pendingPayouts > 0 && (
-              <div className="ml-auto w-2 h-2 rounded-full bg-danger shadow-glow-danger animate-pulse" />
+              <div className="ml-auto w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)] animate-pulse" />
             )}
           </button>
         ))}
       </nav>
 
       <div className="mt-8 pt-8 border-t border-white/5 flex items-center gap-4">
-         <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center font-black text-gold italic shadow-inner">AD</div>
+         <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center font-bold text-gold italic shadow-inner">AD</div>
          <div className="flex flex-col">
-            <span className="text-[10px] font-black text-white uppercase tracking-widest italic">Administrator</span>
-            <span className="text-[8px] font-bold text-success uppercase tracking-widest flex items-center gap-1.5">
-               <div className="w-1 h-1 rounded-full bg-success" /> Online
+            <span className="text-[10px] font-bold text-white uppercase tracking-widest font-display">Administrative Hub</span>
+            <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-2 mt-1">
+               <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" /> Verified
             </span>
          </div>
       </div>
@@ -108,17 +108,17 @@ export default function AdminClient({
       {/* DESKTOP SIDEBAR (Laptop & Monitor) */}
       <aside className={`fixed h-screen border-r border-white/5 bg-[#030508] transition-all duration-300 z-50 flex flex-col p-5 hidden lg:flex ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
         <div className="flex flex-col h-full overflow-hidden">
-          <div className="mb-10 flex items-center justify-between px-1">
+          <div className="mb-10 flex items-center justify-between px-2">
             {isSidebarOpen ? (
-              <div className="animate-fade-in">
+              <div className="animate-fade-in group">
                 <div className="flex items-center gap-2.5 mb-2">
-                   <Shield className="w-3.5 h-3.5 text-gold opacity-80" />
-                   <span className="text-[8px] font-black text-gold uppercase tracking-[0.2em] italic">System Admin</span>
+                   <Shield className="w-3.5 h-3.5 text-gold opacity-50" />
+                   <span className="text-[8px] font-bold text-gold uppercase tracking-[0.2em] font-display">System Integrity</span>
                 </div>
-                <h2 className="text-base font-black text-white italic tracking-tighter uppercase whitespace-nowrap">Pred<span className="text-gradient-gold">Chain.</span></h2>
+                <h2 className="text-lg font-bold text-white tracking-tighter uppercase font-display group-hover:tracking-tight transition-all">Pred<span className="text-gradient-gold">Chain.</span></h2>
               </div>
             ) : (
-              <Shield className="w-5 h-5 text-gold mx-auto" />
+              <Shield className="w-5 h-5 text-gold mx-auto opacity-40" />
             )}
           </div>
 
@@ -151,12 +151,12 @@ export default function AdminClient({
           </button>
 
           <div className="mt-8 pt-8 border-t border-white/5 flex items-center gap-3 overflow-hidden">
-             <div className="shrink-0 w-8 h-8 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-center font-black text-gold italic shadow-inner text-[10px]">AD</div>
+             <div className="shrink-0 w-9 h-9 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center font-bold text-gold italic shadow-inner text-[11px]">AD</div>
              {isSidebarOpen && (
                <div className="flex flex-col animate-fade-in min-w-0">
-                  <span className="text-[9px] font-black text-white uppercase tracking-widest italic truncate">Control Unit</span>
-                  <span className="text-[7.5px] font-bold text-success uppercase tracking-widest flex items-center gap-1.5 opacity-60">
-                     <div className="w-1 h-1 rounded-full bg-success" /> Synchronized
+                  <span className="text-[10px] font-bold text-white uppercase tracking-widest font-display truncate">Control Node</span>
+                  <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-2 mt-0.5 opacity-80">
+                     <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" /> Operational
                   </span>
                </div>
              )}
@@ -199,28 +199,28 @@ export default function AdminClient({
       <main className={`flex-1 transition-all duration-300 flex flex-col min-w-0 ${isSidebarOpen ? 'lg:pl-64' : 'lg:pl-20'}`}>
         
         {/* Responsive Header Bar */}
-        <header className="h-14 border-b border-white/5 bg-[#020406]/80 backdrop-blur-xl sticky top-0 z-40 flex items-center justify-between px-4 md:px-6">
-           <div className="flex items-center gap-3">
-              <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="lg:hidden p-2 bg-white/[0.03] rounded-xl border border-white/5 shadow-inner">
-                 <Menu className="w-4 h-4" />
+        <header className="h-16 border-b border-white/5 bg-[#030508]/80 backdrop-blur-3xl sticky top-0 z-40 flex items-center justify-between px-6 md:px-10">
+           <div className="flex items-center gap-6">
+              <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="lg:hidden p-3 bg-white/[0.03] rounded-2xl border border-white/5 shadow-inner hover:bg-white/[0.06] transition-colors">
+                 <Menu className="w-5 h-5 text-white" />
               </button>
-              <div className="flex items-center gap-2">
-                 <div className="hidden sm:flex items-center gap-2 opacity-20 text-[8px] font-black uppercase tracking-[0.25em]">
-                    <span>SYSTEM</span>
-                    <ChevronRight className="w-2.5 h-2.5" />
-                    <span className="text-white">{navItems.find(i => i.id === activeView)?.label}</span>
+              <div className="flex items-center gap-3">
+                 <div className="hidden sm:flex items-center gap-3 opacity-40 text-[9px] font-bold uppercase tracking-[0.25em] font-display">
+                    <span>ADMINISTRATION</span>
+                    <ChevronRight className="w-3 h-3" />
+                    <span className="text-white opacity-100">{navItems.find(i => i.id === activeView)?.label}</span>
                  </div>
               </div>
            </div>
            
-           <div className="flex items-center gap-5">
-              <div className="hidden sm:flex items-center gap-2.5">
-                 <div className="w-1 h-1 rounded-full bg-success shadow-[0_0_6px_var(--success)] animate-pulse" />
-                 <span className="text-[8px] font-black text-muted uppercase tracking-[0.2em] opacity-30 italic">KERNEL: SYNCHRONIZED</span>
+           <div className="flex items-center gap-8">
+              <div className="hidden md:flex items-center gap-3">
+                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)] animate-pulse" />
+                 <span className="text-[9px] font-bold text-secondary uppercase tracking-[0.2em] opacity-40 italic">STRATEGY: SYNCHRONIZED</span>
               </div>
-              <div className="w-px h-3 bg-white/10" />
-              <button onClick={() => window.location.reload()} className="p-1.5 text-muted hover:text-white transition-opacity opacity-20 hover:opacity-100">
-                 <Activity className="w-3.5 h-3.5" />
+              <div className="w-px h-4 bg-white/10" />
+              <button onClick={() => window.location.reload()} className="p-2 text-secondary hover:text-gold transition-colors opacity-40 hover:opacity-100">
+                 <Activity className="w-4 h-4" />
               </button>
            </div>
         </header>
@@ -228,18 +228,18 @@ export default function AdminClient({
         {/* Dynamic View Content */}
         <div className="p-4 md:p-6 lg:p-7 w-full max-w-[1600px] mx-auto overflow-x-hidden">
            {/* Section Identity */}
-           <div className="mb-6 md:mb-8 animate-slide-up flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-              <div>
-                 <h1 className="text-2xl md:text-3xl font-black italic tracking-tighter leading-none mb-2 text-white uppercase">{navItems.find(i => i.id === activeView)?.label}.</h1>
-                 <p className="text-[8px] md:text-[9px] font-black text-muted uppercase tracking-[0.3em] opacity-20 italic leading-none ml-1">Administrative Matrix node_alpha</p>
+           <div className="mb-10 md:mb-12 animate-slide-up flex flex-col sm:flex-row sm:items-end justify-between gap-6 px-2">
+              <div className="space-y-3">
+                 <h1 className="text-3xl md:text-5xl font-bold tracking-tighter leading-none text-white uppercase font-display italic">{navItems.find(i => i.id === activeView)?.label}.</h1>
+                 <p className="text-[10px] font-bold text-secondary uppercase tracking-[0.3em] opacity-30 leading-none font-display">Strategic Administrative Hub</p>
               </div>
-              <div className="flex items-center gap-3.5 bg-white/[0.01] border border-white/5 rounded-2xl px-5 py-2.5 shadow-sm">
+              <div className="flex items-center gap-5 bg-white/[0.02] border border-white/5 rounded-3xl px-8 py-4 shadow-xl">
                  <div className="flex flex-col items-end shrink-0">
-                    <span className="text-[7.5px] font-black text-muted uppercase tracking-widest opacity-20 leading-none mb-1">Status</span>
-                    <span className="text-[9px] font-mono font-bold text-success uppercase leading-none italic">OPERATIONAL</span>
+                    <span className="text-[9px] font-bold text-secondary uppercase tracking-widest opacity-30 leading-none mb-2">Systems</span>
+                    <span className="text-[11px] font-bold text-emerald-500 uppercase leading-none italic font-display">OPERATIONAL</span>
                  </div>
-                 <div className="w-px h-5 bg-white/5" />
-                 <Database className="w-4 h-4 text-blue-electric opacity-20 shrink-0" />
+                 <div className="w-px h-6 bg-white/5" />
+                 <Database className="w-5 h-5 text-gold opacity-20 shrink-0" />
               </div>
            </div>
 

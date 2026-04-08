@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
-import { Outfit, Inter, Space_Mono } from "next/font/google";
+import { Sora, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const outfit = Outfit({
+const sora = Sora({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-sora",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800"],
 });
 
 const inter = Inter({
@@ -27,13 +27,19 @@ const spaceMono = Space_Mono({
 
 export const metadata: Metadata = {
   title: "PredChain | Elite Football Prediction Arena",
-  description: "Join the premier arena for top-tier football predictions. Build a 3-day sequence to unlock 10X reward multipliers. Premium, verified, and high-performance.",
-  keywords: "football prediction, premium sports tech, cash reward, perfect streak, live matches, analytics",
+  description: "The premier arena for high-stakes football predictions. Master the 3-day streak to unlock 10X reward multipliers. Secure, professional, and performance-driven.",
+  keywords: "football prediction, premium sports tech, reward multiplier, perfect streak, live matches, analytical sports",
   openGraph: {
-    title: "PredChain | Predict. Perform. Prevail.",
-    description: "Maintain a 3-day sequence. Unlock the 10X reward multiplier.",
+    title: "PredChain | Predict. Master. Prevail.",
+    description: "Secure a 3-day sequence. Access elite reward multipliers.",
     type: "website",
+    images: ["/og-image.jpg"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "PredChain | Elite Football Prediction Arena",
+    description: "The 3-day streak to 10X multiplier.",
+  }
 };
 
 export default function RootLayout({
@@ -42,11 +48,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} ${inter.variable} ${spaceMono.variable}`}>
-      <body>
+    <html lang="en" className={`${sora.variable} ${inter.variable} ${spaceMono.variable}`}>
+      <body className="antialiased selection:bg-gold/30 selection:text-white">
         <div className="noise-overlay" aria-hidden="true" />
         <Navbar />
-        <main>{children}</main>
+        <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>

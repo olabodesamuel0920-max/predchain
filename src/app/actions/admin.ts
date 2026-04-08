@@ -26,11 +26,13 @@ import {
  */
 export async function verifyAdmin() {
   const supabase = await createClient();
+  const adminClient = await createAdminClient();
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) throw new Error('Unauthorized');
 
-  const { data: profile } = await supabase
+  // Use Admin Client to bypass RLS recursion when verifying admin role
+  const { data: profile } = await adminClient
     .from('profiles')
     .select('role')
     .eq('id', user.id)
