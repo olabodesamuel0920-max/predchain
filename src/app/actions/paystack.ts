@@ -58,7 +58,7 @@ export async function initializeWalletFunding(amountNgn: number) {
   const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) throw new Error('Unauthorized');
-  if (amountNgn < 1000) throw new Error('Minimum top-up is ₦1,000');
+  if (amountNgn < 5000) throw new Error('Minimum top-up is ₦5,000');
 
   const response = await fetch('https://api.paystack.co/transaction/initialize', {
     method: 'POST',

@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import AccountsClient from './AccountsClient'
+import AccountsClient from '@/components/accounts/AccountsClient'
 import { fetchPlatformStats } from '@/lib/stats'
 
 export default async function AccountsPage() {

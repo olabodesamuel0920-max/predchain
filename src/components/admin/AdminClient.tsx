@@ -23,14 +23,14 @@ import {
 } from 'lucide-react';
 import { ChallengeRound, ChallengeMatch, PayoutRequest, Transaction } from '@/types';
 
-// Import Modular Views
-import DashboardView from './views/DashboardView';
-import UsersView from './views/UsersView';
-import FinanceView from './views/FinanceView';
-import MatchesView from './views/MatchesView';
-import SupportView from './views/SupportView';
-import SettingsView from './views/SettingsView';
-import PlaysView from './views/PlaysView';
+// Import Modular Views from components
+import DashboardView from '@/components/admin/views/DashboardView';
+import UsersView from '@/components/admin/views/UsersView';
+import FinanceView from '@/components/admin/views/FinanceView';
+import MatchesView from '@/components/admin/views/MatchesView';
+import SupportView from '@/components/admin/views/SupportView';
+import SettingsView from '@/components/admin/views/SettingsView';
+import PlaysView from '@/components/admin/views/PlaysView';
 
 interface AdminClientProps {
   initialMetrics: { totalUsers: number; totalRevenue: number; pendingPayouts: number };

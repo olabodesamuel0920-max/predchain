@@ -66,9 +66,9 @@ const STEPS = [
 ];
 
 const REWARD_TABLE = [
-  { tier: 'Standard', entry: '₦1,000', reward: '₦10,000', multiplier: '10X' },
-  { tier: 'Classic', entry: '₦3,000', reward: '₦30,000', multiplier: '10X' },
-  { tier: 'Premium', entry: '₦5,000', reward: '₦50,000', multiplier: '10X' },
+  { tier: 'Starter', entry: '₦5,000', reward: '50,000', multiplier: '10X' },
+  { tier: 'Standard', entry: '₦10,000', reward: '100,000', multiplier: '10X' },
+  { tier: 'Premium', entry: '₦20,000', reward: '200,000', multiplier: '10X' },
 ];
 
 export default function HowItWorksPage() {

@@ -58,7 +58,7 @@ export default function Navbar() {
       <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`} role="navigation">
         <div className="container">
           <div className="flex justify-center">
-            <div className="glass-nav rounded-full px-6 py-2 flex items-center gap-24 relative shadow-2xl">
+            <div className="glass-nav rounded-full px-5 py-2 flex items-center gap-12 md:gap-20 relative shadow-2xl">
               {/* Logo */}
               <Link href="/" className="flex items-center gap-8 group" aria-label="PredChain Home">
                 <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 group-hover:scale-105 transition-transform">

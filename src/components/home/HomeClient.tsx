@@ -96,12 +96,12 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
 
               <div className="mt-20 grid grid-cols-2 md:grid-cols-3 gap-10 opacity-70">
                 <div className="flex flex-col gap-2">
-                   <div className="text-2xl font-bold font-display text-white">₦1,000</div>
-                   <div className="text-[10px] font-bold text-muted uppercase tracking-[0.2em]">Minimum Entry</div>
+                   <div className="text-2xl font-bold font-display text-white">₦5,000</div>
+                   <div className="text-[10px] font-bold text-muted uppercase tracking-[0.2em]">Tier Activation</div>
                 </div>
                 <div className="flex flex-col gap-2">
                    <div className="text-2xl font-bold font-display text-white">10X</div>
-                   <div className="text-[10px] font-bold text-muted uppercase tracking-[0.2em]">Max Multiplier</div>
+                   <div className="text-[10px] font-bold text-muted uppercase tracking-[0.2em]">Reward Multiplier</div>
                 </div>
                 <div className="flex flex-col gap-2 col-span-2 md:col-span-1">
                    <div className="text-2xl font-bold font-display text-white">Instant</div>

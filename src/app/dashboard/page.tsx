@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
-import DashboardClient from './DashboardClient'
+import DashboardClient from '@/components/dashboard/DashboardClient'
 
 export default async function DashboardPage() {
   const supabase = await createClient()

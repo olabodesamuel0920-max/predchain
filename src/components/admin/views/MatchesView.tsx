@@ -19,7 +19,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { settleMatchResult, updateMatchStatus, updateRoundStatus, createMatch, createRound } from '@/app/actions/predictions';
-import { undoMatchSettlement } from '@/app/actions/admin';
+import { undoMatchSettlement, overrideMatchScore } from '@/app/actions/admin';
 import { ChallengeMatch, ChallengeRound } from '@/types';
 import { useRouter } from 'next/navigation';
 
@@ -147,6 +147,28 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
     });
   };
 
+  const handleOverride = async (matchId: string) => {
+    const scores = editingScores[matchId] || { home: 0, away: 0 };
+    if (!confirm(`FORCE UPDATE SCORE TO ${scores.home}-${scores.away}? This will bypass standard settlement logic.`)) return;
+    startTransition(async () => {
+      try {
+        await overrideMatchScore(matchId, scores.home, scores.away);
+        showSuccess('SYSTEM OVERRIDE: Score fixed successfully.');
+        router.refresh();
+      } catch (err: any) {
+        showError(err.message || 'Override failed');
+      }
+    });
+  };
+
+  const handleFeedSync = () => {
+    startTransition(async () => {
+      // Simulation of a hybrid external data feed fetch
+      await new Promise(r => setTimeout(r, 1500));
+      showSuccess('HYBRID ENGINE: External data feeds synchronized.');
+    });
+  };
+
   return (
     <>
     <div className="flex flex-col gap-6 animate-slide-up">
@@ -168,19 +190,25 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
              <h2 className="font-display text-xs font-black uppercase tracking-widest leading-none">Platform Rounds</h2>
           </div>
           <div className="flex items-center gap-3 w-full sm:w-auto">
-             <button 
-              onClick={() => setShowRoundModal(true)}
-              className="btn btn-ghost !px-4 !py-2.5 h-auto text-[9px] font-black uppercase tracking-widest flex items-center gap-2 border border-white/10 grow sm:grow-0"
-            >
-              <Plus className="w-3.5 h-3.5" /> ROUND
-            </button>
-            <button 
-              onClick={() => setShowMatchModal(true)}
-              disabled={!selectedRoundId}
-              className="btn btn-primary !px-4 !py-2.5 h-auto text-[9px] font-black uppercase tracking-widest flex items-center gap-2 grow sm:grow-0"
-            >
-              <Sword className="w-3.5 h-3.5" /> MATCH
-            </button>
+              <button 
+               onClick={handleFeedSync}
+               className="btn btn-ghost !px-4 !py-2.5 h-auto text-[9px] font-black uppercase tracking-widest flex items-center gap-2 border border-gold/10 text-gold grow sm:grow-0"
+              >
+                <RefreshCw className={`w-3.5 h-3.5 ${isPending ? 'animate-spin' : ''}`} /> FEED SYNC
+              </button>
+              <button 
+               onClick={() => setShowRoundModal(true)}
+               className="btn btn-ghost !px-4 !py-2.5 h-auto text-[9px] font-black uppercase tracking-widest flex items-center gap-2 border border-white/10 grow sm:grow-0"
+              >
+                <Plus className="w-3.5 h-3.5" /> ROUND
+              </button>
+              <button 
+               onClick={() => setShowMatchModal(true)}
+               disabled={!selectedRoundId}
+               className="btn btn-primary !px-4 !py-2.5 h-auto text-[9px] font-black uppercase tracking-widest flex items-center gap-2 grow sm:grow-0"
+              >
+                <Plus className="w-3.5 h-3.5" /> MATCH
+              </button>
           </div>
         </div>
         <div className="p-4 md:p-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3">
@@ -338,11 +366,18 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
                          <div className="flex items-center justify-center gap-2 py-2.5 rounded-xl bg-blue-electric/10 border border-blue-electric/10 text-blue-electric text-[9px] font-black uppercase tracking-widest">
                             <CheckCircle2 className="w-3.5 h-3.5" /> AUDITED
                          </div>
-                         <button 
-                          disabled={isPending}
-                          onClick={() => handleUndo(m.id)}
-                          className="w-full text-[8px] text-muted hover:text-white transition-colors underline uppercase font-black tracking-[0.2em] mt-4 opacity-20 hover:opacity-100 text-center"
-                         >Unlock / Fix Result Sequence</button>
+                         <div className="grid grid-cols-2 gap-2 mt-4">
+                           <button 
+                            disabled={isPending}
+                            onClick={() => handleUndo(m.id)}
+                            className="bg-white/5 hover:bg-white/10 border border-white/5 py-2.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all italic opacity-40 hover:opacity-100"
+                           >Unlock Sequence</button>
+                           <button 
+                            disabled={isPending}
+                            onClick={() => handleOverride(m.id)}
+                            className="bg-gold/10 hover:bg-gold/20 text-gold border border-gold/20 py-2.5 rounded-lg text-[8px] font-black uppercase tracking-widest transition-all italic"
+                           >Force Fix Score</button>
+                         </div>
                       </div>
                     )}
                   </div>

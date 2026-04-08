@@ -123,8 +123,8 @@ export default function DashboardClient({
 
   const handlePayout = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (Number(payoutAmount) < 1000) {
-      showError('Minimum withdrawal is ₦1,000.');
+    if (Number(payoutAmount) < 5000) {
+      showError('Minimum withdrawal is ₦5,000.');
       return;
     }
     startTransition(async () => {
@@ -152,13 +152,13 @@ export default function DashboardClient({
   };
 
   return (
-    <div className="relative min-h-screen bg-primary pt-32 pb-24 md:pt-40">
+    <div className="relative min-h-screen bg-primary pt-24 pb-20 md:pt-40">
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none z-0">
          <div className="absolute top-0 right-0 w-full h-[600px] bg-gold-glow blur-[140px] opacity-20" />
       </div>
 
-      <div className="container relative z-10 px-6">
+      <div className="container relative z-10 px-4 md:px-6">
         
         {/* Dashboard Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 animate-slide-up">
@@ -220,7 +220,7 @@ export default function DashboardClient({
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex items-center gap-3 mb-10 overflow-x-auto no-scrollbar pb-2 animate-slide-up" style={{ animationDelay: '0.15s' }}>
+        <div className="flex items-center gap-2 mb-8 overflow-x-auto no-scrollbar pb-2 animate-slide-up" style={{ animationDelay: '0.15s' }}>
             {[
               { id: 'overview', label: 'Overview', icon: Layout },
               { id: 'arena', label: 'Predictions', icon: Target },
@@ -230,14 +230,14 @@ export default function DashboardClient({
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-3 px-8 py-3 rounded-2xl border transition-all whitespace-nowrap ${
+                className={`flex items-center gap-2.5 px-6 py-2.5 rounded-xl border transition-all whitespace-nowrap ${
                   activeTab === tab.id 
                   ? 'bg-white/[0.04] border-white/10 text-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]' 
                   : 'bg-transparent border-transparent text-secondary opacity-60 hover:text-white hover:opacity-100'
                 }`}
               >
-                 <tab.icon className={`w-4 h-4 ${activeTab === tab.id ? 'text-gold' : 'opacity-20'}`} />
-                 <span className="text-[11px] font-bold uppercase tracking-widest font-display">{tab.label}</span>
+                 <tab.icon className={`w-3.5 h-3.5 ${activeTab === tab.id ? 'text-gold' : 'opacity-20'}`} />
+                 <span className="text-[10px] font-bold uppercase tracking-widest font-display">{tab.label}</span>
               </button>
             ))}
         </div>
@@ -478,9 +478,9 @@ export default function DashboardClient({
                   <div className="lg:col-span-4 space-y-8">
                      <div className="card-premium !p-10 bg-gold/[0.02] border-gold/10 shadow-xl">
                         <span className="text-[10px] font-bold text-gold uppercase tracking-[0.3em] mb-10 block opacity-50 font-display">Wallet Funding</span>
-                        <div className="grid grid-cols-2 gap-4 mb-10">
-                           {[5000, 10000, 25000, 50000].map(amt => (
-                             <button key={amt} onClick={() => handleTopUp(amt)} className="py-5 bg-white/[0.03] border border-white/10 rounded-2xl text-[11px] font-bold text-white hover:bg-gold hover:text-black transition-all font-display shadow-inner">+ ₦{amt.toLocaleString()}</button>
+                        <div className="grid grid-cols-2 gap-3 mb-8">
+                           {[5000, 10000, 20000, 50000].map(amt => (
+                             <button key={amt} onClick={() => handleTopUp(amt)} className="py-4 bg-white/[0.03] border border-white/10 rounded-2xl text-[10px] font-bold text-white hover:bg-gold hover:text-black transition-all font-display shadow-inner">+ ₦{amt.toLocaleString()}</button>
                            ))}
                         </div>
                         <p className="text-[10px] font-medium text-secondary uppercase tracking-widest opacity-30 text-center leading-relaxed italic">Fast, high-integrity funding secured via the Paystack network.</p>

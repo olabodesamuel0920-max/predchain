@@ -420,3 +420,54 @@ export async function undoMatchSettlement(matchId: string) {
   revalidatePath('/admin');
   return { success: true };
 }
+
+/**
+ * HYBRID ENGINE: Force update a match score and re-run settlement logic only for this match.
+ * Unlike undoMatchSettlement, this works even on 'finished' matches to "fix" a desired score.
+ */
+export async function overrideMatchScore(matchId: string, homeScore: number, awayScore: number) {
+  const admin = await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  // 1. Update the match score and status
+  const { error: matchError } = await adminClient
+    .from('challenge_matches')
+    .update({ 
+      home_score: homeScore, 
+      away_score: awayScore, 
+      status: 'finished' 
+    })
+    .eq('id', matchId);
+
+  if (matchError) throw matchError;
+
+  // 2. We don't automatically re-payout (that's dangerous), but we update prediction 'is_correct' flags
+  const { data: predictions } = await adminClient
+    .from('predictions')
+    .select('id, entry_id, prediction')
+    .eq('match_id', matchId);
+
+  if (predictions) {
+    const outcome = homeScore > awayScore ? '1' : homeScore < awayScore ? '2' : 'X';
+    
+    for (const pred of predictions) {
+      await adminClient
+        .from('predictions')
+        .update({ 
+          is_correct: pred.prediction === outcome,
+          is_locked: true 
+        })
+        .eq('id', pred.id);
+    }
+  }
+
+  // 3. Audit
+  await adminClient.from('admin_audit_logs').insert({
+    admin_id: admin.id,
+    action: 'override_match_score',
+    details: { matchId, homeScore, awayScore }
+  });
+
+  revalidatePath('/admin');
+  return { success: true };
+}

@@ -1,4 +1,4 @@
-﻿-- 0000_initial_schema.sql
+-- 0000_initial_schema.sql
 -- Create 16 tables for PredChain core functionality
 
 -- 1. PROFILES (Extends auth.users)
@@ -218,10 +218,10 @@ CREATE TRIGGER on_auth_user_created
 
 -- 1. ACCOUNT TIERS
 INSERT INTO public.account_tiers (name, price_ngn, perks) VALUES
-('Starter', 5000, '{"reward": "â‚¦50,000", "predictions_per_round": 3, "referral_bonus": 1000}'::jsonb),
-('Standard', 10000, '{"reward": "â‚¦100,000", "predictions_per_round": 3, "referral_bonus": 1000, "priority": true}'::jsonb),
-('Premium', 20000, '{"reward": "â‚¦200,000", "predictions_per_round": 3, "referral_bonus": 1000, "priority": true, "elite_badge": true}'::jsonb)
-ON CONFLICT (name) DO NOTHING;
+('Starter', 5000, '{"reward": "₦50,000", "predictions_per_round": 3, "referral_bonus": 1000}'::jsonb),
+('Standard', 10000, '{"reward": "₦100,000", "predictions_per_round": 3, "referral_bonus": 1000, "priority": true}'::jsonb),
+('Premium', 20000, '{"reward": "₦200,000", "predictions_per_round": 3, "referral_bonus": 1000, "priority": true, "elite_badge": true}'::jsonb)
+ON CONFLICT (name) DO UPDATE SET price_ngn = EXCLUDED.price_ngn, perks = EXCLUDED.perks;
 
 -- 2. INITIAL CHALLENGE ROUND (Optional: User can create via Admin)
 -- INSERT INTO public.challenge_rounds (round_number, start_date, end_date, status)
@@ -523,12 +523,12 @@ CREATE TABLE IF NOT EXISTS public.platform_settings (
 -- Seed Initial Settings
 INSERT INTO public.platform_settings (key, value, description) VALUES
 ('maintenance_mode', 'false', 'Enable or disable platform maintenance mode.'),
-('tier_pricing', '{"starter": 5000, "standard": 10000, "premium": 25000}', 'Pricing for account tiers in NGN.'),
+('tier_pricing', '{"starter": 5000, "standard": 10000, "premium": 20000}', 'Pricing for account tiers in NGN.'),
 ('referral_bonus', '1000', 'Bonus amount for successful referrals in NGN.'),
 ('payout_limits', '{"min": 5000, "max": 500000}', 'Minimum and maximum payout limits.'),
-('announcement_banner', '{"text": "Welcome to PredChain! Round 43 is now live.", "active": true}', 'Homepage announcement banner content.'),
+('announcement_banner', '{"text": "Welcome to PredChain! Elite Tiers are now active.", "active": true}', 'Homepage announcement banner content.'),
 ('trust_stats_mode', '"real"', 'Display mode for homepage stats: "real" or "launch".')
-ON CONFLICT (key) DO NOTHING;
+ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value;
 
 -- 3. ENHANCE SUPPORT TICKETS
 ALTER TABLE public.support_tickets

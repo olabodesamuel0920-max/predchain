@@ -2,7 +2,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ShieldCheck, Lock, ArrowLeft } from 'lucide-react';
-import AdminClient from './admin-client';
+import AdminClient from '@/components/admin/AdminClient';
 
 export default async function AdminPage() {
   const supabase = await createClient();

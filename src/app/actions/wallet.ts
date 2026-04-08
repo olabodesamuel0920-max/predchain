@@ -20,8 +20,8 @@ export async function requestPayout(amountNgn: number, bankDetails: BankDetails)
   if (!user) throw new Error('Unauthorized');
 
   // Hardened validation for minimum withdrawal
-  if (amountNgn < 1000) {
-    throw new Error('Minimum withdrawal threshold is ₦1,000.');
+  if (amountNgn < 5000) {
+    throw new Error('Minimum withdrawal threshold is ₦5,000.');
   }
 
   // 1. Create Payout Request Atomically via RPC

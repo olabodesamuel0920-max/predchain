@@ -1,5 +1,5 @@
 import { fetchPlatformStats } from '@/lib/stats'
-import HomeClient from './HomeClient'
+import HomeClient from '@/components/home/HomeClient'
 
 export default async function HomePage() {
   const stats = await fetchPlatformStats()

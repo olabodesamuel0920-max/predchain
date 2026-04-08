@@ -237,12 +237,17 @@ h3 { font-size: clamp(1.25rem, 3vw, 2rem); }
 ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
 
 @media (max-width: 768px) {
-  .container { padding: 0 1.5rem; }
-  h1 { font-size: 3rem; }
-  .card-premium { padding: 1.5rem; }
+  .container { padding: 0 1.25rem; }
+  h1 { font-size: 2.75rem; letter-spacing: -0.05em; }
+  h2 { font-size: 2.25rem; }
+  .card-premium { padding: 1.25rem; }
+  .section { padding: 4rem 0; }
 }
 
 @media (max-width: 480px) {
-  h1 { font-size: 2.25rem; }
-  .btn { width: 100%; }
+  h1 { font-size: 2.1rem; }
+  h2 { font-size: 1.75rem; }
+  .btn { width: 100%; padding: 12px 20px; font-size: 13px; }
+  .card-premium { padding: 1rem; }
+  .badge-premium { padding: 3px 10px; font-size: 10px; }
 }

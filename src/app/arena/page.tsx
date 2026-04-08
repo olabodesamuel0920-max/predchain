@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import ArenaClient from './ArenaClient'
+import ArenaClient from '@/components/arena/ArenaClient'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 
@@ -27,14 +27,10 @@ export default async function ArenaPage() {
     .eq('status', 'active')
 
   return (
-    <>
-      <Navbar />
-      <ArenaClient 
-        activeRound={activeRound} 
-        matches={matches || []} 
-        stats={{ activePlayers: activePlayers || 0 }} 
-      />
-      <Footer />
-    </>
+    <ArenaClient 
+      activeRound={activeRound} 
+      matches={matches || []} 
+      stats={{ activePlayers: activePlayers || 0 }} 
+    />
   )
 }
