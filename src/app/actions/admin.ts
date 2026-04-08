@@ -345,3 +345,78 @@ export async function revalidatePlatform() {
   revalidatePath('/', 'layout');
   return { success: true };
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// 5. PREDICTIONS & PLAYS
+// ─────────────────────────────────────────────────────────────────────────────
+
+export async function getPredictionsOverview(filters: { round_id?: string; limit?: number } = {}) {
+  await verifyAdmin();
+  const supabase = await createAdminClient();
+
+  let q = supabase
+    .from('challenge_entries')
+    .select(`
+      id,
+      user_id,
+      round_id,
+      tier_id,
+      streak_count,
+      is_winner,
+      created_at,
+      profiles(username, email),
+      challenge_rounds(round_number),
+      account_tiers(name),
+      predictions(
+        id,
+        match_id,
+        prediction,
+        is_correct,
+        is_locked,
+        challenge_matches(home_team, away_team, kickoff_time, status, home_score, away_score)
+      )
+    `);
+
+  if (filters.round_id && filters.round_id !== 'all') {
+    q = q.eq('round_id', filters.round_id);
+  }
+
+  const { data, error } = await q
+    .order('created_at', { ascending: false })
+    .limit(filters.limit || 100);
+
+  if (error) throw error;
+  return data;
+}
+
+export async function undoMatchSettlement(matchId: string) {
+  const admin = await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  // 1. Reset match status
+  const { error: matchError } = await adminClient
+    .from('challenge_matches')
+    .update({ status: 'live', home_score: 0, away_score: 0 })
+    .eq('id', matchId);
+
+  if (matchError) throw matchError;
+
+  // 2. Unlock all predictions for this match so they can be re-settled
+  const { error: predError } = await adminClient
+    .from('predictions')
+    .update({ is_locked: false, is_correct: null })
+    .eq('match_id', matchId);
+
+  if (predError) throw predError;
+
+  // Audit
+  await adminClient.from('admin_audit_logs').insert({
+    admin_id: admin.id,
+    action: 'undo_match_settlement',
+    target_user_id: null,
+    details: { matchId }
+  });
+
+  revalidatePath('/admin');
+  return { success: true };
+}

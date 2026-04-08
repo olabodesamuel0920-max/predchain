@@ -19,6 +19,7 @@ import {
   RefreshCw
 } from 'lucide-react';
 import { settleMatchResult, updateMatchStatus, updateRoundStatus, createMatch, createRound } from '@/app/actions/predictions';
+import { undoMatchSettlement } from '@/app/actions/admin';
 import { ChallengeMatch, ChallengeRound } from '@/types';
 import { useRouter } from 'next/navigation';
 
@@ -129,6 +130,19 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
         router.refresh();
       } catch (err: any) {
         showError(err.message || 'Round creation failed');
+      }
+    });
+  };
+
+  const handleUndo = async (matchId: string) => {
+    if (!confirm('This will unlock all user predictions for this match. Proceed?')) return;
+    startTransition(async () => {
+      try {
+        await undoMatchSettlement(matchId);
+        showSuccess('Match settlement sequence undone. You can now re-enter the score.');
+        router.refresh();
+      } catch (err: any) {
+        showError(err.message || 'Undo failed');
       }
     });
   };
@@ -326,9 +340,9 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
                          </div>
                          <button 
                           disabled={isPending}
-                          onClick={() => handleStatusChange(m.id, 'scheduled')}
-                          className="w-full text-[8px] text-muted hover:text-white transition-colors underline uppercase font-black tracking-[0.2em] mt-3 opacity-20 text-center"
-                         >Undo settlement sequence</button>
+                          onClick={() => handleUndo(m.id)}
+                          className="w-full text-[8px] text-muted hover:text-white transition-colors underline uppercase font-black tracking-[0.2em] mt-4 opacity-20 hover:opacity-100 text-center"
+                         >Unlock / Fix Result Sequence</button>
                       </div>
                     )}
                   </div>

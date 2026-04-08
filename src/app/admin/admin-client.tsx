@@ -18,7 +18,8 @@ import {
   Menu,
   X,
   CreditCard,
-  Target
+  Target,
+  TrendingUp
 } from 'lucide-react';
 import { ChallengeRound, ChallengeMatch, PayoutRequest, Transaction } from '@/types';
 
@@ -29,6 +30,7 @@ import FinanceView from './views/FinanceView';
 import MatchesView from './views/MatchesView';
 import SupportView from './views/SupportView';
 import SettingsView from './views/SettingsView';
+import PlaysView from './views/PlaysView';
 
 interface AdminClientProps {
   initialMetrics: { totalUsers: number; totalRevenue: number; pendingPayouts: number };
@@ -45,12 +47,13 @@ export default function AdminClient({
   recentPurchases,
   payoutRequests
 }: AdminClientProps) {
-  const [activeView, setActiveView] = useState<'dashboard'|'users'|'finance'|'matches'|'support'|'settings'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard'|'users'|'finance'|'matches'|'support'|'settings'|'plays'>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navItems = [
     { id: 'dashboard' as const, label: 'Overview', icon: LayoutDashboard },
     { id: 'users' as const, label: 'User Directory', icon: Users },
+    { id: 'plays' as const, label: 'User Plays', icon: TrendingUp },
     { id: 'finance' as const, label: 'Bank & Ledger', icon: CreditCard },
     { id: 'matches' as const, label: 'Arena Control', icon: Target },
     { id: 'support' as const, label: 'Help Desk', icon: HelpCircle },
@@ -249,6 +252,7 @@ export default function AdminClient({
               {activeView === 'users' && <UsersView />}
               {activeView === 'finance' && <FinanceView payoutRequests={payoutRequests} initialMetrics={initialMetrics} />}
               {activeView === 'matches' && <MatchesView matches={matches} rounds={rounds} />}
+              {activeView === 'plays' && <PlaysView rounds={rounds} />}
               {activeView === 'support' && <SupportView />}
               {activeView === 'settings' && <SettingsView />}
            </div>
