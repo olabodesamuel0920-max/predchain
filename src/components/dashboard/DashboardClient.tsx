@@ -295,17 +295,24 @@ export default function DashboardClient({
                         </div>
                        ) : (
                         transactions.slice(0, 4).map(tx => (
-                          <div key={tx.id} className="p-8 flex items-center justify-between hover:bg-white/[0.01] transition-all group/item">
+                          <div key={tx.id} className={`p-8 flex items-center justify-between hover:bg-white/[0.01] transition-all group/item ${tx.status === 'failed' ? 'opacity-50' : ''}`}>
                              <div className="flex items-center gap-7">
-                                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border shadow-inner transition-all ${tx.amount > 0 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10' : 'bg-white/[0.03] text-white/20 border-white/5'}`}>
-                                   {tx.type === 'reward' ? <Trophy className="w-5 h-5" /> : <WalletIcon className="w-5 h-5" />}
+                                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border shadow-inner transition-all ${tx.status === 'failed' ? 'border-rose-500/20 bg-rose-500/5 text-rose-500' : tx.status === 'pending' ? 'border-gold/20 bg-gold/5 text-gold' : tx.amount > 0 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10' : 'bg-white/[0.03] text-white/20 border-white/5'}`}>
+                                   {tx.status === 'failed' ? <ShieldAlert className="w-5 h-5" /> : tx.status === 'pending' ? <History className="w-5 h-5" /> : tx.type === 'reward' ? <Trophy className="w-5 h-5" /> : <WalletIcon className="w-5 h-5" />}
                                 </div>
                                 <div className="flex flex-col">
-                                   <span className="text-sm font-bold text-white uppercase tracking-tight font-display">{tx.type.split('_').join(' ')}</span>
+                                   <div className="flex items-center gap-3">
+                                      <span className="text-sm font-bold text-white uppercase tracking-tight font-display">{tx.type.split('_').join(' ')}</span>
+                                      {tx.status !== 'completed' && (
+                                        <span className={`text-[8px] font-black px-2 py-0.5 rounded border uppercase tracking-widest italic ${tx.status === 'pending' ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-rose-500/10 border-rose-500/20 text-rose-500'}`}>
+                                          {tx.status}
+                                        </span>
+                                      )}
+                                   </div>
                                    <span suppressHydrationWarning className="text-[10px] font-medium text-secondary opacity-40 uppercase tracking-widest mt-1 italic">{formatDate(tx.created_at)} • {tx.reference.slice(0, 8)}</span>
                                 </div>
                              </div>
-                             <span className={`text-2xl font-bold font-display tracking-tight ${tx.amount > 0 ? 'text-emerald-500' : 'text-white'}`}>
+                             <span className={`text-2xl font-bold font-display tracking-tight ${tx.status === 'failed' ? 'text-rose-500 line-through' : tx.status === 'pending' ? 'text-gold' : tx.amount > 0 ? 'text-emerald-500' : 'text-white'}`}>
                                 {tx.amount > 0 ? '+' : ''}₦{Math.abs(tx.amount).toLocaleString()}
                              </span>
                           </div>
@@ -449,20 +456,31 @@ export default function DashboardClient({
                                <span className="text-xs font-bold uppercase tracking-[0.3em] font-display">No transactions found</span>
                             </div>
                           ) : (
-                             transactions.map(tx => (
-                               <div key={tx.id} className="p-10 flex items-center justify-between hover:bg-white/[0.01] transition-all group border-b border-transparent hover:border-white/5">
-                                  <div className="flex items-center gap-8">
-                                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-inner transition-transform group-hover:scale-110 ${tx.amount > 0 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10' : 'bg-white/[0.03] text-white/30 border-white/5'}`}>
-                                        {tx.amount > 0 ? <ArrowDownLeft className="w-6 h-6" /> : <ArrowUpLeft className="w-6 h-6" />}
-                                     </div>
-                                     <div className="space-y-2">
-                                        <div className="text-sm font-bold text-white uppercase tracking-tight font-display">{tx.type.split('_').join(' ')}</div>
-                                        <div className="text-[10px] font-medium text-secondary opacity-40 uppercase tracking-widest italic">{tx.reference.slice(0, 12)} • {formatDate(tx.created_at)}</div>
-                                     </div>
-                                  </div>
-                                  <span className={`text-2xl font-bold font-display tracking-tight ${tx.amount > 0 ? 'text-emerald-500' : 'text-white'}`}>₦{Math.abs(tx.amount).toLocaleString()}</span>
-                               </div>
-                             ))
+                             <>
+                              {transactions.map(tx => (
+                                <div key={tx.id} className={`p-10 flex items-center justify-between hover:bg-white/[0.01] transition-all group border-b border-transparent hover:border-white/5 ${tx.status === 'failed' ? 'opacity-50' : ''}`}>
+                                   <div className="flex items-center gap-8">
+                                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-inner transition-transform group-hover:scale-110 ${tx.status === 'failed' ? 'border-rose-500/20 bg-rose-500/5 text-rose-500' : tx.status === 'pending' ? 'border-gold/20 bg-gold/5 text-gold' : tx.amount > 0 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10' : 'bg-white/[0.03] text-white/30 border-white/5'}`}>
+                                         {tx.status === 'failed' ? <ShieldAlert className="w-6 h-6" /> : tx.status === 'pending' ? <History className="w-6 h-6" /> : tx.amount > 0 ? <ArrowDownLeft className="w-6 h-6" /> : <ArrowUpLeft className="w-6 h-6" />}
+                                      </div>
+                                      <div className="space-y-2">
+                                         <div className="flex items-center gap-3">
+                                            <div className="text-sm font-bold text-white uppercase tracking-tight font-display">{tx.type.split('_').join(' ')}</div>
+                                            {tx.status !== 'completed' && (
+                                              <span className={`text-[8px] font-black px-2 py-0.5 rounded border uppercase tracking-widest italic ${tx.status === 'pending' ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-rose-500/10 border-rose-500/20 text-rose-500'}`}>
+                                                {tx.status}
+                                              </span>
+                                            )}
+                                         </div>
+                                         <div className="text-[10px] font-medium text-secondary opacity-40 uppercase tracking-widest italic">{tx.reference.slice(0, 12)} • {formatDate(tx.created_at)}</div>
+                                      </div>
+                                   </div>
+                                   <span className={`text-2xl font-bold font-display tracking-tight ${tx.status === 'failed' ? 'text-rose-500 line-through' : tx.status === 'pending' ? 'text-gold' : tx.amount > 0 ? 'text-emerald-500' : 'text-white'}`}>
+                                      {tx.amount > 0 ? '+' : ''}₦{Math.abs(tx.amount).toLocaleString()}
+                                   </span>
+                                </div>
+                              ))}
+                             </>
                           )
                         )}
                         {walletSubTab === 'payouts' && (

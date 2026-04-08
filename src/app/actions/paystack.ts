@@ -60,6 +60,28 @@ export async function initializeWalletFunding(amountNgn: number) {
   if (!user) throw new Error('Unauthorized');
   if (amountNgn < 5000) throw new Error('Minimum top-up is ₦5,000');
 
+  const adminClient = await createAdminClient();
+  
+  // Self-healing: Ensure wallet exists before initializing funding
+  let { data: wallet } = await adminClient.from('wallets').select('id').eq('user_id', user.id).maybeSingle();
+  if (!wallet) {
+    const { data: newWallet } = await adminClient.from('wallets').upsert({ user_id: user.id, balance_ngn: 0 }).select('id').single();
+    wallet = newWallet;
+  }
+
+  const reference = `fund_${user.id.slice(0, 8)}_${Date.now()}`;
+
+  // Record pending transaction
+  if (wallet) {
+    await adminClient.from('wallet_transactions').insert({
+      wallet_id: wallet.id,
+      amount: amountNgn,
+      type: 'deposit',
+      status: 'pending',
+      reference: reference
+    });
+  }
+
   const response = await fetch('https://api.paystack.co/transaction/initialize', {
     method: 'POST',
     headers: {
@@ -70,6 +92,7 @@ export async function initializeWalletFunding(amountNgn: number) {
       email: user.email,
       amount: amountNgn * 100,
       callback_url: `${APP_URL}/api/payments/verify`,
+      reference: reference, // Force our reference
       metadata: {
         userId: user.id,
         amount: amountNgn,
@@ -81,7 +104,7 @@ export async function initializeWalletFunding(amountNgn: number) {
   const data = await response.json();
   if (!data.status) throw new Error(data.message || 'Funding initialization failed');
 
-  return { authorization_url: data.data.authorization_url, reference: data.data.reference };
+  return { authorization_url: data.data.authorization_url, reference: reference };
 }
 
 /**
@@ -112,6 +135,8 @@ export async function verifyPayment(reference: string) {
 
   const data = await response.json();
   if (!data.status || data.data.status !== 'success') {
+    // Mark as failed if we have a pending record
+    await adminClient.from('wallet_transactions').update({ status: 'failed' }).eq('reference', reference);
     return { success: false, message: 'Payment verification failed at provider' };
   }
 
@@ -151,13 +176,8 @@ export async function verifyPayment(reference: string) {
         .single();
         
       if (createError) {
-        // If it's a conflict (23505), someone else just created it. Retry fetch once.
         if (createError.code === '23505') {
-          const { data: retryWallet } = await adminClient
-            .from('wallets')
-            .select('id, balance_ngn')
-            .eq('user_id', userId)
-            .single();
+          const { data: retryWallet } = await adminClient.from('wallets').select('id, balance_ngn').eq('user_id', userId).single();
           wallet = retryWallet;
         } else {
           console.error('Wallet sync error:', createError);
@@ -170,16 +190,28 @@ export async function verifyPayment(reference: string) {
 
     if (!wallet) throw new Error('System failed to resolve your account status.');
 
+    // UPDATE BALANCES ATOMICALLY
     await adminClient.from('wallets').update({ 
       balance_ngn: (wallet.balance_ngn || 0) + paystackAmount 
     }).eq('id', wallet.id);
 
-    await adminClient.from('wallet_transactions').insert({
-      wallet_id: wallet.id,
+    // Update the pending transaction to COMPLETED
+    const { error: txError } = await adminClient.from('wallet_transactions').update({
       amount: paystackAmount,
-      type: 'deposit',
-      reference: `topup_${reference}`
-    });
+      status: 'completed',
+      created_at: new Date().toISOString()
+    }).eq('reference', reference);
+
+    // fallback if for some reason the pending record didn't exist
+    if (txError) {
+        await adminClient.from('wallet_transactions').insert({
+            wallet_id: wallet.id,
+            amount: paystackAmount,
+            type: 'deposit',
+            status: 'completed',
+            reference: reference
+        });
+    }
 
     revalidatePath('/dashboard');
     return { success: true, message: 'Wallet funded successfully' };

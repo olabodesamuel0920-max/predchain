@@ -10,6 +10,7 @@ export interface Transaction {
   wallet_id: string;
   amount: number;
   type: 'deposit' | 'withdrawal' | 'reward' | 'refund' | 'purchase' | 'referral_bonus' | 'admin_adjustment';
+  status: 'pending' | 'completed' | 'failed';
   reference: string;
   created_at: string;
 }
