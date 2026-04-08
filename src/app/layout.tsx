@@ -1,21 +1,21 @@
 import type { Metadata } from "next";
-import { Sora, Inter, Space_Mono } from "next/font/google";
+import { Outfit, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const sora = Sora({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-sora",
+  variable: "--font-outfit",
   display: "swap",
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
 });
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 const spaceMono = Space_Mono({
@@ -48,7 +48,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sora.variable} ${inter.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${inter.variable} ${spaceMono.variable}`}>
       <body className="antialiased selection:bg-gold/30 selection:text-white">
         <div className="noise-overlay" aria-hidden="true" />
         <Navbar />

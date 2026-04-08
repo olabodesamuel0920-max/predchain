@@ -59,35 +59,33 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
   };
 
   return (
-    <div className="relative min-h-screen pt-40 pb-32">
+    <div className="relative min-h-screen pt-32 pb-24">
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-gold-glow blur-[140px] opacity-10" />
-        <div className="absolute bottom-0 left-0 w-[800px] h-[800px] bg-blue-glow blur-[140px] opacity-10" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-muted/5 blur-[120px]" />
       </div>
 
-      <div className="container relative z-10">
+      <div className="container-tight relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-24 max-w-3xl mx-auto">
-          <div className="badge-premium !text-gold mb-8 px-6 py-2">Elite Performance Plans</div>
-          <h1 className="mb-8 tracking-tight">Choose Your <span className="text-gradient-gold">Arena Entry.</span></h1>
-          <p className="text-secondary text-lg font-medium opacity-70 leading-relaxed">
-            Select an account tier that fits your performance goals. Each tier synchronizes with the live arena to unlock verified 10X reward multipliers.
+        <div className="text-center mb-16 max-w-2xl mx-auto px-4">
+          <div className="badge-luxury mb-6 px-5 py-1.5">ELITE PROTOCOLS</div>
+          <h1 className="mb-4 uppercase italic font-black tracking-tight">Select Your <span className="text-gradient-gold">Arena Entry.</span></h1>
+          <p className="text-text-secondary text-sm font-normal leading-relaxed">
+            Choose a performance tier that aligns with your strategy. Each tier unlocks verified <span className="text-white font-bold italic">10X multipliers</span>.
           </p>
 
           {errorMsg && (
-            <div className="mt-10 flex items-center justify-center gap-3 text-rose-500 bg-rose-500/5 p-5 rounded-2xl border border-rose-500/10 max-w-lg mx-auto">
-              <AlertCircle className="w-5 h-5 shrink-0" />
-              <span className="text-sm font-bold uppercase tracking-widest">{errorMsg}</span>
+            <div className="mt-8 flex items-center justify-center gap-3 text-rose-500 bg-rose-500/5 p-4 rounded-xl border border-rose-500/10 max-w-md mx-auto">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span className="text-[10px] font-black uppercase tracking-widest italic">{errorMsg}</span>
             </div>
           )}
         </div>
 
         {/* Pricing Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-40">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
           {tiers.sort((a,b) => a.price_ngn - b.price_ngn).map((tier, i) => {
             const isMidTier = i === 1;
-            const isPremium = i === 2;
             const rewardVal = tier.price_ngn * 10;
             const isWalletEnough = walletBalance >= tier.price_ngn;
             const isLoading = isPending && activeTierId === tier.id;
@@ -95,72 +93,72 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             return (
               <div 
                 key={tier.id}
-                className={`card-premium flex flex-col transition-all duration-700 hover:-translate-y-4 ${
-                  isMidTier ? 'border-gold shadow-[0_20px_60px_-15px_rgba(240,196,25,0.1)] scale-105 z-10 bg-[#0a0d14]' : 'bg-[#06080e]'
+                className={`card-luxury flex flex-col transition-all duration-500 ${
+                  isMidTier ? 'border-gold/30 bg-[#11161D]' : 'bg-bg-card'
                 }`}
               >
                 {isMidTier && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 badge-premium !bg-gold !text-black !px-6 !py-2 shadow-xl font-bold text-[10px] tracking-widest uppercase">
-                    Most Popular
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 badge-luxury !bg-gold !text-black !px-4 !py-1 shadow-md font-black text-[9px] tracking-widest uppercase italic">
+                    MOST DEPLOYED
                   </div>
                 )}
 
-                <div className="mb-12">
-                   <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 border transition-transform duration-700 ${
-                     isMidTier ? 'bg-gold/10 border-gold/20 text-gold shadow-[0_0_20px_rgba(240,196,25,0.2)]' : 'bg-white/[0.03] border-white/10 text-white/40'
+                <div className="mb-8">
+                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 border transition-all ${
+                     isMidTier ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-white/[0.02] border-border-subtle text-text-dim'
                    }`}>
-                      {isPremium ? <Gem className="w-7 h-7" /> : isMidTier ? <Star className="w-7 h-7" /> : <Zap className="w-7 h-7" />}
+                      {i === 2 ? <Crown className="w-5 h-5" /> : isMidTier ? <Star className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
                    </div>
-                   <h3 className="text-2xl font-bold text-white mb-2 font-display uppercase">{tier.name}</h3>
-                   <div className="flex items-baseline gap-2">
-                      <span className="text-4xl font-bold text-white font-display">₦{tier.price_ngn.toLocaleString()}</span>
-                      <span className="text-xs font-bold text-muted uppercase tracking-widest opacity-40">/ Entry</span>
+                   <h3 className="text-lg font-black text-white mb-2 font-display uppercase italic tracking-[0.05em]">{tier.name}</h3>
+                   <div className="flex items-baseline gap-1.5">
+                      <span className="text-3xl font-black text-white font-display italic tracking-tighter">₦{tier.price_ngn.toLocaleString()}</span>
+                      <span className="text-[8px] font-black text-text-muted uppercase tracking-widest italic opacity-40">/ entry</span>
                    </div>
                 </div>
 
-                <div className="space-y-5 mb-12 flex-1">
+                <div className="space-y-3.5 mb-10 flex-1">
                    {[
-                      '3-Day Sequence Access',
-                      'High-Performance Arena Monitor',
-                      `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} Affirmative Bonus`,
-                      'Automated Reward Settlement'
+                      '3-Day Streak Eligibility',
+                      'verified match data-feeds',
+                      `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} referral share`,
+                      'automated Payout settlement'
                    ].map((feat, idx) => (
-                      <div key={idx} className="flex items-center gap-4">
-                         <div className="w-6 h-6 rounded-full bg-gold/10 flex items-center justify-center border border-gold/10 shrink-0">
-                            <Check className="w-3 h-3 text-gold" />
+                      <div key={idx} className="flex items-center gap-3">
+                         <div className="w-4 h-4 rounded-md bg-white/[0.02] border border-border-subtle flex items-center justify-center shrink-0">
+                            <Check className="w-2.5 h-2.5 text-text-muted" />
                          </div>
-                         <span className="text-[11px] font-bold text-secondary uppercase tracking-wider opacity-60 italic">{feat}</span>
+                         <span className="text-[10px] font-black text-text-secondary uppercase tracking-wider italic opacity-70">{feat}</span>
                       </div>
                    ))}
                 </div>
 
-                <div className="pt-10 border-t border-white/5 space-y-8">
-                   <div className="text-center bg-white/[0.02] p-6 rounded-2xl border border-white/5">
-                      <span className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] opacity-50 block mb-3 italic">Maximum Settlement</span>
-                      <div className="flex items-center justify-center gap-4">
-                         <span className="text-4xl font-bold text-white font-display">₦{rewardVal.toLocaleString()}</span>
-                         <div className="badge-premium !py-1 !px-3 font-bold !bg-emerald-500/10 !text-emerald-500 border-emerald-500/10 text-[9px] tracking-tighter">PER STREAK</div>
+                <div className="pt-8 border-t border-border-subtle space-y-6">
+                   <div className="bg-bg-secondary p-5 rounded-xl border border-border-subtle text-center">
+                      <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] block mb-2 italic">Max Reward Settlement</span>
+                      <div className="flex items-center justify-center gap-2">
+                         <span className="text-2xl font-black text-white font-display italic tracking-tight">₦{rewardVal.toLocaleString()}</span>
+                         <span className="text-[8px] font-extrabold text-emerald-500/60 uppercase tracking-tighter">Verified</span>
                       </div>
                    </div>
 
-                   <div className="flex flex-col gap-4">
+                   <div className="flex flex-col gap-3">
                       <button
                         onClick={() => handlePurchase(tier.id, 'wallet')}
                         disabled={!!(isLoading || (userId && !isWalletEnough))}
-                        className={`btn w-full py-5 rounded-2xl font-bold shadow-2xl transition-all ${
-                          isMidTier ? 'btn-primary' : 'btn-secondary border-white/10 hover:bg-white/5'
+                        className={`btn-luxury !py-4 w-full shadow-sm ${
+                          isMidTier ? 'btn-gold' : 'btn-outline'
                         }`}
                       >
-                         {isLoading ? <Activity className="w-5 h-5 animate-spin" /> : 
-                          (userId && !isWalletEnough) ? 'Insufficient Wallet Balance' : 'Activate with Wallet'}
+                         {isLoading ? <Activity className="w-4 h-4 animate-spin" /> : 
+                          (userId && !isWalletEnough) ? 'Low Wallet Reserve' : 'Purchase with Wallet'}
                       </button>
                       
                       <button
                         onClick={() => handlePurchase(tier.id, 'paystack')}
                         disabled={isLoading}
-                        className="text-[11px] font-bold text-gold/40 hover:text-gold transition-all text-center uppercase tracking-[0.2em] italic underline underline-offset-8 decoration-gold/10"
+                        className="text-[9px] font-black text-text-dim hover:text-gold transition-all text-center uppercase tracking-[0.2em] italic"
                       >
-                         Secure Online Transaction
+                         Secure External Gateway
                       </button>
                    </div>
                 </div>
@@ -170,18 +168,18 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
         </div>
 
         {/* Global Performance Standards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-6xl mx-auto py-32 border-t border-white/5">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto py-20 border-t border-border-subtle">
            {[
-              { icon: ShieldCheck, title: 'Asset Protection', desc: 'All arena fees are securely held until match verification is finalized.' },
-              { icon: Globe, title: 'Official Feeds', desc: 'Results are synchronized directly with official sports performance networks.' },
+              { icon: ShieldCheck, title: 'Asset Protection', desc: 'Fees are securely held until match verification is finalized.' },
+              { icon: Globe, title: 'Official Feeds', desc: 'Results are synchronized directly with official sports networks.' },
               { icon: Crown, title: 'Instant Liquidity', desc: 'Winning sequences trigger automated, high-priority reward transfers.' }
            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center text-center space-y-6 group">
-                 <div className="w-16 h-16 rounded-2xl bg-white/[0.03] border border-white/5 flex items-center justify-center text-gold shadow-lg group-hover:scale-110 transition-transform">
-                    <item.icon className="w-7 h-7 opacity-50 group-hover:opacity-100 transition-opacity" />
+              <div key={i} className="flex flex-col items-center text-center space-y-4 group">
+                 <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-border-subtle flex items-center justify-center text-gold/30 transition-all group-hover:bg-gold group-hover:text-black">
+                    <item.icon className="w-5 h-5" />
                  </div>
-                 <h4 className="text-sm font-bold text-white uppercase tracking-widest font-display">{item.title}</h4>
-                 <p className="text-xs font-medium text-secondary opacity-50 leading-loose tracking-wide">{item.desc}</p>
+                 <h4 className="text-[11px] font-black text-white uppercase tracking-widest font-display italic">{item.title}</h4>
+                 <p className="text-[10px] font-normal text-text-muted leading-relaxed max-w-[200px]">{item.desc}</p>
               </div>
            ))}
         </div>

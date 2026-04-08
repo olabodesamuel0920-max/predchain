@@ -3,17 +3,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { User, LogOut, Menu, X, ArrowUpRight, ChevronRight, Shield } from 'lucide-react';
+import { LogOut, Menu, X, ArrowUpRight, ChevronRight, Shield, Globe } from 'lucide-react';
 import { logout } from '@/app/actions/auth';
 import { createClient } from '@/lib/supabase/client';
-import styles from './Navbar.module.css';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/how-it-works', label: 'How it Works' },
   { href: '/accounts', label: 'Tiers' },
   { href: '/arena', label: 'Arena' },
   { href: '/winners', label: 'Winners' },
+];
+
+const mobileSecondaryLinks = [
+  { href: '/how-it-works', label: 'Guide' },
   { href: '/referral', label: 'Affiliates' },
 ];
 
@@ -46,127 +48,122 @@ export default function Navbar() {
 
   const closeMenu = useCallback(() => setMenuOpen(false), []);
 
-  useEffect(() => {
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [menuOpen]);
-
   if (isAuthRoute || isAdminRoute) return null;
 
   return (
     <>
-      <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''}`} role="navigation">
-        <div className="container">
-          <div className="flex justify-center">
-            <div className="glass-nav rounded-full px-5 py-2 flex items-center gap-12 md:gap-20 relative shadow-2xl">
-              {/* Logo */}
-              <Link href="/" className="flex items-center gap-8 group" aria-label="PredChain Home">
-                <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 group-hover:scale-105 transition-transform">
-                  <Shield className="w-4 h-4 text-gold" />
-                </div>
-                <span className="font-display text-base font-bold text-white tracking-tighter italic">
-                  PRED<span className="text-gold">CHAIN</span>
-                </span>
-              </Link>
-
-              {/* Desktop Links */}
-              <ul className="hidden lg:flex items-center gap-12" role="list">
-                {navLinks.map(({ href, label }) => (
-                  <li key={href}>
-                    <Link
-                      href={href}
-                      className={`text-[10px] font-bold uppercase tracking-widest italic transition-colors ${pathname === href ? 'text-gold' : 'text-muted hover:text-white'}`}
-                    >
-                      {label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Actions */}
-              <div className="flex items-center gap-12">
-                {!user ? (
-                  <>
-                    <Link href="/login" className="hidden lg:block text-[10px] font-bold text-muted hover:text-white transition-colors uppercase tracking-widest italic">Sign In</Link>
-                    <Link href="/accounts" className="btn btn-primary !py-2 !px-6 !text-[10px] !rounded-full shadow-lg">
-                      JOIN ARENA
-                    </Link>
-                  </>
-                ) : (
-                  <Link href="/dashboard" className="btn btn-secondary !py-2 !px-6 !text-[10px] !rounded-full gap-8">
-                    COMMAND CENTER <ArrowUpRight className="w-3 h-3" />
-                  </Link>
-                )}
-
-                {/* Mobile Toggle */}
-                <button
-                  className="lg:hidden p-2 text-white/60 hover:text-white transition-colors"
-                  onClick={() => setMenuOpen(true)}
-                  aria-label="Open menu"
-                >
-                  <Menu className="w-5 h-5" />
-                </button>
+      <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? 'h-16 py-2' : 'h-20 py-4'}`}>
+        <div className="container-tight h-full">
+          <div className={`h-full flex items-center justify-between px-6 rounded-2xl border transition-all duration-500 ${scrolled ? 'bg-bg-card/80 backdrop-blur-3xl border-border-main shadow-md' : 'bg-transparent border-transparent'}`}>
+            
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 group shrink-0">
+              <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 transition-all group-hover:bg-gold/20">
+                <Shield className="w-4 h-4 text-gold" />
               </div>
+              <span className="font-display text-sm font-bold text-white tracking-widest uppercase italic">
+                PRED<span className="text-gold">CHAIN</span>
+              </span>
+            </Link>
+
+            {/* Desktop Navigation */}
+            <nav className="hidden lg:flex items-center gap-9">
+              {navLinks.map(({ href, label }) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:text-white ${pathname === href ? 'text-gold' : 'text-text-muted'}`}
+                >
+                  {label}
+                </Link>
+              ))}
+            </nav>
+
+            {/* CTA's */}
+            <div className="flex items-center gap-4">
+              <div className="hidden sm:flex items-center gap-6 mr-2">
+                {!user ? (
+                  <Link href="/login" className="text-[10px] font-bold text-text-muted hover:text-white transition-all uppercase tracking-widest">Login</Link>
+                ) : null}
+              </div>
+
+              {!user ? (
+                <Link href="/accounts" className="btn-luxury btn-gold !py-2.5 !px-5 flex items-center gap-2 shadow-sm">
+                  <span className="text-[10px] pb-px">MEMBERSHIP</span>
+                  <ArrowUpRight className="w-3.5 h-3.5" />
+                </Link>
+              ) : (
+                <Link href="/dashboard" className="btn-luxury btn-outline !py-2.5 !px-5 flex items-center gap-2">
+                  <span className="text-[10px] pb-px">COMMAND</span>
+                  <Globe className="w-3.5 h-3.5 text-gold" />
+                </Link>
+              )}
+
+              {/* Mobile Menu Toggle */}
+              <button 
+                onClick={() => setMenuOpen(true)}
+                className="lg:hidden p-2 text-text-muted hover:text-white transition-all"
+              >
+                <Menu className="w-6 h-6" />
+              </button>
             </div>
           </div>
         </div>
-      </nav>
+      </header>
 
-      {/* Mobile Menu Overlay */}
-      <div 
-        className={`${styles.mobileMenuOverlay} ${menuOpen ? styles.active : ''}`}
-        onClick={closeMenu}
-      />
-
-      {/* Mobile Menu Side Panel */}
-      <div
-        className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''}`}
-        role="dialog"
-      >
-        <div className="p-8 flex justify-between items-center border-b border-white/5 bg-bg-secondary">
-          <div className="flex items-center gap-2">
-             <span className="font-display text-xs font-bold text-white uppercase italic tracking-tighter">PRED<span className="text-gold">CHAIN</span></span>
+      {/* Mobile Drawer */}
+      <div className={`fixed inset-0 z-[200] lg:hidden transition-all duration-500 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className="absolute inset-0 bg-bg-darker/95 backdrop-blur-xl" onClick={closeMenu} />
+        <div className={`absolute right-0 top-0 bottom-0 w-full max-w-sm bg-bg-card border-l border-border-main p-8 flex flex-col transition-all duration-500 ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <div className="flex items-center justify-between mb-12">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-gold" />
+              <span className="font-display text-sm font-bold uppercase tracking-widest italic">PRED<span className="text-gold">CHAIN</span></span>
+            </div>
+            <button onClick={closeMenu} className="p-2 bg-white/5 rounded-full text-text-muted hover:text-white">
+              <X className="w-6 h-6" />
+            </button>
           </div>
-          <button onClick={closeMenu} className="p-2 text-muted hover:text-white transition-colors">
-            <X className="w-6 h-6" />
-          </button>
-        </div>
 
-        <div className="flex-1 flex flex-col p-8 overflow-y-auto bg-grad-dark">
-          <nav className="flex flex-col gap-4">
+          <nav className="flex flex-col gap-1">
             {navLinks.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
+              <Link 
+                key={href} 
+                href={href} 
                 onClick={closeMenu}
-                className={`flex items-center justify-between px-6 py-5 rounded-2xl text-[11px] font-bold uppercase tracking-widest transition-all ${pathname === href ? 'bg-gold/10 text-gold border border-gold/10' : 'text-muted hover:text-white hover:bg-white/[0.03] border border-transparent'}`}
+                className={`py-4 px-6 rounded-xl font-display text-lg font-bold flex items-center justify-between transition-all ${pathname === href ? 'bg-gold/10 text-gold' : 'text-text-secondary hover:bg-white/5'}`}
               >
                 {label}
-                <ChevronRight className="w-4 h-4 opacity-20" />
+                <ChevronRight className={`w-5 h-5 transition-all ${pathname === href ? 'opacity-100' : 'opacity-20'}`} />
+              </Link>
+            ))}
+            
+            <div className="my-6 border-t border-border-subtle" />
+            
+            {mobileSecondaryLinks.map(({ href, label }) => (
+              <Link 
+                key={href} 
+                href={href} 
+                onClick={closeMenu}
+                className="py-3 px-6 text-sm font-semibold text-text-muted hover:text-white flex items-center justify-between"
+              >
+                {label}
+                <ArrowUpRight className="w-4 h-4 opacity-20" />
               </Link>
             ))}
           </nav>
 
-          <div className="mt-auto pt-10 flex flex-col gap-4">
+          <div className="mt-auto flex flex-col gap-4 pt-10">
             {!user ? (
-              <>
-                <Link href="/accounts" onClick={closeMenu} className="btn btn-primary w-full py-5 text-xs font-bold">
-                  GET STARTED
-                </Link>
-                <Link href="/login" onClick={closeMenu} className="btn btn-secondary w-full py-5 text-xs font-bold border-white/10">
-                  SIGN IN
-                </Link>
-              </>
+               <Link href="/accounts" onClick={closeMenu} className="btn-luxury btn-gold w-full py-5 text-sm uppercase tracking-widest font-bold">
+                 Initialize Arena Access
+               </Link>
             ) : (
-              <>
-                <Link href="/dashboard" onClick={closeMenu} className="btn btn-primary w-full py-5 text-xs font-bold gap-3">
-                  ACCESS DASHBOARD <ArrowUpRight className="w-4 h-4" />
-                </Link>
-                <button onClick={() => { logout(); closeMenu(); }} className="text-[10px] font-bold text-muted hover:text-rose-500 uppercase tracking-widest py-6 transition-all italic text-center">
-                  DISCONNECT SESSION
-                </button>
-              </>
+               <button onClick={() => { logout(); closeMenu(); }} className="btn-luxury btn-outline w-full py-5 text-sm uppercase tracking-widest font-bold text-rose-500 border-rose-500/20">
+                 Terminate Session
+               </button>
             )}
+            <p className="text-center text-[9px] font-bold text-text-dim uppercase tracking-[0.3em] mt-2">v2.0 Elite Production Node</p>
           </div>
         </div>
       </div>

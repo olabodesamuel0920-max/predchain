@@ -26,71 +26,68 @@ export default function Footer() {
   if (isDashboard || isAdmin || isAuth) return null;
 
   return (
-    <footer className="bg-[#030508] pt-32 pb-16 relative overflow-hidden border-t border-white/5" role="contentinfo">
-      {/* Background Ambience */}
-      <div className="absolute bottom-0 right-[-10%] w-[50%] h-[500px] bg-gold-glow blur-[160px] opacity-10 pointer-events-none" />
-      
-      <div className="container relative z-10 px-6">
-        <div className="grid grid-cols-1 xl:grid-cols-12 gap-20 mb-24">
+    <footer className="bg-bg-darker pt-20 pb-10 relative overflow-hidden border-t border-border-subtle" role="contentinfo">
+      <div className="container-tight relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 sm:gap-16 mb-16">
           {/* Brand & Narrative */}
-          <div className="xl:col-span-5 space-y-10">
-            <FooterLogo />
-            <p className="text-secondary text-sm font-medium opacity-50 leading-relaxed max-w-sm">
-               The premier arena for professional football prediction. Join an elite network of players building 3-day sequences for high-impact rewards.
+          <div className="lg:col-span-5 space-y-8">
+            <Link href="/" className="inline-block group mb-4">
+              <span className="font-display text-xl font-black text-white uppercase italic tracking-tighter">PRED<span className="text-gold">CHAIN.</span></span>
+            </Link>
+            <p className="text-text-secondary text-xs font-normal leading-relaxed max-w-sm italic opacity-80">
+               The professional arena for high-performance sports analytics. 
+               Join an elite network of nodes building 3-day sequences for premium rewards.
             </p>
-            <div className="flex gap-6">
+            <div className="flex gap-4">
                {[
                   { icon: Globe, href: '#' },
                   { icon: Send, href: '#' },
                   { icon: Activity, href: '#' }
                ].map((social, i) => (
-                  <Link key={i} href={social.href} className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-muted hover:text-gold hover:border-gold/30 transition-all shadow-xl group">
-                     <social.icon className="w-5 h-5 group-hover:scale-110 transition-transform" />
+                  <Link key={i} href={social.href} className="w-9 h-9 rounded-lg bg-white/[0.02] border border-border-subtle flex items-center justify-center text-text-dim hover:text-gold hover:border-gold/30 transition-all group">
+                     <social.icon className="w-3.5 h-3.5" />
                   </Link>
                ))}
             </div>
           </div>
 
           {/* Sitemaps */}
-          <div className="xl:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-12 sm:gap-16">
+          <div className="lg:col-span-7 grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-12">
              {[
                { 
                  title: 'ARENA', 
                  links: [
-                   { h: '/how-it-works', l: 'The Guide' },
-                   { h: '/accounts', l: 'Entry Tiers' },
-                   { h: '/arena', l: 'Live Match Grid' },
-                   { h: '/leaderboard', l: 'Global Rankings' },
+                   { h: '/how-it-works', l: 'Protocol' },
+                   { h: '/accounts', l: 'Tier Entry' },
+                   { h: '/arena', l: 'Live Feed' },
                  ] 
                },
                { 
                  title: 'PLAYER HUB', 
                  links: [
-                   { h: '/dashboard', l: 'Commander Hub' },
-                   { h: '/winners', l: 'Hall of Fame' },
-                   { h: '/referral', l: 'Elite Associates' },
-                   { h: '/login', l: 'Account Login' },
+                   { h: '/dashboard', l: 'Dashboard' },
+                   { h: '/winners', l: 'Winners' },
+                   { h: '/referral', l: 'Affiliates' },
                  ] 
                },
                { 
-                 title: 'STANDARDS', 
+                 title: 'LEGAL', 
                  links: [
-                   { h: '/terms', l: 'Terms of Use' },
-                   { h: '/privacy', l: 'Privacy Protocol' },
-                   { h: '/faq', l: 'Support Center' },
-                   { h: '/rules', l: 'Arena Rules' }
+                   { h: '/terms', l: 'Terms' },
+                   { h: '/privacy', l: 'Privacy' },
+                   { h: '/rules', l: 'Rules' }
                  ] 
                }
              ].map((group, i) => (
-                <div key={i} className="space-y-10">
-                   <h3 className="text-[11px] font-bold text-white uppercase tracking-[0.3em] font-display opacity-40">
+                <div key={i} className="space-y-6">
+                   <h3 className="text-[10px] font-black text-white uppercase tracking-[0.2em] font-display italic">
                        {group.title}
                    </h3>
-                   <ul className="space-y-6">
+                   <ul className="space-y-4">
                       {group.links.map(link => (
                         <li key={link.l}>
-                           <Link href={link.h} className="text-[11px] font-bold text-secondary uppercase tracking-[0.1em] hover:text-white transition-all duration-400 flex items-center gap-3 group/item">
-                              <div className="w-1 h-1 rounded-full bg-gold scale-0 group-hover/item:scale-100 transition-transform" />
+                           <Link href={link.h} className="text-[11px] font-black text-text-dim uppercase tracking-[0.05em] hover:text-white transition-all italic flex items-center gap-2 group/item">
+                              <span className="w-1 h-px bg-gold/30 scale-x-0 group-hover/item:scale-x-100 transition-all origin-left" />
                               {link.l}
                            </Link>
                         </li>
@@ -102,18 +99,18 @@ export default function Footer() {
         </div>
 
         {/* Global Footer Bar */}
-        <div className="pt-16 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-12 text-center md:text-left">
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-12">
-               <div className="flex items-center gap-4">
-                  <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                  <span className="text-[11px] font-bold text-white uppercase tracking-widest opacity-30 italic">High-Trust Servers Active</span>
+        <div className="pt-10 border-t border-border-subtle flex flex-col md:flex-row items-center justify-between gap-8">
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-8">
+               <div className="flex items-center gap-2.5">
+                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
+                  <span className="text-[9px] font-black text-text-muted uppercase tracking-widest italic opacity-40">NODE ACTIVE</span>
                </div>
-               <span className="text-[10px] font-bold text-muted uppercase tracking-[0.4em] opacity-30 italic">© 2026 PREDCHAIN • PROFESSIONAL ANALYTICS HUB</span>
+               <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.3em] italic opacity-40">© 2026 PREDCHAIN • v2.0 ELITE</span>
             </div>
             
-            <div className="flex items-center gap-3 text-[10px] font-bold text-muted uppercase tracking-widest opacity-30 italic">
-               SECURED BY PREDCHAIN FOUNDATION <Heart className="w-3.5 h-3.5 text-rose-500/50 ml-1.5" />
-            </div>
+            <span className="text-[9px] font-black text-text-dim/40 uppercase tracking-widest italic">
+               SECURED GATEWAY • SSL 256-BIT
+            </span>
         </div>
       </div>
     </footer>
