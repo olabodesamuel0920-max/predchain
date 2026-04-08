@@ -8,6 +8,7 @@ export default function UpdatePasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isPending, setIsPending] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -33,8 +34,35 @@ export default function UpdatePasswordPage() {
     if (result?.error) {
       setError(result.error);
       setIsPending(false);
+    } else {
+      setSuccess(true);
+      setIsPending(false);
     }
   };
+
+  if (success) {
+    return (
+      <div className="min-h-screen bg-[#030508] flex items-center justify-center p-6 relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/5 blur-[120px] pointer-events-none" />
+        <div className="w-full max-w-[340px] relative z-10">
+          <div className="card-elite !bg-black/60 p-8 md:p-10 border-white/5 shadow-2xl text-center">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-8 mx-auto shadow-glow-emerald">
+              <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+            </div>
+            <h1 className="font-display text-2xl font-black text-white italic uppercase tracking-tighter mb-4">
+              Access <span className="text-emerald-500">Restored</span>
+            </h1>
+            <p className="text-muted text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed mb-8 opacity-40 italic">
+              your security protocol has been successfully refreshed
+            </p>
+            <a href="/login" className="btn btn-blue w-full py-4 uppercase text-[10px] items-center justify-center flex gap-2">
+              <ArrowLeft className="w-3.5 h-3.5" /> Return to Login
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#030508] flex items-center justify-center p-6 relative overflow-hidden">
