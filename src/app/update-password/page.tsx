@@ -108,6 +108,7 @@ export default function UpdatePasswordPage() {
                   placeholder="••••••••"
                   className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-4 pl-12 pr-5 text-white text-sm focus:outline-none focus:border-blue-electric/30 focus:bg-white/[0.04] transition-all placeholder:text-white/10"
                 />
+                <p className="text-[8px] text-muted opacity-40 ml-1 mt-1 uppercase tracking-widest leading-normal">8+ chars, 1 uppercase, 1 number, 1 symbol</p>
               </div>
             </div>
 

@@ -4,6 +4,14 @@ import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 
+function validatePassword(password: string): string | null {
+  if (password.length < 8) return 'Password must be at least 8 characters long.'
+  if (!/[A-Z]/.test(password)) return 'Password must contain at least one uppercase letter.'
+  if (!/[0-9]/.test(password)) return 'Password must contain at least one number.'
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) return 'Password must contain at least one special character (!@#$%^&*...).'
+  return null
+}
+
 export async function signup(formData: FormData) {
   const supabase = await createClient()
 
@@ -14,6 +22,10 @@ export async function signup(formData: FormData) {
   const phone = formData.get('phone') as string
   const referral_code = formData.get('referral_code') as string || null
 
+  // --- PASSWORD STRENGTH CHECK ---
+  const passwordError = validatePassword(password)
+  if (passwordError) return { error: passwordError }
+
   // --- UNIQUE PHONE CHECK ---
   const { data: existingPhone } = await supabase
     .from('profiles')
@@ -22,7 +34,17 @@ export async function signup(formData: FormData) {
     .single()
 
   if (existingPhone) {
-    return { error: 'Phone number already linked to an account. Please sign in instead.' }
+    return { error: 'This phone number is already linked to a PredChain profile.' }
+  }
+
+  const { data: existingUser } = await supabase
+    .from('profiles')
+    .select('id')
+    .eq('username', username)
+    .single()
+
+  if (existingUser) {
+    return { error: 'This username is already claimed. Please choose another.' }
   }
   // --------------------------
 
@@ -42,6 +64,9 @@ export async function signup(formData: FormData) {
   })
 
   if (error) {
+    if (error.message.includes('Database error')) {
+      return { error: 'System busy or identity conflict. Please check your details and try again.' }
+    }
     return { error: error.message }
   }
 
@@ -106,6 +131,9 @@ export async function resetPassword(formData: FormData) {
 export async function updatePassword(formData: FormData) {
   const supabase = await createClient()
   const password = formData.get('password') as string
+
+  const passwordError = validatePassword(password)
+  if (passwordError) return { error: passwordError }
 
   const { error } = await supabase.auth.updateUser({ password })
 

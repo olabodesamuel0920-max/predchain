@@ -117,6 +117,7 @@ function SignupForm() {
               placeholder="••••••••" 
               className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3 px-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
             />
+            <p className="text-[8px] text-muted opacity-40 ml-1 mt-1 uppercase tracking-widest leading-normal">8+ chars, 1 uppercase, 1 number, 1 symbol</p>
           </div>
           <div className="space-y-1.5">
             <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
