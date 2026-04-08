@@ -12,6 +12,7 @@ const navLinks = [
   { href: '/accounts', label: 'Tiers' },
   { href: '/arena', label: 'Arena' },
   { href: '/winners', label: 'Winners' },
+  { href: '/leaderboard', label: 'Rankings' },
 ];
 
 const mobileSecondaryLinks = [

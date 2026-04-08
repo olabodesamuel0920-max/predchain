@@ -67,6 +67,7 @@ export default function Footer() {
                  links: [
                    { h: '/dashboard', l: 'Dashboard' },
                    { h: '/winners', l: 'Winners' },
+                   { h: '/leaderboard', l: 'Rankings' },
                    { h: '/referral', l: 'Affiliates' },
                  ] 
                },
