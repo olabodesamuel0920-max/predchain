@@ -118,7 +118,24 @@ export async function verifyPayment(reference: string) {
   const { userId, tierId, type, amount } = data.data.metadata;
   const paystackAmount = data.data.amount / 100;
 
-  // 3. Handle Wallet Funding
+  // 3. Ensure Profile Exists (Resilience for failed auth triggers)
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('id')
+    .eq('id', userId)
+    .maybeSingle();
+
+  if (!profile) {
+    console.warn(`[REPAIR]: Creating missing profile for user ${userId}`);
+    await adminClient.from('profiles').insert({
+      id: userId,
+      full_name: data.data.customer?.first_name || '',
+      username: (data.data.customer?.email || userId).split('@')[0],
+      role: 'user'
+    });
+  }
+
+  // 4. Handle Wallet Funding
   if (type === 'wallet_funding') {
     let { data: wallet, error: walletError } = await adminClient
       .from('wallets')

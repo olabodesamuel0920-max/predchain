@@ -15,10 +15,32 @@ export default async function DashboardPage() {
   }
 
   // 1. Fetch Profile & Wallet
-  const [{ data: profileData }, { data: wallet }] = await Promise.all([
-    supabase.from('profiles').select('*').eq('id', user.id).single(),
-    supabase.from('wallets').select('*').eq('user_id', user.id).single(),
-  ])
+  let { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
+  let { data: wallet } = await supabase.from('wallets').select('*').eq('user_id', user.id).single();
+
+  // SELF-HEALING: If profile or wallet is missing, initialize them now
+  if (!profileData || !wallet) {
+    const adminClient = await createAdminClient();
+    
+    if (!profileData) {
+      const { data: newProfile } = await adminClient.from('profiles').upsert({
+        id: user.id,
+        full_name: user.user_metadata?.full_name || '',
+        username: user.user_metadata?.username || user.email?.split('@')[0] || user.id.slice(0, 8),
+        phone: user.user_metadata?.phone || null,
+        role: 'user'
+      }).select().single();
+      profileData = newProfile;
+    }
+
+    if (!wallet) {
+      const { data: newWallet } = await adminClient.from('wallets').upsert({
+        user_id: user.id,
+        balance_ngn: 0
+      }).select().single();
+      wallet = newWallet;
+    }
+  }
 
   // Inject email from auth for identity resolution
   const profile = profileData ? { ...profileData, email: user.email } : { id: user.id, email: user.email };
