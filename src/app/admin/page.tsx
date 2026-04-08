@@ -47,15 +47,17 @@ export default async function AdminPage() {
     )
   }
 
-  // Fetch Admin Data
-  const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-  const { data: recentPurchases } = await supabase.from('account_purchases').select('amount:amount_paid, created_at, profiles(username, full_name)').order('created_at', { ascending: false }).limit(5);
-  const { data: activeRounds } = await supabase.from('challenge_rounds').select('*').order('round_number', { ascending: false });
-  const { data: pendingPayouts } = await supabase.from('payout_requests').select('*, profiles(username)').eq('status', 'pending');
-  const { data: allMatches } = await supabase.from('challenge_matches').select('*, challenge_rounds!round_id(round_number)').order('kickoff_time', { ascending: false });
+  // Fetch Admin Data (Using Admin Client to bypass RLS)
+  const [{ count: userCount }, { data: recentPurchases }, { data: activeRounds }, { data: pendingPayouts }, { data: allMatches }, { data: purchases }] = await Promise.all([
+    adminClient.from('profiles').select('*', { count: 'exact', head: true }),
+    adminClient.from('account_purchases').select('amount:amount_paid, created_at, profiles(username, full_name)').order('created_at', { ascending: false }).limit(5),
+    adminClient.from('challenge_rounds').select('*').order('round_number', { ascending: false }),
+    adminClient.from('payout_requests').select('*, profiles(username)').eq('status', 'pending'),
+    adminClient.from('challenge_matches').select('*, challenge_rounds!round_id(round_number)').order('kickoff_time', { ascending: false }),
+    adminClient.from('account_purchases').select('amount_paid')
+  ]);
 
   // Revenue calculation
-  const { data: purchases } = await supabase.from('account_purchases').select('amount_paid');
   const totalRevenue = purchases?.reduce((acc, curr) => acc + curr.amount_paid, 0) || 0;
 
   return (
