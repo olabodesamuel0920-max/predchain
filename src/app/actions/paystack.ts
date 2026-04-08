@@ -120,7 +120,7 @@ export async function verifyPayment(reference: string) {
 
   // 3. Handle Wallet Funding
   if (type === 'wallet_funding') {
-    let { data: wallet } = await adminClient
+    let { data: wallet, error: walletError } = await adminClient
       .from('wallets')
       .select('id, balance_ngn')
       .eq('user_id', userId)
@@ -133,12 +133,28 @@ export async function verifyPayment(reference: string) {
         .select('id, balance_ngn')
         .single();
         
-      if (createError) throw new Error('Failed to synchronize wallet state.');
-      wallet = newWallet;
+      if (createError) {
+        // If it's a conflict (23505), someone else just created it. Retry fetch once.
+        if (createError.code === '23505') {
+          const { data: retryWallet } = await adminClient
+            .from('wallets')
+            .select('id, balance_ngn')
+            .eq('user_id', userId)
+            .single();
+          wallet = retryWallet;
+        } else {
+          console.error('Wallet sync error:', createError);
+          throw new Error(`Identity out of sync. Please contact support. (ID: ${userId})`);
+        }
+      } else {
+        wallet = newWallet;
+      }
     }
 
+    if (!wallet) throw new Error('System failed to resolve your account status.');
+
     await adminClient.from('wallets').update({ 
-      balance_ngn: wallet.balance_ngn + paystackAmount 
+      balance_ngn: (wallet.balance_ngn || 0) + paystackAmount 
     }).eq('id', wallet.id);
 
     await adminClient.from('wallet_transactions').insert({
