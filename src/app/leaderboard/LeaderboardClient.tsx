@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
-import { Trophy, Gem, Search, ChevronRight, Globe, TrendingUp, ShieldCheck, ArrowUpRight } from 'lucide-react';
 
 interface LeaderboardClientProps {
   rankings: Array<{
@@ -14,12 +12,16 @@ interface LeaderboardClientProps {
   }>;
 }
 
+const BADGE_COLORS: Record<string, string> = {
+  gold: '#D4AF37', silver: '#A7B0C0', bronze: '#CD7F32',
+};
+
 export default function LeaderboardClient({ rankings }: LeaderboardClientProps) {
   const [tab, setTab] = useState<'weekly' | 'monthly' | 'alltime'>('alltime');
   const [search, setSearch] = useState('');
 
   const filtered = rankings.filter(r => 
-    (r.profile?.username || r.profile?.full_name || 'Participant')
+    (r.profile?.username || r.profile?.full_name || 'Guest')
     .toLowerCase()
     .includes(search.toLowerCase())
   );
@@ -27,127 +29,143 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
   const top3 = filtered.slice(0, 3);
 
   return (
-    <div className="relative min-h-screen pt-24 sm:pt-32 pb-24">
-      {/* Background Decor */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-muted/5 blur-[120px]" />
-      </div>
-
-      <div className="container-tight relative z-10">
-        {/* Header */}
-        <div className="text-center mb-16 sm:mb-24 max-w-2xl mx-auto">
-          <div className="badge-luxury mb-6 px-4 py-1.5 uppercase italic font-black tracking-widest">ARENA RANKINGS</div>
-          <h1 className="mb-4 uppercase italic font-black leading-tight tracking-tight">Top <span className="text-gradient-gold">Performers.</span></h1>
-          <p className="text-text-secondary text-sm font-normal leading-relaxed italic opacity-80">
-            A verified record of participants ranked by sequence strength and node prediction accuracy.
+    <div style={{ paddingTop: '80px' }}>
+      {/* Hero */}
+      <section style={{
+        padding: '72px 0 56px',
+        background: 'linear-gradient(180deg, #0D1321 0%, #070B14 100%)',
+        borderBottom: '1px solid rgba(255,255,255,0.07)',
+        textAlign: 'center', position: 'relative', overflow: 'hidden',
+      }}>
+        <div style={{
+          position: 'absolute', top: '-100px', left: '50%', transform: 'translateX(-50%)',
+          width: '600px', height: '400px', borderRadius: '50%',
+          background: 'radial-gradient(ellipse, rgba(212,175,55,0.08) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} aria-hidden="true" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div className="section-label" style={{ justifyContent: 'center' }}>Rankings</div>
+          <h1 className="section-title" style={{ margin: '0 auto 12px', fontSize: 'clamp(2.5rem, 5vw, 3.5rem)' }}>
+            Global Leaderboard
+          </h1>
+          <p className="section-subtitle" style={{ margin: '0 auto' }}>
+            Top challengers ranked by streak performance and verified wins.
           </p>
         </div>
+      </section>
 
-        {/* Top 3 Podium */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-16 sm:mb-24 items-end max-w-5xl mx-auto">
-          {top3.map((player, i) => {
-            const name = player.profile?.username || player.profile?.full_name || 'Anonymous Node';
-            const isFirst = i === 0;
-            const rankLabel = i === 0 ? 'Arena Master' : i === 1 ? 'High Tier' : 'Elite Node';
-            
-            return (
-              <div 
-                key={player.id} 
-                className={`card-luxury !p-8 sm:!p-10 text-center relative transition-all duration-500 bg-[#11161D] ${isFirst ? 'md:py-14 border-gold/20 shadow-lg z-10' : 'md:opacity-70 scale-95 border-border-subtle order-last md:order-none'}`}
-              >
-                {isFirst && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-gold rounded-lg flex items-center justify-center shadow-lg z-20">
-                    <Trophy className="w-5 h-5 text-black" />
+      {/* Top 3 Spotlight */}
+      <section className="section-sm" style={{ background: 'var(--bg-primary)' }}>
+        <div className="container">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px', marginBottom: '48px' }}>
+            {top3.map((player, i) => {
+              const badge = i === 0 ? 'gold' : i === 1 ? 'silver' : 'bronze';
+              const name = player.profile?.username || player.profile?.full_name || 'Challenger';
+              return (
+                <div key={player.id} style={{
+                  background: 'var(--bg-card)',
+                  border: `1px solid ${BADGE_COLORS[badge] + '40'}`,
+                  borderRadius: '20px', padding: '28px',
+                  textAlign: 'center',
+                  boxShadow: i === 0 ? '0 0 60px rgba(212,175,55,0.15)' : 'var(--shadow-card)',
+                  position: 'relative',
+                  transform: i === 0 ? 'scale(1.04)' : 'scale(1)',
+                }}>
+                  {i === 0 && (
+                    <div style={{
+                      position: 'absolute', top: 0, left: 0, right: 0, height: '3px',
+                      borderRadius: '20px 20px 0 0',
+                      background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
+                    }} aria-hidden="true" />
+                  )}
+                  <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>
+                    {i === 0 ? '🥇' : i === 1 ? '🥈' : '🥉'}
                   </div>
-                )}
-                
-                <div className={`text-[9px] font-black uppercase tracking-widest mb-6 italic ${isFirst ? 'text-gold' : 'text-text-dim'}`}>
-                  {rankLabel}
+                  <div style={{
+                    fontFamily: "'Space Grotesk', sans-serif", fontSize: '0.875rem', fontWeight: 700,
+                    letterSpacing: '0.06em', textTransform: 'uppercase',
+                    color: BADGE_COLORS[badge],
+                    marginBottom: '4px',
+                  }}>#{i + 1}</div>
+                  <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.125rem', fontWeight: 800, color: '#F8FAFC', marginBottom: '16px' }}>
+                    {name}
+                  </div>
+                  <div style={{
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontSize: '1.75rem', fontWeight: 900,
+                    background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
+                    WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                    letterSpacing: '-0.03em', marginBottom: '8px',
+                  }}>{player.streak_count}/3 Streak</div>
                 </div>
+              );
+            })}
+          </div>
 
-                <div className={`w-14 h-14 mx-auto mb-5 rounded-xl bg-white/[0.02] border border-border-subtle flex items-center justify-center relative group overflow-hidden ${isFirst ? 'text-gold' : 'text-text-dim/30'}`}>
-                   {isFirst ? <Gem className="w-7 h-7" /> : <ShieldCheck className="w-7 h-7" />}
-                </div>
-
-                <div className="text-lg font-black text-white mb-1.5 tracking-tight truncate italic uppercase font-display">
-                  {name}
-                </div>
-
-                <div className="text-3xl font-black text-white italic tracking-tighter mb-8 leading-none font-display">
-                  <span className="text-gold">{player.streak_count}</span><span className="text-text-dim/20 text-lg ml-1">/ 3</span> 
-                </div>
-
-                <div className="inline-flex px-3 py-1 rounded-md bg-white/[0.03] border border-border-subtle text-[8px] font-black text-text-dim uppercase tracking-widest italic">
-                  {player.tier?.name || 'Standard'} PROTOCOL
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Controls */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 max-w-5xl mx-auto">
-           <div className="flex bg-bg-darker border border-border-subtle rounded-xl p-1 w-full sm:w-auto overflow-x-auto no-scrollbar">
+          {/* Controls */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px', gap: '16px', flexWrap: 'wrap' }}>
+            <div className="tabs-list">
               {(['weekly', 'monthly', 'alltime'] as const).map(t => (
                 <button
                   key={t}
-                  className={`px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all italic whitespace-nowrap flex-1 sm:flex-none ${tab === t ? 'bg-white/[0.05] text-white shadow-sm' : 'text-text-dim hover:text-white/60'}`}
+                  className={`tab-trigger ${tab === t ? 'active' : ''}`}
                   onClick={() => setTab(t)}
                 >
-                  {t}
+                  {t === 'weekly' ? 'Weekly' : t === 'monthly' ? 'Monthly' : 'All Time'}
                 </button>
               ))}
-           </div>
-           
-           <div className="relative group w-full sm:w-72">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-dim opacity-30 group-focus-within:text-gold transition-colors" />
+            </div>
+            <div style={{ position: 'relative' }}>
               <input
                 type="search"
-                placeholder="Search node..."
+                placeholder="Search username..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full bg-bg-primary/50 border border-border-subtle rounded-xl py-3 pl-11 pr-5 text-[10px] font-black text-white focus:outline-none focus:border-gold/30 transition-all uppercase tracking-widest placeholder:opacity-30 italic"
+                className="input"
+                style={{ paddingLeft: '16px', width: '220px' }}
+                aria-label="Search leaderboard"
               />
-           </div>
-        </div>
+            </div>
+          </div>
 
-        {/* Ranking Table */}
-        <div className="card-luxury !p-0 overflow-hidden mb-24 bg-bg-card border-border-subtle shadow-md max-w-5xl mx-auto">
-          <div className="overflow-x-auto no-scrollbar">
-            <table className="w-full text-left border-collapse">
+          {/* Table */}
+          <div className="table-wrapper">
+            <table className="table" aria-label="Leaderboard rankings">
               <thead>
-                <tr className="bg-white/[0.01] border-b border-border-subtle">
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Rank</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Node User</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Streak</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Protocol</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40 text-right">Status</th>
+                <tr>
+                  <th>Rank</th>
+                  <th>Username</th>
+                  <th>Current Streak</th>
+                  <th>Tier</th>
+                  <th>Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-subtle">
+              <tbody>
                 {filtered.map((row, i) => (
-                  <tr key={row.id} className="hover:bg-white/[0.01] transition-colors group">
-                    <td className="px-8 py-5 text-[10px] font-black text-text-dim group-hover:text-gold transition-colors italic">
-                      #{String(i + 1).padStart(2, '0')}
+                  <tr key={row.id}>
+                    <td>
+                      <span style={{
+                        fontFamily: "'Space Grotesk', sans-serif",
+                        fontWeight: 800,
+                        fontSize: i < 3 ? '1.375rem' : '1rem',
+                        color: i === 0 ? BADGE_COLORS.gold : i === 1 ? BADGE_COLORS.silver : i === 2 ? BADGE_COLORS.bronze : '#6E7A91',
+                      }}>
+                        {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}
+                      </span>
                     </td>
-                    <td className="px-8 py-5">
-                      <span className="text-[11px] font-black text-white uppercase tracking-tight italic font-display">{row.profile?.username || 'Guest Node'}</span>
+                    <td>
+                      <span style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: '#F8FAFC' }}>
+                        {row.profile?.username || row.profile?.full_name || 'Guest Challenger'}
+                      </span>
                     </td>
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-4">
-                         <div className="text-xl font-black italic tracking-tighter font-display" style={{ color: row.streak_count === 3 ? 'var(--success)' : 'var(--gold)' }}>{row.streak_count}/3</div>
-                         <div className="w-20 h-0.5 bg-white/5 rounded-full overflow-hidden shrink-0">
-                            <div className="h-full bg-current" style={{ width: `${(row.streak_count / 3) * 100}%`, color: row.streak_count === 3 ? 'var(--success)' : 'var(--gold)' }} />
-                         </div>
-                      </div>
+                    <td>
+                      <span style={{ color: row.streak_count === 3 ? '#22C55E' : '#D4AF37', fontWeight: 700 }}>{row.streak_count}/3</span>
                     </td>
-                    <td className="px-8 py-5">
-                       <span className="text-[8px] font-black text-text-dim uppercase tracking-widest italic opacity-40">{row.tier?.name || 'Standard'}</span>
-                    </td>
-                    <td className="px-8 py-5 text-right">
+                    <td style={{ color: '#A7B0C0', fontWeight: 600 }}>{row.tier?.name || 'Starter'}</td>
+                    <td>
                       {row.is_winner
-                        ? <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10 italic">SETTLED</span>
-                        : <span className="text-[8px] font-black text-gold uppercase tracking-widest bg-gold/5 px-2 py-0.5 rounded border border-gold/10 italic">IN-FLOW</span>
+                        ? <span className="badge badge-success">Verified</span>
+                        : <span className="badge badge-blue">In Progress</span>
                       }
                     </td>
                   </tr>
@@ -156,23 +174,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
             </table>
           </div>
         </div>
-
-        {/* Final CTA */}
-        <div className="card-luxury-gold !p-12 sm:!p-20 text-center border-gold/10 max-w-3xl mx-auto mb-24 group relative">
-           <div className="max-w-xl mx-auto relative z-10">
-              <h2 className="mb-4 text-4xl uppercase italic font-black">Join the <span className="text-gradient-gold">Best.</span></h2>
-              <p className="text-text-secondary text-[10px] font-normal mb-10 uppercase tracking-widest italic">
-                Ready to prove your accuracy? Initialize your node and start climbing the ranks.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/accounts" className="btn-luxury btn-gold !px-12 !py-4 shadow-sm">
-                  GET STARTED <ArrowUpRight className="w-4 h-4 ml-2" />
-                </Link>
-                <Link href="/arena" className="btn-luxury btn-outline !px-10 !py-4">VIEW ARENA</Link>
-              </div>
-           </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 }

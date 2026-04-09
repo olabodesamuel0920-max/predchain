@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
-import DashboardClient from '@/components/dashboard/DashboardClient'
+import DashboardClient from './DashboardClient'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -15,35 +15,10 @@ export default async function DashboardPage() {
   }
 
   // 1. Fetch Profile & Wallet
-  let { data: profileData } = await supabase.from('profiles').select('*').eq('id', user.id).single();
-  let { data: wallet } = await supabase.from('wallets').select('*').eq('user_id', user.id).single();
-
-  // SELF-HEALING: If profile or wallet is missing, initialize them now
-  if (!profileData || !wallet) {
-    const adminClient = await createAdminClient();
-    
-    if (!profileData) {
-      const { data: newProfile } = await adminClient.from('profiles').upsert({
-        id: user.id,
-        full_name: user.user_metadata?.full_name || '',
-        username: user.user_metadata?.username || user.email?.split('@')[0] || user.id.slice(0, 8),
-        phone: user.user_metadata?.phone || null,
-        role: 'user'
-      }).select().single();
-      profileData = newProfile;
-    }
-
-    if (!wallet) {
-      const { data: newWallet } = await adminClient.from('wallets').upsert({
-        user_id: user.id,
-        balance_ngn: 0
-      }).select().single();
-      wallet = newWallet;
-    }
-  }
-
-  // Inject email from auth for identity resolution
-  const profile = profileData ? { ...profileData, email: user.email } : { id: user.id, email: user.email };
+  const [{ data: profile }, { data: wallet }] = await Promise.all([
+    supabase.from('profiles').select('*').eq('id', user.id).single(),
+    supabase.from('wallets').select('*').eq('user_id', user.id).single(),
+  ])
 
   // 2. Fetch Active Round
   const { data: activeRound } = await supabase
@@ -78,27 +53,7 @@ export default async function DashboardPage() {
     .select('*')
     .eq('wallet_id', wallet?.id)
     .order('created_at', { ascending: false })
-    .limit(50)
-
-  // 6. Fetch payout requests
-  const { data: payoutRequests } = await supabase
-    .from('payout_requests')
-    .select('*')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-    
-  // 7. Fetch account purchases
-  const { data: purchases } = await supabase
-    .from('account_purchases')
-    .select('*, account_tiers(*)')
-    .eq('user_id', user.id)
-    .order('created_at', { ascending: false })
-
-  // 8. Fetch all account tiers for reward context
-  const { data: tiers } = await supabase
-    .from('account_tiers')
-    .select('*')
-    .order('price_ngn', { ascending: true })
+    .limit(10)
 
   return (
     <Suspense fallback={<div className="container py-80 text-center text-muted">Loading Dashboard...</div>}>
@@ -111,11 +66,7 @@ export default async function DashboardPage() {
         userEntry={userEntry}
         predictions={predictions || []}
         transactions={transactions || []}
-        payoutRequests={payoutRequests || []}
-        purchases={purchases || []}
-        tiers={tiers || []}
       />
     </Suspense>
   )
 }
-

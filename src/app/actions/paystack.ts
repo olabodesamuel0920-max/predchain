@@ -39,7 +39,6 @@ export async function initializePayment(tierId: string) {
       metadata: {
         userId: user.id,
         tierId: tier.id,
-        type: 'tier_purchase',
       },
     }),
   });
@@ -48,63 +47,6 @@ export async function initializePayment(tierId: string) {
   if (!data.status) throw new Error(data.message || 'Payment initialization failed');
 
   return { authorization_url: data.data.authorization_url, reference: data.data.reference };
-}
-
-/**
- * User-facing action to top up wallet.
- */
-export async function initializeWalletFunding(amountNgn: number) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user) throw new Error('Unauthorized');
-  if (amountNgn < 5000) throw new Error('Minimum top-up is ₦5,000');
-
-  const adminClient = await createAdminClient();
-  
-  // Self-healing: Ensure wallet exists before initializing funding
-  let { data: wallet } = await adminClient.from('wallets').select('id').eq('user_id', user.id).maybeSingle();
-  if (!wallet) {
-    const { data: newWallet } = await adminClient.from('wallets').upsert({ user_id: user.id, balance_ngn: 0 }).select('id').single();
-    wallet = newWallet;
-  }
-
-  const reference = `fund_${user.id.slice(0, 8)}_${Date.now()}`;
-
-  // Record pending transaction
-  if (wallet) {
-    await adminClient.from('wallet_transactions').insert({
-      wallet_id: wallet.id,
-      amount: amountNgn,
-      type: 'deposit',
-      status: 'pending',
-      reference: reference
-    });
-  }
-
-  const response = await fetch('https://api.paystack.co/transaction/initialize', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      email: user.email,
-      amount: amountNgn * 100,
-      callback_url: `${APP_URL}/api/payments/verify`,
-      reference: reference, // Force our reference
-      metadata: {
-        userId: user.id,
-        amount: amountNgn,
-        type: 'wallet_funding',
-      },
-    }),
-  });
-
-  const data = await response.json();
-  if (!data.status) throw new Error(data.message || 'Funding initialization failed');
-
-  return { authorization_url: data.data.authorization_url, reference: reference };
 }
 
 /**
@@ -135,98 +77,47 @@ export async function verifyPayment(reference: string) {
 
   const data = await response.json();
   if (!data.status || data.data.status !== 'success') {
-    // Mark as failed if we have a pending record
-    await adminClient.from('wallet_transactions').update({ status: 'failed' }).eq('reference', reference);
     return { success: false, message: 'Payment verification failed at provider' };
   }
 
-  const { userId, tierId, type, amount } = data.data.metadata;
+  const { userId, tierId, fundingAmount } = data.data.metadata;
   const paystackAmount = data.data.amount / 100;
 
-  // 3. Ensure Profile Exists (Resilience for failed auth triggers)
-  const { data: profile } = await adminClient
-    .from('profiles')
-    .select('id')
-    .eq('id', userId)
-    .maybeSingle();
-
-  if (!profile) {
-    console.warn(`[REPAIR]: Creating missing profile for user ${userId}`);
-    await adminClient.from('profiles').insert({
-      id: userId,
-      full_name: data.data.customer?.first_name || '',
-      username: (data.data.customer?.email || userId).split('@')[0],
-      role: 'user'
-    });
-  }
-
-  // 4. Handle Wallet Funding
-  if (type === 'wallet_funding') {
-    let { data: wallet, error: walletError } = await adminClient
-      .from('wallets')
-      .select('id, balance_ngn')
-      .eq('user_id', userId)
-      .maybeSingle();
-
-    if (!wallet) {
-      const { data: newWallet, error: createError } = await adminClient
-        .from('wallets')
-        .insert({ user_id: userId, balance_ngn: 0 })
-        .select('id, balance_ngn')
-        .single();
-        
-      if (createError) {
-        if (createError.code === '23505') {
-          const { data: retryWallet } = await adminClient.from('wallets').select('id, balance_ngn').eq('user_id', userId).single();
-          wallet = retryWallet;
-        } else {
-          console.error('Wallet sync error:', createError);
-          throw new Error(`Identity out of sync. Please contact support. (ID: ${userId})`);
-        }
-      } else {
-        wallet = newWallet;
-      }
-    }
-
-    if (!wallet) throw new Error('System failed to resolve your account status.');
-
-    // UPDATE BALANCES ATOMICALLY
-    await adminClient.from('wallets').update({ 
-      balance_ngn: (wallet.balance_ngn || 0) + paystackAmount 
-    }).eq('id', wallet.id);
-
-    // Update the pending transaction to COMPLETED
-    const { error: txError } = await adminClient.from('wallet_transactions').update({
-      amount: paystackAmount,
-      status: 'completed',
-      created_at: new Date().toISOString()
-    }).eq('reference', reference);
-
-    // fallback if for some reason the pending record didn't exist
-    if (txError) {
+  // 3. CASE: WALLET FUNDING
+  if (fundingAmount) {
+     const { data: wallet } = await adminClient.from('wallets').select('id, balance_ngn').eq('user_id', userId).single();
+     if (wallet) {
+        await adminClient.from('wallets').update({ balance_ngn: wallet.balance_ngn + paystackAmount }).eq('id', wallet.id);
         await adminClient.from('wallet_transactions').insert({
-            wallet_id: wallet.id,
-            amount: paystackAmount,
-            type: 'deposit',
-            status: 'completed',
-            reference: reference
+          wallet_id: wallet.id,
+          amount: paystackAmount,
+          type: 'deposit',
+          reference: `funding_${reference}`,
+          status: 'completed'
         });
-    }
-
-    revalidatePath('/dashboard');
-    return { success: true, message: 'Wallet funded successfully' };
+     }
+     revalidatePath('/dashboard');
+     return { success: true };
   }
 
-  // 4. SECURE PRICE MATCHING (Tier Purchase Flow)
-  const { data: tier } = await adminClient
-    .from('account_tiers')
-    .select('price_ngn')
-    .eq('id', tierId)
-    .single();
+  // 4. CASE: TIER PURCHASE
+  if (tierId) {
+    const { data: tier } = await adminClient
+      .from('account_tiers')
+      .select('price_ngn')
+      .eq('id', tierId)
+      .single();
 
-  if (!tier || paystackAmount < tier.price_ngn) {
-    console.error('Payment mismatch:', { expected: tier?.price_ngn, received: paystackAmount });
-    return { success: false, message: `Payment validation failed. Incorrect amount or tier.` };
+    if (!tier || paystackAmount < tier.price_ngn) {
+      console.error('CRITICAL: Payment verification failed!', { 
+        expected: tier?.price_ngn, 
+        received: paystackAmount,
+        tierFound: !!tier,
+        tierId,
+        reference 
+      });
+      return { success: false, message: `Payment validation failed. Tier not recognized or mismatch in amount.` };
+    }
   }
 
   // 4. Create Purchase Record
@@ -275,21 +166,77 @@ export async function verifyPayment(reference: string) {
       .single();
 
     if (referrer) {
-      // 7. Atomic Referral Payout via RPC
-      const { error: rpcError } = await adminClient.rpc('process_referral_reward_atomic', {
-        p_referrer_id: referrer.id,
-        p_referred_user_id: userId,
-        p_referral_code: referredByCode,
-        p_reward_amount: 1000 // Standard referral bonus
-      });
+      const { data: existingRef } = await adminClient
+        .from('referrals')
+        .select('id')
+        .eq('referrer_id', referrer.id)
+        .eq('referred_user_id', userId)
+        .maybeSingle();
 
-      if (rpcError) {
-        console.error('Failed to process referral atomically:', rpcError);
+      if (!existingRef) {
+        const { data: newRef } = await adminClient.from('referrals').insert({
+          referrer_id: referrer.id,
+          referred_user_id: userId,
+          referral_code: referredByCode,
+          status: 'qualified'
+        }).select().single();
+
+        if (newRef) {
+          // Create Reward Record
+          await adminClient.from('referral_rewards').insert({
+            referral_id: newRef.id,
+            amount: 1000,
+            is_paid: true
+          });
+
+          // Credit Referrer Wallet
+          const { data: refWallet } = await adminClient.from('wallets').select('id, balance_ngn').eq('user_id', referrer.id).single();
+          if (refWallet) {
+              await adminClient.from('wallets').update({ balance_ngn: refWallet.balance_ngn + 1000 }).eq('id', refWallet.id);
+              await adminClient.from('wallet_transactions').insert({
+                wallet_id: refWallet.id,
+                amount: 1000,
+                type: 'reward',
+                reference: `referral_bonus_${userId}`
+              });
+          }
+        }
       }
     }
   }
 
-  revalidatePath('/dashboard');
   revalidatePath('/referral');
   return { success: true };
+}
+
+/**
+ * Initializes a wallet funding transaction via Paystack.
+ */
+export async function initializeWalletFunding(amountNgn: number) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) throw new Error('Unauthorized');
+
+  const response = await fetch('https://api.paystack.co/transaction/initialize', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${PAYSTACK_SECRET_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      email: user.email,
+      amount: amountNgn * 100,
+      callback_url: `${APP_URL}/api/payments/verify`,
+      metadata: {
+        userId: user.id,
+        fundingAmount: amountNgn,
+      },
+    }),
+  });
+
+  const data = await response.json();
+  if (!data.status) throw new Error(data.message || 'Funding initialization failed');
+
+  return { authorization_url: data.data.authorization_url, reference: data.data.reference };
 }

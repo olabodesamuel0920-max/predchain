@@ -10,7 +10,7 @@ PredChain is an elite 3-day football prediction platform designed for precision 
 - **Real-Time Leaderboard**: Live rankings and streak tracking.
 - **Instant Payouts**: Automated wallet system for seamless settlements.
 
-### 🛡️ **Admin Control Center**
+### 🛡️ **Platform Management**
 - **User Management**: Advanced user tracking, search, and status control (Verify/Suspend/Demo).
 - **Financial Operations**: Payout moderation queue with automated refund logic and manual ledger adjustments.
 - **Match Management**: Complete round/match lifecycle management with bulk settlement tools.
@@ -26,7 +26,7 @@ PredChain is an elite 3-day football prediction platform designed for precision 
 ## ⚙️ Setup & Configuration
 
 ### 1. Environment Variables
-Copy `.env.example` to `.env.local` and fill in the following:
+Setup `.env.local` based on `.env.example`:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key

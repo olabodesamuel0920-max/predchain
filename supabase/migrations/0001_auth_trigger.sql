@@ -6,13 +6,12 @@ CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
   -- Insert into profiles
-  -- metadata "full_name", "username", and "phone" are expected from the signup form's user_metadata
-  INSERT INTO public.profiles (id, full_name, username, phone)
+  -- metadata "full_name" and "username" are expected from the signup form's user_metadata
+  INSERT INTO public.profiles (id, full_name, username)
   VALUES (
     new.id,
     COALESCE(new.raw_user_meta_data->>'full_name', ''),
-    COALESCE(new.raw_user_meta_data->>'username', new.email),
-    new.raw_user_meta_data->>'phone'
+    COALESCE(new.raw_user_meta_data->>'username', new.email)
   );
   
   -- Initialize a wallet for the new user

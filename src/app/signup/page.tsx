@@ -2,14 +2,15 @@
 
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { signup } from '@/app/actions/auth';
-import { User, Mail, Lock, Phone, Ticket, ShieldCheck, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Zap, Globe, CheckCircle2, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 function SignupForm() {
   const searchParams = useSearchParams();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [referralCode, setReferralCode] = useState('');
 
   useEffect(() => {
@@ -18,15 +19,21 @@ function SignupForm() {
   }, [searchParams]);
 
   const signupAction = async (formData: FormData) => {
+    const password = formData.get('password') as string;
+    const acceptTerms = formData.get('terms') === 'on';
+
+    if (password.length < 8) {
+      setErrorMsg('Security Protocol: Password must be at least 8 characters.');
+      return;
+    }
+
+    if (!acceptTerms) {
+      setErrorMsg('Policy Error: You must accept the terms of service.');
+      return;
+    }
+
     setIsPending(true);
     setErrorMsg(null);
-    
-    const returnTo = searchParams.get('returnTo');
-    if (returnTo) formData.append('returnTo', returnTo);
-    
-    if (!formData.get('referral_code') && referralCode) {
-      formData.append('referral_code', referralCode);
-    }
     
     const res = await signup(formData);
     if (res?.error) {
@@ -35,160 +42,192 @@ function SignupForm() {
     }
   };
 
-  const returnTo = searchParams.get('returnTo');
-  const loginUrl = returnTo ? `/login?returnTo=${encodeURIComponent(returnTo)}` : '/login';
-
   return (
-    <div className="w-full max-w-[420px] animate-fade-in px-6">
-      <div className="text-center mb-10">
-        <h2 className="mb-2">Join the <span className="text-gradient-gold">Arena.</span></h2>
-        <p className="text-[10px] font-bold text-muted uppercase tracking-[0.2em] opacity-40">Create your account to start winning</p>
+    <div style={{ width: '100%', maxWidth: '440px', position: 'relative', zIndex: 1 }}>
+      <div style={{ marginBottom: '40px', textAlign: 'center' }}>
+        <h2 style={{ fontFamily: "var(--font-display)", fontSize: '2.25rem', fontWeight: 800, color: '#FFF', marginBottom: '12px', letterSpacing: '-0.02em' }}>Initialize Account</h2>
+        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', fontWeight: 500, opacity: 0.7 }}>Secure your node in the PredChain network.</p>
       </div>
 
-      <form action={signupAction} className="space-y-4">
+      <form action={signupAction} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
         {errorMsg && (
-          <div className="p-3 bg-danger/10 border border-danger/20 rounded-xl text-danger text-[10px] font-bold uppercase tracking-widest text-center animate-slide-up">
-            {errorMsg}
+          <div style={{ padding: '14px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '12px', color: '#FF4D4D', fontSize: '0.8125rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <AlertCircle className="w-16 h-16 shrink-0" />
+            <span style={{ fontWeight: 600 }}>{errorMsg}</span>
           </div>
         )}
-        
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
-              Full Name
-            </label>
-            <input 
-              name="full_name" 
-              type="text" 
-              required 
-              placeholder="Full Name" 
-              className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3 px-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
-            />
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div>
+            <label style={labelStyle}>Full Name</label>
+            <input name="full_name" type="text" required placeholder="John Doe" style={inputStyle} />
           </div>
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
-              Username
-            </label>
-            <input 
-              name="username" 
-              type="text" 
-              required 
-              placeholder="Username" 
-              className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3 px-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
-            />
+          <div>
+            <label style={labelStyle}>Username</label>
+            <input name="username" type="text" required placeholder="striker_01" style={inputStyle} />
           </div>
         </div>
 
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
-            <Mail className="w-3 h-3" /> Email Address
-          </label>
-          <input 
-            name="email" 
-            type="email" 
-            required 
-            placeholder="name@example.com" 
-            className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3 px-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
-          />
+        <div>
+          <label style={labelStyle}>Email Address</label>
+          <input name="email" type="email" required placeholder="name@domain.com" style={inputStyle} />
         </div>
 
-        <div className="space-y-1.5">
-          <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
-            <Phone className="w-3 h-3" /> Phone Number
-          </label>
-          <input 
-            name="phone" 
-            type="tel" 
-            required 
-            placeholder="+234..." 
-            className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3 px-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
-          />
+        <div>
+          <label style={labelStyle}>Phone Number</label>
+          <input name="phone" type="tel" required placeholder="+234..." style={inputStyle} />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
-              <Lock className="w-3 h-3" /> Password
-            </label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          <div style={{ position: 'relative' }}>
+            <label style={labelStyle}>Password</label>
             <input 
               name="password" 
-              type="password" 
+              type={showPassword ? "text" : "password"} 
               required 
               placeholder="••••••••" 
-              className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3 px-4 text-xs text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
+              style={inputStyle} 
             />
-            <p className="text-[8px] text-muted opacity-40 ml-1 mt-1 uppercase tracking-widest leading-normal">8+ chars, 1 uppercase, 1 number, 1 symbol</p>
+            <button 
+              type="button" 
+              onClick={() => setShowPassword(!showPassword)}
+              style={{ position: 'absolute', right: '12px', bottom: '12px', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
+            >
+              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
           </div>
-          <div className="space-y-1.5">
-            <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
-              <Ticket className="w-3 h-3" /> Referral Code
-            </label>
+          <div>
+            <label style={labelStyle}>Referral Code</label>
             <input 
               name="referral_code" 
               type="text" 
-              placeholder="Optional" 
               value={referralCode}
               onChange={(e) => setReferralCode(e.target.value)}
-              className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3 px-4 text-xs text-gold placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner font-bold" 
+              placeholder="Optional" 
+              style={inputStyle} 
             />
           </div>
         </div>
 
-        <button 
-          type="submit" 
-          disabled={isPending} 
-          className="btn btn-blue w-full py-4 shadow-xl mt-4"
-        >
-          {isPending ? 'Processing...' : 'Create Account'}
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginTop: '8px' }}>
+          <div style={{ position: 'relative', marginTop: '2px' }}>
+            <input name="terms" type="checkbox" id="terms" style={{ opacity: 0, position: 'absolute' }} />
+            <div 
+              onClick={() => {
+                const cb = document.getElementById('terms') as HTMLInputElement;
+                cb.click();
+              }}
+              style={{ width: '18px', height: '18px', border: '2px solid var(--border)', borderRadius: '4px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+            >
+               <CheckCircle2 style={{ width: '14px', height: '14px', color: 'var(--gold)', visibility: 'hidden' }} className="checkbox-icon" />
+            </div>
+          </div>
+          <label htmlFor="terms" style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', lineHeight: 1.5, cursor: 'pointer' }}>
+            I confirm that I am at least 18 years of age and agree to the <Link href="/terms" style={{ color: 'var(--gold)', fontWeight: 600 }}>Terms of Service</Link> and <Link href="/privacy" style={{ color: 'var(--gold)', fontWeight: 600 }}>Privacy Policy</Link>.
+          </label>
+        </div>
+
+        <button type="submit" disabled={isPending} className="btn btn-primary" style={{ width: '100%', padding: '16px', fontSize: '0.875rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+          {isPending ? 'Processing Encryption...' : <>Finalize Registration <ArrowRight size={16} /></>}
         </button>
       </form>
 
-      <div className="mt-10 text-center">
-        <p className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-30">
-          Already have an account? <Link href={loginUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-0.5">Sign In</Link>
-        </p>
-      </div>
+      <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '40px', fontWeight: 500 }}>
+        Member already? <Link href="/login" style={{ color: 'var(--blue-electric)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sign In</Link>
+      </p>
+
+      <style jsx>{`
+        input:checked + div {
+          border-color: var(--gold) !important;
+          background: rgba(var(--gold-rgb), 0.1);
+        }
+        input:checked + div .checkbox-icon {
+          visibility: visible !important;
+        }
+      `}</style>
     </div>
   );
 }
 
 export default function SignupPage() {
   return (
-    <div className="min-h-screen flex bg-[#020406] overflow-hidden">
+    <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--bg-primary)', overflow: 'hidden' }}>
       
-      {/* LEFT: Branding */}
-      <div className="hidden lg:flex flex-1 flex-col justify-between p-16 bg-[#030508] border-r border-white/5 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-blue-glow blur-[120px] opacity-10 pointer-events-none" />
-        
-        <Link href="/" className="relative z-10 flex items-center gap-2 group">
-           <span className="font-display text-2xl font-black text-white uppercase tracking-tighter italic">Pred<span className="text-gradient-gold">Chain</span></span>
-        </Link>
-        
-        <div className="relative z-10 max-w-sm">
-          <h1 className="mb-6 leading-tight">
-            Join the <br />
-            <span className="text-gradient-gold">Arena.</span> <br />
-            Win Big.
-          </h1>
-          <p className="text-[10px] font-black text-muted uppercase tracking-[0.4em] opacity-30 leading-loose">
-            High-Yield Sports Prediction Arena
-          </p>
-        </div>
+      {/* ──────────────────────── LEFT: CINEMATIC ART ──────────────────────── */}
+      <div className="auth-pane-left">
+        <div style={{ position: 'absolute', inset: 0, background: 'var(--bg-secondary)', zIndex: 0 }} />
+        <div style={{ position: 'absolute', top: '5%', right: '5%', width: '80%', height: '80%', background: 'var(--grad-gold)', filter: 'blur(160px)', opacity: 0.15, borderRadius: '50%', zIndex: 1 }} />
+        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '32px 32px', zIndex: 1 }} />
 
-        <div className="relative z-10 flex items-center gap-4 text-muted opacity-20">
-           <ShieldCheck className="w-5 h-5" />
-           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Verified Payout Protocols Active</span>
+        <div style={{ position: 'relative', zIndex: 2, padding: '80px', maxWidth: '640px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '80px', width: 'fit-content' }}>
+            <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg, var(--gold), #FFF)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontWeight: 900, fontSize: '1.25rem', boxShadow: '0 0 20px rgba(255,215,0,0.3)' }}>P</div>
+            <span style={{ fontFamily: "var(--font-display)", fontSize: '1.75rem', fontWeight: 900, color: '#FFF', letterSpacing: '-0.03em' }}>PredChain</span>
+          </Link>
+          
+          <div style={{ marginBottom: '60px' }}>
+             <h1 style={{ fontFamily: "var(--font-display)", fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 900, color: '#FFF', lineHeight: 1.05, marginBottom: '32px', letterSpacing: '-0.04em' }}>
+              Your Capital <br />
+              <span className="text-gradient-gold">Multiplied 10X.</span>
+            </h1>
+            <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontWeight: 400, opacity: 0.8, maxWidth: '500px' }}>
+              Join the only platform where football insights translate directly into verified financial growth through our atomic settlement protocol.
+            </p>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
+             <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ marginTop: '4px', color: 'var(--gold)' }}><ShieldCheck size={20} /></div>
+                <div>
+                   <h4 style={{ color: '#FFF', fontSize: '0.875rem', fontWeight: 800, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Atomic Security</h4>
+                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', lineHeight: 1.5 }}>Multi-sig wallet protection on every settlement.</p>
+                </div>
+             </div>
+             <div style={{ display: 'flex', gap: '16px' }}>
+                <div style={{ marginTop: '4px', color: 'var(--gold)' }}><Zap size={20} /></div>
+                <div>
+                   <h4 style={{ color: '#FFF', fontSize: '0.875rem', fontWeight: 800, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Instant Payout</h4>
+                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', lineHeight: 1.5 }}>3/3 correct predictions settle in real-time.</p>
+                </div>
+             </div>
+          </div>
         </div>
       </div>
 
-      {/* RIGHT: Form */}
-      <div className="flex-1 flex items-center justify-center p-6 relative">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-gold-glow blur-[100px] opacity-10 pointer-events-none" />
+      {/* ──────────────────────── RIGHT: AUTH FORM ──────────────────────── */}
+      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', position: 'relative', overflowY: 'auto' }}>
+        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'var(--grad-blue)', filter: 'blur(160px)', opacity: 0.05, pointerEvents: 'none' }} />
         
-        <Suspense fallback={<div className="text-[10px] font-bold text-muted uppercase tracking-widest animate-pulse">Connecting...</div>}>
-          <SignupForm />
+        <Suspense fallback={<div style={{ color: '#FFF', fontWeight: 900, fontFamily: 'var(--font-mono)' }}>INITIALIZING...</div>}>
+           <SignupForm />
         </Suspense>
       </div>
     </div>
   );
 }
+
+const labelStyle = {
+  display: 'block', 
+  fontSize: '0.7rem', 
+  fontWeight: 800, 
+  color: 'var(--text-secondary)', 
+  textTransform: 'uppercase', 
+  letterSpacing: '0.1em',
+  marginBottom: '8px',
+  opacity: 0.6
+};
+
+const inputStyle = {
+  width: '100%', 
+  padding: '14px 18px', 
+  background: 'rgba(255,255,255,0.02)',
+  border: '1px solid var(--border)', 
+  borderRadius: '12px', 
+  color: '#FFF',
+  fontSize: '0.9375rem', 
+  fontWeight: 500,
+  outline: 'none', 
+  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+  fontFamily: 'inherit',
+  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
+};

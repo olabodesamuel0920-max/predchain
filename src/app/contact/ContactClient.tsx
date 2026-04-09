@@ -59,7 +59,7 @@ export default function ContactClient() {
             <div>
               <div style={{ fontSize: '0.625rem', fontWeight: 800, color: 'var(--blue-electric)', textTransform: 'uppercase', letterSpacing: '0.15em', marginBottom: '8px' }}>Global Network Support</div>
               <h1 className="font-display" style={{ fontSize: 'clamp(2rem, 3.5vw, 2.75rem)', fontWeight: 900, marginBottom: '16px', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
-                Support Center
+                Resolution Center
               </h1>
               <p className="text-secondary" style={{ fontSize: '1rem', marginBottom: '32px', maxWidth: '480px', lineHeight: 1.6 }}>
                 Technical inquiries, account recovery, and platform verification. Our specialists are on standby.
@@ -87,7 +87,7 @@ export default function ContactClient() {
             }}>
               {!submitted ? (
                 <>
-                  <h2 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFF', marginBottom: '24px', letterSpacing: '-0.01em' }}>Submit Ticket</h2>
+                  <h2 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFF', marginBottom: '24px', letterSpacing: '-0.01em' }}>Initialize Ticket</h2>
                   {error && <div style={{ color: 'var(--danger)', marginBottom: '16px', fontSize: '0.75rem', fontWeight: 700 }}>{error}</div>}
                   <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -138,21 +138,22 @@ export default function ContactClient() {
                       />
                     </div>
                     <button type="submit" className="btn btn-primary btn-sm w-full" disabled={loading} style={{ padding: '14px', marginTop: '8px' }}>
-                      {loading ? 'Submitting...' : 'Submit Ticket'}
+                      {loading ? 'Transmitting...' : 'Submit Priority Ticket'}
                     </button>
                   </form>
                 </>
               ) : (
                 <div style={{ textAlign: 'center', padding: '24px 0' }}>
                   <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0, 230, 118, 0.1)', border: '2px solid var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', fontSize: '24px' }}>✓</div>
-                  <h2 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFF', marginBottom: '8px' }}>Message Received</h2>
+                  <h2 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFF', marginBottom: '8px' }}>Ticket Transmitted</h2>
                   <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '0.875rem', lineHeight: 1.6 }}>
-                    We've received your inquiry and will contact you at <strong>{form.email}</strong> shortly.
+                    ID: #{Math.floor(Math.random() * 90000) + 10000 }<br/>
+                    We've received your statement and will contact you at <strong>{form.email}</strong> shortly.
                   </p>
                   <button
                     onClick={() => { setSubmitted(false); setForm({ name: '', email: '', subject: '', message: '' }); }}
                     className="btn btn-ghost btn-sm w-full"
-                  >Submit Another Ticket</button>
+                  >New Transmission</button>
                 </div>
               )}
             </div>

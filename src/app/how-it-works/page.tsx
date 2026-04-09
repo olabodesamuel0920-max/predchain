@@ -1,218 +1,270 @@
 import Link from 'next/link';
-import { 
-  ArrowRight, 
-  Wallet, 
-  Layout, 
-  Target, 
-  Activity, 
-  Trophy, 
-  Globe, 
-  TrendingUp, 
-  Users,
-  ShieldCheck,
-  Zap,
-  ArrowUpRight,
-  ChevronRight,
-  ShieldAlert,
-  Star,
-  Shield,
-  Search,
-  Award,
-  CreditCard
-} from 'lucide-react';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'How it Works — PredChain',
-  description: 'Master the elite football prediction arena. Learn our performance-driven 3-day sequence methodology.',
+  title: 'How It Works — PredChain',
+  description: 'Learn how the 3-day football prediction challenge works, how to buy an account, submit predictions, and unlock the 10X cash reward.',
 };
 
 const STEPS = [
   {
     number: '01',
-    icon: CreditCard,
-    title: 'Select Your Tier',
-    description: 'Choose an entry tier that fits your goals. Your plan defines your level of access and reward potential in the arena.',
-    detail: 'Instant account synchronization upon activation.',
+    icon: '💳',
+    title: 'Buy an Account',
+    description: 'Choose your challenge account tier — Starter (₦5,000), Standard (₦10,000), or Premium (₦20,000). Your account unlocks full access to the prediction challenge round and determines your cash reward multiplier.',
+    detail: 'Account purchase is secure and instant. Once confirmed, you are automatically assigned to the current or next active challenge round.',
   },
   {
     number: '02',
-    icon: Search,
-    title: 'Analyze Fixtures',
-    description: 'Every challenge spans 3 consecutive matchdays. Study upcoming matches using our data-driven performance feeds.',
-    detail: 'Real-time match analytics provided for all members.',
+    icon: '🏟️',
+    title: 'Enter a 3-Day Challenge Round',
+    description: 'Each challenge round runs for exactly 3 days. You are placed into the active round immediately after your account is confirmed. Rounds run continuously — a new round begins as soon as the previous one ends.',
+    detail: 'The round dashboard shows your 3 scheduled prediction matches — one per day — along with kickoff times, live status, and current leaderboard position.',
   },
   {
     number: '03',
-    icon: Target,
-    title: 'Submit Predictions',
-    description: 'Place one precise match outcome prediction every 24 hours before kickoff. High-precision analysis is strictly required.',
-    detail: 'Single-pick integrity enforced for every matchday.',
+    icon: '⚽',
+    title: 'Predict 1 Live Match Per Day',
+    description: 'Each day of the challenge, one live football match opens for prediction. You have a defined window to submit your prediction before the match kicks off. Predictions lock automatically at match start.',
+    detail: 'You predict the match outcome: Home Win, Draw, or Away Win. You submit one prediction per day for 3 consecutive days. Missing a prediction means your streak resets.',
   },
   {
     number: '04',
-    icon: TrendingUp,
-    title: 'Maintain Consistency',
-    description: 'Track your streak live. To secure the top multiplier, you must maintain a perfect 3-day winning sequence.',
-    detail: 'Live performance indicators visible in your dashboard.',
+    icon: '📊',
+    title: 'Track Your Results Live',
+    description: 'Watch match results in real time on the Live Challenge page. Your dashboard updates live as each match resolves. Correct predictions advance your streak. Incorrect predictions reset it.',
+    detail: 'The live leaderboard reflects your position against all active challengers in real time. Track your streak progress and see who you need to beat.',
   },
   {
     number: '05',
-    icon: Award,
-    title: 'Secured Rewards',
-    description: 'Achieve a 3/3 sequence and unlock your 10X reward multipliers. Winnings are settled and paid directly to your wallet.',
-    detail: 'Automated settlement initiated upon final verification.',
+    icon: '🏆',
+    title: 'Complete 3/3 to Unlock the 10X Cash Reward',
+    description: 'If you predict all 3 matches correctly within the same round — a perfect 3/3 streak — you unlock the 10X cash reward for your account tier.',
+    detail: 'Your win is reviewed and verified by the PredChain admin team. Once verified, the cash reward is processed and paid out. All verified winners are publicly displayed on the Winners page.',
   },
 ];
 
 const REWARD_TABLE = [
-  { tier: 'Starter', entry: '₦5,000', reward: '50,000', multiplier: '10X' },
-  { tier: 'Standard', entry: '₦10,000', reward: '100,000', multiplier: '10X' },
-  { tier: 'Premium', entry: '₦20,000', reward: '200,000', multiplier: '10X' },
+  { tier: 'Starter', entry: '₦5,000', reward: '₦50,000', multiplier: '10X' },
+  { tier: 'Standard', entry: '₦10,000', reward: '₦100,000', multiplier: '10X' },
+  { tier: 'Premium', entry: '₦20,000', reward: '₦200,000', multiplier: '10X' },
 ];
 
 export default function HowItWorksPage() {
   return (
-    <div className="relative min-h-screen pt-40 pb-32">
-      {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-full h-[800px] bg-gold-glow blur-[140px] opacity-10" />
-      </div>
+    <div style={{ paddingTop: '80px' }}>
 
-      {/* Hero Section */}
-      <section className="relative z-10 mb-40 text-center px-6">
-        <div className="container max-w-4xl">
-          <div className="badge-premium !text-gold mb-10 px-6 py-2">The Player Guide</div>
-          <h1 className="mb-10 leading-[1.05]">
-            Master the <span className="text-gradient-gold">Arena Pool.</span>
+      {/* Hero */}
+      <section style={{
+        padding: '80px 0 64px',
+        background: 'linear-gradient(180deg, #0D1321 0%, #070B14 100%)',
+        borderBottom: '1px solid rgba(255,255,255,0.07)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          position: 'absolute', top: '-100px', right: '10%',
+          width: '500px', height: '500px', borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(0,194,255,0.08) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} aria-hidden="true" />
+        <div className="container text-center">
+          <div className="section-label" style={{ justifyContent: 'center' }}>Platform Guide</div>
+          <h1 className="section-title" style={{ fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', margin: '0 auto 20px' }}>
+            How PredChain Works
           </h1>
-          <p className="text-secondary text-lg font-medium opacity-70 max-w-2xl mx-auto mb-16 leading-relaxed">
-            PredChain is a high-performance prediction system. Build a perfect 3-day winning sequence to unlock 10X reward multipliers. 
+          <p className="section-subtitle" style={{ margin: '0 auto 40px', maxWidth: '580px' }}>
+            A structured, transparent performance challenge. Five steps from account purchase to verified cash reward unlock.
           </p>
-          <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link href="/accounts" className="btn btn-primary !px-16 !py-6 text-base shadow-2xl group">
-               Start Your Streak <ArrowUpRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
-            </Link>
-            <Link href="/arena" className="btn btn-secondary !px-16 !py-6 text-base border-white/10">Browse Live Matches</Link>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/accounts" className="btn btn-primary btn-lg">Buy Account</Link>
+            <Link href="/live-challenges" className="btn btn-ghost btn-lg">View Live Challenges</Link>
           </div>
         </div>
       </section>
 
-      {/* Vertical Timeline */}
-      <section className="relative z-10 mb-48 px-6">
-        <div className="container max-w-4xl space-y-10">
-          {STEPS.map((step, i) => (
-            <div key={i} className="card-premium flex flex-col md:flex-row items-center md:items-start gap-16 group bg-[#0a0d14] hover:border-gold/30 transition-all duration-700 shadow-2xl relative overflow-hidden">
-              {/* Icon Section */}
-              <div className="relative shrink-0 flex flex-col items-center gap-6">
-                 <div className="w-20 h-20 rounded-3xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-gold shadow-lg group-hover:scale-110 group-hover:bg-gold group-hover:text-black transition-all duration-700">
-                    <step.icon className="w-9 h-9" />
-                 </div>
-                 <div className="text-5xl font-bold font-display text-white/5 group-hover:text-gold/20 transition-colors uppercase italic">{step.number}</div>
-              </div>
+      {/* Steps */}
+      <section className="section">
+        <div className="container-sm">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+            {STEPS.map((step, i) => (
+              <div key={i} style={{
+                display: 'grid',
+                gridTemplateColumns: 'auto 1fr',
+                gap: '32px',
+                padding: '36px',
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                borderRadius: '20px',
+                position: 'relative',
+                overflow: 'hidden',
+              }}>
+                {/* Left: Step number + connector */}
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+                  <div style={{
+                    width: '64px', height: '64px', borderRadius: '16px',
+                    background: 'rgba(255,255,255,0.04)',
+                    border: '1px solid rgba(255,255,255,0.09)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    fontSize: '1.75rem', flexShrink: 0,
+                  }}>
+                    {step.icon}
+                  </div>
+                  {i < STEPS.length - 1 && (
+                    <div style={{
+                      width: '1px', flex: 1,
+                      background: 'linear-gradient(180deg, rgba(212,175,55,0.3), transparent)',
+                      minHeight: '40px',
+                    }} aria-hidden="true" />
+                  )}
+                </div>
 
-              {/* Content Section */}
-              <div className="flex-1 text-center md:text-left">
-                 <div className="badge-premium !text-gold mb-8 px-4 font-display">Step {step.number}</div>
-                 <h2 className="text-3xl md:text-5xl mb-8 tracking-tight font-display">{step.title}</h2>
-                 <p className="text-secondary text-base md:text-lg font-medium opacity-60 leading-relaxed mb-12">
+                {/* Right: Content */}
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                    <span style={{
+                      fontFamily: "'Space Mono', monospace",
+                      fontSize: '0.75rem', fontWeight: 700,
+                      color: 'var(--gold)', letterSpacing: '0.1em',
+                    }}>STEP {step.number}</span>
+                  </div>
+                  <h2 style={{
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontSize: '1.375rem', fontWeight: 700,
+                    color: '#F8FAFC', marginBottom: '12px',
+                  }}>
+                    {step.title}
+                  </h2>
+                  <p style={{ color: '#A7B0C0', lineHeight: 1.75, marginBottom: '14px' }}>
                     {step.description}
-                 </p>
-                 <div className="p-6 bg-white/[0.02] border border-white/5 rounded-3xl flex items-center gap-6 group-hover:bg-white/[0.05] transition-all">
-                    <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0" />
-                    <span className="text-xs font-bold text-muted uppercase tracking-widest opacity-40 italic">{step.detail}</span>
-                 </div>
+                  </p>
+                  <div style={{
+                    padding: '14px 18px',
+                    background: 'rgba(255,255,255,0.03)',
+                    borderLeft: '2px solid rgba(0,194,255,0.4)',
+                    borderRadius: '0 8px 8px 0',
+                    fontSize: '0.875rem',
+                    color: '#6E7A91',
+                    lineHeight: 1.7,
+                  }}>
+                    {step.detail}
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Reward Matrix */}
-      <section className="relative z-10 mb-48 px-6">
-        <div className="container max-w-5xl">
-          <div className="text-center mb-20">
-            <h2 className="mb-6">Reward <span className="text-gradient-gold">Matrix.</span></h2>
-            <p className="text-secondary opacity-60 font-medium tracking-wide">Standardized 10X reward multipliers at every entry level.</p>
+      {/* Reward mapping */}
+      <section className="section-sm" style={{ background: 'var(--bg-secondary)', borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+        <div className="container-sm">
+          <div className="text-center" style={{ marginBottom: '40px' }}>
+            <div className="section-label" style={{ justifyContent: 'center' }}>Reward Logic</div>
+            <h2 className="section-title" style={{ margin: '0 auto' }}>Account Tier → Cash Reward</h2>
           </div>
-          
-          <div className="card-premium !p-0 overflow-hidden bg-[#0a0d14] border-white/5 shadow-2xl">
-            <div className="overflow-x-auto no-scrollbar">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-white/[0.02] border-b border-white/5">
-                    <th className="px-12 py-8 text-xs font-bold text-muted uppercase tracking-[0.2em] opacity-40 italic">TIER CATEGORY</th>
-                    <th className="px-12 py-8 text-xs font-bold text-muted uppercase tracking-[0.2em] opacity-40 italic">ENTRY FEE</th>
-                    <th className="px-12 py-8 text-xs font-bold text-muted uppercase tracking-[0.2em] opacity-40 italic text-right">MAXIMUM REWARD</th>
+          <div className="table-wrapper">
+            <table className="table" aria-label="Account tier reward mapping">
+              <thead>
+                <tr>
+                  <th>Account Tier</th>
+                  <th>Entry Price</th>
+                  <th>Multiplier</th>
+                  <th>Perfect Streak Reward</th>
+                </tr>
+              </thead>
+              <tbody>
+                {REWARD_TABLE.map((r, i) => (
+                  <tr key={i}>
+                    <td style={{ fontFamily: "'Space Grotesk', sans-serif", fontWeight: 700, color: '#F8FAFC' }}>{r.tier}</td>
+                    <td>{r.entry}</td>
+                    <td>
+                      <span className="badge badge-gold">{r.multiplier}</span>
+                    </td>
+                    <td style={{
+                      fontFamily: "'Space Grotesk', sans-serif",
+                      fontWeight: 800,
+                      fontSize: '1.125rem',
+                      background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}>{r.reward}</td>
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-white/5">
-                  {REWARD_TABLE.map((r, i) => (
-                    <tr key={i} className="hover:bg-white/[0.01] transition-colors group">
-                      <td className="px-12 py-10 text-2xl font-bold text-white font-display uppercase italic">{r.tier}</td>
-                      <td className="px-12 py-10 text-sm font-bold text-muted opacity-50 uppercase tracking-widest">{r.entry}</td>
-                      <td className="px-12 py-10 text-right">
-                        <div className="flex flex-col items-end gap-3">
-                           <span className="text-3xl md:text-4xl font-bold font-display text-white tracking-tight">₦{r.reward}</span>
-                           <div className="badge-premium !py-1 !px-4 font-bold !bg-emerald-500/10 !text-emerald-500 border-emerald-500/10 italic text-[10px] tracking-tight">10X PAYOUT</div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      {/* Referral Program */}
-      <section className="relative z-10 mb-40 px-6 container">
-        <div className="card-premium !p-20 md:!p-32 bg-[#07090e] border-blue-500/10 relative overflow-hidden flex flex-col xl:flex-row items-center gap-24 shadow-2xl">
-           <div className="absolute top-0 right-0 p-32 opacity-5 pointer-events-none select-none"><Globe className="w-96 h-96" /></div>
-           
-           <div className="flex-1 text-center xl:text-left relative z-10">
-              <div className="badge-premium !text-blue-electric mb-10 px-6 py-2">Performance Affiliates</div>
-              <h2 className="mb-10 text-5xl md:text-7xl leading-tight">Scale Your <br /><span className="text-gradient-blue text-white">Network.</span></h2>
-              <p className="text-secondary text-lg font-medium opacity-60 mb-16 max-w-xl mx-auto xl:mx-0 leading-relaxed">
-                Connect other players to the arena. Earn ₦1,000 for every successful account activation in your professional network.
+      {/* Referral explanation */}
+      <section className="section">
+        <div className="container-sm">
+          <div style={{
+            padding: '48px',
+            background: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: '24px',
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gap: '48px',
+            alignItems: 'center',
+          }}>
+            <div>
+              <div className="section-label">Referral Bonus</div>
+              <h2 style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: '1.75rem', fontWeight: 700,
+                color: '#F8FAFC', lineHeight: 1.2, marginBottom: '16px',
+              }}>
+                Earn ₦1,000 Per Successful Referral
+              </h2>
+              <p style={{ color: '#A7B0C0', lineHeight: 1.75, marginBottom: '24px' }}>
+                Share your unique referral code with friends. Every friend who purchases a PredChain account using your code earns you a ₦1,000 cash bonus — deposited directly to your earnings wallet. No limit on referrals.
               </p>
-              <Link href="/referral" className="btn btn-primary !bg-white !text-black !px-16 !py-6 text-base rounded-2xl shadow-2xl group">
-                 Affiliate Portal <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-2" />
-              </Link>
-           </div>
-           
-           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full xl:w-auto relative z-10">
+              <Link href="/referral" className="btn btn-primary">View Referral Program</Link>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
               {[
-                { icon: Shield, text: 'AUTHENTICATE' },
-                { icon: Globe, text: 'SHARE LINK' },
-                { icon: Zap, text: 'TRACK ACTIVITY' },
-                { icon: Wallet, text: 'COLLECT BONUSES' },
+                { step: '1', icon: '🔗', text: 'Get your unique referral code from your dashboard' },
+                { step: '2', icon: '👥', text: 'Share your link with friends, family, or followers' },
+                { step: '3', icon: '✅', text: 'Friend purchases an account using your code' },
+                { step: '4', icon: '💰', text: 'You instantly earn ₦1,000 in your earnings wallet' },
               ].map((item, i) => (
-                <div key={i} className="card-premium !p-8 bg-black/40 border-white/5 flex items-center gap-8 shadow-inner hover:border-blue-500/30 transition-all">
-                   <div className="w-12 h-12 bg-white/[0.03] rounded-2xl border border-white/5 flex items-center justify-center text-muted/30">
-                      <item.icon className="w-6 h-6" />
-                   </div>
-                   <span className="text-[11px] font-bold text-muted uppercase tracking-[0.2em] opacity-40">{item.text}</span>
+                <div key={i} style={{
+                  display: 'flex', alignItems: 'center', gap: '14px',
+                  padding: '16px', background: 'rgba(255,255,255,0.03)',
+                  border: '1px solid rgba(255,255,255,0.06)',
+                  borderRadius: '12px',
+                }}>
+                  <span style={{ fontSize: '1.25rem' }}>{item.icon}</span>
+                  <span style={{ fontSize: '0.875rem', color: '#A7B0C0' }}>{item.text}</span>
                 </div>
               ))}
-           </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative z-10 container pb-24 px-6">
-        <div className="card-premium !p-24 md:!p-44 text-center relative overflow-hidden bg-grad-glow border-gold/10 shadow-2xl">
-           <div className="max-w-3xl mx-auto relative z-10">
-              <h2 className="mb-12 text-6xl md:text-8xl leading-none tracking-tight">Ready to <br /><span className="text-gradient-gold">Dominate?</span></h2>
-              <p className="text-secondary text-lg font-medium opacity-50 mb-20 max-w-xl mx-auto leading-relaxed">
-                 Choose your tier, analyze the arena, and secure your first 3-day winning sequence today.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-8 justify-center">
-                <Link href="/accounts" className="btn btn-primary !px-20 !py-6 text-lg shadow-2xl">Join the Arena Pool</Link>
-                <Link href="/arena" className="btn btn-secondary !px-20 !py-6 text-lg border-white/10">Active Matches</Link>
-              </div>
-           </div>
+      {/* CTA */}
+      <section className="section-sm" style={{ background: 'var(--bg-secondary)', borderTop: '1px solid rgba(255,255,255,0.07)', textAlign: 'center' }}>
+        <div className="container">
+          <h2 style={{
+            fontFamily: "'Space Grotesk', sans-serif",
+            fontSize: 'clamp(2rem, 4vw, 2.75rem)',
+            fontWeight: 800, letterSpacing: '-0.03em',
+            marginBottom: '16px', color: '#F8FAFC',
+          }}>
+            Ready to Start Your Challenge?
+          </h2>
+          <p style={{ color: '#A7B0C0', marginBottom: '32px', fontSize: '1.0625rem', maxWidth: '480px', margin: '0 auto 32px' }}>
+            Buy an account, enter the live round, and build the perfect 3-match streak.
+          </p>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/accounts" className="btn btn-primary btn-lg">Buy Account</Link>
+            <Link href="/live-challenges" className="btn btn-ghost btn-lg">See Live Round</Link>
+          </div>
         </div>
       </section>
     </div>

@@ -1,170 +1,169 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LogOut, Menu, X, ArrowUpRight, ChevronRight, Shield, Globe } from 'lucide-react';
+import { Shield, User, LogOut, ChevronRight, Menu, X, ArrowUpRight } from 'lucide-react';
 import { logout } from '@/app/actions/auth';
-import { createClient } from '@/lib/supabase/client';
+import styles from './Navbar.module.css';
 
 const navLinks = [
-  { href: '/', label: 'Home' },
-  { href: '/accounts', label: 'Tiers' },
-  { href: '/arena', label: 'Arena' },
-  { href: '/winners', label: 'Winners' },
-  { href: '/leaderboard', label: 'Rankings' },
-];
-
-const mobileSecondaryLinks = [
-  { href: '/how-it-works', label: 'Guide' },
-  { href: '/referral', label: 'Affiliates' },
+  { href: '/', label: 'HOME' },
+  { href: '/how-it-works', label: 'HOW IT WORKS' },
+  { href: '/accounts', label: 'ACCOUNTS' },
+  { href: '/live-challenges', label: 'CHALLENGES' },
+  { href: '/leaderboard', label: 'LEADERBOARD' },
+  { href: '/winners', label: 'VERIFIED' },
+  { href: '/referral', label: 'NETWORK' },
 ];
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [user, setUser] = useState<any>(null);
   const pathname = usePathname();
   const isAuthRoute = pathname?.startsWith('/dashboard') ?? false;
   const isAdminRoute = pathname?.startsWith('/admin') ?? false;
 
   useEffect(() => {
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => {
-      setUser(data.user);
-    });
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-
     const onScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener('scroll', onScroll, { passive: true });
-    
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      subscription.unsubscribe();
-    };
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
 
   if (isAuthRoute || isAdminRoute) return null;
 
   return (
     <>
-      <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${scrolled ? 'h-16 py-2' : 'h-20 py-4'}`}>
-        <div className="container-tight h-full">
-          <div className={`h-full flex items-center justify-between px-6 rounded-2xl border transition-all duration-500 ${scrolled ? 'bg-bg-card/80 backdrop-blur-3xl border-border-main shadow-md' : 'bg-transparent border-transparent'}`}>
-            
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-2 group shrink-0">
-              <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20 transition-all group-hover:bg-gold/20">
-                <Shield className="w-4 h-4 text-gold" />
-              </div>
-              <span className="font-display text-sm font-bold text-white tracking-widest uppercase italic">
-                PRED<span className="text-gold">CHAIN</span>
-              </span>
-            </Link>
+      <nav className={`${styles.navbar} ${scrolled ? styles.scrolled : ''} backdrop-blur-3xl border-b border-white/5`} role="navigation">
+        <div className={`container ${styles.inner} py-8`}>
+          {/* Logo */}
+          <Link href="/" className={`${styles.logo} flex items-center gap-12 group`} aria-label="PredChain Home">
+            <div className={`${styles.logoMark} transition-transform group-hover:scale-110 duration-500`}>
+              <svg width="24" height="24" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2L24 8V20L14 26L4 20V8L14 2Z" fill="url(#logoGrad)" stroke="url(#logoStroke)" strokeWidth="0.5"/>
+                <path d="M14 7L19 10.5V17.5L14 21L9 17.5V10.5L14 7Z" fill="rgba(3,5,8,0.8)"/>
+                <path d="M14 9.5L17 11.5V16L14 18L11 16V11.5L14 9.5Z" fill="url(#logoGrad2)"/>
+                <defs>
+                  <linearGradient id="logoGrad" x1="4" y1="2" x2="24" y2="26">
+                    <stop stopColor="#F2C94C"/>
+                    <stop offset="1" stopColor="#00E5FF"/>
+                  </linearGradient>
+                  <linearGradient id="logoStroke" x1="4" y1="2" x2="24" y2="26">
+                    <stop stopColor="#F2C94C" stopOpacity="0.6"/>
+                    <stop offset="1" stopColor="#00E5FF" stopOpacity="0.6"/>
+                  </linearGradient>
+                  <linearGradient id="logoGrad2" x1="11" y1="9.5" x2="17" y2="18">
+                    <stop stopColor="#F2C94C"/>
+                    <stop offset="1" stopColor="#FDE68A"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <span className="font-display text-lg font-black tracking-tight text-white uppercase">Pred<span className="text-grad-gold italic">Chain</span></span>
+          </Link>
 
-            {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-9">
-              {navLinks.map(({ href, label }) => (
+          {/* Desktop Nav */}
+          <ul className="hidden lg:flex items-center gap-8 bg-white/[0.02] border border-white/5 rounded-full px-6 py-2" role="list">
+            {navLinks.map(({ href, label }) => (
+              <li key={href}>
                 <Link
-                  key={href}
                   href={href}
-                  className={`text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:text-white ${pathname === href ? 'text-gold' : 'text-text-muted'}`}
+                  className={`px-10 py-3 rounded-full text-[11px] font-black uppercase tracking-[0.15em] transition-all hover:text-white ${
+                    pathname === href ? 'bg-white/10 text-white shadow-sm' : 'text-muted/60'
+                  }`}
                 >
                   {label}
                 </Link>
-              ))}
-            </nav>
+              </li>
+            ))}
+          </ul>
 
-            {/* CTA's */}
-            <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-6 mr-2">
-                {!user ? (
-                  <Link href="/login" className="text-[10px] font-bold text-text-muted hover:text-white transition-all uppercase tracking-widest">Login</Link>
-                ) : null}
+          {/* Desktop CTA */}
+          <div className="hidden lg:flex items-center gap-16">
+            {isAdminRoute ? (
+              <div className="px-12 py-6 rounded-lg bg-gold/10 border border-gold/20 flex items-center gap-8">
+                <Shield className="w-12 h-12 text-gold" />
+                <span className="text-[10px] font-black text-gold uppercase tracking-[0.2em]">Platform Control</span>
               </div>
-
-              {!user ? (
-                <Link href="/accounts" className="btn-luxury btn-gold !py-2.5 !px-5 flex items-center gap-2 shadow-sm">
-                  <span className="text-[10px] pb-px">MEMBERSHIP</span>
-                  <ArrowUpRight className="w-3.5 h-3.5" />
+            ) : !isAuthRoute ? (
+              <div className="flex items-center gap-8">
+                <Link href="/login" className="px-16 py-8 text-[10px] font-black text-muted hover:text-white uppercase tracking-widest transition-colors">Sign In</Link>
+                <Link href="/accounts" className="btn btn-blue px-16 py-8 text-[10px] font-black uppercase tracking-widest shadow-lg shadow-blue-electric/20 flex items-center gap-6">
+                   Get Account <ArrowUpRight className="w-10 h-10" />
                 </Link>
-              ) : (
-                <Link href="/dashboard" className="btn-luxury btn-outline !py-2.5 !px-5 flex items-center gap-2">
-                  <span className="text-[10px] pb-px">COMMAND</span>
-                  <Globe className="w-3.5 h-3.5 text-gold" />
-                </Link>
-              )}
-
-              {/* Mobile Menu Toggle */}
-              <button 
-                onClick={() => setMenuOpen(true)}
-                className="lg:hidden p-2 text-text-muted hover:text-white transition-all"
-              >
-                <Menu className="w-6 h-6" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Mobile Drawer */}
-      <div className={`fixed inset-0 z-[200] lg:hidden transition-all duration-500 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-        <div className="absolute inset-0 bg-bg-darker/95 backdrop-blur-xl" onClick={closeMenu} />
-        <div className={`absolute right-0 top-0 bottom-0 w-full max-w-sm bg-bg-card border-l border-border-main p-8 flex flex-col transition-all duration-500 ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-          <div className="flex items-center justify-between mb-12">
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5 text-gold" />
-              <span className="font-display text-sm font-bold uppercase tracking-widest italic">PRED<span className="text-gold">CHAIN</span></span>
-            </div>
-            <button onClick={closeMenu} className="p-2 bg-white/5 rounded-full text-text-muted hover:text-white">
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-
-          <nav className="flex flex-col gap-1">
-            {navLinks.map(({ href, label }) => (
-              <Link 
-                key={href} 
-                href={href} 
-                onClick={closeMenu}
-                className={`py-4 px-6 rounded-xl font-display text-lg font-bold flex items-center justify-between transition-all ${pathname === href ? 'bg-gold/10 text-gold' : 'text-text-secondary hover:bg-white/5'}`}
-              >
-                {label}
-                <ChevronRight className={`w-5 h-5 transition-all ${pathname === href ? 'opacity-100' : 'opacity-20'}`} />
-              </Link>
-            ))}
-            
-            <div className="my-6 border-t border-border-subtle" />
-            
-            {mobileSecondaryLinks.map(({ href, label }) => (
-              <Link 
-                key={href} 
-                href={href} 
-                onClick={closeMenu}
-                className="py-3 px-6 text-sm font-semibold text-text-muted hover:text-white flex items-center justify-between"
-              >
-                {label}
-                <ArrowUpRight className="w-4 h-4 opacity-20" />
-              </Link>
-            ))}
-          </nav>
-
-          <div className="mt-auto flex flex-col gap-4 pt-10">
-            {!user ? (
-               <Link href="/accounts" onClick={closeMenu} className="btn-luxury btn-gold w-full py-5 text-sm uppercase tracking-widest font-bold">
-                 Initialize Arena Access
-               </Link>
+              </div>
             ) : (
-               <button onClick={() => { logout(); closeMenu(); }} className="btn-luxury btn-outline w-full py-5 text-sm uppercase tracking-widest font-bold text-rose-500 border-rose-500/20">
-                 Terminate Session
-               </button>
+              <div className="flex items-center gap-12 group cursor-pointer">
+                <Link href="/accounts" className="px-12 py-4 rounded-lg border border-white/5 text-[9px] font-black text-muted uppercase tracking-widest hover:border-white/20 transition-all">Upgrade Tier</Link>
+                <div className="w-32 h-32 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-gold shadow-lg group-hover:border-gold/30 transition-all">
+                  S
+                </div>
+              </div>
             )}
-            <p className="text-center text-[9px] font-bold text-text-dim uppercase tracking-[0.3em] mt-2">v2.0 Elite Production Node</p>
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="lg:hidden p-8 text-muted hover:text-white transition-colors"
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          >
+            {menuOpen ? <X className="w-20 h-20" /> : <Menu className="w-20 h-20" />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      <div
+        id="mobile-menu"
+        className={`${styles.mobileMenu} ${menuOpen ? styles.mobileMenuOpen : ''} backdrop-blur-3xl bg-primary/95 border-l border-white/5`}
+        role="dialog"
+      >
+        <div className="p-32 flex flex-col h-full">
+           <div className="flex items-center justify-between mb-48">
+              <span className="font-display text-lg font-black tracking-tight text-white uppercase italic">PredChain</span>
+              <button onClick={() => setMenuOpen(false)} className="p-8 bg-white/5 rounded-full text-muted"><X className="w-16 h-16" /></button>
+           </div>
+           
+           <ul className="flex flex-col gap-24 mb-64" role="list">
+            {navLinks.map(({ href, label }, i) => (
+              <li key={href} style={{ transitionDelay: `${i * 50}ms` }} className={`transform transition-all ${menuOpen ? 'translate-x-0 opacity-100' : 'translate-x-32 opacity-0'}`}>
+                <Link
+                  href={href}
+                  onClick={() => setMenuOpen(false)}
+                  className={`text-xl font-black uppercase tracking-[0.2em] transition-all ${
+                    pathname === href ? 'text-blue-electric italic' : 'text-muted/60 hover:text-white'
+                  }`}
+                >
+                  {label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-auto flex flex-col gap-12">
+            {isAdminRoute ? (
+              <Link href="/" onClick={() => setMenuOpen(false)} className="btn btn-outline-gold w-full text-[12px] font-black uppercase tracking-widest flex items-center justify-center gap-8">
+                 Platform Control <LogOut className="w-14 h-14" />
+              </Link>
+            ) : !isAuthRoute ? (
+              <>
+                <Link href="/login" onClick={() => setMenuOpen(false)} className="px-24 py-16 text-center text-[11px] font-black text-muted uppercase tracking-widest">Sign In</Link>
+                <Link href="/accounts" onClick={() => setMenuOpen(false)} className="btn btn-blue w-full py-16 text-[11px] font-black uppercase tracking-widest shadow-xl">Join Network</Link>
+              </>
+            ) : (
+              <>
+                <Link href="/accounts" onClick={() => setMenuOpen(false)} className="px-24 py-16 text-center text-[11px] font-black text-muted uppercase tracking-widest">Upgrade Tier</Link>
+                <button onClick={() => logout()} className="btn btn-primary w-full py-16 text-[11px] font-black uppercase tracking-widest flex items-center justify-center gap-8">
+                   Sign Out <LogOut className="w-14 h-14" />
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

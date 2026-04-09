@@ -1,7 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { CheckCircle2, TrendingUp, Trophy, ArrowUpRight, Globe, ShieldCheck, Zap, DollarSign } from 'lucide-react';
 
 interface WinnersClientProps {
   winners: Array<{
@@ -13,110 +12,169 @@ interface WinnersClientProps {
   }>;
 }
 
+const tierColors: Record<string, string> = {
+  Premium: '#D4AF37',
+  Standard: '#00C2FF',
+  Starter: '#22C55E',
+};
+
 export default function WinnersClient({ winners }: WinnersClientProps) {
   const totalPaid = winners.reduce((sum, w) => sum + w.payout_amount, 0);
 
   return (
-    <div className="relative min-h-screen pt-24 sm:pt-32 pb-24">
-      {/* Background Decor */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-muted/5 blur-[120px]" />
-      </div>
+    <div style={{ paddingTop: '80px' }}>
 
-      <div className="container-tight relative z-10">
-        {/* Hero Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-16 items-stretch">
-          <div className="lg:col-span-8 card-luxury !p-10 sm:!p-16 bg-[#11161D] border-gold/10 flex flex-col justify-center">
-             <div className="badge-luxury mb-6 px-4 py-1.5 uppercase italic font-black tracking-widest">PAYOUT PROTOCOL</div>
-             <h1 className="mb-4 uppercase italic font-black leading-tight tracking-tight">Verified <span className="text-gradient-gold">Winners.</span></h1>
-             <p className="text-text-secondary text-sm font-normal leading-relaxed max-w-lg mb-0 italic">
-               A transparent record of participants who successfully completed their sequences and received automated reward settlement.
-             </p>
-          </div>
-          
-          <div className="lg:col-span-4 card-luxury !p-10 bg-bg-card border-border-subtle flex flex-col items-center justify-center text-center relative overflow-hidden">
-             <div className="text-[9px] font-black text-text-dim uppercase tracking-[0.2em] mb-3 italic opacity-60">Total Verified Payouts</div>
-             <div className="text-4xl sm:text-5xl font-black text-white italic tracking-tighter leading-none mb-4 font-display">
-                ₦{totalPaid.toLocaleString()}
-             </div>
-             <div className="flex items-center gap-2 text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/5 px-3 py-1 rounded-lg border border-emerald-500/10 italic">
-                <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                Live Network Ledger
-             </div>
+      {/* Hero */}
+      <section style={{
+        padding: '72px 0 56px',
+        background: 'linear-gradient(180deg, #0D1321 0%, #070B14 100%)',
+        borderBottom: '1px solid rgba(255,255,255,0.07)',
+        position: 'relative', overflow: 'hidden',
+      }}>
+        <div style={{
+          position: 'absolute', top: '-80px', right: '10%',
+          width: '500px', height: '500px', borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(212,175,55,0.1) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }} aria-hidden="true" />
+        <div className="container" style={{ position: 'relative', zIndex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '32px' }}>
+            <div>
+              <div className="section-label">Verified Winners</div>
+              <h1 className="section-title" style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', marginBottom: '12px' }}>
+                Real Challengers.<br />
+                <span style={{
+                  background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
+                  WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                }}>Verified Rewards.</span>
+              </h1>
+              <p className="section-subtitle">
+                Every winner listed here completed a perfect 3/3 streak, passed anti-fraud verification, and received their confirmed cash reward payout.
+              </p>
+            </div>
+            <div style={{
+              padding: '32px 40px',
+              background: 'rgba(212,175,55,0.08)',
+              border: '1px solid rgba(212,175,55,0.25)',
+              borderRadius: '20px',
+              textAlign: 'center',
+              flexShrink: 0,
+            }}>
+              <div style={{ fontSize: '0.8125rem', color: '#6E7A91', marginBottom: '8px', fontWeight: 600, letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+                Total Cash Paid
+              </div>
+              <div style={{
+                fontFamily: "'Space Grotesk', sans-serif",
+                fontSize: '2.5rem', fontWeight: 900,
+                background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
+                WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                letterSpacing: '-0.03em',
+              }}>₦{totalPaid.toLocaleString()}</div>
+              <div style={{ fontSize: '0.8125rem', color: '#6E7A91', marginTop: '8px' }}>Across all rounds</div>
+            </div>
           </div>
         </div>
+      </section>
 
-        {/* Winners Grid */}
-        <div className="space-y-6 mb-24">
-          <div className="flex items-center gap-3 px-2 opacity-50">
-             <Trophy className="w-4 h-4 text-gold/40" />
-             <h2 className="text-[9px] font-black uppercase tracking-[0.4em] text-white italic">Recent Distributions</h2>
-             <div className="flex-1 h-px bg-border-subtle ml-4" />
+      {/* Winners grid */}
+      <section className="section">
+        <div className="container">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px', flexWrap: 'wrap', gap: '16px' }}>
+            <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1.5rem', fontWeight: 700, color: '#F8FAFC' }}>
+              Recent Verified Winners
+            </h2>
+            <span className="badge badge-success"><div className="live-dot" /> Updated Live</span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '20px' }}>
             {winners.length === 0 ? (
-               <div className="card-luxury !p-24 text-center col-span-full border-dashed border-border-subtle opacity-20">
-                  <Zap className="w-8 h-8 mx-auto mb-4 text-text-dim" />
-                  <p className="text-[9px] font-black uppercase tracking-widest italic opacity-40">Awaiting next sequence settlement...</p>
+               <div className="card text-center" style={{ padding: '48px', gridColumn: '1/-1' }}>
+                  <p style={{ color: 'var(--text-secondary)' }}>Gathering winner data for the current season...</p>
                </div>
             ) : (
-                 winners.map((w, i) => {
-                   const name = w.profile?.username || w.profile?.full_name || 'Anonymous Node';
-                   
-                   return (
-                     <div key={w.id} className="card-luxury !p-6 bg-bg-card border-border-subtle flex flex-col gap-6 group hover:-translate-y-1 transition-all duration-500 shadow-sm">
-                       <div className="flex items-center gap-4">
-                         <div className="w-9 h-9 rounded-lg bg-white/[0.02] border border-border-subtle flex items-center justify-center text-[10px] font-black text-gold italic">
-                           {name.charAt(0).toUpperCase()}
-                         </div>
-                         <div className="flex-1 min-w-0">
-                           <div className="text-[13px] font-black text-white uppercase tracking-tight truncate italic">{name}</div>
-                           <div className="flex items-center gap-2 opacity-40">
-                              <ShieldCheck className="w-2.5 h-2.5 text-emerald-500" />
-                              <span className="text-[7px] font-black text-text-dim uppercase tracking-widest italic">Node Verified</span>
-                           </div>
-                         </div>
-                       </div>
+                winners.map((w) => {
+                  const name = w.profile?.username || w.profile?.full_name || 'Challenger';
+                  const initial = name.charAt(0).toUpperCase();
+                  const tier = 'Starter'; // Defaulting for UI display
+                  
+                  return (
+                    <div key={w.id} style={{
+                      background: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '20px',
+                      padding: '24px',
+                      boxShadow: 'var(--shadow-card)',
+                      display: 'flex', flexDirection: 'column', gap: '16px',
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+                        <div style={{
+                          width: '48px', height: '48px', borderRadius: '14px', flexShrink: 0,
+                          background: `linear-gradient(135deg, ${tierColors[tier]}20, rgba(0,194,255,0.1))`,
+                          border: `1px solid ${tierColors[tier]}30`,
+                          display: 'flex', alignItems: 'center', justifyContent: 'center',
+                          fontFamily: "'Space Grotesk', sans-serif",
+                          fontSize: '1.25rem', fontWeight: 800,
+                          color: tierColors[tier],
+                        }}>{initial}</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '1rem', fontWeight: 700, color: '#F8FAFC' }}>{name}</div>
+                          <div style={{ fontSize: '0.75rem', color: '#6E7A91', marginTop: '2px' }}>
+                            <span style={{ color: tierColors[tier], fontWeight: 600 }}>Verified Challenger</span>
+                          </div>
+                        </div>
+                        <span className="badge badge-success">✓ Verified</span>
+                      </div>
 
-                       <div className="bg-bg-secondary p-4 rounded-xl flex items-center justify-between border border-border-subtle shadow-sm">
-                         <div className="flex flex-col">
-                           <span className="text-[7px] font-black text-text-dim uppercase tracking-widest italic opacity-40 mb-1">Settlement</span>
-                           <span className="text-xl font-black text-white italic tracking-tighter font-display">₦{w.payout_amount.toLocaleString()}</span>
-                         </div>
-                         <div className="text-right">
-                           <span className="text-[7px] font-black text-text-dim uppercase tracking-widest italic opacity-40 mb-1">Streak</span>
-                           <span className="text-base font-black text-emerald-500 italic">3/3</span>
-                         </div>
-                       </div>
+                      <div style={{
+                        padding: '16px',
+                        background: 'rgba(212,175,55,0.06)',
+                        border: '1px solid rgba(212,175,55,0.15)',
+                        borderRadius: '12px',
+                        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                      }}>
+                        <div>
+                          <div style={{ fontSize: '0.75rem', color: '#6E7A91', marginBottom: '4px' }}>Cash Reward Unlocked</div>
+                          <div style={{
+                            fontFamily: "'Space Grotesk', sans-serif",
+                            fontSize: '1.625rem', fontWeight: 800,
+                            background: 'linear-gradient(135deg, #D4AF37, #F6D365)',
+                            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+                            letterSpacing: '-0.02em',
+                          }}>₦{w.payout_amount.toLocaleString()}</div>
+                        </div>
+                        <div style={{ textAlign: 'right' }}>
+                          <div style={{ fontSize: '0.75rem', color: '#6E7A91', marginBottom: '4px' }}>Perfect Streak</div>
+                          <div style={{ fontSize: '1.375rem', fontWeight: 800, color: '#22C55E' }}>3/3 ✓</div>
+                        </div>
+                      </div>
 
-                       <div className="flex justify-between items-center text-[7px] font-black uppercase tracking-widest text-text-dim italic opacity-30">
-                         <span>CYCLE v2.0-{(w.round?.round_number || 0).toString().padStart(2, '0')}</span>
-                         <span>{new Date(w.created_at).toLocaleDateString()}</span>
-                       </div>
-                     </div>
-                   );
-                 })
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8125rem', color: '#6E7A91' }}>
+                        <span>Round {w.round?.round_number || 'N/A'}</span>
+                        <span>{new Date(w.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                  );
+                })
             )}
           </div>
         </div>
+      </section>
 
-        {/* Bottom CTA */}
-        <div className="card-luxury-gold !p-12 sm:!p-20 text-center border-gold/10 max-w-3xl mx-auto mb-24 group relative shadow-md">
-           <div className="max-w-xl mx-auto relative z-10">
-              <h2 className="mb-4 text-4xl uppercase italic font-black">Claim Your <span className="text-gradient-gold">Spot.</span></h2>
-              <p className="text-text-secondary text-[10px] font-normal mb-10 uppercase tracking-widest italic">
-                Successful sequences lead to verified settlements. Initialize your node prediction today.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/accounts" className="btn-luxury btn-gold !py-4 !px-10 !text-[10px] shadow-sm">
-                  INITIALIZE ACCESS <ArrowUpRight className="w-4 h-4" />
-                </Link>
-                <Link href="/arena" className="btn-luxury btn-outline !py-4 !px-10 !text-[10px]">LATEST FIXTURES</Link>
-              </div>
-           </div>
+      {/* Bottom CTA */}
+      <section className="section-sm" style={{ textAlign: 'center' }}>
+        <div className="container">
+          <h2 style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: '2rem', fontWeight: 800, color: '#F8FAFC', marginBottom: '12px' }}>
+            Your Name Could Be Here
+          </h2>
+          <p style={{ color: '#A7B0C0', marginBottom: '32px', maxWidth: '460px', margin: '0 auto 32px' }}>
+            Buy an account, build the perfect streak, and join the verified winners list.
+          </p>
+          <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Link href="/accounts" className="btn btn-primary btn-lg">Buy Account</Link>
+            <Link href="/how-it-works" className="btn btn-ghost btn-lg">How It Works</Link>
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

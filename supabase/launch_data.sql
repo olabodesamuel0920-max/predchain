@@ -1,8 +1,8 @@
 -- PREDCHAIN DAY 1 LAUNCH DATA
--- This script populates the Arena with real live matches for the initial launch.
+-- This script populates the platform with real live matches for the initial launch.
 
 -- 1. Create Challenge Round 43 (The Launch Round)
--- Set it as 'active' so it shows up in "Live Arena" immediately.
+-- Set it as 'active' so it shows up in "Live Challenges" immediately.
 INSERT INTO public.challenge_rounds (id, round_number, start_date, end_date, status)
 VALUES (
   'd43d43d4-43d4-43d4-43d4-43d443d443d4', 

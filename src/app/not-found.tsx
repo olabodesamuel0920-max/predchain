@@ -21,7 +21,7 @@ export default function NotFound() {
           Area Out of Bounds
         </h1>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', lineHeight: 1.6 }}>
-          The page you're searching for doesn't exist in our arena. You might have taken a wrong turn or the link is broken.
+          The page you're searching for doesn't exist on our platform. You might have taken a wrong turn or the link is broken.
         </p>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
