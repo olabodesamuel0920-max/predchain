@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Outfit, Space_Grotesk, Space_Mono } from "next/font/google";
+import { Inter, Sora, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const outfit = Outfit({
+const inter = Inter({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-inter",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+const sora = Sora({
   subsets: ["latin"],
-  variable: "--font-space-grotesk",
+  variable: "--font-sora",
   display: "swap",
 });
 
@@ -40,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} ${spaceGrotesk.variable} ${spaceMono.variable}`}>
+    <html lang="en" className={`${inter.variable} ${sora.variable} ${spaceMono.variable}`}>
       <body>
         <div className="noise-overlay" aria-hidden="true" />
         <Navbar />
