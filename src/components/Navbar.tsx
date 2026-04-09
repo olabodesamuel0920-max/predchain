@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Shield, User, LogOut, ChevronRight, Menu, X, ArrowUpRight } from 'lucide-react';
+import { Shield, LogOut, Menu, X, ArrowUpRight } from 'lucide-react';
 import { logout } from '@/app/actions/auth';
 import styles from './Navbar.module.css';
 

@@ -2,16 +2,12 @@
 
 import { ChallengeRound, ChallengeMatch } from '@/types';
 import { 
-  Trophy, 
-  Zap, 
+  Zap,
   ShieldCheck, 
   Target, 
-  ChevronRight, 
   ArrowRight,
   Activity,
-  Globe,
   Radio,
-  Star,
   Shield,
   Clock,
   Award

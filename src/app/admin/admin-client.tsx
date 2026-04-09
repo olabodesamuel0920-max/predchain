@@ -2,18 +2,14 @@
 
 import { useState } from 'react';
 import { 
-  Monitor, 
   Users, 
   BarChart3, 
   Sword, 
   HelpCircle, 
   Settings, 
   Shield, 
-  Zap, 
   Activity,
   ChevronRight,
-  Database,
-  Cpu,
   Menu,
   X,
   LayoutDashboard

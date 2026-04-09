@@ -44,7 +44,16 @@ export default function FinanceView({ payoutRequests, initialMetrics }: FinanceV
   };
 
   useEffect(() => {
-    loadLedger();
+    let isMounted = true;
+    (async () => {
+      try {
+        const data = await getAdminLedger(20);
+        if (isMounted) setLedger(data);
+      } catch (err) {
+        console.error('Failed to load ledger:', err);
+      }
+    })();
+    return () => { isMounted = false; };
   }, []);
 
   const handleApprove = async (id: string) => {
@@ -54,8 +63,9 @@ export default function FinanceView({ payoutRequests, initialMetrics }: FinanceV
         setSuccessMsg('Payout approved successfully.');
         setTimeout(() => setSuccessMsg(''), 3000);
         loadLedger();
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Approval failed');
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Approval failed';
+        setErrorMsg(msg);
       }
     });
   };
@@ -71,8 +81,9 @@ export default function FinanceView({ payoutRequests, initialMetrics }: FinanceV
         setSuccessMsg('Payout rejected. Funds restored.');
         setTimeout(() => setSuccessMsg(''), 3000);
         loadLedger();
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Rejection failed');
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : 'Rejection failed';
+        setErrorMsg(msg);
       }
     });
   };
@@ -245,7 +256,7 @@ export default function FinanceView({ payoutRequests, initialMetrics }: FinanceV
                             <span className="text-[11px] font-black text-white">@{entry.profiles?.username || 'system'}</span>
                             <ChevronRight className="w-3 h-3 text-muted opacity-20" />
                           </div>
-                          <div className="text-[9px] text-muted font-bold tracking-widest uppercase opacity-40 mt-1 italic truncate max-w-150">"{(entry.reason || 'Platform Adjustment')}"</div>
+                          <div className="text-[9px] text-muted font-bold tracking-widest uppercase opacity-40 mt-1 italic truncate max-w-150">&quot;{(entry.reason || 'Platform Adjustment')}&quot;</div>
                        </div>
                     </div>
                     <div className="text-right flex flex-col items-end gap-2">

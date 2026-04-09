@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect, useTransition, useCallback } from 'react';
 import { 
   Wallet, 
   TrendingUp, 
@@ -13,7 +13,6 @@ import {
   Banknote, 
   ShieldCheck, 
   Activity,
-  ChevronRight,
   ShieldAlert,
   Check
 } from 'lucide-react';
@@ -34,18 +33,21 @@ export default function FinanceView({ payoutRequests, initialMetrics }: FinanceV
   const [ledger, setLedger] = useState<AdminLedgerEntryWithProfile[]>([]);
   const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback();
 
-  const loadLedger = async () => {
+  const loadLedger = useCallback(async () => {
     try {
       const data = await getAdminLedger(20);
       setLedger(data);
     } catch (err) {
       console.error('Failed to load ledger:', err);
     }
-  };
+  }, []);
 
   useEffect(() => {
-    loadLedger();
-  }, []);
+    const timeoutId = setTimeout(() => {
+      loadLedger();
+    }, 0);
+    return () => clearTimeout(timeoutId);
+  }, [loadLedger]);
 
   const handleApprove = async (id: string) => {
     startTransition(async () => {
@@ -244,7 +246,7 @@ export default function FinanceView({ payoutRequests, initialMetrics }: FinanceV
                           <div className="flex items-center gap-2">
                             <span className="text-[11px] font-black text-white truncate max-w-[100px]">@{entry.profiles?.username || 'system'}</span>
                           </div>
-                          <div className="text-[8px] text-muted font-black tracking-widest uppercase opacity-30 italic truncate max-w-[150px]">"{(entry.reason || 'Settle')}"</div>
+                          <div className="text-[8px] text-muted font-black tracking-widest uppercase opacity-30 italic truncate max-w-[150px]">&quot;{(entry.reason || 'Settle')}&quot;</div>
                        </div>
                     </div>
                     <div className="text-right flex flex-col items-end shrink-0">

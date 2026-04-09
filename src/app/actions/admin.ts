@@ -4,9 +4,7 @@ import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { 
   AdminSearchProfile, 
-  Profile, 
   SupportTicket, 
-  AdminLedgerEntry,
   UserStatus,
   FullUserDetails,
   SupportTicketWithProfile,
@@ -249,7 +247,7 @@ export async function updateTicketStatus(ticketId: string, status: string, inter
   const admin = await verifyAdmin();
   const supabase = await createAdminClient();
 
-  const updates: Partial<SupportTicket> & { updated_at?: string } = { status: status as any, updated_at: new Date().toISOString() };
+  const updates: Partial<SupportTicket> & { updated_at?: string } = { status: status as SupportTicket['status'], updated_at: new Date().toISOString() };
   if (internalNotes !== undefined) updates.internal_notes = internalNotes;
 
   const { error } = await supabase
@@ -258,6 +256,14 @@ export async function updateTicketStatus(ticketId: string, status: string, inter
     .eq('id', ticketId);
 
   if (error) throw error;
+  
+  // Audit log
+  await supabase.from('admin_audit_logs').insert({
+    admin_id: admin.id,
+    action: 'update_ticket_status',
+    target_user_id: null,
+    details: { ticketId, status, internalNotes }
+  });
 
   revalidatePath('/admin');
   return { success: true };
@@ -296,7 +302,7 @@ export async function getAllPlatformSettings(): Promise<Partial<PlatformSettings
   if (error) throw error;
   
   return data.reduce((acc: Partial<PlatformSettings>, curr) => {
-    acc[curr.key as keyof PlatformSettings] = curr.value as any;
+    acc[curr.key as keyof PlatformSettings] = curr.value as never;
     return acc;
   }, {});
 }

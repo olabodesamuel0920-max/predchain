@@ -5,8 +5,6 @@ import {
   User, 
   Shield, 
   KeyRound, 
-  Mail, 
-  Phone, 
   Lock, 
   CheckCircle2, 
   AlertCircle, 

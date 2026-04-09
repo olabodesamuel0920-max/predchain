@@ -14,6 +14,8 @@ This document contains the final systematic verification protocols to move PredC
 | **Webhooks** | Endpoint `/api/webhooks/paystack` reachable by external POST | [ ] |
 | **Admin Setup** | First admin account manually promoted in `profiles` table | [ ] |
 | **Build Check** | `npm run build` completed with zero type errors | [x] |
+| **Linting Audit** | `eslint` zero-warning state achieved | [x] |
+| **Render Hygiene** | Removed cascading renders in core Views | [x] |
 
 ---
 

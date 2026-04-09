@@ -2,19 +2,13 @@
 
 import { 
   Users, 
-  TrendingUp, 
   Zap, 
   Link as LinkIcon, 
   Check, 
-  ChevronRight, 
   Activity, 
   Globe, 
-  ShieldCheck, 
-  Target,
-  ArrowUpRight,
   Gift
 } from 'lucide-react';
-import Link from 'next/link';
 import { useFeedback } from '@/hooks/useFeedback';
 
 interface ReferralClientProps {
@@ -30,7 +24,7 @@ interface ReferralClientProps {
 }
 
 export default function ReferralClient({ profile, referrals, totalEarnings }: ReferralClientProps) {
-  const { success, showSuccess, clear } = useFeedback();
+  const { success, showSuccess } = useFeedback();
 
   const referralCode = profile?.username?.toUpperCase() || 'STRIKERX';
   const referralLink = `predchain.io/ref/${referralCode}`;
@@ -152,7 +146,7 @@ export default function ReferralClient({ profile, referrals, totalEarnings }: Re
                               </td>
                            </tr>
                          ) : (
-                           referrals.map((h, i) => (
+                           referrals.map((h) => (
                              <tr key={h.id} className="group hover:bg-white/[0.01] transition-colors">
                                 <td className="py-20 pl-24">
                                    <div className="flex items-center gap-12">

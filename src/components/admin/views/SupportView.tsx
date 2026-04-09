@@ -1,16 +1,12 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect, useTransition, useCallback } from 'react';
 import { 
   HelpCircle, 
   AlertCircle, 
   Clock, 
-  CheckCircle2, 
   MessageSquare, 
   Filter, 
-  MoreVertical, 
-  ShieldCheck, 
-  Activity, 
   ChevronRight,
   Check,
   Archive,
@@ -29,18 +25,21 @@ export default function SupportView() {
   const [internalNotes, setInternalNotes] = useState('');
   const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback();
 
-  const loadTickets = async () => {
+  const loadTickets = useCallback(async () => {
     try {
         const data = await getSupportTickets({ status: filter });
         setTickets(data);
     } catch (err: unknown) {
         showError((err as Error).message || 'Failed to load tickets');
     }
-  };
+  }, [filter, showError]);
 
   useEffect(() => {
-    loadTickets();
-  }, [filter]);
+    const timeoutId = setTimeout(() => {
+      loadTickets();
+    }, 0);
+    return () => clearTimeout(timeoutId);
+  }, [loadTickets]);
 
   const handleUpdateStatus = async (status: SupportTicket['status']) => {
     if (!selectedTicket) return;
@@ -174,7 +173,7 @@ export default function SupportView() {
                   <div className="text-[9px] text-muted uppercase font-black mb-4 tracking-widest flex items-center gap-2 opacity-40 italic">
                      User Transmission:
                   </div>
-                  <div className="text-[13px] text-white leading-relaxed font-bold italic opacity-85">"{selectedTicket.message}"</div>
+                  <div className="text-[13px] text-white leading-relaxed font-bold italic opacity-85">&quot;{selectedTicket.message}&quot;</div>
                 </div>
 
                 <div className="flex flex-col gap-6">

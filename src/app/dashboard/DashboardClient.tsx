@@ -4,11 +4,9 @@ import { useState, useTransition, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { 
-  Layout, 
   Zap, 
   Wallet as WalletIcon, 
   Users, 
-  LogOut, 
   ChevronRight, 
   Check, 
   AlertCircle, 
@@ -28,7 +26,6 @@ import {
 } from 'lucide-react';
 import { submitPrediction } from '@/app/actions/predictions';
 import { requestPayout } from '@/app/actions/wallet';
-import { logout } from '@/app/actions/auth';
 import { Profile, ChallengeRound, ChallengeMatch, ChallengeEntry, Prediction, Transaction, Wallet } from '@/types';
 import { useFeedback } from '@/hooks/useFeedback';
 
@@ -44,7 +41,6 @@ interface DashboardClientProps {
 }
 
 export default function DashboardClient({ 
-  user, 
   profile, 
   wallet, 
   activeRound, 
@@ -70,8 +66,6 @@ export default function DashboardClient({
     }
   }, [searchParams, showSuccess, showError]);
 
-  const initial = profile?.full_name?.charAt(0) || user?.email?.charAt(0) || '?';
-  const username = profile?.username || user?.email?.split('@')[0] || 'User';
   const balance = wallet?.balance_ngn || 0;
   const streak = userEntry?.streak_count || 0;
 

@@ -2,12 +2,11 @@
 
 import { useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { login } from '@/app/actions/auth';
-import { ShieldCheck, Zap, AlertCircle, Eye, EyeOff, ArrowRight, Lock, Globe } from 'lucide-react';
+import { Zap, AlertCircle, Eye, EyeOff, ArrowRight, Lock, Globe } from 'lucide-react';
 
 function LoginForm() {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const message = searchParams.get('message');
   

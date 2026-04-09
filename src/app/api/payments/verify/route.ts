@@ -1,4 +1,3 @@
-import { createClient } from '@/lib/supabase/server';
 import { verifyPayment } from '@/app/actions/paystack';
 import { redirect } from 'next/navigation';
 import { NextRequest } from 'next/server';
@@ -19,8 +18,8 @@ export async function GET(request: NextRequest) {
     } else {
       redirect(`/dashboard?error=${encodeURIComponent(result.message || 'Verification failed')}`);
     }
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Payment callback error:', err);
-    redirect(`/dashboard?error=${encodeURIComponent(err.message || 'Internal payment error')}`);
+    redirect(`/dashboard?error=${encodeURIComponent((err as Error).message || 'Internal payment error')}`);
   }
 }

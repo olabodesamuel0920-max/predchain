@@ -15,7 +15,7 @@ export default function RulesPage() {
           <section className="card" style={{ padding: '32px' }}>
             <h2 className="text-white font-bold text-xl mb-16">The 3-Day Perfect Streak</h2>
             <ul className="flex flex-col gap-12 list-disc pl-20">
-              <li>A "Round" consists of a 3-day window with active football matches.</li>
+              <li>A &quot;Round&quot; consists of a 3-day window with active football matches.</li>
               <li>You must submit exactly <strong>one</strong> correct prediction each day.</li>
               <li>Predictions are outcome-based (1X2):
                 <ul className="pl-20 mt-8">

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense, useRef } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { signup } from '@/app/actions/auth';
-import { ShieldCheck, Zap, Globe, CheckCircle2, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Zap, CheckCircle2, AlertCircle, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
 function SignupForm() {
   const searchParams = useSearchParams();
@@ -13,9 +13,16 @@ function SignupForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [referralCode, setReferralCode] = useState('');
 
+  const initialRefProcessed = useRef(false);
   useEffect(() => {
+    if (initialRefProcessed.current) return;
     const ref = searchParams.get('ref');
-    if (ref) setReferralCode(ref);
+    if (ref && !initialRefProcessed.current) {
+      setTimeout(() => {
+        setReferralCode(ref);
+      }, 0);
+      initialRefProcessed.current = true;
+    }
   }, [searchParams]);
 
   const signupAction = async (formData: FormData) => {

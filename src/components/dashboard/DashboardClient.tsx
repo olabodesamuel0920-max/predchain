@@ -9,28 +9,22 @@ import {
   Wallet as WalletIcon, 
   Users, 
   LogOut, 
-  ChevronRight, 
-  Check, 
-  AlertCircle, 
-  TrendingUp, 
-  ShieldCheck, 
-  Activity,
+  Target, 
+  Settings, 
+  Trophy,
+  Star,
+  History,
+  ArrowRight,
   ArrowUpRight,
   ArrowDownLeft,
   ArrowUpLeft,
   ShieldAlert,
   Globe,
   Radio,
-  Trophy,
-  ArrowRight,
-  History,
-  Lock,
-  Target,
-  Settings,
-  CreditCard,
-  User,
-  Gift,
-  Star
+  Check,
+  Activity,
+  Award,
+  Gift
 } from 'lucide-react';
 import { submitPrediction } from '@/app/actions/predictions';
 import { requestPayout } from '@/app/actions/wallet';
@@ -67,8 +61,18 @@ export default function DashboardClient({
   tiers
 }: DashboardClientProps) {
   const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback(5000);
+  const totalRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
+  const totalReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
+  const pendingPayouts = payoutRequests.filter(r => r.status === 'pending').reduce((acc, r) => acc + r.amount, 0);
+  
   const [activeTab, setActiveTab] = useState<'overview' | 'arena' | 'wallet' | 'network'>('overview');
   const [walletSubTab, setWalletSubTab] = useState<'transactions' | 'payouts'>('transactions');
+  const [payoutAmount, setPayoutAmount] = useState('');
+  const [bankInfo] = useState<{bank: string, account: string, name: string}>({
+    bank: 'Standard Trust',
+    account: 'Verified Protocol',
+    name: profile?.full_name || 'System Identity'
+  });
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -76,23 +80,21 @@ export default function DashboardClient({
   };
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
-  const [payoutAmount, setPayoutAmount] = useState('');
-  const [bankInfo, setBankInfo] = useState({ bank: '', account: '', name: '' });
-
-  const totalRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
-  const totalReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
-  const pendingPayouts = payoutRequests.filter(r => r.status === 'pending').reduce((acc, r) => acc + r.amount, 0);
 
   useEffect(() => {
     const tabParam = searchParams.get('tab');
-    if (tabParam && ['overview', 'arena', 'wallet', 'network'].includes(tabParam)) {
-      setActiveTab(tabParam as any);
-    }
-
     const errorParam = searchParams.get('error');
     const successParam = searchParams.get('success');
-    if (errorParam && errorParam !== 'NEXT_REDIRECT') showError(decodeURIComponent(errorParam));
-    if (successParam) showSuccess(decodeURIComponent(successParam));
+
+    const timeoutId = setTimeout(() => {
+      if (tabParam && ['overview', 'arena', 'wallet', 'network'].includes(tabParam)) {
+        setActiveTab(tabParam as 'overview' | 'arena' | 'wallet' | 'network');
+      }
+      if (errorParam && errorParam !== 'NEXT_REDIRECT') showError(decodeURIComponent(errorParam));
+      if (successParam) showSuccess(decodeURIComponent(successParam));
+    }, 0);
+
+    return () => clearTimeout(timeoutId);
   }, [searchParams, showError, showSuccess]);
 
   const displayName = profile?.full_name || profile?.username || user?.email?.split('@')[0] || 'User';
@@ -115,8 +117,8 @@ export default function DashboardClient({
       try {
         await submitPrediction(formData);
         showSuccess('Prediction secured.');
-      } catch (err: any) {
-        showError(err.message || 'Submission failed.');
+      } catch (err: unknown) {
+        showError((err as Error).message || 'Submission failed.');
       }
     });
   };
@@ -132,8 +134,8 @@ export default function DashboardClient({
         await requestPayout(Number(payoutAmount), bankInfo);
         showSuccess('Withdrawal request submitted.');
         setPayoutAmount('');
-      } catch (err: any) {
-        showError(err.message || 'Withdrawal failed.');
+      } catch (err: unknown) {
+        showError((err as Error).message || 'Withdrawal failed.');
       }
     });
   };
@@ -145,8 +147,8 @@ export default function DashboardClient({
         if (result.authorization_url) {
           window.location.href = result.authorization_url;
         }
-      } catch (err: any) {
-        showError(err.message || 'Funding failed.');
+      } catch (err: unknown) {
+        showError((err as Error).message || 'Funding failed.');
       }
     });
   };
@@ -229,10 +231,10 @@ export default function DashboardClient({
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
+                onClick={() => setActiveTab(tab.id as 'overview' | 'arena' | 'wallet' | 'network')}
                 className={`flex items-center gap-2.5 px-6 py-2.5 rounded-xl border transition-all whitespace-nowrap ${
                   activeTab === tab.id 
-                  ? 'bg-white/[0.04] border-white/10 text-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]' 
+                  ? 'bg-white/[0.04] border-white/10 text-white shadow-[0_10px_30_rgba(0,0,0,0.5)]' 
                   : 'bg-transparent border-transparent text-secondary opacity-60 hover:text-white hover:opacity-100'
                 }`}
               >
@@ -444,7 +446,7 @@ export default function DashboardClient({
                              { id: 'transactions', label: 'Ledger' },
                              { id: 'payouts', label: 'Withdrawals' }
                            ].map(t => (
-                             <button key={t.id} onClick={() => setWalletSubTab(t.id as any)} className={`px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all font-display ${walletSubTab === t.id ? 'bg-white/10 text-white shadow-lg' : 'text-muted/40 hover:text-white'}`}>{t.label}</button>
+                             <button key={t.id} onClick={() => setWalletSubTab(t.id as 'transactions' | 'payouts')} className={`px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all font-display ${walletSubTab === t.id ? 'bg-white/10 text-white shadow-lg' : 'text-muted/40 hover:text-white'}`}>{t.label}</button>
                            ))}
                         </div>
                      </div>

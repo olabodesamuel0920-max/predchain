@@ -19,7 +19,7 @@ export default async function SettingsPage() {
   }
 
   // Fetch the user's protocol profile using Admin Override (Bypass RLS)
-  const { data: profile, error } = await adminClient
+  const { data: profile } = await adminClient
     .from('profiles')
     .select('*')
     .eq('id', user.id)
@@ -39,8 +39,8 @@ export default async function SettingsPage() {
 
   const enrichedProfile: Profile = {
     ...(profile || fallbackProfile),
-    email: user.email || (profile as any)?.email || 'not available',
-    status: (profile as any)?.status || 'active',
+    email: user.email || (profile as Profile)?.email || 'not available',
+    status: (profile as Profile)?.status || 'active',
   } as Profile;
 
   return (

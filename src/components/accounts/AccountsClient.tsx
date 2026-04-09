@@ -2,23 +2,14 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import { 
-  Shield, 
-  Target, 
   Zap, 
   Check, 
   ShieldCheck, 
   Activity, 
-  Wallet, 
   Globe, 
-  ArrowUpRight, 
   AlertCircle, 
-  Trophy, 
-  Star, 
-  Gem, 
-  ArrowRight, 
-  CreditCard,
+  Star,
   Crown
 } from 'lucide-react';
 import { initializePayment } from '@/app/actions/paystack';
@@ -26,7 +17,7 @@ import { purchaseTierWithWallet } from '@/app/actions/wallet';
 import { AccountTier, PlatformStats } from '@/types';
 import { useFeedback } from '@/hooks/useFeedback';
 
-export default function AccountsClient({ tiers, userId, walletBalance = 0, stats }: { tiers: AccountTier[]; userId?: string; walletBalance?: number; stats: PlatformStats }) {
+export default function AccountsClient({ tiers, userId, walletBalance = 0 }: { tiers: AccountTier[]; userId?: string; walletBalance?: number; stats: PlatformStats }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const { error: errorMsg, showError } = useFeedback(5000);
@@ -51,8 +42,8 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             window.location.href = result.authorization_url;
           }
         }
-      } catch (err: any) {
-        showError(err.message || 'Transaction failed. Please try again.');
+      } catch (err: unknown) {
+        showError((err as Error).message || 'Transaction failed. Please try again.');
         setActiveTierId(null);
       }
     });

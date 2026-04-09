@@ -1,50 +1,89 @@
 'use client';
 
-import { useState, useTransition, useEffect } from 'react';
+import { useState, useTransition, useEffect, useCallback } from 'react';
 import { 
-  Sword, 
-  Users, 
   Trophy, 
   Activity, 
   ShieldCheck, 
-  Search, 
   Filter, 
   CheckCircle2, 
   XCircle, 
   Clock, 
   ChevronRight,
   TrendingUp,
-  AlertCircle,
-  Calendar
+  AlertCircle
 } from 'lucide-react';
 import { getPredictionsOverview } from '@/app/actions/admin';
 import { ChallengeRound } from '@/types';
 import { useFeedback } from '@/hooks/useFeedback';
+
+interface PredictionWithMatch {
+  id: string;
+  prediction: string;
+  is_correct: boolean | null;
+  is_locked: boolean;
+  challenge_matches?: {
+    home_team: string;
+    away_team: string;
+    kickoff_time: string;
+    home_score?: number;
+    away_score?: number;
+  } | {
+    home_team: string;
+    away_team: string;
+    kickoff_time: string;
+    home_score?: number;
+    away_score?: number;
+  }[];
+}
+
+interface PredictionEntry {
+  id: string;
+  streak_count: number;
+  is_winner: boolean;
+  created_at: string;
+  profiles?: {
+    username: string;
+  } | {
+    username: string;
+  }[];
+  account_tiers?: {
+    name: string;
+  } | {
+    name: string;
+  }[];
+  challenge_rounds?: {
+    round_number: number;
+  } | {
+    round_number: number;
+  }[];
+  predictions?: PredictionWithMatch[];
+}
 
 interface PlaysViewProps {
   rounds: ChallengeRound[];
 }
 
 export default function PlaysView({ rounds }: PlaysViewProps) {
-  const [entries, setEntries] = useState<any[]>([]);
+  const [entries, setEntries] = useState<PredictionEntry[]>([]);
   const [filterRoundId, setFilterRoundId] = useState<string>('all');
   const [isPending, startTransition] = useTransition();
   const { success: successMsg, error: errorMsg, showError, clear } = useFeedback();
 
-  useEffect(() => {
-    loadPlays();
-  }, [filterRoundId]);
-
-  const loadPlays = () => {
+  const loadPlays = useCallback(() => {
     startTransition(async () => {
       try {
         const data = await getPredictionsOverview({ round_id: filterRoundId });
         setEntries(data);
-      } catch (err: any) {
-        showError(err.message || 'Failed to fetch plays');
+      } catch (err: unknown) {
+        showError((err as Error).message || 'Failed to fetch plays');
       }
     });
-  };
+  }, [filterRoundId, showError]);
+
+  useEffect(() => {
+    loadPlays();
+  }, [loadPlays]);
 
   return (
     <div className="flex flex-col gap-8 animate-slide-up">
@@ -98,24 +137,29 @@ export default function PlaysView({ rounds }: PlaysViewProps) {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4">
-            {entries.map(entry => (
-              <div key={entry.id} className="card p-0 border border-white/5 bg-white/[0.02] hover:bg-white/[0.03] transition-all overflow-hidden">
-                 <div className="p-5 flex flex-col xl:flex-row xl:items-center justify-between gap-8">
-                    {/* User & Entry Info */}
-                    <div className="flex items-center gap-6 min-w-[250px]">
-                       <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center font-black text-xs text-blue-electric">
-                          {entry.profiles?.username?.[0] || 'U'}
-                       </div>
-                       <div>
-                          <div className="flex items-center gap-3 mb-1">
-                             <span className="text-sm font-black text-white">@{entry.profiles?.username}</span>
-                             <span className="badge badge-muted !text-[7px] px-2 py-0.5 uppercase">{entry.account_tiers?.name}</span>
-                          </div>
-                          <div className="text-[9px] text-muted font-bold font-mono tracking-tighter opacity-50">
-                             R{entry.challenge_rounds?.round_number} <span className="mx-2">|</span> {new Date(entry.created_at).toLocaleDateString()}
-                          </div>
-                       </div>
-                    </div>
+            {entries.map(entry => {
+              const profile = Array.isArray(entry.profiles) ? entry.profiles[0] : entry.profiles;
+              const tier = Array.isArray(entry.account_tiers) ? entry.account_tiers[0] : entry.account_tiers;
+              const round = Array.isArray(entry.challenge_rounds) ? entry.challenge_rounds[0] : entry.challenge_rounds;
+
+              return (
+                <div key={entry.id} className="card p-0 border border-white/5 bg-white/[0.02] hover:bg-white/[0.03] transition-all overflow-hidden">
+                   <div className="p-5 flex flex-col xl:flex-row xl:items-center justify-between gap-8">
+                      {/* User & Entry Info */}
+                      <div className="flex items-center gap-6 min-w-[250px]">
+                         <div className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center font-black text-xs text-blue-electric">
+                            {profile?.username?.[0] || 'U'}
+                         </div>
+                         <div>
+                            <div className="flex items-center gap-3 mb-1">
+                               <span className="text-sm font-black text-white">@{profile?.username}</span>
+                               <span className="badge badge-muted !text-[7px] px-2 py-0.5 uppercase">{tier?.name}</span>
+                            </div>
+                            <div className="text-[9px] text-muted font-bold font-mono tracking-tighter opacity-50">
+                               R{round?.round_number} <span className="mx-2">|</span> {new Date(entry.created_at).toLocaleDateString()}
+                            </div>
+                         </div>
+                      </div>
 
                     {/* Streak Visualization */}
                     <div className="flex-1 max-w-2xl px-8 border-x border-white/5 hidden xl:block">
@@ -154,42 +198,44 @@ export default function PlaysView({ rounds }: PlaysViewProps) {
                  <div className="bg-black/20 border-t border-white/5 p-5 grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[0, 1, 2].map(idx => {
                       const pred = entry.predictions?.[idx];
+                      const match = pred ? (Array.isArray(pred.challenge_matches) ? pred.challenge_matches[0] : pred.challenge_matches) : null;
+                      
                       return (
                         <div key={idx} className={`p-4 rounded-xl border transition-all ${
                           pred ? 'bg-white/[0.02] border-white/5' : 'bg-transparent border-white/5 border-dashed opacity-20'
                         }`}>
                            {!pred ? (
-                             <div className="flex items-center justify-center h-12 italic text-[9px] font-bold text-muted uppercase tracking-widest">Awaiting Submission</div>
+                              <div className="flex items-center justify-center h-12 italic text-[9px] font-bold text-muted uppercase tracking-widest">Awaiting Submission</div>
                            ) : (
-                             <div className="flex flex-col gap-4">
-                               <div className="flex justify-between items-center">
-                                  <span className="text-[8px] font-black text-muted uppercase tracking-widest">MATCH {idx + 1}</span>
-                                  {pred.is_locked ? (
-                                    pred.is_correct ? <CheckCircle2 className="w-3.5 h-3.5 text-success" /> : <XCircle className="w-3.5 h-3.5 text-danger" />
-                                  ) : (
-                                    <Clock className="w-3.5 h-3.5 text-blue-electric animate-pulse" />
-                                  )}
-                               </div>
-                               <div className="flex justify-between items-end">
-                                  <div>
-                                    <div className="text-[10px] font-black text-white uppercase italic tracking-tight truncate max-w-[120px]">
-                                       {pred.challenge_matches?.home_team} vs {pred.challenge_matches?.away_team}
-                                    </div>
-                                    <div className="text-[8px] text-muted font-bold uppercase mt-1">Prediction: {pred.prediction === '1' ? 'Home' : pred.prediction === '2' ? 'Away' : 'Draw'}</div>
-                                  </div>
-                                  <div className="text-right">
-                                    <div className="text-[9px] font-black text-white font-mono">{pred.challenge_matches?.home_score} - {pred.challenge_matches?.away_score}</div>
-                                    <div className={`text-[7px] font-black uppercase mt-1 ${pred.is_correct ? 'text-success' : 'text-muted opacity-40'}`}>{pred.is_correct ? 'PROFIT' : 'LOSS'}</div>
-                                  </div>
-                               </div>
-                             </div>
+                              <div className="flex flex-col gap-4">
+                                <div className="flex justify-between items-center">
+                                   <span className="text-[8px] font-black text-muted uppercase tracking-widest">MATCH {idx + 1}</span>
+                                   {pred.is_locked ? (
+                                     pred.is_correct ? <CheckCircle2 className="w-3.5 h-3.5 text-success" /> : <XCircle className="w-3.5 h-3.5 text-danger" />
+                                   ) : (
+                                     <Clock className="w-3.5 h-3.5 text-blue-electric animate-pulse" />
+                                   )}
+                                </div>
+                                <div className="flex justify-between items-end">
+                                   <div>
+                                     <div className="text-[10px] font-black text-white uppercase italic tracking-tight truncate max-w-[120px]">
+                                        {match?.home_team} vs {match?.away_team}
+                                     </div>
+                                     <div className="text-[8px] text-muted font-bold uppercase mt-1">Prediction: {pred.prediction === '1' ? 'Home' : pred.prediction === '2' ? 'Away' : 'Draw'}</div>
+                                   </div>
+                                   <div className="text-xs font-black text-white italic tracking-tighter">
+                                      {match?.home_score ?? "-"} : {match?.away_score ?? "-"}
+                                   </div>
+                                </div>
+                              </div>
                            )}
                         </div>
                       );
                     })}
                  </div>
               </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

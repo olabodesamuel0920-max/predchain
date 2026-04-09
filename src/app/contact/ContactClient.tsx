@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { submitSupportTicket } from '@/app/actions/support';
 
 const HELP_CATEGORIES = [
@@ -18,6 +17,7 @@ export default function ContactClient() {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [ticketId] = useState(() => Math.floor(Math.random() * 90000) + 10000);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,8 +147,8 @@ export default function ContactClient() {
                   <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'rgba(0, 230, 118, 0.1)', border: '2px solid var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', fontSize: '24px' }}>✓</div>
                   <h2 className="font-display" style={{ fontSize: '1.25rem', fontWeight: 800, color: '#FFF', marginBottom: '8px' }}>Ticket Transmitted</h2>
                   <p style={{ color: 'var(--text-muted)', marginBottom: '24px', fontSize: '0.875rem', lineHeight: 1.6 }}>
-                    ID: #{Math.floor(Math.random() * 90000) + 10000 }<br/>
-                    We've received your statement and will contact you at <strong>{form.email}</strong> shortly.
+                    ID: #{ticketId}<br/>
+                    We&apos;ve received your statement and will contact you at <strong>{form.email}</strong> shortly.
                   </p>
                   <button
                     onClick={() => { setSubmitted(false); setForm({ name: '', email: '', subject: '', message: '' }); }}

@@ -1,7 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
 import ArenaClient from '@/components/arena/ArenaClient'
-import Navbar from '@/components/Navbar'
-import Footer from '@/components/Footer'
 
 export default async function ArenaPage() {
   const supabase = await createClient()

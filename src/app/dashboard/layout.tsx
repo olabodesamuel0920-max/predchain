@@ -3,7 +3,7 @@
 import { useState, ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShieldCheck, Zap, Wallet as WalletIcon, Users, Settings, LogOut, ChevronRight, Menu, X, Landmark, Trophy, HelpCircle } from 'lucide-react';
+import { Zap, Wallet as WalletIcon, Users, LogOut, ChevronRight, Menu, X, Landmark, Trophy, HelpCircle } from 'lucide-react';
 
 import { logout } from '@/app/actions/auth';
 

@@ -1,16 +1,14 @@
 'use client';
 
-import { useState, useEffect, useTransition } from 'react';
+import { useState, useEffect, useTransition, useCallback } from 'react';
 import Link from 'next/link';
 import { 
   Zap, 
   Swords, 
   Trophy, 
-  Clock, 
   Target, 
   ShieldCheck, 
   AlertCircle, 
-  ChevronRight,
   Check,
   TrendingUp,
   Activity,
@@ -30,7 +28,7 @@ interface LiveChallengesClientProps {
 }
 
 function CountdownTimer({ label, targetDate }: { label: string, targetDate?: string }) {
-  const calculateTime = () => {
+  const calculateTime = useCallback(() => {
     const target = targetDate ? new Date(targetDate).getTime() : Date.now() + 17000000;
     const now = Date.now();
     const diff = Math.max(0, target - now);
@@ -40,14 +38,14 @@ function CountdownTimer({ label, targetDate }: { label: string, targetDate?: str
       m: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
       s: Math.floor((diff % (1000 * 60)) / 1000)
     };
-  };
+  }, [targetDate]);
 
   const [time, setTime] = useState(calculateTime);
 
   useEffect(() => {
     const id = setInterval(() => setTime(calculateTime()), 1000);
     return () => clearInterval(id);
-  }, [targetDate]);
+  }, [targetDate, calculateTime]);
 
   const pad = (n: number) => String(n).padStart(2, '0');
   
@@ -73,7 +71,7 @@ export default function LiveChallengesClient({
   hasTier
 }: LiveChallengesClientProps) {
   const [isPending, startTransition] = useTransition();
-  const { success, error, showSuccess, showError, clear } = useFeedback();
+  const { success, error, showSuccess, showError } = useFeedback();
 
   const streak = userEntry?.streak_count || 0;
   const roundNumber = round?.round_number || 'N/A';
@@ -84,8 +82,8 @@ export default function LiveChallengesClient({
       try {
         await initializeRoundEntry(round.id);
         showSuccess('Node initialized. System access granted.');
-      } catch (err: any) {
-        showError(err.message || 'Initialization failed');
+      } catch (err: unknown) {
+        showError((err as Error).message || 'Initialization failed');
       }
     });
   };

@@ -3,14 +3,9 @@
 import { useState, useEffect, useTransition } from 'react';
 import { 
   HelpCircle, 
-  AlertCircle, 
   Clock, 
-  CheckCircle2, 
   MessageSquare, 
   Filter, 
-  MoreVertical, 
-  ShieldCheck, 
-  Activity, 
   ChevronRight,
   Check,
   Archive,
@@ -35,7 +30,12 @@ export default function SupportView() {
   };
 
   useEffect(() => {
-    loadTickets();
+    let isMounted = true;
+    (async () => {
+      const data = await getSupportTickets({ status: filter });
+      if (isMounted) setTickets(data);
+    })();
+    return () => { isMounted = false; };
   }, [filter]);
 
   const handleUpdateStatus = async (status: SupportTicket['status']) => {
@@ -162,7 +162,7 @@ export default function SupportView() {
                   <div className="text-[9px] text-muted uppercase font-black mb-10 tracking-widest flex items-center gap-6">
                      <MessageSquare className="w-4 h-4" /> Message Content
                   </div>
-                  <div className="text-[12px] text-white leading-relaxed font-medium italic">"{selectedTicket.message}"</div>
+                  <div className="text-[12px] text-white leading-relaxed font-medium italic">&quot;{selectedTicket.message}&quot;</div>
                 </div>
 
                 <div className="flex flex-col gap-8">

@@ -4,7 +4,6 @@ import { useState, useTransition } from 'react';
 import { 
   Sword, 
   Calendar, 
-  TrendingUp, 
   CheckCircle2, 
   Activity, 
   Trophy, 
@@ -54,8 +53,8 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
         await settleMatchResult(matchId, scores.home, scores.away);
         setSuccessMsg('Match result settled successfully.');
         setTimeout(() => setSuccessMsg(''), 3000);
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Settlement failed');
+      } catch (err: unknown) {
+        setErrorMsg((err as Error).message || 'Settlement failed');
       }
     });
   };
@@ -66,8 +65,8 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
         await updateMatchStatus(matchId, status);
         setSuccessMsg(`Match marked as ${status}.`);
         setTimeout(() => setSuccessMsg(''), 3000);
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Status update failed');
+      } catch (err: unknown) {
+        setErrorMsg((err as Error).message || 'Status update failed');
       }
     });
   };
@@ -78,8 +77,8 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
         await updateRoundStatus(roundId, status);
         setSuccessMsg(`Round status updated to ${status}.`);
         setTimeout(() => setSuccessMsg(''), 3000);
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Round status update failed');
+      } catch (err: unknown) {
+        setErrorMsg((err as Error).message || 'Round status update failed');
       }
     });
   };
@@ -93,8 +92,8 @@ export default function MatchesView({ matches, rounds }: MatchesViewProps) {
         setShowMatchModal(false);
         setMatchData({ home_team: '', away_team: '', kickoff_time: '' });
         setTimeout(() => setSuccessMsg(''), 3000);
-      } catch (err: any) {
-        setErrorMsg(err.message || 'Creation failed');
+      } catch (err: unknown) {
+        setErrorMsg((err as Error).message || 'Creation failed');
       }
     });
   };

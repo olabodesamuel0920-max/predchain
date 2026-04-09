@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import AdminClient from './admin-client';
+import { Transaction } from '@/types';
 
 export default async function AdminPage() {
   const supabase = await createClient();
@@ -22,7 +23,7 @@ export default async function AdminPage() {
 
   // Fetch Admin Data
   const { count: userCount } = await supabase.from('profiles').select('*', { count: 'exact', head: true });
-  const { data: recentPurchases } = await supabase.from('account_purchases').select('amount:amount_paid, created_at, profiles(username, full_name)').order('created_at', { ascending: false }).limit(5);
+  const { data: recentPurchases } = await supabase.from('account_purchases').select('id, amount:amount_paid, created_at, profiles(username, full_name)').order('created_at', { ascending: false }).limit(5);
   const { data: activeRounds } = await supabase.from('challenge_rounds').select('*').order('round_number', { ascending: false });
   const { data: pendingPayouts } = await supabase.from('payout_requests').select('*, profiles(username)').eq('status', 'pending');
   const { data: allMatches } = await supabase.from('challenge_matches').select('*, challenge_rounds!round_id(round_number)').order('kickoff_time', { ascending: false });
@@ -40,7 +41,7 @@ export default async function AdminPage() {
       }}
       rounds={activeRounds || []}
       matches={allMatches || []}
-      recentPurchases={(recentPurchases || []) as any[]}
+      recentPurchases={(recentPurchases || []) as unknown as (Transaction & { profiles?: { username: string } })[]}
       payoutRequests={pendingPayouts || []}
     />
   );

@@ -9,7 +9,7 @@ export async function fetchPlatformStats(): Promise<PlatformStats> {
     .from('platform_settings')
     .select('key, value')
 
-  const settings: any = {}
+  const settings: Record<string, string | number | boolean> = {}
   settingsData?.forEach(s => {
     settings[s.key] = s.value
   })
