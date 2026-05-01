@@ -1,6 +1,6 @@
 import { Profile } from './user';
 import { AccountTier, ChallengeEntry, ChallengeRound, AccountPurchase } from './challenge';
-import { Wallet } from './wallet';
+import { Wallet, PayoutRequest } from './wallet';
 
 export interface PlatformStats {
   activeChallengers: number;

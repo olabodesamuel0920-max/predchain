@@ -12,10 +12,12 @@ import {
   Unlock, 
   ShieldCheck, 
   Activity,
+  ChevronRight,
   UserPlus,
   Check,
   AlertCircle,
-  MoreVertical
+  MoreVertical,
+  ExternalLink
 } from 'lucide-react';
 import { searchUsers, updateUserStatus, adjustUserWallet, getUserDetails, createDemoUser } from '@/app/actions/admin';
 import { AdminSearchProfile, Profile, FullUserDetails, UserStatus } from '@/types';

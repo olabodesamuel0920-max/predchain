@@ -232,7 +232,7 @@ export default function FAQPage() {
             Still Have Questions?
           </h2>
           <p style={{ color: '#A7B0C0', marginBottom: '28px', maxWidth: '400px', margin: '0 auto 28px' }}>
-            Our support team is ready to help. Reach out and we&apos;ll respond within 24 hours.
+            Our support team is ready to help. Reach out and we'll respond within 24 hours.
           </p>
           <div style={{ display: 'flex', gap: '12px', justifyContent: 'center', flexWrap: 'wrap' }}>
             <Link href="/contact" className="btn btn-primary">Contact Support</Link>

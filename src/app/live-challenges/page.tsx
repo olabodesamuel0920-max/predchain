@@ -35,22 +35,12 @@ export default async function LiveChallengesPage() {
     .eq('round_id', round?.id)
     .single()
 
-  // Fetch the user's latest valid tier purchase
-  const { data: userTier } = await supabase
-    .from('account_purchases')
-    .select('tier_id')
-    .eq('user_id', user.id)
-    .eq('status', 'completed')
-    .order('verified_at', { ascending: false })
-    .limit(1)
-    .single()
-
   // Fetch the user's predictions for these matches
   const { data: predictions } = await supabase
     .from('predictions')
     .select('*')
-    .in('match_id', (matches || []).map(m => m.id))
-    .eq('entry_id', userEntry?.id || '00000000-0000-0000-0000-000000000000')
+    .in('match_id', matches?.map(m => m.id) || [])
+    .eq('entry_id', userEntry?.id)
 
   return (
     <LiveChallengesClient 
@@ -58,7 +48,6 @@ export default async function LiveChallengesPage() {
       matches={matches || []} 
       userEntry={userEntry}
       predictions={predictions || []}
-      hasTier={!!userTier}
     />
   )
 }

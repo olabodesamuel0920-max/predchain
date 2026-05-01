@@ -20,8 +20,8 @@ export async function requestPayout(amountNgn: number, bankDetails: BankDetails)
   if (!user) throw new Error('Unauthorized');
 
   // Hardened validation for minimum withdrawal
-  if (amountNgn < 1000) {
-    throw new Error('Minimum withdrawal threshold is ₦1,000.');
+  if (amountNgn < 5000) {
+    throw new Error('Minimum withdrawal threshold is ₦5,000.');
   }
 
   // 1. Create Payout Request Atomically via RPC
@@ -95,23 +95,51 @@ export async function rejectPayout(requestId: string, reason: string) {
   revalidatePath('/dashboard');
   return { success: true };
 }
-
 /**
- * Executes an atomic tier purchase using the user's local wallet balance.
+ * User-facing action to buy a tier using wallet balance.
+ * Uses the atomic RPC created in migration 0006.
  */
 export async function purchaseTierWithWallet(tierId: string) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const userClient = await createClient();
+  const adminClient = await createAdminClient();
+  const { data: { user } } = await userClient.auth.getUser();
+
   if (!user) throw new Error('Unauthorized');
 
-  const { error } = await supabase.rpc('purchase_tier_with_wallet_atomic', {
+  // 1. Generate unique reference
+  const reference = `wallet_pur_${Date.now()}_${Math.random().toString(36).substring(7)}`;
+
+  // 2. Execute Atomic Purchase RPC
+  const { error: rpcError } = await adminClient.rpc('purchase_tier_with_wallet_atomic', {
     p_user_id: user.id,
-    p_tier_id: tierId
+    p_tier_id: tierId,
+    p_payment_reference: reference
   });
 
-  if (error) throw new Error(error.message);
+  if (rpcError) throw new Error(rpcError.message);
 
-  revalidatePath('/dashboard');
-  revalidatePath('/accounts');
-  return { success: true };
+    // 5. Handle Referral Rewards
+    const { data: userData } = await adminClient.auth.admin.getUserById(user.id);
+    const referredByCode = userData.user?.user_metadata?.referred_by_code;
+
+    if (referredByCode) {
+      const { data: referrer } = await adminClient
+        .from('profiles')
+        .select('id')
+        .eq('username', referredByCode.toLowerCase())
+        .single();
+
+      if (referrer) {
+        await adminClient.rpc('process_referral_reward_atomic', {
+          p_referrer_id: referrer.id,
+          p_referred_user_id: user.id,
+          p_referral_code: referredByCode,
+          p_reward_amount: 1000
+        });
+      }
+    }
+
+    revalidatePath('/dashboard');
+    revalidatePath('/accounts');
+    return { success: true, reference };
 }

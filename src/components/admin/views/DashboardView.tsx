@@ -7,6 +7,7 @@ import {
   TrendingUp, 
   ShieldCheck, 
   Activity,
+  ArrowUpRight,
   ChevronRight
 } from 'lucide-react';
 import { Transaction } from '@/types';

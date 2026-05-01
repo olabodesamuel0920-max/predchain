@@ -9,22 +9,28 @@ import {
   Wallet as WalletIcon, 
   Users, 
   LogOut, 
-  Target, 
-  Settings, 
-  Trophy,
-  Star,
-  History,
-  ArrowRight,
+  ChevronRight, 
+  Check, 
+  AlertCircle, 
+  TrendingUp, 
+  ShieldCheck, 
+  Activity,
   ArrowUpRight,
   ArrowDownLeft,
   ArrowUpLeft,
   ShieldAlert,
   Globe,
   Radio,
-  Check,
-  Activity,
-  Award,
-  Gift
+  Trophy,
+  ArrowRight,
+  History,
+  Lock,
+  Target,
+  Settings,
+  CreditCard,
+  User,
+  Gift,
+  Star
 } from 'lucide-react';
 import { submitPrediction } from '@/app/actions/predictions';
 import { requestPayout } from '@/app/actions/wallet';
@@ -61,18 +67,8 @@ export default function DashboardClient({
   tiers
 }: DashboardClientProps) {
   const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback(5000);
-  const totalRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
-  const totalReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
-  const pendingPayouts = payoutRequests.filter(r => r.status === 'pending').reduce((acc, r) => acc + r.amount, 0);
-  
   const [activeTab, setActiveTab] = useState<'overview' | 'arena' | 'wallet' | 'network'>('overview');
   const [walletSubTab, setWalletSubTab] = useState<'transactions' | 'payouts'>('transactions');
-  const [payoutAmount, setPayoutAmount] = useState('');
-  const [bankInfo] = useState<{bank: string, account: string, name: string}>({
-    bank: 'Standard Trust',
-    account: 'Verified Protocol',
-    name: profile?.full_name || 'System Identity'
-  });
 
   const formatDate = (dateStr: string) => {
     const d = new Date(dateStr);
@@ -80,21 +76,23 @@ export default function DashboardClient({
   };
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
+  const [payoutAmount, setPayoutAmount] = useState('');
+  const [bankInfo, setBankInfo] = useState({ bank: '', account: '', name: '' });
+
+  const totalRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
+  const totalReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
+  const pendingPayouts = payoutRequests.filter(r => r.status === 'pending').reduce((acc, r) => acc + r.amount, 0);
 
   useEffect(() => {
     const tabParam = searchParams.get('tab');
+    if (tabParam && ['overview', 'arena', 'wallet', 'network'].includes(tabParam)) {
+      setActiveTab(tabParam as any);
+    }
+
     const errorParam = searchParams.get('error');
     const successParam = searchParams.get('success');
-
-    const timeoutId = setTimeout(() => {
-      if (tabParam && ['overview', 'arena', 'wallet', 'network'].includes(tabParam)) {
-        setActiveTab(tabParam as 'overview' | 'arena' | 'wallet' | 'network');
-      }
-      if (errorParam && errorParam !== 'NEXT_REDIRECT') showError(decodeURIComponent(errorParam));
-      if (successParam) showSuccess(decodeURIComponent(successParam));
-    }, 0);
-
-    return () => clearTimeout(timeoutId);
+    if (errorParam && errorParam !== 'NEXT_REDIRECT') showError(decodeURIComponent(errorParam));
+    if (successParam) showSuccess(decodeURIComponent(successParam));
   }, [searchParams, showError, showSuccess]);
 
   const displayName = profile?.full_name || profile?.username || user?.email?.split('@')[0] || 'User';
@@ -117,8 +115,8 @@ export default function DashboardClient({
       try {
         await submitPrediction(formData);
         showSuccess('Prediction secured.');
-      } catch (err: unknown) {
-        showError((err as Error).message || 'Submission failed.');
+      } catch (err: any) {
+        showError(err.message || 'Submission failed.');
       }
     });
   };
@@ -134,8 +132,8 @@ export default function DashboardClient({
         await requestPayout(Number(payoutAmount), bankInfo);
         showSuccess('Withdrawal request submitted.');
         setPayoutAmount('');
-      } catch (err: unknown) {
-        showError((err as Error).message || 'Withdrawal failed.');
+      } catch (err: any) {
+        showError(err.message || 'Withdrawal failed.');
       }
     });
   };
@@ -147,8 +145,8 @@ export default function DashboardClient({
         if (result.authorization_url) {
           window.location.href = result.authorization_url;
         }
-      } catch (err: unknown) {
-        showError((err as Error).message || 'Funding failed.');
+      } catch (err: any) {
+        showError(err.message || 'Funding failed.');
       }
     });
   };
@@ -231,10 +229,10 @@ export default function DashboardClient({
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as 'overview' | 'arena' | 'wallet' | 'network')}
+                onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-2.5 px-6 py-2.5 rounded-xl border transition-all whitespace-nowrap ${
                   activeTab === tab.id 
-                  ? 'bg-white/[0.04] border-white/10 text-white shadow-[0_10px_30_rgba(0,0,0,0.5)]' 
+                  ? 'bg-white/[0.04] border-white/10 text-white shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]' 
                   : 'bg-transparent border-transparent text-secondary opacity-60 hover:text-white hover:opacity-100'
                 }`}
               >
@@ -297,24 +295,17 @@ export default function DashboardClient({
                         </div>
                        ) : (
                         transactions.slice(0, 4).map(tx => (
-                          <div key={tx.id} className={`p-8 flex items-center justify-between hover:bg-white/[0.01] transition-all group/item ${tx.status === 'failed' ? 'opacity-50' : ''}`}>
+                          <div key={tx.id} className="p-8 flex items-center justify-between hover:bg-white/[0.01] transition-all group/item">
                              <div className="flex items-center gap-7">
-                                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border shadow-inner transition-all ${tx.status === 'failed' ? 'border-rose-500/20 bg-rose-500/5 text-rose-500' : tx.status === 'pending' ? 'border-gold/20 bg-gold/5 text-gold' : tx.amount > 0 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10' : 'bg-white/[0.03] text-white/20 border-white/5'}`}>
-                                   {tx.status === 'failed' ? <ShieldAlert className="w-5 h-5" /> : tx.status === 'pending' ? <History className="w-5 h-5" /> : tx.type === 'reward' ? <Trophy className="w-5 h-5" /> : <WalletIcon className="w-5 h-5" />}
+                                <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border shadow-inner transition-all ${tx.amount > 0 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10' : 'bg-white/[0.03] text-white/20 border-white/5'}`}>
+                                   {tx.type === 'reward' ? <Trophy className="w-5 h-5" /> : <WalletIcon className="w-5 h-5" />}
                                 </div>
                                 <div className="flex flex-col">
-                                   <div className="flex items-center gap-3">
-                                      <span className="text-sm font-bold text-white uppercase tracking-tight font-display">{tx.type.split('_').join(' ')}</span>
-                                      {tx.status !== 'completed' && (
-                                        <span className={`text-[8px] font-black px-2 py-0.5 rounded border uppercase tracking-widest italic ${tx.status === 'pending' ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-rose-500/10 border-rose-500/20 text-rose-500'}`}>
-                                          {tx.status}
-                                        </span>
-                                      )}
-                                   </div>
+                                   <span className="text-sm font-bold text-white uppercase tracking-tight font-display">{tx.type.split('_').join(' ')}</span>
                                    <span suppressHydrationWarning className="text-[10px] font-medium text-secondary opacity-40 uppercase tracking-widest mt-1 italic">{formatDate(tx.created_at)} • {tx.reference.slice(0, 8)}</span>
                                 </div>
                              </div>
-                             <span className={`text-2xl font-bold font-display tracking-tight ${tx.status === 'failed' ? 'text-rose-500 line-through' : tx.status === 'pending' ? 'text-gold' : tx.amount > 0 ? 'text-emerald-500' : 'text-white'}`}>
+                             <span className={`text-2xl font-bold font-display tracking-tight ${tx.amount > 0 ? 'text-emerald-500' : 'text-white'}`}>
                                 {tx.amount > 0 ? '+' : ''}₦{Math.abs(tx.amount).toLocaleString()}
                              </span>
                           </div>
@@ -446,7 +437,7 @@ export default function DashboardClient({
                              { id: 'transactions', label: 'Ledger' },
                              { id: 'payouts', label: 'Withdrawals' }
                            ].map(t => (
-                             <button key={t.id} onClick={() => setWalletSubTab(t.id as 'transactions' | 'payouts')} className={`px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all font-display ${walletSubTab === t.id ? 'bg-white/10 text-white shadow-lg' : 'text-muted/40 hover:text-white'}`}>{t.label}</button>
+                             <button key={t.id} onClick={() => setWalletSubTab(t.id as any)} className={`px-6 py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-xl transition-all font-display ${walletSubTab === t.id ? 'bg-white/10 text-white shadow-lg' : 'text-muted/40 hover:text-white'}`}>{t.label}</button>
                            ))}
                         </div>
                      </div>
@@ -458,31 +449,20 @@ export default function DashboardClient({
                                <span className="text-xs font-bold uppercase tracking-[0.3em] font-display">No transactions found</span>
                             </div>
                           ) : (
-                             <>
-                              {transactions.map(tx => (
-                                <div key={tx.id} className={`p-10 flex items-center justify-between hover:bg-white/[0.01] transition-all group border-b border-transparent hover:border-white/5 ${tx.status === 'failed' ? 'opacity-50' : ''}`}>
-                                   <div className="flex items-center gap-8">
-                                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-inner transition-transform group-hover:scale-110 ${tx.status === 'failed' ? 'border-rose-500/20 bg-rose-500/5 text-rose-500' : tx.status === 'pending' ? 'border-gold/20 bg-gold/5 text-gold' : tx.amount > 0 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10' : 'bg-white/[0.03] text-white/30 border-white/5'}`}>
-                                         {tx.status === 'failed' ? <ShieldAlert className="w-6 h-6" /> : tx.status === 'pending' ? <History className="w-6 h-6" /> : tx.amount > 0 ? <ArrowDownLeft className="w-6 h-6" /> : <ArrowUpLeft className="w-6 h-6" />}
-                                      </div>
-                                      <div className="space-y-2">
-                                         <div className="flex items-center gap-3">
-                                            <div className="text-sm font-bold text-white uppercase tracking-tight font-display">{tx.type.split('_').join(' ')}</div>
-                                            {tx.status !== 'completed' && (
-                                              <span className={`text-[8px] font-black px-2 py-0.5 rounded border uppercase tracking-widest italic ${tx.status === 'pending' ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-rose-500/10 border-rose-500/20 text-rose-500'}`}>
-                                                {tx.status}
-                                              </span>
-                                            )}
-                                         </div>
-                                         <div className="text-[10px] font-medium text-secondary opacity-40 uppercase tracking-widest italic">{tx.reference.slice(0, 12)} • {formatDate(tx.created_at)}</div>
-                                      </div>
-                                   </div>
-                                   <span className={`text-2xl font-bold font-display tracking-tight ${tx.status === 'failed' ? 'text-rose-500 line-through' : tx.status === 'pending' ? 'text-gold' : tx.amount > 0 ? 'text-emerald-500' : 'text-white'}`}>
-                                      {tx.amount > 0 ? '+' : ''}₦{Math.abs(tx.amount).toLocaleString()}
-                                   </span>
-                                </div>
-                              ))}
-                             </>
+                             transactions.map(tx => (
+                               <div key={tx.id} className="p-10 flex items-center justify-between hover:bg-white/[0.01] transition-all group border-b border-transparent hover:border-white/5">
+                                  <div className="flex items-center gap-8">
+                                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-inner transition-transform group-hover:scale-110 ${tx.amount > 0 ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/10' : 'bg-white/[0.03] text-white/30 border-white/5'}`}>
+                                        {tx.amount > 0 ? <ArrowDownLeft className="w-6 h-6" /> : <ArrowUpLeft className="w-6 h-6" />}
+                                     </div>
+                                     <div className="space-y-2">
+                                        <div className="text-sm font-bold text-white uppercase tracking-tight font-display">{tx.type.split('_').join(' ')}</div>
+                                        <div className="text-[10px] font-medium text-secondary opacity-40 uppercase tracking-widest italic">{tx.reference.slice(0, 12)} • {formatDate(tx.created_at)}</div>
+                                     </div>
+                                  </div>
+                                  <span className={`text-2xl font-bold font-display tracking-tight ${tx.amount > 0 ? 'text-emerald-500' : 'text-white'}`}>₦{Math.abs(tx.amount).toLocaleString()}</span>
+                               </div>
+                             ))
                           )
                         )}
                         {walletSubTab === 'payouts' && (

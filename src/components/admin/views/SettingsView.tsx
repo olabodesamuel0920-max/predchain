@@ -7,10 +7,14 @@ import {
   DollarSign, 
   Megaphone, 
   BarChart3, 
+  Database, 
   RefreshCcw, 
   Power, 
   Globe, 
+  Activity, 
   Check,
+  ChevronRight,
+  ShieldCheck,
   Zap
 } from 'lucide-react';
 import { updatePlatformSettings, getAllPlatformSettings, revalidatePlatform } from '@/app/actions/admin';

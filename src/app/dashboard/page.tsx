@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Suspense } from 'react'
-import DashboardClient from './DashboardClient'
+import DashboardClient from '@/components/dashboard/DashboardClient'
 
 export default async function DashboardPage() {
   const supabase = await createClient()
@@ -15,10 +15,13 @@ export default async function DashboardPage() {
   }
 
   // 1. Fetch Profile & Wallet
-  const [{ data: profile }, { data: wallet }] = await Promise.all([
+  const [{ data: profileData }, { data: wallet }] = await Promise.all([
     supabase.from('profiles').select('*').eq('id', user.id).single(),
     supabase.from('wallets').select('*').eq('user_id', user.id).single(),
   ])
+
+  // Inject email from auth for identity resolution
+  const profile = profileData ? { ...profileData, email: user.email } : { id: user.id, email: user.email };
 
   // 2. Fetch Active Round
   const { data: activeRound } = await supabase
@@ -53,7 +56,27 @@ export default async function DashboardPage() {
     .select('*')
     .eq('wallet_id', wallet?.id)
     .order('created_at', { ascending: false })
-    .limit(10)
+    .limit(50)
+
+  // 6. Fetch payout requests
+  const { data: payoutRequests } = await supabase
+    .from('payout_requests')
+    .select('*')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+    
+  // 7. Fetch account purchases
+  const { data: purchases } = await supabase
+    .from('account_purchases')
+    .select('*, account_tiers(*)')
+    .eq('user_id', user.id)
+    .order('created_at', { ascending: false })
+
+  // 8. Fetch all account tiers for reward context
+  const { data: tiers } = await supabase
+    .from('account_tiers')
+    .select('*')
+    .order('price_ngn', { ascending: true })
 
   return (
     <Suspense fallback={<div className="container py-80 text-center text-muted">Loading Dashboard...</div>}>
@@ -66,7 +89,11 @@ export default async function DashboardPage() {
         userEntry={userEntry}
         predictions={predictions || []}
         transactions={transactions || []}
+        payoutRequests={payoutRequests || []}
+        purchases={purchases || []}
+        tiers={tiers || []}
       />
     </Suspense>
   )
 }
+
