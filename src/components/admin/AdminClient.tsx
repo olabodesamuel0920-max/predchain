@@ -2,13 +2,18 @@
 
 import { useState } from 'react';
 import { 
+  Monitor, 
   Users, 
+  BarChart3, 
+  Sword, 
   HelpCircle, 
   Settings, 
   Shield, 
+  Zap, 
   Activity,
   ChevronRight,
   Database,
+  Cpu,
   LayoutDashboard,
   Menu,
   X,
@@ -54,6 +59,51 @@ export default function AdminClient({
     { id: 'support' as const, label: 'Help Desk', icon: HelpCircle },
     { id: 'settings' as const, label: 'System Config', icon: Settings },
   ];
+
+  const SidebarContent = () => (
+    <div className="flex flex-col h-full">
+      <div className="mb-12">
+        <div className="flex items-center gap-3 mb-6">
+           <Shield className="w-4 h-4 text-gold opacity-60" />
+           <span className="text-[10px] font-bold text-gold uppercase tracking-[0.2em] font-display">System Integrity</span>
+        </div>
+        <h2 className="text-2xl font-bold text-white tracking-tighter uppercase font-display">Pred<span className="text-gradient-gold">Chain.</span></h2>
+      </div>
+
+      <nav className="flex-1 space-y-3">
+        {navItems.map(item => (
+          <button 
+            key={item.id}
+            onClick={() => {
+              setActiveView(item.id);
+              setIsSidebarOpen(false);
+            }}
+            className={`w-full flex items-center gap-4 py-4 px-5 rounded-2xl transition-all text-[11px] font-bold uppercase tracking-widest font-display group ${
+              activeView === item.id 
+                ? 'bg-white/10 text-white shadow-xl' 
+                : 'text-secondary hover:text-white hover:bg-white/[0.03]'
+            }`}
+          >
+            <item.icon className={`w-4 h-4 transition-all ${activeView === item.id ? 'text-gold' : 'opacity-30 group-hover:opacity-100'}`} />
+            <span className="italic">{item.label}</span>
+            {item.id === 'finance' && initialMetrics.pendingPayouts > 0 && (
+              <div className="ml-auto w-2 h-2 rounded-full bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)] animate-pulse" />
+            )}
+          </button>
+        ))}
+      </nav>
+
+      <div className="mt-8 pt-8 border-t border-white/5 flex items-center gap-4">
+         <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center font-bold text-gold italic shadow-inner">AD</div>
+         <div className="flex flex-col">
+            <span className="text-[10px] font-bold text-white uppercase tracking-widest font-display">Administrative Hub</span>
+            <span className="text-[8px] font-bold text-emerald-500 uppercase tracking-widest flex items-center gap-2 mt-1">
+               <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" /> Verified
+            </span>
+         </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-[#020406] text-white flex overflow-x-hidden">

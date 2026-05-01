@@ -1,9 +1,12 @@
 'use client';
 
+import { useState, useTransition, useEffect } from 'react';
 import { 
   Sword, 
   Calendar, 
+  TrendingUp, 
   CheckCircle2, 
+  Activity, 
   Trophy, 
   ShieldCheck, 
   AlertCircle, 
@@ -15,7 +18,6 @@ import {
   Plus,
   RefreshCw
 } from 'lucide-react';
-import { useState, useTransition } from 'react';
 import { settleMatchResult, updateMatchStatus, updateRoundStatus, createMatch, createRound } from '@/app/actions/predictions';
 import { undoMatchSettlement, overrideMatchScore } from '@/app/actions/admin';
 import { ChallengeMatch, ChallengeRound } from '@/types';
@@ -26,18 +28,23 @@ interface MatchesViewProps {
   rounds: ChallengeRound[];
 }
 
-export default function MatchesView({ matches: initialMatches, rounds }: MatchesViewProps) {
+export default function MatchesView({ matches, rounds }: MatchesViewProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [matches] = useState(initialMatches);
   const [editingScores, setEditingScores] = useState<Record<string, { home: number; away: number }>>({});
-  const [selectedRoundId, setSelectedRoundId] = useState<string | null>(() => rounds.find(r => r.status === 'active')?.id || rounds[0]?.id || null);
+  const [selectedRoundId, setSelectedRoundId] = useState<string | null>(rounds.find(r => r.status === 'active')?.id || rounds[0]?.id || null);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [showMatchModal, setShowMatchModal] = useState(false);
   const [showRoundModal, setShowRoundModal] = useState(false);
   const [matchData, setMatchData] = useState({ home_team: '', away_team: '', kickoff_time: '' });
   const [roundData, setRoundData] = useState({ round_number: rounds.length + 1, start_date: '', end_date: '' });
+
+  useEffect(() => {
+    if (!selectedRoundId && rounds.length > 0) {
+      setSelectedRoundId(rounds[0].id);
+    }
+  }, [rounds, selectedRoundId]);
 
   const showSuccess = (msg: string) => {
     setSuccessMsg(msg);
@@ -67,8 +74,8 @@ export default function MatchesView({ matches: initialMatches, rounds }: Matches
     startTransition(async () => {
       try {
         await settleMatchResult(matchId, scores.home, scores.away);
-      } catch (err: unknown) {
-        setErrorMsg((err as Error).message || 'Settlement failed');
+      } catch (err: any) {
+        setErrorMsg(err.message || 'Settlement failed');
       }
     });
   };
@@ -79,8 +86,8 @@ export default function MatchesView({ matches: initialMatches, rounds }: Matches
         await updateMatchStatus(matchId, status);
         setSuccessMsg(`Match marked as ${status}.`);
         setTimeout(() => setSuccessMsg(''), 3000);
-      } catch (err: unknown) {
-        setErrorMsg((err as Error).message || 'Status update failed');
+      } catch (err: any) {
+        setErrorMsg(err.message || 'Status update failed');
       }
     });
   };
@@ -91,8 +98,8 @@ export default function MatchesView({ matches: initialMatches, rounds }: Matches
         await updateRoundStatus(roundId, status);
         setSuccessMsg(`Round status updated to ${status}.`);
         setTimeout(() => setSuccessMsg(''), 3000);
-      } catch (err: unknown) {
-        setErrorMsg((err as Error).message || 'Round status update failed');
+      } catch (err: any) {
+        setErrorMsg(err.message || 'Round status update failed');
       }
     });
   };
@@ -106,8 +113,8 @@ export default function MatchesView({ matches: initialMatches, rounds }: Matches
         setShowMatchModal(false);
         setMatchData({ home_team: '', away_team: '', kickoff_time: '' });
         router.refresh();
-      } catch (err: unknown) {
-        showError((err as Error).message || 'Creation failed');
+      } catch (err: any) {
+        showError(err.message || 'Creation failed');
       }
     });
   };
@@ -121,8 +128,8 @@ export default function MatchesView({ matches: initialMatches, rounds }: Matches
         setShowRoundModal(false);
         setRoundData({ round_number: rounds.length + 2, start_date: '', end_date: '' });
         router.refresh();
-      } catch (err: unknown) {
-        showError((err as Error).message || 'Round creation failed');
+      } catch (err: any) {
+        showError(err.message || 'Round creation failed');
       }
     });
   };
@@ -134,8 +141,8 @@ export default function MatchesView({ matches: initialMatches, rounds }: Matches
         await undoMatchSettlement(matchId);
         showSuccess('Match settlement sequence undone. You can now re-enter the score.');
         router.refresh();
-      } catch (err: unknown) {
-        showError((err as Error).message || 'Undo failed');
+      } catch (err: any) {
+        showError(err.message || 'Undo failed');
       }
     });
   };
@@ -148,8 +155,8 @@ export default function MatchesView({ matches: initialMatches, rounds }: Matches
         await overrideMatchScore(matchId, scores.home, scores.away);
         showSuccess('SYSTEM OVERRIDE: Score fixed successfully.');
         router.refresh();
-      } catch (err: unknown) {
-        showError((err as Error).message || 'Override failed');
+      } catch (err: any) {
+        showError(err.message || 'Override failed');
       }
     });
   };

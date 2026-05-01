@@ -1,19 +1,21 @@
 import type { Metadata } from "next";
-import { Inter, Sora, Space_Mono } from "next/font/google";
+import { Outfit, Inter, Space_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+  weight: ["400", "500", "600", "700", "800", "900"],
+});
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-});
-
-const sora = Sora({
-  subsets: ["latin"],
-  variable: "--font-sora",
-  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 const spaceMono = Space_Mono({
@@ -24,14 +26,20 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "PredChain — Premium Football Prediction Challenge Platform",
-  description: "Buy an account, enter a 3-day live football challenge, predict 1 live match per day, and complete the full 3/3 perfect streak to unlock the 10X cash reward. Premium. Elite. Verified.",
-  keywords: "football prediction, challenge platform, cash reward, perfect streak, live matches, leaderboard",
+  title: "PredChain | Elite Football Prediction Arena",
+  description: "The premier arena for high-stakes football predictions. Master the 3-day streak to unlock 10X reward multipliers. Secure, professional, and performance-driven.",
+  keywords: "football prediction, premium sports tech, reward multiplier, perfect streak, live matches, analytical sports",
   openGraph: {
-    title: "PredChain — Premium Football Prediction Challenge",
-    description: "Build the perfect 3-match streak. Unlock the 10X cash reward.",
+    title: "PredChain | Predict. Master. Prevail.",
+    description: "Secure a 3-day sequence. Access elite reward multipliers.",
     type: "website",
+    images: ["/og-image.jpg"],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "PredChain | Elite Football Prediction Arena",
+    description: "The 3-day streak to 10X multiplier.",
+  }
 };
 
 export default function RootLayout({
@@ -40,11 +48,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${inter.variable} ${sora.variable} ${spaceMono.variable}`}>
-      <body>
+    <html lang="en" className={`${outfit.variable} ${inter.variable} ${spaceMono.variable}`}>
+      <body className="antialiased selection:bg-gold/30 selection:text-white">
         <div className="noise-overlay" aria-hidden="true" />
         <Navbar />
-        <main>{children}</main>
+        <main className="min-h-screen">{children}</main>
         <Footer />
       </body>
     </html>

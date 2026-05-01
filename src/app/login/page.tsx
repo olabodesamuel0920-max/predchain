@@ -1,187 +1,145 @@
 'use client';
 
-import { useState, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { login } from '@/app/actions/auth';
-import { Zap, AlertCircle, Eye, EyeOff, ArrowRight, Lock, Globe } from 'lucide-react';
+import { ArrowRight, Lock, Mail, ShieldCheck } from 'lucide-react';
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const message = searchParams.get('message');
-  
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [infoMsg, setInfoMsg] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
+
+  useEffect(() => {
+    const errorParam = searchParams.get('error');
+    if (errorParam) setErrorMsg(decodeURIComponent(errorParam));
+
+    const messageParam = searchParams.get('message');
+    if (messageParam) setInfoMsg(decodeURIComponent(messageParam));
+  }, [searchParams]);
 
   const loginAction = async (formData: FormData) => {
-    setIsLoading(true);
+    setIsPending(true);
     setErrorMsg(null);
+    
+    const returnTo = searchParams.get('returnTo');
+    if (returnTo) formData.append('returnTo', returnTo);
+    
     const res = await login(formData);
     if (res?.error) {
       setErrorMsg(res.error);
-      setIsLoading(false);
+      setIsPending(false);
     }
   };
 
+  const returnTo = searchParams.get('returnTo');
+  const signupUrl = returnTo ? `/signup?returnTo=${encodeURIComponent(returnTo)}` : '/signup';
+
   return (
-    <div style={{ width: '100%', maxWidth: '400px', position: 'relative', zIndex: 1 }}>
-      <div style={{ marginBottom: '40px', textAlign: 'center' }}>
-        <h2 style={{ fontFamily: "var(--font-display)", fontSize: '2.25rem', fontWeight: 800, color: '#FFF', marginBottom: '12px', letterSpacing: '-0.02em' }}>Welcome Back</h2>
-        <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', fontWeight: 500, opacity: 0.7 }}>Resume your prediction sequence.</p>
+    <div className="w-full max-w-[360px] animate-fade-in px-6">
+      <div className="text-center mb-10">
+        <h2 className="mb-2">Welcome <span className="text-gradient-gold">Back.</span></h2>
+        <p className="text-[10px] font-bold text-muted uppercase tracking-[0.2em] opacity-40">Please enter your account details</p>
       </div>
 
-      <form action={loginAction} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-        {message && (
-          <div style={{ padding: '14px', background: 'rgba(0,194,255,0.1)', border: '1px solid rgba(0,194,255,0.2)', borderRadius: '12px', color: '#00C2FF', fontSize: '0.8125rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <Zap className="w-16 h-16 shrink-0" />
-            <span style={{ fontWeight: 600 }}>{message}</span>
-          </div>
-        )}
+      <form action={loginAction} className="space-y-5">
         {errorMsg && (
-          <div style={{ padding: '14px', background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: '12px', color: '#FF4D4D', fontSize: '0.8125rem', display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <AlertCircle className="w-16 h-16 shrink-0" />
-            <span style={{ fontWeight: 600 }}>{errorMsg}</span>
+          <div className="p-3 bg-danger/10 border border-danger/20 rounded-xl text-danger text-[10px] font-bold uppercase tracking-widest text-center animate-slide-up">
+            {errorMsg}
           </div>
         )}
-
-        <div>
-          <label style={labelStyle}>Email Address</label>
+        {infoMsg && (
+          <div className="p-3 bg-blue-electric/10 border border-blue-electric/20 rounded-xl text-blue-electric text-[10px] font-bold uppercase tracking-widest text-center animate-slide-up">
+            {infoMsg}
+          </div>
+        )}
+        
+        <div className="space-y-2">
+          <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest ml-1 opacity-40">
+            <Mail className="w-3 h-3" /> Email Address
+          </label>
           <input 
+            name="email" 
             type="email" 
-            name="email"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            placeholder="operator@predchain.com"
-            style={inputStyle}
+            required 
+            placeholder="name@example.com" 
+            className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3.5 px-4 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
           />
         </div>
 
-        <div>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-            <label style={labelStyle}>Password</label>
-            <Link href="#" style={{ fontSize: '0.7rem', color: 'var(--blue-electric)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Forgot key?</Link>
+        <div className="space-y-2">
+          <div className="flex justify-between items-center ml-1">
+            <label className="flex items-center gap-2 text-[9px] font-bold text-muted uppercase tracking-widest opacity-40">
+              <Lock className="w-3 h-3" /> Password
+            </label>
+            <Link href="/forgot-password" title="Recover Password" className="text-[9px] text-gold/60 font-bold uppercase tracking-widest hover:text-gold transition-colors">Forgot?</Link>
           </div>
-          <div style={{ position: 'relative' }}>
-            <input 
-              type={showPassword ? "text" : "password"} 
-              name="password"
-              required
-              autoComplete="current-password"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              placeholder="••••••••"
-              style={inputStyle}
-            />
-            <button 
-              type="button" 
-              onClick={() => setShowPassword(!showPassword)}
-              style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
-            >
-              {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-            </button>
-          </div>
+          <input 
+            name="password" 
+            type="password" 
+            required 
+            placeholder="••••••••" 
+            className="w-full bg-white/[0.02] border border-white/5 rounded-xl py-3.5 px-4 text-sm text-white placeholder:text-white/10 focus:outline-none focus:border-gold/30 transition-all shadow-inner" 
+          />
         </div>
 
         <button 
           type="submit" 
-          disabled={isLoading}
-          className="btn btn-primary" 
-          style={{ width: '100%', padding: '16px', fontSize: '0.875rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', opacity: isLoading ? 0.7 : 1 }}
+          disabled={isPending} 
+          className="btn btn-primary w-full py-4 shadow-xl mt-4"
         >
-          {isLoading ? 'Decrypting Access...' : <>Initialize Session <ArrowRight size={16} /></>}
+          {isPending ? 'Authenticating...' : 'Sign In'}
         </button>
       </form>
 
-      <p style={{ textAlign: 'center', fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '40px', fontWeight: 500 }}>
-        New Operative? <Link href="/signup" style={{ color: 'var(--gold)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Create Account</Link>
-      </p>
+      <div className="mt-10 text-center">
+        <p className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-30">
+          Don't have an account? <Link href={signupUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-0.5">Create One</Link>
+        </p>
+      </div>
     </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <div style={{ minHeight: '100vh', display: 'flex', background: 'var(--bg-primary)', overflow: 'hidden' }}>
+    <div className="min-h-screen flex bg-[#020406] overflow-hidden">
       
-      {/* ──────────────────────── LEFT: CINEMATIC ART ──────────────────────── */}
-      <div className="auth-pane-left">
-        <div style={{ position: 'absolute', inset: 0, background: 'var(--bg-secondary)', zIndex: 0 }} />
-        <div style={{ position: 'absolute', bottom: '5%', left: '5%', width: '80%', height: '80%', background: 'var(--grad-blue)', filter: 'blur(160px)', opacity: 0.1, borderRadius: '50%', zIndex: 1 }} />
-        <div style={{ position: 'absolute', inset: 0, backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)', backgroundSize: '32px 32px', zIndex: 1 }} />
+      {/* LEFT: Branding */}
+      <div className="hidden lg:flex flex-1 flex-col justify-between p-16 bg-[#030508] border-r border-white/5 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-glow blur-[120px] opacity-10 pointer-events-none" />
+        
+        <Link href="/" className="relative z-10 flex items-center gap-2 group">
+           <span className="font-display text-2xl font-black text-white uppercase tracking-tighter italic">Pred<span className="text-gradient-gold">Chain</span></span>
+        </Link>
+        
+        <div className="relative z-10 max-w-sm">
+          <h1 className="mb-6 leading-tight">
+            Predict. <br />
+            <span className="text-gradient-gold">Perform.</span> <br />
+            Win.
+          </h1>
+          <p className="text-[10px] font-black text-muted uppercase tracking-[0.4em] opacity-30 leading-loose">
+            High-Yield Sports Prediction Arena
+          </p>
+        </div>
 
-        <div style={{ position: 'relative', zIndex: 2, padding: '80px', maxWidth: '640px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '80px', width: 'fit-content' }}>
-            <div style={{ width: '48px', height: '48px', background: 'linear-gradient(135deg, var(--gold), #FFF)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#000', fontWeight: 900, fontSize: '1.25rem', boxShadow: '0 0 20px rgba(255,215,0,0.3)' }}>P</div>
-            <span style={{ fontFamily: "var(--font-display)", fontSize: '1.75rem', fontWeight: 900, color: '#FFF', letterSpacing: '-0.03em' }}>PredChain</span>
-          </Link>
-          
-          <div style={{ marginBottom: '60px' }}>
-             <h1 style={{ fontFamily: "var(--font-display)", fontSize: 'clamp(2.5rem, 5vw, 4rem)', fontWeight: 900, color: '#FFF', lineHeight: 1.05, marginBottom: '32px', letterSpacing: '-0.04em' }}>
-              Access Your <br />
-              <span className="text-gradient-gold">Control Node.</span>
-            </h1>
-            <p style={{ fontSize: '1.125rem', color: 'var(--text-secondary)', lineHeight: 1.6, fontWeight: 400, opacity: 0.8, maxWidth: '500px' }}>
-              Resume your strategic oversight of live challenges and manage your verified capital growth from your professional dashboard.
-            </p>
-          </div>
-
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px' }}>
-             <div style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ marginTop: '4px', color: 'var(--gold)' }}><Lock size={20} /></div>
-                <div>
-                   <h4 style={{ color: '#FFF', fontSize: '0.875rem', fontWeight: 800, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Secured Entry</h4>
-                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', lineHeight: 1.5 }}>Encrypted session management via Supabase Auth.</p>
-                </div>
-             </div>
-             <div style={{ display: 'flex', gap: '16px' }}>
-                <div style={{ marginTop: '4px', color: 'var(--gold)' }}><Globe size={20} /></div>
-                <div>
-                   <h4 style={{ color: '#FFF', fontSize: '0.875rem', fontWeight: 800, marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Global Sync</h4>
-                   <p style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', lineHeight: 1.5 }}>Multi-device synchronization for real-time tracking.</p>
-                </div>
-             </div>
-          </div>
+        <div className="relative z-10 flex items-center gap-4 text-muted opacity-20">
+           <ShieldCheck className="w-5 h-5" />
+           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Verified Payout Protocols Active</span>
         </div>
       </div>
 
-      {/* ──────────────────────── RIGHT: AUTH FORM ──────────────────────── */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '80px 24px', position: 'relative' }}>
-         <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: '600px', height: '600px', background: 'var(--grad-gold)', filter: 'blur(160px)', opacity: 0.05, pointerEvents: 'none' }} />
+      {/* RIGHT: Form */}
+      <div className="flex-1 flex items-center justify-center p-6 relative">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] bg-gold-glow blur-[100px] opacity-10 pointer-events-none" />
         
-        <Suspense fallback={<div style={{ color: '#FFF', fontWeight: 900, fontFamily: 'var(--font-mono)' }}>INITIALIZING...</div>}>
-           <LoginForm />
+        <Suspense fallback={<div className="text-[10px] font-bold text-muted uppercase tracking-widest animate-pulse">Connecting...</div>}>
+          <LoginForm />
         </Suspense>
       </div>
     </div>
   );
 }
-
-const labelStyle = {
-  display: 'block', 
-  fontSize: '0.7rem', 
-  fontWeight: 800, 
-  color: 'var(--text-secondary)', 
-  textTransform: 'uppercase', 
-  letterSpacing: '0.1em',
-  opacity: 0.6
-};
-
-const inputStyle = {
-  width: '100%', 
-  padding: '16px 20px', 
-  background: 'rgba(255,255,255,0.02)',
-  border: '1px solid var(--border)', 
-  borderRadius: '12px', 
-  color: '#FFF',
-  fontSize: '1rem', 
-  fontWeight: 500,
-  outline: 'none', 
-  transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-  fontFamily: 'inherit',
-  boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.1)'
-};

@@ -3,12 +3,11 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ShieldCheck, Zap, Wallet as WalletIcon, Users, Settings, LogOut, Menu, X, Terminal } from 'lucide-react';
+import { ShieldCheck, Zap, Wallet as WalletIcon, Users, Settings, LogOut, Menu, X, Terminal, ChevronRight } from 'lucide-react';
 import { logout } from '@/app/actions/auth';
-import { Profile } from '@/types';
 
 interface DashboardMenuProps {
-  profile: Profile | null;
+  profile: any;
   children: React.ReactNode;
 }
 

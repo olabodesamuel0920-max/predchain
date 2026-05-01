@@ -18,10 +18,12 @@ const config: Config = {
         blue: {
           electric: "var(--blue-electric)",
         },
+        success: "var(--success)",
+        danger: "var(--danger)",
       },
       fontFamily: {
         sans: ["var(--font-inter)", "system-ui", "sans-serif"],
-        display: ["var(--font-sora)", "system-ui", "sans-serif"],
+        display: ["var(--font-outfit)", "system-ui", "sans-serif"],
         mono: ["var(--font-space-mono)", "monospace"],
       },
       boxShadow: {
@@ -30,6 +32,11 @@ const config: Config = {
       },
     },
   },
+  safelist: [
+    { pattern: /bg-(success|danger|gold|blue-electric)/ },
+    { pattern: /text-(success|danger|gold|blue-electric)/ },
+    { pattern: /border-(success|danger|gold|blue-electric)/ },
+  ],
   plugins: [],
 };
 

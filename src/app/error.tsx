@@ -35,7 +35,7 @@ export default function Error({
           Something went wrong.
         </h1>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', lineHeight: 1.6 }}>
-          An unexpected error occurred in our command center. We&apos;ve been notified and are working on it.
+          An unexpected error occurred in our command center. We've been notified and are working on it.
         </p>
         
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
