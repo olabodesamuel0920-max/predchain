@@ -24,7 +24,7 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'How it Works — PredChain',
-  description: 'Master the elite football prediction arena. Learn our performance-driven 3-day sequence methodology.',
+  description: 'Master the elite football prediction arena. Learn our performance-driven 3-day streak methodology.',
 };
 
 const STEPS = [
@@ -33,7 +33,7 @@ const STEPS = [
     icon: CreditCard,
     title: 'Select Your Tier',
     description: 'Choose an entry tier that fits your goals. Your plan defines your level of access and reward potential in the arena.',
-    detail: 'Instant account synchronization upon activation.',
+    detail: 'Instant account activation upon activation.',
   },
   {
     number: '02',
@@ -53,15 +53,15 @@ const STEPS = [
     number: '04',
     icon: TrendingUp,
     title: 'Maintain Consistency',
-    description: 'Track your streak live. To secure the top multiplier, you must maintain a perfect 3-day winning sequence.',
+    description: 'Track your streak live. To secure the top multiplier, you must maintain a perfect 3-day winning streak.',
     detail: 'Live performance indicators visible in your dashboard.',
   },
   {
     number: '05',
     icon: Award,
     title: 'Secured Rewards',
-    description: 'Achieve a 3/3 sequence and unlock your 10X reward multipliers. Winnings are settled and paid directly to your wallet.',
-    detail: 'Automated settlement initiated upon final verification.',
+    description: 'Achieve a 3/3 streak and unlock your 10X reward multipliers. Winnings are paid and paid directly to your wallet.',
+    detail: 'Automated payout initiated upon final verification.',
   },
 ];
 
@@ -84,10 +84,10 @@ export default function HowItWorksPage() {
         <div className="container max-w-4xl">
           <div className="badge-premium !text-gold mb-10 px-6 py-2">The Player Guide</div>
           <h1 className="mb-10 leading-[1.05]">
-            Master the <span className="text-gradient-gold">Arena Pool.</span>
+            Master the <span className="text-gradient-gold">Match Arena.</span>
           </h1>
           <p className="text-secondary text-lg font-medium opacity-70 max-w-2xl mx-auto mb-16 leading-relaxed">
-            PredChain is a high-performance prediction system. Build a perfect 3-day winning sequence to unlock 10X reward multipliers. 
+            PredChain is a high-performance prediction arena. Build a perfect 3-day winning streak to unlock 10X reward multipliers. 
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/accounts" className="btn btn-primary !px-16 !py-6 text-base shadow-2xl group">
@@ -206,10 +206,10 @@ export default function HowItWorksPage() {
            <div className="max-w-3xl mx-auto relative z-10">
               <h2 className="mb-12 text-6xl md:text-8xl leading-none tracking-tight">Ready to <br /><span className="text-gradient-gold">Dominate?</span></h2>
               <p className="text-secondary text-lg font-medium opacity-50 mb-20 max-w-xl mx-auto leading-relaxed">
-                 Choose your tier, analyze the arena, and secure your first 3-day winning sequence today.
+                 Choose your tier, analyze the arena, and secure your first 3-day winning streak today.
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
-                <Link href="/accounts" className="btn btn-primary !px-20 !py-6 text-lg shadow-2xl">Join the Arena Pool</Link>
+                <Link href="/accounts" className="btn btn-primary !px-20 !py-6 text-lg shadow-2xl">Join the Match Arena</Link>
                 <Link href="/arena" className="btn btn-secondary !px-20 !py-6 text-lg border-white/10">Active Matches</Link>
               </div>
            </div>

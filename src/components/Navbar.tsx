@@ -10,7 +10,7 @@ import { createClient } from '@/lib/supabase/client';
 const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/how-it-works', label: 'Guide' },
-  { href: '/accounts', label: 'Accounts' },
+  { href: '/accounts', label: 'Tiers' },
   { href: '/arena', label: 'Arena' },
   { href: '/winners', label: 'Winners' },
   { href: '/leaderboard', label: 'Rankings' },

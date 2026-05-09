@@ -68,7 +68,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
       <div className="container-tight relative z-10">
         {/* Section Header */}
         <div className="text-center mb-16 max-w-2xl mx-auto px-4">
-          <div className="badge-luxury mb-6 px-5 py-1.5">ELITE PROTOCOLS</div>
+          <div className="badge-luxury mb-6 px-5 py-1.5">ELITE MEMBERSHIP</div>
           <h1 className="mb-4 uppercase italic font-black tracking-tight">Select Your <span className="text-gradient-gold">Arena Entry.</span></h1>
           <p className="text-text-secondary text-sm font-normal leading-relaxed">
             Choose a performance tier that aligns with your strategy. Each tier unlocks verified <span className="text-white font-bold italic">10X multipliers</span>.
@@ -121,7 +121,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                       '3-Day Streak Eligibility',
                       'verified match data-feeds',
                       `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} referral share`,
-                      'automated Payout settlement'
+                      'automated rewards'
                    ].map((feat, idx) => (
                       <div key={idx} className="flex items-center gap-3">
                          <div className="w-4 h-4 rounded-md bg-white/[0.02] border border-border-subtle flex items-center justify-center shrink-0">
@@ -134,7 +134,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
 
                 <div className="pt-8 border-t border-border-subtle space-y-6">
                    <div className="bg-bg-secondary p-5 rounded-xl border border-border-subtle text-center">
-                      <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] block mb-2 italic">Max Reward Settlement</span>
+                      <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] block mb-2 italic">Max Reward Payout</span>
                       <div className="flex items-center justify-center gap-2">
                          <span className="text-2xl font-black text-white font-display italic tracking-tight">₦{rewardVal.toLocaleString()}</span>
                          <span className="text-[8px] font-extrabold text-emerald-500/60 uppercase tracking-tighter">Verified</span>
@@ -172,7 +172,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
            {[
               { icon: ShieldCheck, title: 'Asset Protection', desc: 'Fees are securely held until match verification is finalized.' },
               { icon: Globe, title: 'Official Feeds', desc: 'Results are synchronized directly with official sports networks.' },
-              { icon: Crown, title: 'Instant Liquidity', desc: 'Winning sequences trigger automated, high-priority reward transfers.' }
+              { icon: Crown, title: 'Instant Liquidity', desc: 'Winning streaks trigger automated, high-priority reward transfers.' }
            ].map((item, i) => (
               <div key={i} className="flex flex-col items-center text-center space-y-4 group">
                  <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-border-subtle flex items-center justify-center text-gold/30 transition-all group-hover:bg-gold group-hover:text-black">

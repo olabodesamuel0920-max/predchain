@@ -177,7 +177,7 @@ export default function SignupPage() {
 
         <div className="relative z-10 flex items-center gap-4 text-muted opacity-20">
            <ShieldCheck className="w-5 h-5" />
-           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Verified Payout Protocols Active</span>
+           <span className="text-[8px] font-black uppercase tracking-[0.4em]">Verified Reward System Active</span>
         </div>
       </div>
 

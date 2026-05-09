@@ -107,7 +107,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 </div>
                 <div className="flex flex-col gap-1 col-span-2 md:col-span-1 transition-transform hover:translate-y-[-2px] duration-300">
                    <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">Instant</div>
-                   <div className="text-[9px] font-extrabold text-text-muted uppercase tracking-[0.3em] italic">Settlement</div>
+                   <div className="text-[9px] font-extrabold text-text-muted uppercase tracking-[0.3em] italic">Payouts</div>
                 </div>
               </div>
             </div>

@@ -31,7 +31,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
              <div className="badge-luxury mb-6 px-4 py-1.5 uppercase italic font-black tracking-widest">PAYOUT SYSTEM</div>
              <h1 className="mb-4 uppercase italic font-black leading-tight tracking-tight">Verified <span className="text-gradient-gold">Winners.</span></h1>
              <p className="text-text-secondary text-sm font-normal leading-relaxed max-w-lg mb-0 italic">
-               A transparent record of participants who successfully completed their streaks and received automated reward settlement.
+               A transparent record of participants who successfully completed their streaks and received automated verified reward.
              </p>
           </div>
           
@@ -59,7 +59,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
             {winners.length === 0 ? (
                <div className="card-luxury !p-24 text-center col-span-full border-dashed border-border-subtle opacity-20">
                   <Zap className="w-8 h-8 mx-auto mb-4 text-text-dim" />
-                  <p className="text-[9px] font-black uppercase tracking-widest italic opacity-40">Awaiting next streak settlement...</p>
+                  <p className="text-[9px] font-black uppercase tracking-widest italic opacity-40">Awaiting next streak completion...</p>
                </div>
             ) : (
                  winners.map((w, i) => {
@@ -107,7 +107,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
            <div className="max-w-xl mx-auto relative z-10">
               <h2 className="mb-4 text-4xl uppercase italic font-black">Claim Your <span className="text-gradient-gold">Spot.</span></h2>
               <p className="text-text-secondary text-[10px] font-normal mb-10 uppercase tracking-widest italic">
-                Successful streaks lead to verified settlements. Start your prediction streak today.
+                Successful streaks lead to verified payouts. Start your prediction streak today.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/accounts" className="btn-luxury btn-gold !py-4 !px-10 !text-[10px] shadow-sm">

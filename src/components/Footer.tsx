@@ -36,7 +36,7 @@ export default function Footer() {
             </Link>
             <p className="text-text-secondary text-xs font-normal leading-relaxed max-w-sm italic opacity-80">
                The premier arena for high-performance sports predictions. 
-               Join an elite network of players building 3-day winning sequences for premium rewards.
+               Join an elite network of players building 3-day winning streaks for premium rewards.
             </p>
             <div className="flex gap-4">
                {[
@@ -59,8 +59,8 @@ export default function Footer() {
                  links: [
                    { h: '/', l: 'Home' },
                    { h: '/how-it-works', l: 'Guide' },
-                   { h: '/accounts', l: 'Accounts' },
-                   { h: '/arena', l: 'Arena Feed' },
+                   { h: '/accounts', l: 'Tiers' },
+                   { h: '/arena', l: 'Arena' },
                  ] 
                },
                { 

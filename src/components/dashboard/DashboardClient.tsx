@@ -163,7 +163,7 @@ export default function DashboardClient({
         {/* Dashboard Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-12 animate-slide-up">
           <div className="space-y-4">
-            <div className="badge-premium !text-gold bg-gold/10 px-4 py-1.5 uppercase tracking-widest font-bold text-[10px]">Command Center</div>
+            <div className="badge-premium !text-gold bg-gold/10 px-4 py-1.5 uppercase tracking-widest font-bold text-[10px]">Challenge Hub</div>
             <h1 className="leading-none tracking-tight">Performance <span className="text-gradient-gold">Hub.</span></h1>
             <div className="flex flex-wrap items-center gap-6">
               <div className="flex items-center gap-4">
@@ -201,7 +201,7 @@ export default function DashboardClient({
             { label: 'Available Balance', val: `₦${balance.toLocaleString()}`, icon: WalletIcon, color: 'text-gold' },
             { label: 'Active Plan', val: currentPlan?.name || 'Inactivate', icon: Zap, color: 'text-blue-electric' },
             { label: 'Active Streak', val: `${streak}/3`, icon: Star, color: 'text-emerald-500' },
-            { label: 'Total Earnings', val: `₦${(totalRewards + totalReferrals).toLocaleString()}`, icon: Trophy, color: 'text-white' },
+            { label: 'Streak Rewards', val: `₦${(totalRewards + totalReferrals).toLocaleString()}`, icon: Trophy, color: 'text-white' },
           ].map((m, i) => (
             <div key={i} className="card-premium group hover:border-white/20 transition-all duration-500">
                <div className="flex flex-col gap-4">
@@ -257,7 +257,7 @@ export default function DashboardClient({
                           <div className="badge-premium !text-gold mb-8 px-6 py-1.5 uppercase tracking-widest font-bold">Winning Consistency</div>
                           <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-8 font-display">Streak <span className="text-gradient-gold">Progress.</span></h2>
                           <p className="text-secondary text-sm font-medium opacity-60 leading-relaxed mb-12">
-                            {userEntry ? `Your ${currentPlan?.name} performance cycle is active. Achieve a perfect 3-day winning sequence to unlock your verified 10X reward settlement.` : 'Your prediction sequence is currently inactive. Select an entry tier to join the live performance arena.'}
+                            {userEntry ? `Your ${currentPlan?.name} challenge is active. Achieve a perfect 3-day winning streak to unlock your verified 10X reward payout.` : 'Your prediction streak is currently inactive. Select an entry tier to join the live performance arena.'}
                           </p>
                           <Link href={userEntry ? "/dashboard?tab=arena" : "/accounts"} className="btn btn-primary !px-16 !py-5 shadow-2xl flex items-center justify-center w-full sm:w-auto">
                              {userEntry ? 'Active Arena' : 'Select Entry Tier'} <ArrowRight className="w-4 h-4 ml-4" />
@@ -415,7 +415,7 @@ export default function DashboardClient({
                <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
                   {[
                     { label: 'Total Balance', val: balance, icon: WalletIcon, color: 'text-gold' },
-                    { label: 'Sequence Rewards', val: totalRewards, icon: Trophy, color: 'text-emerald-500' },
+                    { label: 'Streak Rewards', val: totalRewards, icon: Trophy, color: 'text-emerald-500' },
                     { label: 'Associate Bonus', val: totalReferrals, icon: Users, color: 'text-blue-500' },
                     { label: 'Active Requests', val: pendingPayouts, icon: History, color: 'text-white' },
                   ].map((k, i) => (
@@ -540,7 +540,7 @@ export default function DashboardClient({
                         <Gift className="w-7 h-7" />
                      </div>
                      <h4 className="text-xl font-bold text-white font-display mb-3 uppercase italic">Earn ₦1,000</h4>
-                     <p className="text-[11px] font-bold text-secondary uppercase tracking-widest opacity-50 mb-0 leading-relaxed">Per active arena entry <br />verified via your link.</p>
+                     <p className="text-[11px] font-bold text-secondary uppercase tracking-widest opacity-50 mb-0 leading-relaxed">Per active arena challenge <br />verified via your link.</p>
                   </div>
                </div>
             </div>
