@@ -35,8 +35,8 @@ export default function Footer() {
               <span className="font-display text-xl font-black text-white uppercase italic tracking-tighter">PRED<span className="text-gold">CHAIN.</span></span>
             </Link>
             <p className="text-text-secondary text-xs font-normal leading-relaxed max-w-sm italic opacity-80">
-               The professional arena for high-performance sports analytics. 
-               Join an elite network of nodes building 3-day sequences for premium rewards.
+               The premier arena for high-performance sports predictions. 
+               Join an elite network of players building 3-day winning sequences for premium rewards.
             </p>
             <div className="flex gap-4">
                {[
@@ -57,18 +57,19 @@ export default function Footer() {
                { 
                  title: 'ARENA', 
                  links: [
-                   { h: '/how-it-works', l: 'Protocol' },
-                   { h: '/accounts', l: 'Tier Entry' },
-                   { h: '/arena', l: 'Live Feed' },
+                   { h: '/', l: 'Home' },
+                   { h: '/how-it-works', l: 'Guide' },
+                   { h: '/accounts', l: 'Accounts' },
+                   { h: '/arena', l: 'Arena Feed' },
                  ] 
                },
                { 
-                 title: 'PLAYER HUB', 
+                 title: 'COMMUNITY', 
                  links: [
-                   { h: '/dashboard', l: 'Dashboard' },
                    { h: '/winners', l: 'Winners' },
                    { h: '/leaderboard', l: 'Rankings' },
                    { h: '/referral', l: 'Affiliates' },
+                   { h: '/faq', l: 'FAQ' },
                  ] 
                },
                { 
@@ -101,12 +102,12 @@ export default function Footer() {
 
         {/* Global Footer Bar */}
         <div className="pt-10 border-t border-border-subtle flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex flex-wrap items-center justify-center md:justify-start gap-8">
+             <div className="flex flex-wrap items-center justify-center md:justify-start gap-8">
                <div className="flex items-center gap-2.5">
                   <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                  <span className="text-[9px] font-black text-text-muted uppercase tracking-widest italic opacity-40">NODE ACTIVE</span>
+                  <span className="text-[9px] font-black text-text-muted uppercase tracking-widest italic opacity-40">PLATFORM ACTIVE</span>
                </div>
-               <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.3em] italic opacity-40">© 2026 PREDCHAIN • v2.0 ELITE</span>
+               <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.3em] italic opacity-40">© 2026 PREDCHAIN • ELITE PERFORMANCE</span>
             </div>
             
             <span className="text-[9px] font-black text-text-dim/40 uppercase tracking-widest italic">

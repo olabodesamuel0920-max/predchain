@@ -93,8 +93,8 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             return (
               <div 
                 key={tier.id}
-                className={`card-luxury flex flex-col transition-all duration-500 ${
-                  isMidTier ? 'border-gold/30 bg-[#11161D]' : 'bg-bg-card'
+                className={`card-luxury flex flex-col transition-all duration-500 transform perspective-1000 hover:rotate-x-1 hover:translate-y-[-4px] ${
+                  isMidTier ? 'border-gold/30 bg-[#11161D] shadow-gold/5' : 'bg-bg-card shadow-lg'
                 }`}
               >
                 {isMidTier && (

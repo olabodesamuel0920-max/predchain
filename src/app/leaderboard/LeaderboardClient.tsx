@@ -39,16 +39,16 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
           <div className="badge-luxury mb-6 px-4 py-1.5 uppercase italic font-black tracking-widest">ARENA RANKINGS</div>
           <h1 className="mb-4 uppercase italic font-black leading-tight tracking-tight">Top <span className="text-gradient-gold">Performers.</span></h1>
           <p className="text-text-secondary text-sm font-normal leading-relaxed italic opacity-80">
-            A verified record of participants ranked by sequence strength and node prediction accuracy.
+            A verified record of participants ranked by streak strength and prediction accuracy.
           </p>
         </div>
 
         {/* Top 3 Podium */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-16 sm:mb-24 items-end max-w-5xl mx-auto">
           {top3.map((player, i) => {
-            const name = player.profile?.username || player.profile?.full_name || 'Anonymous Node';
+            const name = player.profile?.username || player.profile?.full_name || 'Anonymous Player';
             const isFirst = i === 0;
-            const rankLabel = i === 0 ? 'Arena Master' : i === 1 ? 'High Tier' : 'Elite Node';
+            const rankLabel = i === 0 ? 'Arena Master' : i === 1 ? 'High Tier' : 'Elite Player';
             
             return (
               <div 
@@ -78,7 +78,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                 </div>
 
                 <div className="inline-flex px-3 py-1 rounded-md bg-white/[0.03] border border-border-subtle text-[8px] font-black text-text-dim uppercase tracking-widest italic">
-                  {player.tier?.name || 'Standard'} PROTOCOL
+                  {player.tier?.name || 'Standard'} SYSTEM
                 </div>
               </div>
             );
@@ -103,7 +103,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-dim opacity-30 group-focus-within:text-gold transition-colors" />
               <input
                 type="search"
-                placeholder="Search node..."
+                placeholder="Search players..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="w-full bg-bg-primary/50 border border-border-subtle rounded-xl py-3 pl-11 pr-5 text-[10px] font-black text-white focus:outline-none focus:border-gold/30 transition-all uppercase tracking-widest placeholder:opacity-30 italic"
@@ -118,9 +118,9 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
               <thead>
                 <tr className="bg-white/[0.01] border-b border-border-subtle">
                   <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Rank</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Node User</th>
+                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Player</th>
                   <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Streak</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Protocol</th>
+                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">System</th>
                   <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40 text-right">Status</th>
                 </tr>
               </thead>
@@ -131,7 +131,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                       #{String(i + 1).padStart(2, '0')}
                     </td>
                     <td className="px-8 py-5">
-                      <span className="text-[11px] font-black text-white uppercase tracking-tight italic font-display">{row.profile?.username || 'Guest Node'}</span>
+                      <span className="text-[11px] font-black text-white uppercase tracking-tight italic font-display">{row.profile?.username || 'Guest Player'}</span>
                     </td>
                     <td className="px-8 py-5">
                       <div className="flex items-center gap-4">
@@ -162,7 +162,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
            <div className="max-w-xl mx-auto relative z-10">
               <h2 className="mb-4 text-4xl uppercase italic font-black">Join the <span className="text-gradient-gold">Best.</span></h2>
               <p className="text-text-secondary text-[10px] font-normal mb-10 uppercase tracking-widest italic">
-                Ready to prove your accuracy? Initialize your node and start climbing the ranks.
+                Ready to prove your accuracy? Start your streak and start climbing the ranks.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/accounts" className="btn-luxury btn-gold !px-12 !py-4 shadow-sm">

@@ -63,13 +63,14 @@ function CountdownTimer({ label, targetDate }: { label: string, targetDate?: str
 }
 
 interface LiveChallengesClientProps {
+  user: any;
   round: ChallengeRound | null;
   matches: ChallengeMatch[];
   userEntry: ChallengeEntry | null;
   predictions: Prediction[];
 }
 
-export default function LiveChallengesClient({ round, matches, userEntry, predictions }: LiveChallengesClientProps) {
+export default function LiveChallengesClient({ user, round, matches, userEntry, predictions }: LiveChallengesClientProps) {
   const [isPending, startTransition] = useTransition();
   const { success: successMsg, error: errorMsg, showSuccess, showError, clear } = useFeedback(5000);
 
@@ -77,8 +78,13 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
   const roundNumber = round?.round_number || 'X';
 
   const handlePrediction = async (matchId: string, choice: '1' | 'X' | '2') => {
+    if (!user) {
+      window.location.href = '/login?returnTo=/live-challenges';
+      return;
+    }
+
     if (!userEntry) {
-      showError('Please select a plan to participate in the arena.');
+      showError('Please select a membership plan to start your streak.');
       return;
     }
 
@@ -114,12 +120,28 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
             </div>
             <h1 className="mb-4">Match <span className="text-gradient-gold">Arena.</span></h1>
             <p className="text-muted text-sm md:text-base font-medium opacity-60 max-w-sm">
-              Study the upcoming fixture list and commit to your 3-day sequence.
+              Analyze the upcoming fixtures and build your 3-day winning streak.
             </p>
           </div>
 
-          {round && <CountdownTimer label="Arena Cycle Closing" targetDate={round.end_date} />}
+          {round && <CountdownTimer label="Match Cycle Closing" targetDate={round.end_date} />}
         </div>
+
+        {!user && (
+          <div className="mb-12 card-luxury !bg-gold/5 border-gold/20 flex flex-col md:flex-row items-center justify-between gap-6 p-8 animate-slide-up shadow-gold/5">
+             <div className="flex items-center gap-5">
+                <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center text-gold shadow-inner"><Radio className="w-6 h-6 animate-pulse" /></div>
+                <div>
+                   <h3 className="text-lg font-black text-white italic uppercase tracking-tight mb-1 font-display">Public Arena Preview</h3>
+                   <p className="text-[10px] font-black text-text-muted uppercase tracking-widest italic">Login to secure your predictions and start your streak</p>
+                </div>
+             </div>
+             <div className="flex gap-4 w-full md:w-auto">
+                <Link href="/login" className="btn-luxury btn-gold !py-3 !px-8 flex-1 md:flex-none">LOGIN TO PARTICIPATE</Link>
+                <Link href="/signup" className="btn-luxury btn-outline !py-3 !px-8 flex-1 md:flex-none">JOIN THE ARENA</Link>
+             </div>
+          </div>
+        )}
 
         {/* Streak Integrity Tracker */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-16">
@@ -128,7 +150,7 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
                <div className="flex items-center gap-4 shrink-0">
                   <div className="w-12 h-12 rounded-xl bg-white/[0.03] flex items-center justify-center text-gold shadow-inner"><TrendingUp className="w-5 h-5" /></div>
                   <div className="flex flex-col">
-                     <span className="text-[10px] font-black text-white uppercase tracking-widest italic">Sequence Tracker</span>
+                     <span className="text-[10px] font-black text-white uppercase tracking-widest italic">Streak Tracker</span>
                      <span className="text-[8px] font-black text-muted uppercase tracking-widest opacity-30 italic">Round {roundNumber} Active</span>
                   </div>
                </div>
@@ -147,7 +169,7 @@ export default function LiveChallengesClient({ round, matches, userEntry, predic
           
           <div className="lg:col-span-4 card-elite !p-6 bg-gold/5 border-gold/10 flex items-center justify-between shadow-xl group">
              <div className="flex flex-col">
-                <span className="text-[10px] font-black text-gold uppercase tracking-widest italic">Potential Pot</span>
+                <span className="text-[10px] font-black text-gold uppercase tracking-widest italic">Potential Reward</span>
                 <span className="text-xl font-black text-white italic tracking-tighter transition-all group-hover:scale-105 origin-left">₦{(userEntry?.tier_id ? (userEntry as any).price_ngn * 10 : 0).toLocaleString()}</span>
              </div>
              <Trophy className="w-8 h-8 text-gold opacity-30 group-hover:rotate-12 transition-transform" />

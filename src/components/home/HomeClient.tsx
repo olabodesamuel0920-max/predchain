@@ -43,7 +43,7 @@ function Counter({ end, prefix = '', suffix = '', duration = 2000 }: { end: numb
 const STEPS = [
   { label: 'Register', desc: 'Secure your elite account and join the prediction pool.' },
   { label: 'Analyze', desc: 'Leverage data-driven insights for upcoming match fixtures.' },
-  { label: 'Predict', desc: 'Submit your 3-day winning sequence of calculated picks.' },
+  { label: 'Predict', desc: 'Submit your 3-day winning streak of predictions.' },
   { label: 'Consistency', desc: 'Maintain your winning streak across consecutive matchdays.' },
   { label: 'Harvest', desc: 'Unlock and instantly withdraw your 10X reward multipliers.' },
 ];
@@ -64,9 +64,9 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
       </div>
 
       {/* Hero Section */}
-      <section className="relative z-10 pt-24 pb-12 sm:pt-48 sm:pb-24 overflow-hidden">
+      <section className="relative z-10 pt-20 pb-10 sm:pt-32 sm:pb-20 overflow-hidden">
         <div className="container-tight">
-          <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
+          <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 items-center">
             
             {/* Left: Value Prop */}
             <div className="flex-1 text-center lg:text-left">
@@ -80,9 +80,9 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 <span className="text-gradient-gold">Winning Streak.</span>
               </h1>
 
-              <p className="max-w-xl mx-auto lg:mx-0 text-text-secondary text-base font-normal leading-relaxed mb-10">
+              <p className="max-w-xl mx-auto lg:mx-0 text-text-secondary text-sm sm:text-base font-normal leading-relaxed mb-8 opacity-80">
                 The high-performance arena for elite sports predictions. 
-                Maintain a 3-day sequence to unlock <span className="text-white font-bold italic">10X reward multipliers</span> per matchday.
+                Maintain a 3-day streak to unlock <span className="text-white font-bold italic">10X multipliers</span>.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -96,16 +96,16 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 </Link>
               </div>
 
-              <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-6 opacity-80 border-t border-border-subtle pt-8 max-w-lg mx-auto lg:mx-0">
-                <div className="flex flex-col gap-1">
-                   <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">₦5,000</div>
-                   <div className="text-[9px] font-extrabold text-text-muted uppercase tracking-[0.3em] italic">Entry Tier</div>
+              <div className="mt-12 grid grid-cols-2 md:grid-cols-3 gap-6 opacity-90 border-t border-border-subtle pt-8 max-w-lg mx-auto lg:mx-0">
+                <div className="flex flex-col gap-1 transition-transform hover:translate-y-[-2px] duration-300">
+                   <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">₦5k—20k</div>
+                   <div className="text-[9px] font-extrabold text-text-muted uppercase tracking-[0.3em] italic">Entry Tiers</div>
                 </div>
-                <div className="flex flex-col gap-1">
-                   <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">10X</div>
-                   <div className="text-[9px] font-extrabold text-text-muted uppercase tracking-[0.3em] italic">Multiplier</div>
+                <div className="flex flex-col gap-1 transition-transform hover:translate-y-[-2px] duration-300">
+                   <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">₦50k—200k</div>
+                   <div className="text-[9px] font-extrabold text-text-muted uppercase tracking-[0.3em] italic">Reward Potential</div>
                 </div>
-                <div className="flex flex-col gap-1 col-span-2 md:col-span-1">
+                <div className="flex flex-col gap-1 col-span-2 md:col-span-1 transition-transform hover:translate-y-[-2px] duration-300">
                    <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">Instant</div>
                    <div className="text-[9px] font-extrabold text-text-muted uppercase tracking-[0.3em] italic">Settlement</div>
                 </div>
@@ -116,18 +116,18 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
             <div className="flex-1 relative w-full max-w-lg lg:max-w-xl scale-95 lg:scale-100">
               <div className="absolute inset-0 bg-gold/5 blur-[120px] opacity-30" />
               
-              <div className="card-luxury !bg-bg-darker border-border-main shadow-md relative z-10 p-0 overflow-hidden">
+              <div className="card-luxury !bg-bg-darker border-border-main shadow-2xl relative z-10 p-0 overflow-hidden transform perspective-1000 hover:rotate-x-1 hover:rotate-y-1 transition-transform duration-700">
                 <div className="p-6 border-b border-border-subtle flex justify-between items-center bg-white/[0.01]">
                    <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-xl bg-gold/5 flex items-center justify-center border border-gold/10">
                         <Activity className="w-5 h-5 text-gold" />
                       </div>
                       <div>
-                        <div className="text-[10px] font-black text-white uppercase tracking-[0.2em] italic">Tournament_01</div>
-                        <div className="text-[8px] text-text-muted uppercase tracking-[0.3em] font-extrabold italic">Status: Live Pool</div>
+                        <div className="text-[10px] font-black text-white uppercase tracking-[0.2em] italic">LIVE_ARENA_FEED</div>
+                        <div className="text-[8px] text-text-muted uppercase tracking-[0.3em] font-extrabold italic">NETWORK_ACTIVE</div>
                       </div>
                    </div>
-                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10">
+                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10 shadow-inner">
                      <span className="text-[9px] font-black text-emerald-500 tracking-widest italic">SECURE</span>
                    </div>
                 </div>
@@ -159,7 +159,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                           <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">10.00x</div>
                         </div>
                         <div className="text-right">
-                          <div className="text-[9px] font-black text-gold uppercase tracking-[0.2em] mb-2 italic">Sequence</div>
+                          <div className="text-[9px] font-black text-gold uppercase tracking-[0.2em] mb-2 italic">Streak</div>
                           <div className="flex gap-1">
                             {[1, 2, 3].map(i => (
                               <div key={i} className={`w-2.5 h-1 rounded-full ${i <= 2 ? 'bg-gold' : 'bg-white/10'}`} />
@@ -180,9 +180,9 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
       </section>
 
       {/* Metrics Section */}
-      <section className="relative z-10 py-16 sm:py-24 border-y border-border-subtle bg-bg-secondary/30 backdrop-blur-3xl">
+      <section className="relative z-10 py-12 sm:py-20 border-y border-border-subtle bg-bg-secondary/30 backdrop-blur-3xl">
         <div className="container-tight">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-10">
             {[
               { label: 'Platform Challengers', value: stats.activeChallengers, icon: <Users className="w-4 h-4" /> },
               { label: 'Tournament Cycles', value: stats.roundsCompleted, icon: <Zap className="w-4 h-4" /> },
@@ -206,8 +206,8 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
       {/* Process Section */}
       <section className="relative z-10 section-padding container-tight">
         <div className="flex flex-col items-center text-center mb-16 sm:mb-20">
-          <div className="badge-luxury mb-6 px-5 py-1.5">OUR PROTOCOL</div>
-          <h2 className="mb-6 uppercase italic font-black">How to Command the <br /><span className="text-gradient-gold">Prediction Pool.</span></h2>
+          <div className="badge-luxury mb-6 px-5 py-1.5">THE SYSTEM</div>
+          <h2 className="mb-6 uppercase italic font-black">How to Command the <br /><span className="text-gradient-gold">Match Arena.</span></h2>
           <p className="text-text-secondary max-w-xl font-normal leading-relaxed">A systematic approach to performance. Build consistency, analyze the field, and secure your rewards.</p>
         </div>
 
@@ -231,10 +231,10 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
            <div className="absolute bottom-0 left-0 p-12 opacity-[0.02] pointer-events-none group-hover:opacity-5 transition-all duration-1000 -rotate-12"><Shield className="w-48 h-48" /></div>
            
            <div className="max-w-xl mx-auto relative z-10">
-              <h2 className="mb-6 text-4xl sm:text-5xl uppercase italic font-black leading-tight tracking-tight">Access the Elite <br /><span className="text-gradient-gold">Arena Pool.</span></h2>
+              <h2 className="mb-6 text-4xl sm:text-5xl uppercase italic font-black leading-tight tracking-tight">Access the Elite <br /><span className="text-gradient-gold">Match Arena.</span></h2>
               <p className="text-text-secondary mb-10 text-base font-normal leading-relaxed">Secure your membership today and gain access to the premier sports performance arena.</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/signup" className="btn-luxury btn-gold !py-4.5 !px-12 !text-xs shadow-md">INITIALIZE ACCOUNT</Link>
+                <Link href="/signup" className="btn-luxury btn-gold !py-4.5 !px-12 !text-xs shadow-md">JOIN THE ARENA</Link>
                 <Link href="/arena" className="btn-luxury btn-outline !py-4.5 !px-12 !text-xs">EXPLORE FIXTURES</Link>
               </div>
            </div>

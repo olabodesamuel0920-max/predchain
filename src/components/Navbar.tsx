@@ -9,15 +9,16 @@ import { createClient } from '@/lib/supabase/client';
 
 const navLinks = [
   { href: '/', label: 'Home' },
-  { href: '/accounts', label: 'Tiers' },
+  { href: '/how-it-works', label: 'Guide' },
+  { href: '/accounts', label: 'Accounts' },
   { href: '/arena', label: 'Arena' },
   { href: '/winners', label: 'Winners' },
   { href: '/leaderboard', label: 'Rankings' },
+  { href: '/referral', label: 'Affiliates' },
 ];
 
 const mobileSecondaryLinks = [
-  { href: '/how-it-works', label: 'Guide' },
-  { href: '/referral', label: 'Affiliates' },
+  { href: '/faq', label: 'FAQ' },
 ];
 
 export default function Navbar() {
@@ -90,12 +91,12 @@ export default function Navbar() {
 
               {!user ? (
                 <Link href="/accounts" className="btn-luxury btn-gold !py-2.5 !px-5 flex items-center gap-2 shadow-sm">
-                  <span className="text-[10px] pb-px">MEMBERSHIP</span>
+                  <span className="text-[10px] pb-px tracking-widest font-bold">START STREAK</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               ) : (
                 <Link href="/dashboard" className="btn-luxury btn-outline !py-2.5 !px-5 flex items-center gap-2">
-                  <span className="text-[10px] pb-px">COMMAND</span>
+                  <span className="text-[10px] pb-px tracking-widest font-bold uppercase">Dashboard</span>
                   <Globe className="w-3.5 h-3.5 text-gold" />
                 </Link>
               )}
@@ -157,14 +158,14 @@ export default function Navbar() {
           <div className="mt-auto flex flex-col gap-4 pt-10">
             {!user ? (
                <Link href="/accounts" onClick={closeMenu} className="btn-luxury btn-gold w-full py-5 text-sm uppercase tracking-widest font-bold">
-                 Initialize Arena Access
+                 Start Your Streak
                </Link>
             ) : (
                <button onClick={() => { logout(); closeMenu(); }} className="btn-luxury btn-outline w-full py-5 text-sm uppercase tracking-widest font-bold text-rose-500 border-rose-500/20">
-                 Terminate Session
+                 Log Out
                </button>
             )}
-            <p className="text-center text-[9px] font-bold text-text-dim uppercase tracking-[0.3em] mt-2">v2.0 Elite Production Node</p>
+            <p className="text-center text-[9px] font-bold text-text-dim uppercase tracking-[0.3em] mt-2 italic opacity-40">Elite Performance Arena</p>
           </div>
         </div>
       </div>

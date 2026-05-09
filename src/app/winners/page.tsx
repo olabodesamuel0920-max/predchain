@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import WinnersClient from './WinnersClient'
+import { fetchPlatformStats } from '@/lib/stats'
 
 export default async function WinnersPage() {
   const supabase = await createClient()
@@ -10,5 +11,6 @@ export default async function WinnersPage() {
     .select('*, profile:profiles(*), round:challenge_rounds(*)')
     .order('created_at', { ascending: false })
 
-  return <WinnersClient winners={winners || []} />
+  const stats = await fetchPlatformStats()
+  return <WinnersClient winners={winners || []} stats={stats} />
 }

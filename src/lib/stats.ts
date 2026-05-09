@@ -42,10 +42,10 @@ export async function fetchPlatformStats(): Promise<PlatformStats> {
   const mode = settings.trust_stats_mode || 'real'
   if (mode === 'launch') {
     stats = {
-      activeChallengers: (stats.activeChallengers < 1240) ? 1240 + stats.activeChallengers : stats.activeChallengers,
-      roundsCompleted: (stats.roundsCompleted < 42) ? 42 + stats.roundsCompleted : stats.roundsCompleted,
-      totalCashPaid: (stats.totalCashPaid < 2500000) ? 2500000 + stats.totalCashPaid : stats.totalCashPaid,
-      perfectStreaks: (stats.perfectStreaks < 156) ? 156 + stats.perfectStreaks : stats.perfectStreaks
+      activeChallengers: (stats.activeChallengers < 12840) ? 12840 + stats.activeChallengers : stats.activeChallengers,
+      roundsCompleted: (stats.roundsCompleted < 142) ? 142 + stats.roundsCompleted : stats.roundsCompleted,
+      totalCashPaid: (stats.totalCashPaid < 12500000) ? 12500000 + stats.totalCashPaid : stats.totalCashPaid,
+      perfectStreaks: (stats.perfectStreaks < 856) ? 856 + stats.perfectStreaks : stats.perfectStreaks
     }
   } else if (mode === 'hidden') {
     stats = {

@@ -9,9 +9,7 @@ export default async function LiveChallengesPage() {
     data: { user },
   } = await supabase.auth.getUser()
 
-  if (!user) {
-    return redirect('/login')
-  }
+  // Note: Guest access is allowed for previewing matches
 
   // Fetch the active round
   const { data: round } = await supabase
@@ -27,27 +25,38 @@ export default async function LiveChallengesPage() {
     .eq('round_id', round?.id)
     .order('kickoff_time', { ascending: true })
 
-  // Fetch the user's entry for the active round
-  const { data: userEntry } = await supabase
-    .from('challenge_entries')
-    .select('*')
-    .eq('user_id', user.id)
-    .eq('round_id', round?.id)
-    .single()
+  // Fetch the user's entry for the active round if authenticated
+  let userEntry = null
+  let predictions = []
 
-  // Fetch the user's predictions for these matches
-  const { data: predictions } = await supabase
-    .from('predictions')
-    .select('*')
-    .in('match_id', matches?.map(m => m.id) || [])
-    .eq('entry_id', userEntry?.id)
+  if (user) {
+    const { data: entry } = await supabase
+      .from('challenge_entries')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('round_id', round?.id)
+      .single()
+    
+    userEntry = entry
+
+    if (userEntry) {
+      const { data: preds } = await supabase
+        .from('predictions')
+        .select('*')
+        .in('match_id', matches?.map(m => m.id) || [])
+        .eq('entry_id', userEntry?.id)
+      
+      predictions = preds || []
+    }
+  }
 
   return (
     <LiveChallengesClient 
+      user={user}
       round={round} 
       matches={matches || []} 
       userEntry={userEntry}
-      predictions={predictions || []}
+      predictions={predictions}
     />
   )
 }

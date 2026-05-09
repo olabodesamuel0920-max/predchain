@@ -73,14 +73,14 @@ const REWARD_TABLE = [
 
 export default function HowItWorksPage() {
   return (
-    <div className="relative min-h-screen pt-40 pb-32">
+    <div className="relative min-h-screen pt-32 pb-20">
       {/* Background Ambience */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 right-0 w-full h-[800px] bg-gold-glow blur-[140px] opacity-10" />
       </div>
 
       {/* Hero Section */}
-      <section className="relative z-10 mb-40 text-center px-6">
+      <section className="relative z-10 mb-24 text-center px-6">
         <div className="container max-w-4xl">
           <div className="badge-premium !text-gold mb-10 px-6 py-2">The Player Guide</div>
           <h1 className="mb-10 leading-[1.05]">
@@ -99,7 +99,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Vertical Timeline */}
-      <section className="relative z-10 mb-48 px-6">
+      <section className="relative z-10 mb-32 px-6">
         <div className="container max-w-4xl space-y-10">
           {STEPS.map((step, i) => (
             <div key={i} className="card-premium flex flex-col md:flex-row items-center md:items-start gap-16 group bg-[#0a0d14] hover:border-gold/30 transition-all duration-700 shadow-2xl relative overflow-hidden">
@@ -129,7 +129,7 @@ export default function HowItWorksPage() {
       </section>
 
       {/* Reward Matrix */}
-      <section className="relative z-10 mb-48 px-6">
+      <section className="relative z-10 mb-32 px-6">
         <div className="container max-w-5xl">
           <div className="text-center mb-20">
             <h2 className="mb-6">Reward <span className="text-gradient-gold">Matrix.</span></h2>

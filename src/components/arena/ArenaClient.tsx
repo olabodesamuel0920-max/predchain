@@ -1,6 +1,6 @@
 'use client';
 
-import { ChallengeRound, ChallengeMatch } from '@/types';
+import { ChallengeRound, ChallengeMatch, PlatformStats } from '@/types';
 import { 
   Trophy, 
   Zap, 
@@ -21,12 +21,12 @@ import Link from 'next/link';
 interface ArenaClientProps {
   activeRound: ChallengeRound | null;
   matches: ChallengeMatch[];
-  stats: { activePlayers: number };
+  stats: PlatformStats;
 }
 
 export default function ArenaClient({ activeRound, matches, stats }: ArenaClientProps) {
   return (
-    <div className="min-h-screen pt-24 sm:pt-32 pb-24">
+    <div className="min-h-screen pt-20 sm:pt-32 pb-16">
       {/* Dynamic Background */}
       <div className="fixed inset-0 pointer-events-none z-0">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-muted/5 blur-[120px]" />
@@ -34,7 +34,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
 
       <div className="container-tight relative z-10">
         {/* Global Strategy Header */}
-        <div className="max-w-4xl mb-16 sm:mb-24">
+        <div className="max-w-4xl mb-12 sm:mb-20">
           <div className="flex flex-wrap items-center gap-4 mb-8">
             <div className="badge-luxury px-4 py-1.5 flex items-center gap-2.5">
                <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
@@ -43,17 +43,17 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
           </div>
           
           <h1 className="mb-6 uppercase italic font-black leading-[1.1] tracking-tight">
-            Master the <span className="text-gradient-gold">Sequence.</span><br />
+            Master the <span className="text-gradient-gold">Winning Streak.</span><br />
             Dominate the <span className="text-white">Professional Arena.</span>
           </h1>
           
-          <p className="text-text-secondary text-base font-normal leading-relaxed max-w-2xl mb-12">
-            The high-precision platform for elite football prediction. Build a perfect 3-day sequence to unlock verified <span className="text-white font-bold italic">10X multipliers</span>.
+          <p className="text-text-secondary text-sm sm:text-base font-normal leading-relaxed max-w-2xl mb-10 opacity-80">
+            The high-precision platform for elite football prediction. Build a perfect 3-day streak to unlock verified <span className="text-white font-bold italic">10X multipliers</span>.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-8">
             <Link href="/signup" className="btn-luxury btn-gold !py-4.5 !px-12 w-full sm:w-auto shadow-md group">
-               INITIALIZE ACCESS <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+               JOIN THE ARENA <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
             </Link>
             <div className="flex items-center gap-5">
               <div className="flex -space-x-2.5">
@@ -64,8 +64,8 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                 ))}
               </div>
               <div className="flex flex-col">
-                 <span className="text-[11px] font-black text-white uppercase italic leading-none">+{stats.activePlayers.toLocaleString()} Active Nodes</span>
-                 <span className="text-[9px] font-extrabold text-text-dim uppercase tracking-widest mt-1 italic">Real-time sync</span>
+                 <span className="text-[11px] font-black text-white uppercase italic leading-none">+{stats.activeChallengers.toLocaleString()} Active Players</span>
+                 <span className="text-[9px] font-extrabold text-text-dim uppercase tracking-widest mt-1 italic">Network synchronizing</span>
               </div>
             </div>
           </div>
@@ -87,15 +87,15 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                  </div>
               </div>
               <div className="flex items-center gap-8 bg-bg-primary/50 border border-border-subtle rounded-xl px-8 py-4 shadow-sm">
-                 <div className="text-center">
-                    <span className="text-[8px] font-black text-text-dim uppercase tracking-widest block mb-1 italic">Current Pool</span>
-                    <span className="text-lg font-black text-white font-display italic tracking-tight">₦{(stats.activePlayers * 5000).toLocaleString()}</span>
-                 </div>
-                 <div className="w-px h-8 bg-border-subtle" />
-                 <div className="text-center">
-                    <span className="text-[8px] font-black text-text-dim uppercase tracking-widest block mb-1 italic">Network Risk</span>
-                    <span className="text-lg font-black text-emerald-500 font-display italic tracking-tight uppercase">Optimal</span>
-                 </div>
+                  <div className="text-center">
+                     <span className="text-[8px] font-black text-text-dim uppercase tracking-widest block mb-1 italic">Payout Reserve</span>
+                     <span className="text-lg font-black text-white font-display italic tracking-tight">₦{stats.totalCashPaid.toLocaleString()}</span>
+                  </div>
+                  <div className="w-px h-8 bg-border-subtle" />
+                  <div className="text-center">
+                     <span className="text-[8px] font-black text-text-dim uppercase tracking-widest block mb-1 italic">System Status</span>
+                     <span className="text-lg font-black text-emerald-500 font-display italic tracking-tight uppercase">Optimal</span>
+                  </div>
               </div>
            </div>
         </div>
@@ -122,7 +122,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                   </div>
                 ) : (
                   matches.map((match, i) => (
-                    <div key={match.id} className="p-5 bg-bg-secondary/50 border border-border-subtle rounded-xl flex flex-col sm:flex-row items-center justify-between hover:bg-bg-secondary hover:border-border-highlight transition-all gap-6 sm:gap-0">
+                    <div key={match.id} className="p-5 bg-bg-secondary/50 border border-border-subtle rounded-xl flex flex-col sm:flex-row items-center justify-between hover:bg-bg-secondary hover:border-border-highlight transition-all gap-6 sm:gap-0 transform perspective-1000 hover:rotate-y-1 hover:translate-y-[-2px] duration-500 shadow-sm">
                        <div className="flex items-center gap-6 w-full sm:w-auto">
                           <div className="w-10 h-10 rounded-lg bg-bg-primary border border-border-subtle flex flex-col items-center justify-center text-[8px] font-black text-text-muted group-hover:text-gold transition-all shrink-0">
                              <span className="opacity-50">DAY</span>
@@ -182,9 +182,9 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
             <div className="card-luxury !p-6 border-border-subtle bg-transparent flex items-center gap-4">
                <Activity className="w-6 h-6 text-emerald-500/20 shrink-0" />
                <div className="space-y-1">
-                  <h4 className="text-[10px] font-black text-white font-display uppercase italic tracking-tight">Full Integrity Pool</h4>
+                  <h4 className="text-[10px] font-black text-white font-display uppercase italic tracking-tight">Platform Integrity</h4>
                   <p className="text-[9px] font-normal text-text-dim italic leading-relaxed">
-                     Global strategy is synchronized and optimal. Settlement is automated.
+                     Platform system is synchronized and optimal. Settlement is automated.
                   </p>
                </div>
             </div>

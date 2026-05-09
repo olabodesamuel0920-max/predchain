@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import ArenaClient from '@/components/arena/ArenaClient'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
+import { fetchPlatformStats } from '@/lib/stats'
 
 export default async function ArenaPage() {
   const supabase = await createClient()
@@ -20,17 +21,13 @@ export default async function ArenaPage() {
     .eq('round_id', activeRound?.id)
     .order('kickoff_time', { ascending: true })
 
-  // Fetch global stats for social proof
-  const { count: activePlayers } = await supabase
-    .from('profiles')
-    .select('*', { count: 'exact', head: true })
-    .eq('status', 'active')
+  const stats = await fetchPlatformStats()
 
   return (
     <ArenaClient 
       activeRound={activeRound} 
       matches={matches || []} 
-      stats={{ activePlayers: activePlayers || 0 }} 
+      stats={stats} 
     />
   )
 }
