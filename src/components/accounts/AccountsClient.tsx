@@ -44,7 +44,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
       try {
         if (method === 'wallet') {
           await purchaseTierWithWallet(tierId);
-          router.push('/dashboard?success=Account+activated+successfully');
+          router.push('/dashboard?success=Tier+activated+successfully');
         } else {
           const result = await initializePayment(tierId);
           if (result.authorization_url) {
@@ -119,7 +119,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                 <div className="space-y-3.5 mb-10 flex-1">
                    {[
                       '3-Day Streak Eligibility',
-                      'verified match data-feeds',
+                      'official match data-feeds',
                       `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} referral share`,
                       'automated rewards'
                    ].map((feat, idx) => (
@@ -137,7 +137,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                       <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] block mb-2 italic">Max Reward Payout</span>
                       <div className="flex items-center justify-center gap-2">
                          <span className="text-2xl font-black text-white font-display italic tracking-tight">₦{rewardVal.toLocaleString()}</span>
-                         <span className="text-[8px] font-extrabold text-emerald-500/60 uppercase tracking-tighter">Verified</span>
+                         <span className="text-[8px] font-extrabold text-emerald-500/60 uppercase tracking-tighter">Confirmed</span>
                       </div>
                    </div>
 
@@ -170,9 +170,9 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
         {/* Global Performance Standards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto py-20 border-t border-border-subtle">
            {[
-              { icon: ShieldCheck, title: 'Asset Protection', desc: 'Fees are securely held until match verification is finalized.' },
-              { icon: Globe, title: 'Official Feeds', desc: 'Results are synchronized directly with official sports networks.' },
-              { icon: Crown, title: 'Instant Liquidity', desc: 'Winning streaks trigger automated, high-priority reward transfers.' }
+              { icon: ShieldCheck, title: 'Asset Protection', desc: 'Fees are securely held until match confirmation is finalized.' },
+              { icon: Globe, title: 'Official Feeds', desc: 'Results are updated in real-time with official sports networks.' },
+              { icon: Crown, title: 'Instant Rewards', desc: 'Winning streaks trigger instant, high-priority reward transfers.' }
            ].map((item, i) => (
               <div key={i} className="flex flex-col items-center text-center space-y-4 group">
                  <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-border-subtle flex items-center justify-center text-gold/30 transition-all group-hover:bg-gold group-hover:text-black">

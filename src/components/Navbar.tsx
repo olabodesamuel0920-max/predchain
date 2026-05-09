@@ -14,7 +14,7 @@ const navLinks = [
   { href: '/arena', label: 'Arena' },
   { href: '/winners', label: 'Winners' },
   { href: '/leaderboard', label: 'Rankings' },
-  { href: '/referral', label: 'Affiliates' },
+  { href: '/referral', label: 'Partners' },
 ];
 
 const mobileSecondaryLinks = [

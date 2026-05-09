@@ -24,16 +24,16 @@ export default function TermsPage() {
         <div className="flex flex-col gap-12">
           {[
             { 
-              title: '1. Participation Protocol', 
-              text: 'PredChain is an elite prediction challenge platform. Participation requires a valid account tier. Users must be 18+ years of age.' 
+              title: '1. Participation Rules', 
+              text: 'PredChain is an elite prediction challenge platform. Participation requires a valid entry tier. Users must be 18+ years of age.' 
             },
             { 
-              title: '2. Sequence Mechanics', 
-              text: 'A challenge round consists of 3 consecutive matches. A user must correctly predict the outcome (1, X, or 2) of one match per day. Failing to predict or an incorrect prediction resets the sequence instantly.' 
+              title: '2. Streak Mechanics', 
+              text: 'A challenge round consists of 3 consecutive matches. A user must correctly predict the outcome (1, X, or 2) of one match per day. Failing to predict or an incorrect prediction resets the streak instantly.' 
             },
             { 
-              title: '3. Reward Verification', 
-              text: 'A perfect 3/3 streak unlocks a 10X reward based on the account tier price. Payouts are verified by the admin protocol and processed within 24-48 hours via the user wallet hub.' 
+              title: '3. Reward Confirmation', 
+              text: 'A perfect 3/3 streak unlocks a 10X reward based on the entry tier price. Payouts are confirmed by the audit team and processed within 24-48 hours via the user wallet hub.' 
             },
             { 
               title: '4. Integrity System', 

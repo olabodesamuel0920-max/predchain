@@ -26,12 +26,13 @@ const spaceMono = Space_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://predchain.io'),
   title: "PredChain | Elite Football Prediction Arena",
   description: "The premier arena for high-stakes football predictions. Master the 3-day streak to unlock 10X reward multipliers. Secure, professional, and performance-driven.",
   keywords: "football prediction, premium sports tech, reward multiplier, perfect streak, live matches, analytical sports",
   openGraph: {
     title: "PredChain | Predict. Master. Prevail.",
-    description: "Secure a 3-day sequence. Access elite reward multipliers.",
+    description: "Secure a 3-day streak. Access elite reward multipliers.",
     type: "website",
     images: ["/og-image.jpg"],
   },

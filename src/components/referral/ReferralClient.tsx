@@ -61,7 +61,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              <span className="text-gradient-gold">Earn Real Rewards.</span>
            </h1>
            <p className="text-text-secondary text-lg font-medium opacity-70 max-w-2xl mx-auto mb-12 leading-relaxed">
-             Join the PredChain elite partner network. Invite players to the arena and earn ₦1,000 for every verified membership activation. No limits, automated rewards.
+             Join the PredChain elite partner network. Invite players to the arena and earn ₦1,000 for every confirmed tier entry. No limits, automated rewards.
            </p>
            
            {!user && (
@@ -106,7 +106,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
               },
               { 
                 title: 'Automated Payouts', 
-                desc: 'Rewards are settled instantly upon player verification. No withdrawal delays.', 
+                desc: 'Rewards are credited instantly upon entry confirmation. No withdrawal delays.', 
                 icon: Zap 
               },
               { 
@@ -156,9 +156,9 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                    <div className="flex items-center justify-between pt-8 border-t border-white/5">
                       <div className="flex items-center gap-3">
                          <div className="w-2 h-2 bg-success rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.5)]" />
-                         <span className="text-[10px] font-black text-success uppercase tracking-widest italic">Real-time Attribution Active</span>
+                         <span className="text-[10px] font-black text-success uppercase tracking-widest italic">Real-time Tracking Active</span>
                       </div>
-                      <span className="text-[9px] font-bold text-muted uppercase tracking-widest opacity-20 italic">v2.1 Active</span>
+                      <span className="text-[9px] font-bold text-muted uppercase tracking-widest opacity-20 italic">Secure Access</span>
                    </div>
                 </div>
 
@@ -222,7 +222,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                                    </td>
                                    <td className="px-12 py-8 text-right">
                                       <div className={`badge-elite !py-1 !px-4 italic font-black text-[10px] ${r.status === 'qualified' ? '!bg-emerald-500/10 !text-emerald-500 border-emerald-500/10' : 'opacity-20'}`}>
-                                         {r.status === 'qualified' ? 'VERIFIED' : 'PENDING'}
+                                         {r.status === 'qualified' ? 'CONFIRMED' : 'PENDING'}
                                       </div>
                                    </td>
                                 </tr>

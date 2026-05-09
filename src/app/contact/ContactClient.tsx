@@ -10,7 +10,7 @@ const HELP_CATEGORIES = [
   { icon: '👥', label: 'Referral Program', desc: 'How referrals work and how to earn bonuses.' },
   { icon: '💳', label: 'Account & Billing', desc: 'Account tiers, purchases, and account access.' },
   { icon: '🏆', label: 'Leaderboard & Rankings', desc: 'How rankings are determined and updated.' },
-  { icon: '🔒', label: 'Security & Fraud', desc: 'Anti-fraud policy, verification, and fair play.' },
+  { icon: '🔒', label: 'Security & Fraud', desc: 'Anti-fraud policy, confirmation, and fair play.' },
 ];
 
 export default function ContactClient() {
@@ -62,7 +62,7 @@ export default function ContactClient() {
                 Support Center
               </h1>
               <p className="text-secondary" style={{ fontSize: '1rem', marginBottom: '32px', maxWidth: '480px', lineHeight: 1.6 }}>
-                Technical inquiries, account recovery, and platform verification. Our specialists are on standby.
+                Technical inquiries, account recovery, and identity confirmation. Our specialists are on standby.
               </p>
               
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>

@@ -33,7 +33,7 @@ const STEPS = [
     icon: CreditCard,
     title: 'Select Your Tier',
     description: 'Choose an entry tier that fits your goals. Your plan defines your level of access and reward potential in the arena.',
-    detail: 'Instant account activation upon activation.',
+    detail: 'Instant account access upon activation.',
   },
   {
     number: '02',
@@ -60,8 +60,8 @@ const STEPS = [
     number: '05',
     icon: Award,
     title: 'Secured Rewards',
-    description: 'Achieve a 3/3 streak and unlock your 10X reward multipliers. Winnings are paid and paid directly to your wallet.',
-    detail: 'Automated payout initiated upon final verification.',
+    description: 'Achieve a 3/3 streak and unlock your 10X reward multipliers. Winnings are paid directly to your wallet.',
+    detail: 'Instant payout sent upon final confirmation.',
   },
 ];
 

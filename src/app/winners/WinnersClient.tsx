@@ -28,15 +28,15 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
         {/* Hero Section */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-16 items-stretch">
           <div className="lg:col-span-8 card-luxury !p-10 sm:!p-16 bg-[#11161D] border-gold/10 flex flex-col justify-center">
-             <div className="badge-luxury mb-6 px-4 py-1.5 uppercase italic font-black tracking-widest">PAYOUT SYSTEM</div>
+             <div className="badge-luxury mb-6 px-4 py-1.5 uppercase italic font-black tracking-widest">REWARD HUB</div>
              <h1 className="mb-4 uppercase italic font-black leading-tight tracking-tight">Verified <span className="text-gradient-gold">Winners.</span></h1>
              <p className="text-text-secondary text-sm font-normal leading-relaxed max-w-lg mb-0 italic">
-               A transparent record of participants who successfully completed their streaks and received automated verified reward.
+               A transparent record of participants who successfully completed their streaks and received automated rewards.
              </p>
           </div>
           
           <div className="lg:col-span-4 card-luxury !p-10 bg-bg-card border-border-subtle flex flex-col items-center justify-center text-center relative overflow-hidden">
-             <div className="text-[9px] font-black text-text-dim uppercase tracking-[0.2em] mb-3 italic opacity-60">Total Verified Payouts</div>
+             <div className="text-[9px] font-black text-text-dim uppercase tracking-[0.2em] mb-3 italic opacity-60">Total Confirmed Payouts</div>
               <div className="text-4xl sm:text-5xl font-black text-white italic tracking-tighter leading-none mb-4 font-display">
                  ₦{stats.totalCashPaid.toLocaleString()}
               </div>
@@ -75,7 +75,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
                            <div className="text-[13px] font-black text-white uppercase tracking-tight truncate italic">{name}</div>
                            <div className="flex items-center gap-2 opacity-40">
                               <ShieldCheck className="w-2.5 h-2.5 text-emerald-500" />
-                              <span className="text-[7px] font-black text-text-dim uppercase tracking-widest italic">Player Verified</span>
+                              <span className="text-[7px] font-black text-text-dim uppercase tracking-widest italic">Confirmed</span>
                            </div>
                          </div>
                        </div>
@@ -107,7 +107,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
            <div className="max-w-xl mx-auto relative z-10">
               <h2 className="mb-4 text-4xl uppercase italic font-black">Claim Your <span className="text-gradient-gold">Spot.</span></h2>
               <p className="text-text-secondary text-[10px] font-normal mb-10 uppercase tracking-widest italic">
-                Successful streaks lead to verified payouts. Start your prediction streak today.
+                Successful streaks lead to confirmed payouts. Start your prediction streak today.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/accounts" className="btn-luxury btn-gold !py-4 !px-10 !text-[10px] shadow-sm">

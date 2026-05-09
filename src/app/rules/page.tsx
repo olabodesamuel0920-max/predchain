@@ -17,13 +17,13 @@ export default function RulesPage() {
             Challenge Rules & <span className="text-gradient-gold">Fair Play</span>
           </h1>
           <p className="text-[11px] font-bold text-secondary uppercase tracking-widest max-w-lg mx-auto leading-relaxed italic opacity-40">
-            Understand the 3-day sequence mechanics and our commitment to absolute platform integrity.
+            Understand the 3-day streak mechanics and our commitment to absolute platform integrity.
           </p>
         </div>
         
         <div className="flex flex-col gap-6">
           <section className="card p-8 md:p-10 bg-white/[0.015] border-white/5 shadow-2xl">
-            <h2 className="font-display text-xl font-bold text-white uppercase italic tracking-tight mb-8">The 3-Day Protocol</h2>
+            <h2 className="font-display text-xl font-bold text-white uppercase italic tracking-tight mb-8">The 3-Day Streak</h2>
             <ul className="flex flex-col gap-6 text-xs font-medium text-secondary uppercase tracking-wide leading-relaxed list-none">
               <li className="flex gap-4 items-start opacity-60">
                 <span className="text-gold font-bold">01.</span>
@@ -45,7 +45,7 @@ export default function RulesPage() {
               </li>
               <li className="flex gap-4 items-start opacity-60">
                 <span className="text-gold font-bold">04.</span>
-                <span>A successful 3/3 sequence earns the verified 10X yield payout.</span>
+                <span>A successful 3/3 streak earns the confirmed 10X reward payout.</span>
               </li>
               <li className="flex gap-4 items-start opacity-60">
                 <span className="text-gold font-bold">05.</span>
@@ -57,18 +57,18 @@ export default function RulesPage() {
           <section className="card p-8 bg-white/[0.01] border-white/5 shadow-inner">
              <h2 className="font-display text-lg font-bold text-white uppercase italic tracking-tight mb-4">Match Lock-in</h2>
              <p className="text-[10px] font-bold text-secondary uppercase tracking-widest leading-relaxed opacity-40 italic">
-               All predictions must be submitted BEFORE the official match kickoff time. Once a match starts, the verification window is locked permanently.
+               All predictions must be submitted BEFORE the official match kickoff time. Once a match starts, the audit window is locked permanently.
              </p>
           </section>
 
           <section className="card p-8 md:p-10 bg-white/[0.015] border-white/5 shadow-2xl">
              <h2 className="font-display text-lg font-bold text-white uppercase italic tracking-tight mb-6">Platform Integrity</h2>
              <p className="text-[11px] font-bold text-secondary uppercase tracking-widest leading-relaxed mb-8 opacity-40 italic">
-               To maintain elite trust levels, we employ advanced verification protocols:
+               To maintain elite trust levels, we employ advanced security checks:
              </p>
              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {[
-                  'Multi-account verification check',
+                  'Multi-account security check',
                   'Bot detection on submissions',
                   'Manual audit for rewards',
                   'Zero tolerance for fraud'

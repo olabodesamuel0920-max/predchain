@@ -1,6 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import ReferralClient from '@/components/referral/ReferralClient'
+import type { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  title: 'Partner Program — PredChain',
+  description: 'Join the elite PredChain partner network. Scale the arena and earn automated rewards for every participant you connect.',
+}
 
 export default async function ReferralPage() {
   const supabase = await createClient()

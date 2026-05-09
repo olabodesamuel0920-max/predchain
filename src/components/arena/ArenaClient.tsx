@@ -69,7 +69,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
               </div>
               <div className="flex flex-col">
                  <span className="text-[11px] font-black text-white uppercase italic leading-none">{stats.activeChallengers.toLocaleString()}+ Active Players</span>
-                 <span className="text-[9px] font-extrabold text-emerald-500/60 uppercase tracking-widest mt-1.5 italic">Live system status</span>
+                 <span className="text-[9px] font-extrabold text-emerald-500/60 uppercase tracking-widest mt-1.5 italic">Live status</span>
               </div>
             </div>
           </div>
@@ -87,7 +87,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                     <div className="flex items-center gap-3">
                        <span className="text-[10px] font-black text-gold uppercase tracking-[0.2em] italic">Current Cycle</span>
                        <div className="w-1 h-1 rounded-full bg-emerald-500" />
-                       <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] italic">Operational</span>
+                       <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em] italic">Live Feed</span>
                     </div>
                     <h2 className="text-2xl sm:text-3xl font-black italic uppercase tracking-tighter font-display text-white">Match Cycle {activeRound?.round_number || '01'}</h2>
                  </div>
@@ -95,13 +95,13 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
               
               <div className="flex items-center gap-10 bg-black/40 border border-white/5 rounded-2xl px-10 py-6 shadow-inner w-full lg:w-auto">
                   <div className="text-center flex-1 lg:flex-none">
-                     <span className="text-[9px] font-black text-text-dim uppercase tracking-widest block mb-2 italic">Payout Reserve</span>
+                     <span className="text-[9px] font-black text-text-dim uppercase tracking-widest block mb-2 italic">Payout Pool</span>
                      <span className="text-xl font-black text-white font-display italic tracking-tight">₦{stats.totalCashPaid.toLocaleString()}</span>
                   </div>
                   <div className="w-px h-10 bg-white/5 hidden sm:block" />
                   <div className="text-center flex-1 lg:flex-none">
-                     <span className="text-[9px] font-black text-text-dim uppercase tracking-widest block mb-2 italic">System Integrity</span>
-                     <span className="text-xl font-black text-emerald-500 font-display italic tracking-tight uppercase">Verified</span>
+                     <span className="text-[9px] font-black text-text-dim uppercase tracking-widest block mb-2 italic">Official Audit</span>
+                     <span className="text-xl font-black text-emerald-500 font-display italic tracking-tight uppercase">Confirmed</span>
                   </div>
               </div>
            </div>
@@ -115,30 +115,36 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
               <div className="px-10 py-8 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
                  <div className="flex items-center gap-4">
                     <Activity className="w-5 h-5 text-gold/60" />
-                    <span className="text-[11px] font-black text-white uppercase tracking-[0.2em] italic font-display">Live Arena Fixtures</span>
+                    <span className="text-[11px] font-black text-white uppercase tracking-[0.2em] italic font-display">Elite Arena Fixtures</span>
                  </div>
                  {!activeRound && (
                    <div className="flex items-center gap-3">
                       <div className="w-2 h-2 bg-gold/40 rounded-full animate-ping" />
-                      <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.2em] italic">Updating Feed...</span>
+                      <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.2em] italic">Updating Arena...</span>
                    </div>
                  )}
               </div>
 
               <div className="p-6 sm:p-8 space-y-4">
                 {matches.length === 0 ? (
-                  <div className="py-32 text-center border-2 border-dashed border-white/5 rounded-3xl flex flex-col items-center">
-                    <Zap className="w-12 h-12 mb-6 text-white/5" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-text-dim italic">Waiting for next Arena Cycle</span>
+                  <div className="py-32 px-10 text-center border border-white/5 bg-white/[0.01] rounded-[2rem] flex flex-col items-center relative overflow-hidden group">
+                    <div className="absolute inset-0 bg-gold/5 blur-[80px] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
+                    <div className="w-20 h-20 rounded-2xl bg-gold/5 border border-gold/10 flex items-center justify-center mb-10 relative z-10">
+                       <Zap className="w-8 h-8 text-gold animate-pulse" />
+                    </div>
+                    <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-4 italic relative z-10">Preparing Next <span className="text-gradient-gold">Arena Cycle.</span></h3>
+                    <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] max-w-sm mx-auto leading-loose italic opacity-40 relative z-10">
+                       Synchronizing official match feeds and establishing elite prediction liquidity. The next match cycle will be accessible shortly.
+                    </p>
                   </div>
                 ) : (
                   matches.map((match, i) => (
-                    <div key={match.id} className="group p-6 sm:p-8 bg-white/[0.02] border border-white/5 rounded-2xl flex flex-col sm:flex-row items-center justify-between hover:bg-white/[0.04] hover:border-gold/20 transition-all duration-500 gap-8 sm:gap-0 relative overflow-hidden shadow-sm">
-                       <div className="absolute inset-0 bg-gradient-to-r from-gold/0 via-gold/[0.01] to-gold/0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+                    <div key={match.id} className="group p-6 sm:p-8 bg-[#0a0d14] border border-white/5 rounded-3xl flex flex-col sm:flex-row items-center justify-between hover:bg-[#0d1018] hover:border-gold/20 transition-all duration-500 gap-8 sm:gap-0 relative overflow-hidden shadow-xl">
+                       <div className="absolute inset-0 bg-gradient-to-r from-gold/0 via-gold/[0.02] to-gold/0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                        
                        <div className="flex items-center gap-8 w-full sm:w-auto relative z-10">
-                          <div className="w-12 h-12 rounded-xl bg-black border border-white/10 flex flex-col items-center justify-center text-[9px] font-black text-text-muted group-hover:text-gold group-hover:border-gold/20 transition-all shrink-0 shadow-inner">
-                             <span className="opacity-40">DAY</span>
+                          <div className="w-14 h-14 rounded-2xl bg-black border border-white/10 flex flex-col items-center justify-center text-[10px] font-black text-text-muted group-hover:text-gold group-hover:border-gold/20 transition-all shrink-0 shadow-inner group-hover:shadow-gold/5">
+                             <span className="opacity-40 uppercase">Day</span>
                              <span className="text-lg font-display font-black leading-none italic mt-1">0{i+1}</span>
                           </div>
                           <div className="flex flex-col">
@@ -171,13 +177,13 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
             <div className="card-luxury !p-10 border-gold/10 bg-[#0a0d12] shadow-2xl">
                <div className="flex items-center gap-4 mb-10">
                   <ShieldCheck className="w-5 h-5 text-gold" />
-                  <h3 className="text-lg font-black italic uppercase tracking-tight font-display text-white">Arena <span className="text-gradient-gold">Rules.</span></h3>
+                  <h3 className="text-lg font-black italic uppercase tracking-tight font-display text-white">Match <span className="text-gradient-gold">Rules.</span></h3>
                </div>
                <ul className="space-y-8">
                   {[
                     { title: 'Access', desc: 'Select an entry tier to join the current arena pool.', icon: Shield },
                     { title: 'Predict', desc: 'Submit one prediction for every 24-hour cycle.', icon: Target },
-                    { title: 'Verify', desc: 'Results are verified in real-time by official feeds.', icon: ShieldCheck },
+                    { title: 'Confirm', desc: 'Results are confirmed in real-time by official feeds.', icon: ShieldCheck },
                     { title: 'Collect', desc: 'Achieve a 3-day winning streak for 10X rewards.', icon: Award }
                   ].map((rule, i) => (
                     <li key={i} className="flex gap-5 items-start group">
@@ -196,9 +202,9 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
             <div className="card-luxury !p-8 border-white/5 bg-transparent flex items-center gap-6 shadow-xl group hover:bg-white/[0.02] transition-colors">
                <Activity className="w-8 h-8 text-emerald-500/30 shrink-0 group-hover:scale-110 transition-transform" />
                <div className="space-y-2">
-                  <h4 className="text-[11px] font-black text-white font-display uppercase italic tracking-wider">Integrity Verified</h4>
+                  <h4 className="text-[11px] font-black text-white font-display uppercase italic tracking-wider">Integrity Confirmed</h4>
                   <p className="text-[10px] font-medium text-text-dim italic leading-relaxed uppercase tracking-widest opacity-60">
-                     Global match outcomes are synchronized and automated.
+                     Match outcomes are verified via official real-time feeds.
                   </p>
                </div>
             </div>

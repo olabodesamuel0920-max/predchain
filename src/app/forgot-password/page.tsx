@@ -47,7 +47,7 @@ export default function ForgotPasswordPage() {
               Lost <span className="text-gradient-gold">Key?</span>
             </h1>
             <p className="text-muted text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed opacity-30 italic">
-              credential recovery sequence
+              password recovery
             </p>
           </div>
 

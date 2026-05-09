@@ -24,12 +24,12 @@ export default function PrivacyPage() {
         <div className="flex flex-col gap-12">
           {[
             { 
-              title: '1. Data Collection Protocol', 
-              text: 'We collect essential account details (Username, Email, Phone) and payment verification to ensure secure challenge participation.' 
+              title: '1. Data Collection Rules', 
+              text: 'We collect essential account details (Username, Email, Phone) and payment confirmation to ensure secure challenge participation.' 
             },
             { 
-              title: '2. Usage Protocol', 
-              text: 'Your data is used strictly for authentication, reward verification, and support communication. We never sell your data to third-party networks.' 
+              title: '2. Usage Rules', 
+              text: 'Your data is used strictly for authentication, reward audit, and support communication. We never sell your data to third-party networks.' 
             },
             { 
               title: '3. Security System', 

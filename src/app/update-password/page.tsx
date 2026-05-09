@@ -53,7 +53,7 @@ export default function UpdatePasswordPage() {
               Access <span className="text-emerald-500">Restored</span>
             </h1>
             <p className="text-muted text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed mb-8 opacity-40 italic">
-              your security protocol has been successfully refreshed
+              your security system has been successfully refreshed
             </p>
             <a href="/login" className="btn btn-blue w-full py-4 uppercase text-[10px] items-center justify-center flex gap-2">
               <ArrowLeft className="w-3.5 h-3.5" /> Return to Login
@@ -79,7 +79,7 @@ export default function UpdatePasswordPage() {
               Update <span className="text-gradient-blue">Access</span>
             </h1>
             <p className="text-muted text-[10px] font-black uppercase tracking-[0.2em] leading-relaxed opacity-30 italic">
-              credential update protocol
+              password update
             </p>
           </div>
 

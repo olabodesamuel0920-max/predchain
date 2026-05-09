@@ -178,7 +178,7 @@ export default function DashboardClient({
               <div className="w-px h-6 bg-white/10 hidden md:block" />
               <div className="flex items-center gap-2">
                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                 <span className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-40">System Connected</span>
+                 <span className="text-[10px] font-bold text-muted uppercase tracking-widest opacity-40">Arena Online</span>
               </div>
             </div>
           </div>
@@ -225,7 +225,7 @@ export default function DashboardClient({
               { id: 'overview', label: 'Overview', icon: Layout },
               { id: 'arena', label: 'Predictions', icon: Target },
               { id: 'wallet', label: 'Finances', icon: WalletIcon },
-              { id: 'network', label: 'Referrals', icon: Users }
+              { id: 'network', label: 'Partners', icon: Users }
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -285,7 +285,7 @@ export default function DashboardClient({
                        <span className="text-[11px] font-bold text-white uppercase tracking-[0.2em] flex items-center gap-3 opacity-60">
                           <History className="w-4 h-4 text-gold" /> Activity Feed
                        </span>
-                       <button onClick={() => setActiveTab('wallet')} className="text-[10px] font-bold text-gold hover:text-white transition-colors uppercase tracking-widest font-display">Financial Ledger</button>
+                       <button onClick={() => setActiveTab('wallet')} className="text-[10px] font-bold text-gold hover:text-white transition-colors uppercase tracking-widest font-display">Account History</button>
                     </div>
                     <div className="divide-y divide-white/5">
                        {transactions.length === 0 ? (
@@ -532,7 +532,7 @@ export default function DashboardClient({
                      </div>
                      <div className="flex flex-col sm:flex-row gap-4 p-4 bg-black/40 border border-white/10 rounded-3xl shadow-inner group">
                         <input readOnly value={`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`} className="flex-1 bg-transparent px-6 py-4 font-bold text-sm text-gold outline-none italic opacity-90 font-display" />
-                        <button onClick={() => { navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`); showSuccess('Invite link copied.'); }} className="btn btn-primary !px-16 !py-5 rounded-2xl font-bold uppercase text-[12px] shadow-2xl transition-all hover:scale-[1.02]">CLONE LINK</button>
+                        <button onClick={() => { navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`); showSuccess('Invite link copied.'); }} className="btn btn-primary !px-16 !py-5 rounded-2xl font-bold uppercase text-[12px] shadow-2xl transition-all hover:scale-[1.02]">COPY LINK</button>
                      </div>
                   </div>
                   <div className="lg:col-span-4 card-premium !p-16 bg-gold/[0.03] border-gold/10 shadow-xl flex flex-col justify-center items-center text-center">
@@ -554,7 +554,7 @@ export default function DashboardClient({
           }`}>
              <div className="shrink-0 w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center">{successMsg ? <Check className="w-6 h-6" /> : <ShieldAlert className="w-6 h-6" />}</div>
              <div className="flex flex-col text-left">
-                <span className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-50 mb-1">{successMsg ? 'VERIFIED ACTION' : 'SYSTEM ALERT'}</span>
+                <span className="text-[10px] font-bold uppercase tracking-[0.2em] opacity-50 mb-1">{successMsg ? 'CONFIRMED' : 'SYSTEM ALERT'}</span>
                 <span className="text-sm font-bold tracking-tight font-display">{successMsg || errorMsg}</span>
              </div>
              <button onClick={clear} className="ml-auto w-8 h-8 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors">×</button>

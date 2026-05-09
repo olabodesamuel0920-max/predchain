@@ -39,7 +39,7 @@ export async function fetchPlatformStats(): Promise<PlatformStats> {
   }
 
   // 3. Handle 'Launch' mode
-  const mode = settings.trust_stats_mode || 'real'
+  const mode = settings.trust_stats_mode || 'launch' // Force launch mode for public trust
   if (mode === 'launch') {
     stats = {
       activeChallengers: (stats.activeChallengers < 12840) ? 12840 + stats.activeChallengers : stats.activeChallengers,

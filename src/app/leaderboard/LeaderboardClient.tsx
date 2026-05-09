@@ -39,7 +39,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
           <div className="badge-luxury mb-6 px-4 py-1.5 uppercase italic font-black tracking-widest">ARENA RANKINGS</div>
           <h1 className="mb-4 uppercase italic font-black leading-tight tracking-tight">Top <span className="text-gradient-gold">Performers.</span></h1>
           <p className="text-text-secondary text-sm font-normal leading-relaxed italic opacity-80">
-            A verified record of participants ranked by streak strength and prediction accuracy.
+            A confirmed record of participants ranked by streak strength and prediction accuracy.
           </p>
         </div>
 
@@ -78,7 +78,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                 </div>
 
                 <div className="inline-flex px-3 py-1 rounded-md bg-white/[0.03] border border-border-subtle text-[8px] font-black text-text-dim uppercase tracking-widest italic">
-                  {player.tier?.name || 'Standard'} SYSTEM
+                  {player.tier?.name || 'Standard'} TIER
                 </div>
               </div>
             );
@@ -146,8 +146,8 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                     </td>
                     <td className="px-8 py-5 text-right">
                       {row.is_winner
-                        ? <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10 italic">SETTLED</span>
-                        : <span className="text-[8px] font-black text-gold uppercase tracking-widest bg-gold/5 px-2 py-0.5 rounded border border-gold/10 italic">IN-FLOW</span>
+                        ? <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10 italic">CONFIRMED</span>
+                        : <span className="text-[8px] font-black text-gold uppercase tracking-widest bg-gold/5 px-2 py-0.5 rounded border border-gold/10 italic">ACTIVE</span>
                       }
                     </td>
                   </tr>
