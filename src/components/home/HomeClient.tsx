@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { PlatformStats, HomeMatch } from '@/types';
-import { ArrowRight, Check, Trophy, Zap, Users, Wallet, Globe, Activity, Radio, Clock, Shield, Star, PlayCircle } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, Check, Trophy, Zap, Users, Wallet, Globe, Activity, Radio, Clock, Shield, Star, PlayCircle } from 'lucide-react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 /* ── Animated Counter ── */
