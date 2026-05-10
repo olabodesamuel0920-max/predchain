@@ -66,25 +66,46 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-muted/5 blur-[120px]" />
       </div>
 
-      <div className="container-tight relative z-10">
+      <div className="container-tight relative z-10 px-4 sm:px-0">
         {/* Section Header */}
-        <div className="text-center mb-16 max-w-2xl mx-auto px-4">
-          <div className="badge-luxury mb-6 px-5 py-1.5">ELITE MEMBERSHIP</div>
-          <h1 className="mb-4 uppercase italic font-black tracking-tight">Select Your <span className="text-gradient-gold">Arena Entry.</span></h1>
-          <p className="text-text-secondary text-sm font-normal leading-relaxed">
-            Choose a performance tier that aligns with your strategy. Each tier unlocks verified <span className="text-white font-bold italic">10X multipliers</span>.
-          </p>
+        <div className="text-center mb-16 sm:mb-24 max-w-2xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="badge-luxury mb-8 px-6 py-2 bg-white/[0.02] border-white/10 italic font-black"
+          >
+            ARENA ACCESS PROTOCOL
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6 uppercase italic font-black tracking-tighter text-5xl sm:text-7xl leading-none"
+          >
+            Select Your <span className="text-gradient-gold">Circuit.</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-text-secondary text-sm sm:text-base font-medium leading-relaxed italic opacity-60"
+          >
+            Deploy into the arena by securing a membership tier. Each level unlocks verified <span className="text-white font-black">10X multipliers</span> upon streak completion.
+          </motion.p>
 
           {errorMsg && (
-            <div className="mt-8 flex items-center justify-center gap-3 text-rose-500 bg-rose-500/5 p-4 rounded-xl border border-rose-500/10 max-w-md mx-auto">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="mt-10 flex items-center justify-center gap-3 text-rose-500 bg-rose-500/5 p-5 rounded-2xl border border-rose-500/10 max-w-md mx-auto shadow-2xl"
+            >
+              <AlertCircle className="w-5 h-5 shrink-0" />
               <span className="text-[10px] font-black uppercase tracking-widest italic">{errorMsg}</span>
-            </div>
+            </motion.div>
           )}
         </div>
 
         {/* Pricing Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-32">
           {tiers.sort((a,b) => a.price_ngn - b.price_ngn).map((tier, i) => {
             const isMidTier = i === 1;
             const rewardVal = tier.price_ngn * 10;
@@ -94,74 +115,75 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             return (
               <motion.div 
                 key={tier.id}
-                whileHover={{ rotateX: 4, rotateY: -2, y: -8 }}
-                transition={{ type: "spring", stiffness: 300, damping: 20 }}
-                className={`card-luxury flex flex-col transition-all duration-500 transform preserve-3d depth-card ${
-                  isMidTier ? 'border-gold/30 bg-[#11161D] shadow-depth-gold' : 'bg-bg-card shadow-lg'
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1, duration: 0.8 }}
+                className={`card-luxury flex flex-col transition-all duration-700 transform preserve-3d depth-card relative group p-0 overflow-hidden ${
+                  isMidTier ? 'border-gold/30 bg-[#07090e] shadow-[0_50px_100px_-30px_rgba(242,201,76,0.15)]' : 'bg-[#0a0d14] border-white/5'
                 }`}
               >
                 {isMidTier && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 badge-luxury !bg-gold !text-black !px-4 !py-1 shadow-md font-black text-[9px] tracking-widest uppercase italic z-20">
-                    MOST DEPLOYED
+                  <div className="absolute top-6 right-6 badge-luxury !bg-gold !text-black !px-4 !py-1 shadow-2xl font-black text-[9px] tracking-widest uppercase italic z-20">
+                    POPULAR
                   </div>
                 )}
 
-                <div className="mb-8 relative z-10">
-                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 border transition-all ${
-                     isMidTier ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-white/[0.02] border-border-subtle text-text-dim'
+                <div className="p-10 pb-0 relative z-10">
+                   <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-10 border transition-all duration-700 shadow-inner group-hover:rotate-12 ${
+                     isMidTier ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-white/[0.03] border-white/10 text-text-dim/60 group-hover:text-gold group-hover:border-gold/30'
                    }`}>
-                      {i === 2 ? <Crown className="w-5 h-5" /> : isMidTier ? <Star className="w-5 h-5" /> : <Zap className="w-5 h-5" />}
+                      {i === 2 ? <Crown className="w-7 h-7" /> : isMidTier ? <Star className="w-7 h-7" /> : <Zap className="w-7 h-7" />}
                    </div>
-                   <h3 className="text-lg font-black text-white mb-2 font-display uppercase italic tracking-[0.05em]">{tier.name}</h3>
-                   <div className="flex items-baseline gap-1.5">
-                      <span className="text-3xl font-black text-white font-display italic tracking-tighter">₦{tier.price_ngn.toLocaleString()}</span>
-                      <span className="text-[8px] font-black text-text-muted uppercase tracking-widest italic opacity-40">/ entry</span>
+                   <h3 className="text-xl font-black text-white mb-3 font-display uppercase italic tracking-tighter leading-none">{tier.name}</h3>
+                   <div className="flex items-baseline gap-2 mb-10">
+                      <span className="text-4xl font-black text-white font-display italic tracking-tighter transition-colors group-hover:text-gold">₦{tier.price_ngn.toLocaleString()}</span>
+                      <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] italic opacity-40">Entry</span>
                    </div>
                 </div>
 
-                <div className="space-y-3.5 mb-10 flex-1 relative z-10">
+                <div className="px-10 space-y-5 mb-12 flex-1 relative z-10">
                    {[
                       '3-Day Streak Eligibility',
-                      'official match data-feeds',
-                      `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} referral share`,
-                      'automated rewards'
+                      'Official Match Intel-Feed',
+                      `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} Partner Credit`,
+                      'Automated Reward Flow'
                    ].map((feat, idx) => (
-                      <div key={idx} className="flex items-center gap-3">
-                         <div className="w-4 h-4 rounded-md bg-white/[0.02] border border-border-subtle flex items-center justify-center shrink-0">
-                            <Check className="w-2.5 h-2.5 text-text-muted" />
+                      <div key={idx} className="flex items-center gap-4 group/item">
+                         <div className="w-5 h-5 rounded-lg bg-white/[0.02] border border-white/5 flex items-center justify-center shrink-0 group-hover/item:border-gold/30 transition-all">
+                            <Check className="w-3 h-3 text-gold/40 group-hover/item:text-gold transition-colors" />
                          </div>
-                         <span className="text-[10px] font-black text-text-secondary uppercase tracking-wider italic opacity-70">{feat}</span>
+                         <span className="text-[11px] font-black text-text-secondary uppercase tracking-widest italic opacity-40 group-hover/item:opacity-100 transition-opacity">{feat}</span>
                       </div>
                    ))}
                 </div>
 
-                <div className="pt-8 border-t border-border-subtle space-y-6 relative z-10">
-                   <div className="bg-bg-secondary p-5 rounded-xl border border-border-subtle text-center glass-layered">
-                      <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] block mb-2 italic">Max Reward Payout</span>
-                      <div className="flex items-center justify-center gap-2">
-                         <span className="text-2xl font-black text-white font-display italic tracking-tight">₦{rewardVal.toLocaleString()}</span>
-                         <span className="text-[8px] font-extrabold text-emerald-500/60 uppercase tracking-tighter">Confirmed</span>
+                <div className="p-10 pt-0 relative z-10 mt-auto">
+                   <div className="bg-black/60 border border-white/5 rounded-2xl p-6 text-center glass-layered mb-8 shadow-inner group-hover:border-gold/10 transition-all duration-700">
+                      <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.4em] block mb-3 italic opacity-30">Maximum Reward Potential</span>
+                      <div className="flex items-center justify-center gap-3">
+                         <span className="text-3xl font-black text-white font-display italic tracking-tighter transition-transform group-hover:scale-105 duration-700">₦{rewardVal.toLocaleString()}</span>
+                         <ShieldCheck className="w-4 h-4 text-emerald-500 opacity-40" />
                       </div>
                    </div>
 
-                   <div className="flex flex-col gap-3">
+                   <div className="flex flex-col gap-4">
                       <button
                         onClick={() => handlePurchase(tier.id, 'wallet')}
                         disabled={!!(isLoading || (userId && !isWalletEnough))}
-                        className={`btn-luxury btn-premium-depth !py-4 w-full shadow-sm ${
-                          isMidTier ? 'btn-gold' : 'btn-outline'
+                        className={`btn-luxury btn-premium-depth !py-5 w-full shadow-2xl font-black italic tracking-widest text-[11px] ${
+                          isMidTier ? 'btn-gold' : 'btn-outline border-white/10 bg-white/[0.02]'
                         }`}
                       >
                          {isLoading ? <Activity className="w-4 h-4 animate-spin" /> : 
-                          (userId && !isWalletEnough) ? 'Low Wallet Reserve' : 'Purchase with Wallet'}
+                          (userId && !isWalletEnough) ? 'LOW WALLET RESERVE' : 'ACTIVATE WITH WALLET'}
                       </button>
                       
                       <button
                         onClick={() => handlePurchase(tier.id, 'paystack')}
                         disabled={isLoading}
-                        className="text-[9px] font-black text-text-dim hover:text-gold transition-all text-center uppercase tracking-[0.2em] italic"
+                        className="text-[9px] font-black text-text-dim hover:text-white transition-all text-center uppercase tracking-[0.3em] italic opacity-40 hover:opacity-100"
                       >
-                         Secure External Gateway
+                         Secure External Payment Gateway
                       </button>
                    </div>
                 </div>
@@ -170,20 +192,27 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
           })}
         </div>
 
-        {/* Global Performance Standards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-5xl mx-auto py-20 border-t border-border-subtle">
+        {/* Platform Integrity Standards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-5xl mx-auto py-24 border-t border-white/5">
            {[
-              { icon: ShieldCheck, title: 'Asset Protection', desc: 'Fees are securely held until match confirmation is finalized.' },
-              { icon: Globe, title: 'Official Feeds', desc: 'Results are updated in real-time with official sports networks.' },
-              { icon: Crown, title: 'Instant Rewards', desc: 'Winning streaks trigger instant, high-priority reward transfers.' }
+              { icon: ShieldCheck, title: 'Asset Integrity', desc: 'Membership fees are locked in reserve until match outcomes are verified.' },
+              { icon: Globe, title: 'Network Feeds', desc: 'Arena fixtures and results are synchronized with global sports intelligence.' },
+              { icon: Crown, title: 'Priority Harvest', desc: 'Elite streak winners receive high-priority, automated reward distributions.' }
            ].map((item, i) => (
-              <div key={i} className="flex flex-col items-center text-center space-y-4 group">
-                 <div className="w-12 h-12 rounded-xl bg-white/[0.02] border border-border-subtle flex items-center justify-center text-gold/30 transition-all group-hover:bg-gold group-hover:text-black">
-                    <item.icon className="w-5 h-5" />
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="flex flex-col items-center text-center space-y-6 group"
+              >
+                 <div className="w-14 h-14 rounded-2xl bg-white/[0.02] border border-white/5 flex items-center justify-center text-gold/20 transition-all duration-700 group-hover:bg-gold group-hover:text-black group-hover:rotate-12 shadow-inner">
+                    <item.icon className="w-6 h-6" />
                  </div>
-                 <h4 className="text-[11px] font-black text-white uppercase tracking-widest font-display italic">{item.title}</h4>
-                 <p className="text-[10px] font-normal text-text-muted leading-relaxed max-w-[200px]">{item.desc}</p>
-              </div>
+                 <h4 className="text-[13px] font-black text-white uppercase tracking-[0.2em] font-display italic group-hover:text-gold transition-colors">{item.title}</h4>
+                 <p className="text-[11px] font-bold text-text-dim leading-relaxed max-w-[240px] uppercase tracking-widest italic opacity-40 group-hover:opacity-100 transition-opacity">{item.desc}</p>
+              </motion.div>
            ))}
         </div>
       </div>

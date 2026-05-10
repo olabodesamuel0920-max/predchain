@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Trophy, Gem, Search, ChevronRight, Globe, TrendingUp, ShieldCheck, ArrowUpRight } from 'lucide-react';
 
 interface LeaderboardClientProps {
@@ -33,65 +34,88 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gold-muted/5 blur-[120px]" />
       </div>
 
-      <div className="container-tight relative z-10">
+      <div className="container-tight relative z-10 px-4 sm:px-0">
         {/* Header */}
-        <div className="text-center mb-16 sm:mb-24 max-w-2xl mx-auto">
-          <div className="badge-luxury mb-6 px-4 py-1.5 uppercase italic font-black tracking-widest">ARENA RANKINGS</div>
-          <h1 className="mb-4 uppercase italic font-black leading-tight tracking-tight">Top <span className="text-gradient-gold">Performers.</span></h1>
-          <p className="text-text-secondary text-sm font-normal leading-relaxed italic opacity-80">
-            A confirmed record of participants ranked by streak strength and prediction accuracy.
-          </p>
+        <div className="text-center mb-24 sm:mb-40 max-w-3xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="badge-luxury mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
+          >
+            ARENA PERFORMANCE LEDGER
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8 uppercase italic font-black leading-none tracking-tighter text-5xl sm:text-8xl text-white"
+          >
+            Elite <span className="text-gradient-gold">Performers.</span>
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-text-secondary text-base sm:text-xl font-medium opacity-60 leading-relaxed italic max-w-2xl mx-auto"
+          >
+            The verified hierarchy of challengers ranked by circuit consistency and high-precision prediction accuracy.
+          </motion.p>
         </div>
 
         {/* Top 3 Podium */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-16 sm:mb-24 items-end max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-12 mb-32 sm:mb-48 items-end max-w-6xl mx-auto relative">
+          <div className="absolute inset-0 bg-gold/[0.02] blur-[150px] pointer-events-none" />
+          
           {top3.map((player, i) => {
-            const name = player.profile?.username || player.profile?.full_name || 'Anonymous Player';
+            const name = player.profile?.username || player.profile?.full_name || 'ANONYMOUS_PLAYER';
             const isFirst = i === 0;
             const rankLabel = i === 0 ? 'Arena Master' : i === 1 ? 'High Tier' : 'Elite Player';
             
             return (
-              <div 
+              <motion.div 
                 key={player.id} 
-                className={`card-luxury !p-8 sm:!p-10 text-center relative transition-all duration-500 bg-[#11161D] ${isFirst ? 'md:py-14 border-gold/20 shadow-lg z-10' : 'md:opacity-70 scale-95 border-border-subtle order-last md:order-none'}`}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className={`card-luxury !p-12 sm:!p-16 text-center relative transition-all duration-700 bg-[#07090e] depth-card shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)] ${isFirst ? 'md:py-24 border-gold/30 z-20 scale-105' : 'md:opacity-60 scale-95 border-white/10 order-last md:order-none'}`}
               >
                 {isFirst && (
-                  <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-10 h-10 bg-gold rounded-lg flex items-center justify-center shadow-lg z-20">
-                    <Trophy className="w-5 h-5 text-black" />
+                  <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-14 h-14 bg-gold rounded-2xl flex items-center justify-center shadow-[0_20px_40px_-10px_rgba(242,201,76,0.5)] z-30 animate-bounce">
+                    <Trophy className="w-7 h-7 text-black" />
                   </div>
                 )}
                 
-                <div className={`text-[9px] font-black uppercase tracking-widest mb-6 italic ${isFirst ? 'text-gold' : 'text-text-dim'}`}>
+                <div className={`text-[10px] font-black uppercase tracking-[0.4em] mb-10 italic ${isFirst ? 'text-gold' : 'text-text-dim opacity-30'}`}>
                   {rankLabel}
                 </div>
 
-                <div className={`w-14 h-14 mx-auto mb-5 rounded-xl bg-white/[0.02] border border-border-subtle flex items-center justify-center relative group overflow-hidden ${isFirst ? 'text-gold' : 'text-text-dim/30'}`}>
-                   {isFirst ? <Gem className="w-7 h-7" /> : <ShieldCheck className="w-7 h-7" />}
+                <div className={`w-20 h-20 mx-auto mb-10 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center justify-center relative group overflow-hidden shadow-inner ${isFirst ? 'text-gold' : 'text-text-dim/30'}`}>
+                   {isFirst ? <Gem className="w-10 h-10" /> : <ShieldCheck className="w-10 h-10" />}
+                   <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
 
-                <div className="text-lg font-black text-white mb-1.5 tracking-tight truncate italic uppercase font-display">
-                  {name}
+                <div className="text-xl sm:text-2xl font-black text-white mb-4 tracking-tighter truncate italic uppercase font-display group-hover:text-gold transition-colors">
+                  @{name}
                 </div>
 
-                <div className="text-3xl font-black text-white italic tracking-tighter mb-8 leading-none font-display">
-                  <span className="text-gold">{player.streak_count}</span><span className="text-text-dim/20 text-lg ml-1">/ 3</span> 
+                <div className="text-5xl sm:text-6xl font-black text-white italic tracking-tighter mb-12 leading-none font-display">
+                  <span className={isFirst ? 'text-gold' : 'text-white'}>{player.streak_count}</span><span className="text-text-dim/20 text-2xl ml-2 tracking-widest">/ 3</span> 
                 </div>
 
-                <div className="inline-flex px-3 py-1 rounded-md bg-white/[0.03] border border-border-subtle text-[8px] font-black text-text-dim uppercase tracking-widest italic">
-                  {player.tier?.name || 'Standard'} TIER
+                <div className="inline-flex px-6 py-2 rounded-2xl bg-white/[0.03] border border-white/5 text-[9px] font-black text-text-dim uppercase tracking-[0.3em] italic shadow-inner">
+                  {player.tier?.name || 'STANDARD'} CIRCUIT
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
         {/* Controls */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 gap-4 max-w-5xl mx-auto">
-           <div className="flex bg-bg-darker border border-border-subtle rounded-xl p-1 w-full sm:w-auto overflow-x-auto no-scrollbar">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-12 gap-8 max-w-6xl mx-auto">
+           <div className="flex bg-[#07090e] border border-white/10 rounded-[2rem] p-1.5 w-full sm:w-auto overflow-x-auto no-scrollbar shadow-inner">
               {(['weekly', 'monthly', 'alltime'] as const).map(t => (
                 <button
                   key={t}
-                  className={`px-6 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all italic whitespace-nowrap flex-1 sm:flex-none ${tab === t ? 'bg-white/[0.05] text-white shadow-sm' : 'text-text-dim hover:text-white/60'}`}
+                  className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-500 italic whitespace-nowrap flex-1 sm:flex-none ${tab === t ? 'bg-white/[0.05] text-white shadow-lg' : 'text-text-dim opacity-30 hover:opacity-100'}`}
                   onClick={() => setTab(t)}
                 >
                   {t}
@@ -99,55 +123,62 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
               ))}
            </div>
            
-           <div className="relative group w-full sm:w-72">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-text-dim opacity-30 group-focus-within:text-gold transition-colors" />
+           <div className="relative group w-full sm:w-80">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/30 group-focus-within:text-gold transition-all duration-500" />
               <input
                 type="search"
-                placeholder="Search players..."
+                placeholder="SEARCH_CHALLENGERS..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
-                className="w-full bg-bg-primary/50 border border-border-subtle rounded-xl py-3 pl-11 pr-5 text-[10px] font-black text-white focus:outline-none focus:border-gold/30 transition-all uppercase tracking-widest placeholder:opacity-30 italic"
+                className="w-full bg-[#07090e] border border-white/10 rounded-[2rem] py-5 pl-14 pr-8 text-[11px] font-black text-white focus:outline-none focus:border-gold/30 transition-all uppercase tracking-[0.2em] placeholder:opacity-20 italic shadow-inner"
               />
            </div>
         </div>
 
         {/* Ranking Table */}
-        <div className="card-luxury !p-0 overflow-hidden mb-24 bg-bg-card border-border-subtle shadow-md max-w-5xl mx-auto">
-          <div className="overflow-x-auto no-scrollbar">
+        <div className="card-luxury !p-0 overflow-hidden mb-32 bg-[#07090e] border-white/10 shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)] max-w-6xl mx-auto relative group">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-1000 pointer-events-none" />
+          <div className="overflow-x-auto no-scrollbar relative z-10">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-white/[0.01] border-b border-border-subtle">
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Rank</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Player</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Streak</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Entry Tier</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40 text-right">Status</th>
+                <tr className="bg-white/[0.02] border-b border-white/5">
+                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">RANK</th>
+                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">CHALLENGER</th>
+                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">STREAK_VELOCITY</th>
+                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">CIRCUIT</th>
+                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40 text-right">STATUS</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-subtle">
+              <tbody className="divide-y divide-white/5">
                 {filtered.map((row, i) => (
-                  <tr key={row.id} className="hover:bg-white/[0.01] transition-colors group">
-                    <td className="px-8 py-5 text-[10px] font-black text-text-dim group-hover:text-gold transition-colors italic">
+                  <tr key={row.id} className="hover:bg-white/[0.01] transition-all group/row duration-500">
+                    <td className="px-12 py-8 text-[11px] font-black text-text-dim group-hover/row:text-gold transition-colors italic tracking-widest opacity-30 group-hover/row:opacity-100">
                       #{String(i + 1).padStart(2, '0')}
                     </td>
-                    <td className="px-8 py-5">
-                      <span className="text-[11px] font-black text-white uppercase tracking-tight italic font-display">{row.profile?.username || 'Guest Player'}</span>
+                    <td className="px-12 py-8">
+                      <span className="text-lg font-black text-white uppercase tracking-tighter italic font-display group-hover/row:text-gold transition-colors">@{row.profile?.username || 'GUEST_CHALLENGER'}</span>
                     </td>
-                    <td className="px-8 py-5">
-                      <div className="flex items-center gap-4">
-                         <div className="text-xl font-black italic tracking-tighter font-display" style={{ color: row.streak_count === 3 ? 'var(--success)' : 'var(--gold)' }}>{row.streak_count}/3</div>
-                         <div className="w-20 h-0.5 bg-white/5 rounded-full overflow-hidden shrink-0">
-                            <div className="h-full bg-current" style={{ width: `${(row.streak_count / 3) * 100}%`, color: row.streak_count === 3 ? 'var(--success)' : 'var(--gold)' }} />
+                    <td className="px-12 py-8">
+                      <div className="flex items-center gap-6">
+                         <div className="text-2xl font-black italic tracking-tighter font-display transition-transform group-hover/row:scale-110 duration-500" style={{ color: row.streak_count === 3 ? 'var(--success)' : 'white' }}>{row.streak_count}/3</div>
+                         <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden shrink-0 shadow-inner">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              animate={{ width: `${(row.streak_count / 3) * 100}%` }}
+                              transition={{ duration: 1, delay: i * 0.05 }}
+                              className="h-full bg-current shadow-[0_0_10px_rgba(242,201,76,0.3)]" 
+                              style={{ color: row.streak_count === 3 ? 'var(--success)' : 'var(--gold)' }} 
+                            />
                          </div>
                       </div>
                     </td>
-                    <td className="px-8 py-5">
-                       <span className="text-[8px] font-black text-text-dim uppercase tracking-widest italic opacity-40">{row.tier?.name || 'Standard'}</span>
+                    <td className="px-12 py-8">
+                       <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] italic opacity-30 group-hover/row:opacity-100 transition-opacity">{row.tier?.name || 'STANDARD'}</span>
                     </td>
-                    <td className="px-8 py-5 text-right">
+                    <td className="px-12 py-8 text-right">
                       {row.is_winner
-                        ? <span className="text-[8px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/5 px-2 py-0.5 rounded border border-emerald-500/10 italic">CONFIRMED</span>
-                        : <span className="text-[8px] font-black text-gold uppercase tracking-widest bg-gold/5 px-2 py-0.5 rounded border border-gold/10 italic">ACTIVE</span>
+                        ? <div className="badge-luxury !py-2 !px-6 italic font-black text-[9px] !bg-emerald-500/5 !text-emerald-500 border-emerald-500/10 tracking-[0.2em] shadow-inner">CONFIRMED</div>
+                        : <div className="badge-luxury !py-2 !px-6 italic font-black text-[9px] !bg-gold/5 !text-gold border-gold/10 tracking-[0.2em] shadow-inner">ACTIVE</div>
                       }
                     </td>
                   </tr>
@@ -158,20 +189,27 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
         </div>
 
         {/* Final CTA */}
-        <div className="card-luxury-gold !p-12 sm:!p-20 text-center border-gold/10 max-w-3xl mx-auto mb-24 group relative">
-           <div className="max-w-xl mx-auto relative z-10">
-              <h2 className="mb-4 text-4xl uppercase italic font-black">Join the <span className="text-gradient-gold">Best.</span></h2>
-              <p className="text-text-secondary text-[10px] font-normal mb-10 uppercase tracking-widest italic">
-                Ready to prove your accuracy? Start your streak and start climbing the ranks.
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="card-luxury-gold !p-20 md:!p-32 text-center border-gold/15 max-w-5xl mx-auto mb-40 group relative rounded-[4rem] shadow-[0_60px_120px_-40px_rgba(242,201,76,0.15)]"
+        >
+           <div className="absolute inset-0 bg-[#05070a]" />
+           <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.05] to-transparent opacity-50" />
+           <div className="max-w-3xl mx-auto relative z-10">
+              <h2 className="mb-12 text-6xl md:text-9xl uppercase italic font-black leading-none text-white tracking-tighter">Join the <br /><span className="text-gradient-gold">Elite Hub.</span></h2>
+              <p className="text-text-secondary text-lg font-medium mb-20 leading-relaxed italic opacity-60">
+                Ready to validate your accuracy on the global stage? Start your circuit activation and command the rankings today.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/accounts" className="btn-luxury btn-gold !px-12 !py-4 shadow-sm">
-                  GET STARTED <ArrowUpRight className="w-4 h-4 ml-2" />
+              <div className="flex flex-col sm:flex-row gap-8 justify-center">
+                <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !px-20 !py-6 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">
+                  INITIALIZE ACCESS <ArrowUpRight className="w-5 h-5 ml-3" />
                 </Link>
-                <Link href="/arena" className="btn-luxury btn-outline !px-10 !py-4">VIEW ARENA</Link>
+                <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !px-20 !py-6 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">VIEW ARENA</Link>
               </div>
            </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

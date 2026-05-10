@@ -1,81 +1,88 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Challenge Rules & Fair Play — PredChain',
-  description: 'Understand the elite 3-day streak mechanics and our anti-fraud commitment.',
+  title: 'Arena Protocol — PredChain',
+  description: 'Understand the elite match methodology and our commitment to absolute performance integrity.',
 };
 
 export default function RulesPage() {
   return (
-    <div className="pt-24 lg:pt-32 pb-20 min-h-screen bg-primary">
-      <div className="container max-w-3xl px-6">
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-6">
-            <span className="text-[10px] font-bold text-muted uppercase tracking-widest italic opacity-40">Official Rules</span>
+    <div className="relative pt-32 lg:pt-44 pb-20 min-h-screen overflow-hidden">
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-0 right-0 w-full h-[1000px] bg-gold-glow blur-[180px] opacity-[0.05]" />
+        <div className="absolute bottom-0 left-0 w-full h-[1000px] bg-blue-glow blur-[150px] opacity-[0.02]" />
+      </div>
+
+      <div className="container max-w-4xl px-6 relative z-10">
+        <div className="text-center mb-24">
+          <div className="badge-luxury mb-10 px-8 py-2 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px] text-gold mx-auto w-fit">
+            MATCH_PROTOCOL
           </div>
-          <h1 className="font-display text-4xl md:text-6xl font-bold text-white italic uppercase tracking-tighter mb-4 leading-none lowercase">
-            Challenge Rules & <span className="text-gradient-gold">Fair Play</span>
+          <h1 className="font-display text-5xl md:text-9xl font-black text-white italic uppercase tracking-tighter mb-8 leading-none">
+            Arena <span className="text-gradient-gold">Protocol.</span>
           </h1>
-          <p className="text-[11px] font-bold text-secondary uppercase tracking-widest max-w-lg mx-auto leading-relaxed italic opacity-40">
-            Understand the 3-day streak mechanics and our commitment to absolute platform integrity.
+          <p className="text-lg md:text-xl font-medium text-text-secondary uppercase tracking-widest max-w-2xl mx-auto leading-relaxed italic opacity-40">
+            Master the 3-day winning methodology and our commitment to absolute performance integrity.
           </p>
         </div>
         
-        <div className="flex flex-col gap-6">
-          <section className="card p-8 md:p-10 bg-white/[0.015] border-white/5 shadow-2xl">
-            <h2 className="font-display text-xl font-bold text-white uppercase italic tracking-tight mb-8">The 3-Day Streak</h2>
-            <ul className="flex flex-col gap-6 text-xs font-medium text-secondary uppercase tracking-wide leading-relaxed list-none">
-              <li className="flex gap-4 items-start opacity-60">
-                <span className="text-gold font-bold">01.</span>
-                <span>A "Challenge Round" consists of a 3-day window with active football matches.</span>
-              </li>
-              <li className="flex gap-4 items-start opacity-60">
-                <span className="text-gold font-bold">02.</span>
-                <span>You must submit exactly <strong className="text-white">one</strong> correct prediction each day.</span>
-              </li>
-              <li className="flex gap-4 items-start opacity-60">
-                <span className="text-gold font-bold">03.</span>
-                <span>Predictions are outcome-based (1X2): 
-                   <div className="mt-4 grid grid-cols-3 gap-2">
-                      <div className="p-3 bg-black/40 border border-white/5 rounded-lg text-center"><span className="text-gold font-bold">1</span> Home</div>
-                      <div className="p-3 bg-black/40 border border-white/5 rounded-lg text-center"><span className="text-gold font-bold">X</span> Draw</div>
-                      <div className="p-3 bg-black/40 border border-white/5 rounded-lg text-center"><span className="text-gold font-bold">2</span> Away</div>
-                   </div>
-                </span>
-              </li>
-              <li className="flex gap-4 items-start opacity-60">
-                <span className="text-gold font-bold">04.</span>
-                <span>A successful 3/3 streak earns the confirmed 10X reward payout.</span>
-              </li>
-              <li className="flex gap-4 items-start opacity-60">
-                <span className="text-gold font-bold">05.</span>
-                <span>Incorrect predictions reset your streak for that round instantly.</span>
-              </li>
-            </ul>
+        <div className="flex flex-col gap-10">
+          <section className="card-luxury !p-12 md:!p-20 bg-[#07090e] border-white/10 shadow-2xl depth-card group relative overflow-hidden">
+             <div className="absolute top-0 right-0 p-16 text-8xl font-black text-white/[0.01] italic leading-none pointer-events-none group-hover:text-gold/[0.03] transition-all duration-1000 uppercase select-none">STREAK</div>
+             <h2 className="font-display text-3xl font-black text-white uppercase italic tracking-tighter mb-12 border-b border-white/5 pb-8">THE_STREAK_METHODOLOGY</h2>
+             <ul className="flex flex-col gap-10 text-base font-black text-text-dim uppercase tracking-[0.15em] leading-relaxed list-none">
+               <li className="flex gap-8 items-start group/item">
+                 <span className="text-gold font-black italic text-xl opacity-40 group-hover/item:opacity-100 transition-all">01.</span>
+                 <span className="group-hover/item:text-white transition-colors">A "Winning Circuit" consists of a 3-day operational window with verified elite fixtures.</span>
+               </li>
+               <li className="flex gap-8 items-start group/item">
+                 <span className="text-gold font-black italic text-xl opacity-40 group-hover/item:opacity-100 transition-all">02.</span>
+                 <span className="group-hover/item:text-white transition-colors">You must authorize exactly <strong className="text-gold italic">ONE</strong> correct match prediction every 24 hours.</span>
+               </li>
+               <li className="flex gap-8 items-start group/item">
+                 <span className="text-gold font-black italic text-xl opacity-40 group-hover/item:opacity-100 transition-all">03.</span>
+                 <span className="group-hover/item:text-white transition-colors">Outcome authorization is strictly 1X2 format: 
+                    <div className="mt-8 grid grid-cols-3 gap-4 max-w-sm">
+                       <div className="p-5 bg-black/60 border border-white/5 rounded-2xl text-center group-hover/item:border-gold/20 transition-all"><span className="text-gold font-black block mb-1">1</span> <span className="text-[9px] opacity-40">HOME</span></div>
+                       <div className="p-5 bg-black/60 border border-white/5 rounded-2xl text-center group-hover/item:border-gold/20 transition-all"><span className="text-gold font-black block mb-1">X</span> <span className="text-[9px] opacity-40">DRAW</span></div>
+                       <div className="p-5 bg-black/60 border border-white/5 rounded-2xl text-center group-hover/item:border-gold/20 transition-all"><span className="text-gold font-black block mb-1">2</span> <span className="text-[9px] opacity-40">AWAY</span></div>
+                    </div>
+                 </span>
+               </li>
+               <li className="flex gap-8 items-start group/item">
+                 <span className="text-gold font-black italic text-xl opacity-40 group-hover/item:opacity-100 transition-all">04.</span>
+                 <span className="group-hover/item:text-white transition-colors">Successful 3/3 target acquisition triggers the confirmed <strong className="text-gold italic">10X PAYOUT FLOW</strong>.</span>
+               </li>
+               <li className="flex gap-8 items-start group/item">
+                 <span className="text-gold font-black italic text-xl opacity-40 group-hover/item:opacity-100 transition-all">05.</span>
+                 <span className="group-hover/item:text-white transition-colors">Failed predictions terminate the current circuit immediately.</span>
+               </li>
+             </ul>
           </section>
 
-          <section className="card p-8 bg-white/[0.01] border-white/5 shadow-inner">
-             <h2 className="font-display text-lg font-bold text-white uppercase italic tracking-tight mb-4">Match Lock-in</h2>
-             <p className="text-[10px] font-bold text-secondary uppercase tracking-widest leading-relaxed opacity-40 italic">
-               All predictions must be submitted BEFORE the official match kickoff time. Once a match starts, the audit window is locked permanently.
+          <section className="card-luxury !p-12 bg-gold/[0.02] border-gold/10 shadow-inner group transition-all duration-700 hover:bg-gold/[0.05]">
+             <h2 className="font-display text-2xl font-black text-white uppercase italic tracking-tighter mb-6 group-hover:text-gold transition-colors">MATCH_LOCK_IN</h2>
+             <p className="text-[12px] font-black text-text-dim uppercase tracking-[0.3em] leading-loose opacity-40 italic group-hover:opacity-100 transition-opacity">
+               All predictions must be authorized BEFORE official kickoff. Once a match initializes, the performance window is permanently locked.
              </p>
           </section>
 
-          <section className="card p-8 md:p-10 bg-white/[0.015] border-white/5 shadow-2xl">
-             <h2 className="font-display text-lg font-bold text-white uppercase italic tracking-tight mb-6">Platform Integrity</h2>
-             <p className="text-[11px] font-bold text-secondary uppercase tracking-widest leading-relaxed mb-8 opacity-40 italic">
-               To maintain elite trust levels, we employ advanced security checks:
+          <section className="card-luxury !p-12 md:!p-20 bg-[#07090e] border-white/10 shadow-2xl depth-card group">
+             <h2 className="font-display text-3xl font-black text-white uppercase italic tracking-tighter mb-10 border-b border-white/5 pb-8">CIRCUIT_INTEGRITY</h2>
+             <p className="text-[13px] font-black text-text-dim uppercase tracking-[0.4em] leading-relaxed mb-12 opacity-30 italic">
+               To maintain elite trust levels, we employ automated verification:
              </p>
-             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {[
-                  'Multi-account security check',
-                  'Bot detection on submissions',
-                  'Manual audit for rewards',
-                  'Zero tolerance for fraud'
+                  'MULTI_ACCOUNT_DETECTION',
+                  'BOT_UPLINK_SHIELD',
+                  'VERIFIED_PAYOUT_AUDIT',
+                  'ZERO_TOLERANCE_POLICY'
                 ].map((rule, i) => (
-                  <div key={i} className="p-4 bg-black/40 border border-white/5 rounded-xl flex items-center gap-3">
-                    <div className="w-1.5 h-1.5 bg-blue-electric rounded-full opacity-40" />
-                    <span className="text-[9px] font-bold text-muted uppercase tracking-widest opacity-60">{rule}</span>
+                  <div key={i} className="p-8 bg-black/60 border border-white/5 rounded-3xl flex items-center gap-6 hover:border-gold/30 transition-all duration-700 shadow-inner group/rule">
+                    <div className="w-2.5 h-2.5 bg-gold rounded-full opacity-20 group-hover/rule:opacity-100 group-hover/rule:animate-pulse shadow-gold/50" />
+                    <span className="text-[11px] font-black text-text-dim uppercase tracking-[0.3em] opacity-40 group-hover/rule:opacity-100 group-hover/rule:text-white transition-all">{rule}</span>
                   </div>
                 ))}
              </div>
