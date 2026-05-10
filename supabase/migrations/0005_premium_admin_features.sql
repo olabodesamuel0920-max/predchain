@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.platform_settings (
 -- Seed Initial Settings
 INSERT INTO public.platform_settings (key, value, description) VALUES
 ('maintenance_mode', 'false', 'Enable or disable platform maintenance mode.'),
-('tier_pricing', '{"starter": 5000, "standard": 10000, "premium": 25000}', 'Pricing for account tiers in NGN.'),
+('tier_pricing', '{"starter": 5000, "standard": 10000, "premium": 20000}', 'Pricing for account tiers in NGN.'),
 ('referral_bonus', '1000', 'Bonus amount for successful referrals in NGN.'),
 ('payout_limits', '{"min": 5000, "max": 500000}', 'Minimum and maximum payout limits.'),
 ('announcement_banner', '{"text": "Welcome to PredChain! Round 43 is now live.", "active": true}', 'Homepage announcement banner content.'),

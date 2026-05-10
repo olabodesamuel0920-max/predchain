@@ -32,6 +32,7 @@ import {
   Gift,
   Star
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { submitPrediction } from '@/app/actions/predictions';
 import { requestPayout } from '@/app/actions/wallet';
 import { initializeWalletFunding } from '@/app/actions/paystack';
@@ -199,11 +200,15 @@ export default function DashboardClient({
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-12 animate-slide-up" style={{ animationDelay: '0.1s' }}>
           {[
             { label: 'Available Balance', val: `₦${balance.toLocaleString()}`, icon: WalletIcon, color: 'text-gold' },
-            { label: 'Active Plan', val: currentPlan?.name || 'Inactivate', icon: Zap, color: 'text-blue-electric' },
+            { label: 'Active Plan', val: currentPlan?.name || 'Inactive', icon: Zap, color: 'text-blue-electric' },
             { label: 'Active Streak', val: `${streak}/3`, icon: Star, color: 'text-emerald-500' },
             { label: 'Streak Rewards', val: `₦${(totalRewards + totalReferrals).toLocaleString()}`, icon: Trophy, color: 'text-white' },
           ].map((m, i) => (
-            <div key={i} className="card-premium group hover:border-white/20 transition-all duration-500">
+            <motion.div 
+              key={i} 
+              whileHover={{ y: -4, scale: 1.02 }}
+              className="card-premium group hover:border-white/20 transition-all duration-500 depth-card"
+            >
                <div className="flex flex-col gap-4">
                   <div className="flex items-center justify-between">
                      <span className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em] opacity-40">{m.label}</span>
@@ -215,7 +220,7 @@ export default function DashboardClient({
                      {m.val}
                   </div>
                </div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
@@ -249,17 +254,20 @@ export default function DashboardClient({
           {activeTab === 'overview' && (
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               <div className="lg:col-span-8 space-y-8">
-                 <div className="card-premium !p-12 md:!p-16 relative overflow-hidden group">
+                 <motion.div 
+                    whileHover={{ rotateX: 2, rotateY: -1 }}
+                    className="card-premium !p-12 md:!p-16 relative overflow-hidden group depth-card preserve-3d"
+                 >
                     <div className="absolute top-0 right-0 p-16 opacity-5 pointer-events-none group-hover:opacity-10 transition-opacity rotate-12"><Target className="w-80 h-80" /></div>
                     
-                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-12">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-12 relative z-10">
                        <div className="max-w-md">
                           <div className="badge-premium !text-gold mb-8 px-6 py-1.5 uppercase tracking-widest font-bold">Winning Consistency</div>
                           <h2 className="text-4xl md:text-6xl font-bold tracking-tight mb-8 font-display">Streak <span className="text-gradient-gold">Progress.</span></h2>
                           <p className="text-secondary text-sm font-medium opacity-60 leading-relaxed mb-12">
                             {userEntry ? `Your ${currentPlan?.name} challenge is active. Achieve a perfect 3-day winning streak to unlock your verified 10X reward payout.` : 'Your prediction streak is currently inactive. Select an entry tier to join the live performance arena.'}
                           </p>
-                          <Link href={userEntry ? "/dashboard?tab=arena" : "/accounts"} className="btn btn-primary !px-16 !py-5 shadow-2xl flex items-center justify-center w-full sm:w-auto">
+                          <Link href={userEntry ? "/dashboard?tab=arena" : "/accounts"} className="btn btn-primary btn-premium-depth !px-16 !py-5 shadow-2xl flex items-center justify-center w-full sm:w-auto">
                              {userEntry ? 'Active Arena' : 'Select Entry Tier'} <ArrowRight className="w-4 h-4 ml-4" />
                           </Link>
                        </div>
@@ -277,7 +285,7 @@ export default function DashboardClient({
                           </div>
                        </div>
                     </div>
-                 </div>
+                 </motion.div>
 
                  {/* Recent Activity */}
                  <div className="card-premium !p-0 overflow-hidden group">
@@ -416,14 +424,18 @@ export default function DashboardClient({
                   {[
                     { label: 'Total Balance', val: balance, icon: WalletIcon, color: 'text-gold' },
                     { label: 'Streak Rewards', val: totalRewards, icon: Trophy, color: 'text-emerald-500' },
-                    { label: 'Associate Bonus', val: totalReferrals, icon: Users, color: 'text-blue-500' },
+                    { label: 'Partner Bonus', val: totalReferrals, icon: Users, color: 'text-blue-500' },
                     { label: 'Active Requests', val: pendingPayouts, icon: History, color: 'text-white' },
                   ].map((k, i) => (
-                    <div key={i} className="card-premium !p-8 relative overflow-hidden group">
+                    <motion.div 
+                      key={i} 
+                      whileHover={{ y: -4, scale: 1.02 }}
+                      className="card-premium !p-8 relative overflow-hidden group depth-card shadow-lg"
+                    >
                        <k.icon className={`absolute -top-4 -right-4 w-20 h-20 opacity-5 group-hover:opacity-10 transition-all duration-500 ${k.color}`} />
                        <span className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em] mb-4 block opacity-40 italic">{k.label}</span>
                        <span className="text-3xl font-bold text-white font-display tracking-tighter leading-none">₦{k.val.toLocaleString()}</span>
-                    </div>
+                    </motion.div>
                   ))}
                </div>
 
@@ -506,19 +518,19 @@ export default function DashboardClient({
           {/* NETWORK (REFERRALS) */}
           {activeTab === 'network' && (
             <div className="space-y-10">
-               <div className="card-premium !p-16 md:!p-24 bg-[#0a0d14] relative overflow-hidden group text-center md:text-left">
+               <div className="card-premium !p-16 md:!p-24 bg-[#0a0d14] relative overflow-hidden group text-center md:text-left shadow-2xl depth-card">
                   <div className="absolute top-0 right-0 p-24 opacity-5 pointer-events-none group-hover:opacity-10 transition-all duration-1000"><Globe className="w-96 h-96" /></div>
                   
                   <div className="flex flex-col md:flex-row items-center justify-between gap-16 relative z-10">
                      <div className="max-w-xl">
-                        <div className="badge-premium !text-gold mb-10 px-6 py-2">Associate Network</div>
+                        <div className="badge-premium !text-gold mb-10 px-6 py-2">Partner Program</div>
                         <h2 className="text-4xl md:text-7xl font-bold tracking-tight mb-10 font-display">Expand the <br /><span className="text-gradient-gold">Global Pool.</span></h2>
                         <p className="text-secondary text-sm md:text-base font-medium opacity-60 leading-relaxed italic">
                            Invite colleagues and professional players to join the PredChain arena. Earn a verified ₦1,000 performance bonus for every successful account activation in your network.
                         </p>
                      </div>
-                     <div className="card-premium !p-12 md:!p-16 bg-white/[0.03] text-center shadow-2xl min-w-[280px]">
-                        <span className="text-[11px] font-bold text-secondary uppercase tracking-[0.2em] opacity-40 block mb-4">Total Network Size</span>
+                     <div className="card-premium !p-12 md:!p-16 bg-white/[0.03] text-center shadow-2xl min-w-[280px] glass-layered shadow-depth-gold">
+                        <span className="text-[11px] font-bold text-secondary uppercase tracking-[0.2em] opacity-40 block mb-4">Total Partner Count</span>
                         <div className="text-6xl md:text-8xl font-bold text-white font-display tracking-tighter leading-none">{profile?.referral_count || 0}</div>
                      </div>
                   </div>

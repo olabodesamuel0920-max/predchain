@@ -17,6 +17,7 @@ import {
   Star,
   PlayCircle
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useFeedback } from '@/hooks/useFeedback';
 
@@ -73,28 +74,35 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
         </div>
 
         {/* Global Rewards Snapshot */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-20 items-stretch">
-          <div className="lg:col-span-8 card-elite !p-12 md:!p-16 bg-[#080a0f] border-white/5 flex flex-col justify-center relative overflow-hidden group">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-20 items-stretch"
+        >
+          <div className="lg:col-span-8 card-luxury !p-12 md:!p-16 bg-[#080a0f] border-white/5 flex flex-col justify-center relative overflow-hidden group depth-card shadow-2xl">
              <div className="absolute top-0 right-0 p-12 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity duration-700 rotate-12"><Users className="w-64 h-64" /></div>
-             <div className="badge-elite !text-gold mb-10 px-5 py-1.5 bg-white/[0.03] uppercase italic font-black tracking-widest w-fit">Network Growth</div>
+             <div className="badge-luxury !text-gold mb-10 px-5 py-1.5 bg-white/[0.03] uppercase italic font-black tracking-widest w-fit">Network Growth</div>
              <h2 className="text-3xl md:text-5xl font-black italic uppercase tracking-tighter mb-8 leading-none">The Partner <span className="text-gradient-gold">Advantage.</span></h2>
              <p className="text-muted text-sm md:text-base font-medium opacity-60 max-w-lg leading-relaxed">
                 As a PredChain partner, you help scale the most transparent sports prediction arena in the world. Every new player you bring helps build the pool and increase the stakes.
              </p>
           </div>
           
-          <div className="lg:col-span-4 card-elite !p-12 bg-black border-gold/10 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group">
+          <motion.div 
+            whileHover={{ scale: 1.02, rotateY: -5 }}
+            className="lg:col-span-4 card-luxury !p-12 bg-black border-gold/10 flex flex-col items-center justify-center text-center shadow-2xl relative overflow-hidden group depth-card preserve-3d"
+          >
              <div className="absolute inset-0 bg-gold/5 blur-[40px] pointer-events-none group-hover:opacity-20 transition-opacity" />
              <div className="text-[10px] font-black text-gold uppercase tracking-[0.3em] mb-6 italic opacity-60">Rewards Generated</div>
              <div className="text-5xl md:text-6xl font-black text-white italic tracking-tighter leading-none mb-8 font-display">
                 ₦{totalEarnings.toLocaleString()}
              </div>
-             <div className="flex items-center gap-3 text-[9px] font-bold text-success uppercase tracking-widest bg-success/10 px-4 py-2 rounded-full border border-success/10 italic">
+             <div className="flex items-center gap-3 text-[9px] font-bold text-success uppercase tracking-widest bg-success/10 px-4 py-2 rounded-full border border-success/10 italic glass-layered">
                 <Gift className="w-3.5 h-3.5" />
                 Uncapped Earnings
              </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Program Benefits Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-32">
@@ -115,7 +123,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                 icon: ShieldCheck 
               }
            ].map((item, i) => (
-              <div key={i} className="card-elite !p-12 bg-[#080a0f] border-white/5 flex flex-col gap-10 group hover:border-gold/30 transition-all duration-700 shadow-xl">
+              <div key={i} className="card-luxury !p-12 bg-[#080a0f] border-white/5 flex flex-col gap-10 group hover:border-gold/30 transition-all duration-700 shadow-xl">
                  <div className="w-14 h-14 rounded-2xl bg-white/[0.03] flex items-center justify-center border border-white/10 group-hover:bg-gold group-hover:text-black transition-all duration-500">
                     <item.icon className="w-6 h-6" />
                  </div>
@@ -138,7 +146,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
 
              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Referral Link */}
-                <div className="card-elite !p-12 bg-[#0a0d12] border-white/10 flex flex-col justify-between shadow-2xl relative overflow-hidden group">
+                <div className="card-luxury !p-12 bg-[#0a0d12] border-white/10 flex flex-col justify-between shadow-2xl relative overflow-hidden group">
                    <div className="absolute top-0 right-0 p-8 opacity-[0.02] group-hover:opacity-[0.05] transition-opacity"><LinkIcon className="w-32 h-32" /></div>
                    <div>
                       <div className="flex items-center gap-4 mb-12">
@@ -164,12 +172,12 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
 
                 {/* Quick Stats Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                   <div className="card-elite !p-12 bg-[#0a0d12] border-white/5 flex flex-col items-center justify-center text-center shadow-xl group hover:border-gold/20 transition-all duration-700">
+                   <div className="card-luxury !p-12 bg-[#0a0d12] border-white/5 flex flex-col items-center justify-center text-center shadow-xl group hover:border-gold/20 transition-all duration-700">
                       <div className="w-14 h-14 rounded-2xl bg-white/[0.03] flex items-center justify-center mb-8 text-white/20 group-hover:bg-gold group-hover:text-black transition-all duration-500 shadow-inner"><Users className="w-7 h-7" /></div>
                       <div className="text-4xl font-black text-white italic tracking-tighter mb-2 leading-none font-display">{referralCount}</div>
-                      <span className="text-[11px] font-extrabold text-muted uppercase tracking-widest opacity-40 italic">Active Partners</span>
+                      <span className="text-[11px] font-extrabold text-muted uppercase tracking-widest opacity-40 italic">Active Members</span>
                    </div>
-                   <div className="card-elite !p-12 bg-gold/5 border-gold/10 flex flex-col items-center justify-center text-center shadow-xl group hover:bg-gold/10 transition-all duration-700">
+                   <div className="card-luxury !p-12 bg-gold/5 border-gold/10 flex flex-col items-center justify-center text-center shadow-xl group hover:bg-gold/10 transition-all duration-700">
                       <div className="w-14 h-14 rounded-2xl bg-gold/10 flex items-center justify-center mb-8 text-gold shadow-inner"><Zap className="w-7 h-7" /></div>
                       <div className="text-4xl font-black text-white italic tracking-tighter mb-2 leading-none font-display">₦1,000</div>
                       <span className="text-[11px] font-extrabold text-gold uppercase tracking-widest opacity-60 italic">Per Activation</span>
@@ -185,7 +193,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                    <div className="flex-1 h-px bg-white/5 ml-6" />
                 </div>
 
-                <div className="card-elite !p-0 overflow-hidden bg-[#080a0f] border-white/5 shadow-2xl">
+                <div className="card-luxury !p-0 overflow-hidden bg-[#080a0f] border-white/5 shadow-2xl">
                    <div className="overflow-x-auto no-scrollbar">
                       <table className="w-full text-left border-collapse">
                          <thead>
@@ -221,7 +229,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                                       <span className="text-base font-black text-gold italic font-display">₦1,000</span>
                                    </td>
                                    <td className="px-12 py-8 text-right">
-                                      <div className={`badge-elite !py-1 !px-4 italic font-black text-[10px] ${r.status === 'qualified' ? '!bg-emerald-500/10 !text-emerald-500 border-emerald-500/10' : 'opacity-20'}`}>
+                                      <div className={`badge-luxury !py-1 !px-4 italic font-black text-[10px] ${r.status === 'qualified' ? '!bg-emerald-500/10 !text-emerald-500 border-emerald-500/10' : 'opacity-20'}`}>
                                          {r.status === 'qualified' ? 'CONFIRMED' : 'PENDING'}
                                       </div>
                                    </td>

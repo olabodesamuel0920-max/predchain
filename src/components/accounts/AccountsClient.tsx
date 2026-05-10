@@ -21,6 +21,7 @@ import {
   CreditCard,
   Crown
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { initializePayment } from '@/app/actions/paystack';
 import { purchaseTierWithWallet } from '@/app/actions/wallet';
 import { AccountTier, PlatformStats } from '@/types';
@@ -91,19 +92,21 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             const isLoading = isPending && activeTierId === tier.id;
 
             return (
-              <div 
+              <motion.div 
                 key={tier.id}
-                className={`card-luxury flex flex-col transition-all duration-500 transform perspective-1000 hover:rotate-x-1 hover:translate-y-[-4px] ${
-                  isMidTier ? 'border-gold/30 bg-[#11161D] shadow-gold/5' : 'bg-bg-card shadow-lg'
+                whileHover={{ rotateX: 4, rotateY: -2, y: -8 }}
+                transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                className={`card-luxury flex flex-col transition-all duration-500 transform preserve-3d depth-card ${
+                  isMidTier ? 'border-gold/30 bg-[#11161D] shadow-depth-gold' : 'bg-bg-card shadow-lg'
                 }`}
               >
                 {isMidTier && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 badge-luxury !bg-gold !text-black !px-4 !py-1 shadow-md font-black text-[9px] tracking-widest uppercase italic">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 badge-luxury !bg-gold !text-black !px-4 !py-1 shadow-md font-black text-[9px] tracking-widest uppercase italic z-20">
                     MOST DEPLOYED
                   </div>
                 )}
 
-                <div className="mb-8">
+                <div className="mb-8 relative z-10">
                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center mb-6 border transition-all ${
                      isMidTier ? 'bg-gold/10 border-gold/20 text-gold' : 'bg-white/[0.02] border-border-subtle text-text-dim'
                    }`}>
@@ -116,7 +119,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                    </div>
                 </div>
 
-                <div className="space-y-3.5 mb-10 flex-1">
+                <div className="space-y-3.5 mb-10 flex-1 relative z-10">
                    {[
                       '3-Day Streak Eligibility',
                       'official match data-feeds',
@@ -132,8 +135,8 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                    ))}
                 </div>
 
-                <div className="pt-8 border-t border-border-subtle space-y-6">
-                   <div className="bg-bg-secondary p-5 rounded-xl border border-border-subtle text-center">
+                <div className="pt-8 border-t border-border-subtle space-y-6 relative z-10">
+                   <div className="bg-bg-secondary p-5 rounded-xl border border-border-subtle text-center glass-layered">
                       <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] block mb-2 italic">Max Reward Payout</span>
                       <div className="flex items-center justify-center gap-2">
                          <span className="text-2xl font-black text-white font-display italic tracking-tight">₦{rewardVal.toLocaleString()}</span>
@@ -145,7 +148,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                       <button
                         onClick={() => handlePurchase(tier.id, 'wallet')}
                         disabled={!!(isLoading || (userId && !isWalletEnough))}
-                        className={`btn-luxury !py-4 w-full shadow-sm ${
+                        className={`btn-luxury btn-premium-depth !py-4 w-full shadow-sm ${
                           isMidTier ? 'btn-gold' : 'btn-outline'
                         }`}
                       >
@@ -162,7 +165,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                       </button>
                    </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>

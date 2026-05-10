@@ -19,7 +19,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
   const [search, setSearch] = useState('');
 
   const filtered = rankings.filter(r => 
-    (r.profile?.username || r.profile?.full_name || 'Participant')
+    (r.profile?.username || r.profile?.full_name || 'Player')
     .toLowerCase()
     .includes(search.toLowerCase())
   );
@@ -120,7 +120,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                   <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Rank</th>
                   <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Player</th>
                   <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Streak</th>
-                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">System</th>
+                  <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40">Entry Tier</th>
                   <th className="px-8 py-4 text-[9px] font-black text-text-dim uppercase tracking-widest italic opacity-40 text-right">Status</th>
                 </tr>
               </thead>

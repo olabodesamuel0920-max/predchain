@@ -172,7 +172,7 @@ export default function HowItWorksPage() {
            <div className="absolute top-0 right-0 p-32 opacity-5 pointer-events-none select-none"><Globe className="w-96 h-96" /></div>
            
            <div className="flex-1 text-center xl:text-left relative z-10">
-              <div className="badge-premium !text-blue-electric mb-10 px-6 py-2">Performance Affiliates</div>
+              <div className="badge-premium !text-blue-electric mb-10 px-6 py-2">Partner Program</div>
               <h2 className="mb-10 text-5xl md:text-7xl leading-tight">Scale Your <br /><span className="text-gradient-blue text-white">Network.</span></h2>
               <p className="text-secondary text-lg font-medium opacity-60 mb-16 max-w-xl mx-auto xl:mx-0 leading-relaxed">
                 Connect other players to the arena. Earn ₦1,000 for every successful account activation in your professional network.

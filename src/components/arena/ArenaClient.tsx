@@ -19,6 +19,7 @@ import {
   Users
 } from 'lucide-react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 
 interface ArenaClientProps {
   activeRound: ChallengeRound | null;
@@ -76,7 +77,11 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
         </div>
 
         {/* Challenge Overview Banner */}
-        <div className="card-luxury !p-8 sm:!p-10 mb-12 bg-[#0a0d12] border-white/5 relative overflow-hidden group shadow-2xl">
+        <motion.div 
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           className="card-luxury !p-8 sm:!p-10 mb-12 bg-[#0a0d12] border-white/5 relative overflow-hidden group shadow-2xl depth-card"
+        >
            <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity duration-700 rotate-12"><Trophy className="w-48 h-48" /></div>
            <div className="flex flex-col lg:flex-row items-center justify-between gap-12 relative z-10">
               <div className="flex items-center gap-6">
@@ -93,7 +98,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                  </div>
               </div>
               
-              <div className="flex items-center gap-10 bg-black/40 border border-white/5 rounded-2xl px-10 py-6 shadow-inner w-full lg:w-auto">
+              <div className="flex items-center gap-10 bg-black/40 border border-white/5 rounded-2xl px-10 py-6 shadow-inner w-full lg:w-auto glass-layered">
                   <div className="text-center flex-1 lg:flex-none">
                      <span className="text-[9px] font-black text-text-dim uppercase tracking-widest block mb-2 italic">Payout Pool</span>
                      <span className="text-xl font-black text-white font-display italic tracking-tight">₦{stats.totalCashPaid.toLocaleString()}</span>
@@ -105,7 +110,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                   </div>
               </div>
            </div>
-        </div>
+        </motion.div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
@@ -134,12 +139,17 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                     </div>
                     <h3 className="text-xl font-black text-white uppercase tracking-tighter mb-4 italic relative z-10">Preparing Next <span className="text-gradient-gold">Arena Cycle.</span></h3>
                     <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.3em] max-w-sm mx-auto leading-loose italic opacity-40 relative z-10">
-                       Synchronizing official match feeds and establishing elite prediction liquidity. The next match cycle will be accessible shortly.
+                       Gathering elite match intelligence and securing the arena floor. The next match cycle will be accessible shortly.
                     </p>
                   </div>
                 ) : (
                   matches.map((match, i) => (
-                    <div key={match.id} className="group p-6 sm:p-8 bg-[#0a0d14] border border-white/5 rounded-3xl flex flex-col sm:flex-row items-center justify-between hover:bg-[#0d1018] hover:border-gold/20 transition-all duration-500 gap-8 sm:gap-0 relative overflow-hidden shadow-xl">
+                    <motion.div 
+                      key={match.id} 
+                      whileHover={{ scale: 1.01, x: 4 }}
+                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                      className="group p-6 sm:p-8 bg-[#0a0d14] border border-white/5 rounded-3xl flex flex-col sm:flex-row items-center justify-between hover:border-gold/20 transition-all duration-500 gap-8 sm:gap-0 relative overflow-hidden shadow-xl depth-card"
+                    >
                        <div className="absolute inset-0 bg-gradient-to-r from-gold/0 via-gold/[0.02] to-gold/0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                        
                        <div className="flex items-center gap-8 w-full sm:w-auto relative z-10">
@@ -162,10 +172,10 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                           </div>
                        </div>
                        
-                       <Link href="/accounts" className="btn-luxury btn-outline !py-3 !px-10 !text-[10px] w-full sm:w-auto group/btn relative z-10">
+                       <Link href="/accounts" className="btn-luxury btn-outline btn-premium-depth !py-3 !px-10 !text-[10px] w-full sm:w-auto group/btn relative z-10">
                           SECURE PICK <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover/btn:translate-x-1" />
                        </Link>
-                    </div>
+                    </motion.div>
                   ))
                 )}
               </div>

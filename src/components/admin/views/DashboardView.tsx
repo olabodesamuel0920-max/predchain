@@ -137,7 +137,7 @@ export default function DashboardView({ metrics, recentPurchases }: DashboardVie
                <div className={`p-4 rounded-xl border relative overflow-hidden ${metrics.pendingPayouts > 0 ? 'bg-danger/[0.04] border-danger/20' : 'bg-success/[0.04] border-success/20 shadow-sm'}`}>
                   <div className="flex items-center gap-3 mb-3 relative z-10">
                      <div className={`w-4 h-4 rounded-full ${metrics.pendingPayouts > 0 ? 'bg-danger animate-pulse' : 'bg-success'}`} />
-                     <div className="text-[10px] font-black text-white uppercase tracking-widest leading-none">Settlement protocol</div>
+                     <div className="text-[10px] font-black text-white uppercase tracking-widest leading-none">Reward Distribution</div>
                   </div>
                   <p className="text-[11px] text-muted leading-relaxed font-bold opacity-60 italic">
                      {metrics.pendingPayouts > 0 
@@ -156,7 +156,7 @@ export default function DashboardView({ metrics, recentPurchases }: DashboardVie
                   </div>
                   <div className="flex items-center gap-3 text-[9px] text-muted italic font-black uppercase opacity-20 tracking-tighter">
                      <TrendingUp className="w-3.5 h-3.5" />
-                     Positive Growth Sequence Active
+                     Positive Growth Activity Active
                   </div>
                </div>
             </div>

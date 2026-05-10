@@ -79,8 +79,8 @@ export default function SettingsView() {
         <div className="flex items-center gap-3">
            <div className="p-2.5 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><Settings className="w-4 h-4 text-blue-electric" /></div>
            <div className="leading-tight">
-              <h2 className="font-display text-base font-black tracking-tight text-white uppercase italic">Platform <span className="text-gradient-gold">Kernel.</span></h2>
-              <p className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-40 italic">Global Environment Matrix</p>
+              <h2 className="font-display text-base font-black tracking-tight text-white uppercase italic">Platform <span className="text-gradient-gold">Core.</span></h2>
+              <p className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-40 italic">Global Environment Controls</p>
            </div>
         </div>
         <div className="hidden sm:block badge badge-muted text-[8px] font-black uppercase px-2.5 py-1 border border-white/10 opacity-40 tracking-widest">SESSION:STABLE</div>
@@ -90,7 +90,7 @@ export default function SettingsView() {
         <div className="flex flex-col gap-6">
           <div className="card p-5 bg-white/[0.02]">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-6 flex items-center gap-3 opacity-60">
-               <Power className="w-4 h-4" /> SECURE ACCESS DEPLOYMENT
+               <Power className="w-4 h-4" /> SECURE PLATFORM ACCESS
             </h3>
             
             <div className="flex flex-col gap-3">
@@ -99,7 +99,7 @@ export default function SettingsView() {
                 <div className="flex items-center gap-4">
                    <div className={`w-3 h-3 rounded-full ${settings.maintenance_mode ? 'bg-danger shadow-[0_0_8px_var(--danger)] animate-pulse' : 'bg-success shadow-[0_0_8px_var(--success)]'}`} />
                    <div>
-                     <div className="font-black text-[11px] text-white uppercase tracking-tight">Maintenance Protocol <span className="text-[8px] ml-2 text-danger/60 italic font-bold">(DE-COUPLED)</span></div>
+                     <div className="font-black text-[11px] text-white uppercase tracking-tight">Maintenance Mode <span className="text-[8px] ml-2 text-danger/60 italic font-bold">(MANUAL)</span></div>
                      <div className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-20">Gate high-traffic ingress</div>
                    </div>
                 </div>
@@ -143,7 +143,7 @@ export default function SettingsView() {
                    <div className="p-2 bg-blue-electric/10 rounded-xl border border-blue-electric/10"><BarChart3 className="w-4 h-4 text-blue-electric" /></div>
                    <div>
                      <div className="font-black text-[11px] text-white uppercase tracking-tight">Metrics Mode <span className="text-[8px] ml-2 text-danger/60 italic font-bold">(STABLE)</span></div>
-                     <div className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-20">Data visualization policy</div>
+                     <div className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-20">Data visualization settings</div>
                    </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
@@ -164,14 +164,14 @@ export default function SettingsView() {
           {/* Announcement Banner */}
           <div className="card p-5 bg-white/[0.02]">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-6 flex items-center gap-3 opacity-60">
-               <Megaphone className="w-4 h-4" /> HYPER-DASHBOARD BANNER
+               <Megaphone className="w-4 h-4" /> GLOBAL ANNOUNCEMENT BANNER
             </h3>
             <div className="flex flex-col gap-4">
               <textarea 
                   value={settings.announcement_banner?.text || ''} 
                   onChange={(e) => setSettings((prev) => ({ ...prev, announcement_banner: { ...prev.announcement_banner, text: e.target.value } }))}
                   className="input-premium h-24 text-[11px] font-black py-4 px-4 italic placeholder:opacity-20 resize-none" 
-                  placeholder="Input global broadcast transmission..."
+                  placeholder="Input global broadcast message..."
               />
               <div className="flex gap-3">
                 <button 
@@ -193,7 +193,7 @@ export default function SettingsView() {
           {/* Tier Pricing */}
           <div className="card p-5 bg-white/[0.02]">
             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-muted mb-6 flex items-center gap-3 opacity-60">
-               <Globe className="w-4 h-4" /> ASSET PRICE MATRIX
+               <Globe className="w-4 h-4" /> TIER PRICING STRUCTURE
             </h3>
             <div className="flex flex-col gap-3">
                {Object.entries(settings.tier_pricing || {}).map(([tier, price]) => (
@@ -222,7 +222,7 @@ export default function SettingsView() {
                   className="btn btn-blue w-full py-3.5 mt-2 font-black uppercase text-[10px] tracking-widest shadow-xl shadow-blue-electric/10 flex items-center justify-center gap-3"
               >
                 <RefreshCcw className="w-3.5 h-3.5" />
-                SYNCHRONIZE PRICE STRUCTURE
+                UPDATE PRICE STRUCTURE
               </button>
             </div>
           </div>
@@ -233,11 +233,11 @@ export default function SettingsView() {
             <div className="flex items-center gap-4 mb-5 relative z-10">
                <div className="p-2.5 bg-danger/10 rounded-xl border border-danger/20"><ShieldAlert className="w-4 h-4 text-danger" /></div>
                <div>
-                  <h3 className="font-black text-xs text-white uppercase tracking-tight">System Termination</h3>
-                  <p className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-40">High-Severity Overrides</p>
+                  <h3 className="font-black text-xs text-white uppercase tracking-tight">Platform Overrides</h3>
+                  <p className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-40">High-Priority Controls</p>
                </div>
             </div>
-            <p className="text-[10px] text-muted mb-6 leading-relaxed italic opacity-60 relative z-10 pr-12">Manual synchronization of Edge Cache and global revalidation. Procedural caution advised.</p>
+            <p className="text-[10px] text-muted mb-6 leading-relaxed italic opacity-60 relative z-10 pr-12">Manual refresh of platform cache and global revalidation. Caution advised.</p>
             <div className="flex gap-3 relative z-10">
                 <button 
                   onClick={handleRevalidate}
@@ -245,7 +245,7 @@ export default function SettingsView() {
                   className="btn btn-danger flex-1 py-3 font-black uppercase text-[10px] tracking-[0.15em] shadow-xl shadow-danger/10 flex items-center justify-center gap-3 overflow-hidden bg-danger text-black hover:bg-danger/90"
                 >
                    <Zap className={`w-3.5 h-3.5 ${isPending ? 'animate-spin' : ''}`} /> 
-                   {isPending ? 'SYNCHING...' : 'REVALIDATE CORE'}
+                   {isPending ? 'REFRESHING...' : 'REFRESH PLATFORM'}
                 </button>
                 <button className="p-3 bg-white/5 hover:bg-white/10 rounded-xl border border-white/5 transition-all" onClick={() => window.location.reload()}>
                    <RefreshCcw className="w-4 h-4 opacity-40 hover:opacity-100" />

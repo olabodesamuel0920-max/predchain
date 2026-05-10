@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { PlatformStats, HomeMatch } from '@/types';
 import { ArrowRight, Check, Trophy, Zap, Users, Wallet, Globe, Activity, Radio, Clock, Shield, Star, PlayCircle } from 'lucide-react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 
 /* ── Animated Counter ── */
 function Counter({ end, prefix = '', suffix = '', duration = 2000 }: { end: number; prefix?: string; suffix?: string; duration?: number }) {
@@ -54,6 +55,11 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
     { id: 2, day: 'Day 2', match: 'LIV vs MCI', status: 'open', time: 'Live', pick: null },
     { id: 3, day: 'Day 3', match: 'RMA vs FCB', status: 'locked', time: 'Tomorrow', pick: null },
   ]);
+
+  const { scrollY } = useScroll();
+  const y1 = useTransform(scrollY, [0, 500], [0, -50]);
+  const y2 = useTransform(scrollY, [0, 500], [0, -100]);
+  const y3 = useTransform(scrollY, [0, 500], [0, -150]);
 
   return (
     <div className="relative min-h-screen">
@@ -113,66 +119,84 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
             </div>
 
             {/* Right: High Fidelity UI Visual */}
-            <div className="flex-1 relative w-full max-w-lg lg:max-w-xl scale-95 lg:scale-100">
+            <div className="flex-1 relative w-full max-w-lg lg:max-w-xl scale-95 lg:scale-100 perspective-container">
               <div className="absolute inset-0 bg-gold/5 blur-[120px] opacity-30" />
               
-              <div className="card-luxury !bg-bg-darker border-border-main shadow-2xl relative z-10 p-0 overflow-hidden transform perspective-1000 hover:rotate-x-1 hover:rotate-y-1 transition-transform duration-700">
-                <div className="p-6 border-b border-border-subtle flex justify-between items-center bg-white/[0.01]">
-                   <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-xl bg-gold/5 flex items-center justify-center border border-gold/10">
-                        <Activity className="w-5 h-5 text-gold" />
-                      </div>
-                      <div>
-                        <div className="text-[10px] font-black text-white uppercase tracking-[0.2em] italic">LIVE_ARENA_FEED</div>
-                        <div className="text-[8px] text-text-muted uppercase tracking-[0.3em] font-extrabold italic">NETWORK_ACTIVE</div>
-                      </div>
-                   </div>
-                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10 shadow-inner">
-                     <span className="text-[9px] font-black text-emerald-500 tracking-widest italic">SECURE</span>
-                   </div>
-                </div>
-
-                <div className="p-6 space-y-3">
-                  {matches.map((m, i) => (
-                    <div key={i} className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-500 ${
-                      m.status === 'open' ? 'bg-bg-secondary border-gold/20 shadow-sm' : 'bg-transparent border-border-subtle opacity-30'
-                    }`}>
-                      <div className="flex items-center gap-5">
-                        <span className="text-[9px] font-black text-text-muted uppercase w-8 italic">{m.day}</span>
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold text-white tracking-tight font-display">{m.match}</span>
-                          <span className="text-[7px] font-extrabold text-text-dim uppercase tracking-[0.2em] mt-1 italic">H2H Verified</span>
+              <motion.div 
+                style={{ y: y1 }}
+                className="relative z-10 preserve-3d"
+              >
+                <motion.div 
+                  whileHover={{ rotateX: 5, rotateY: -5, scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                  className="card-luxury !bg-bg-darker border-border-main shadow-2xl p-0 overflow-hidden depth-card"
+                >
+                  <div className="p-6 border-b border-border-subtle flex justify-between items-center bg-white/[0.01]">
+                    <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-gold/5 flex items-center justify-center border border-gold/10">
+                          <Activity className="w-5 h-5 text-gold" />
                         </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        {m.status === 'correct' ? <Check className="w-4 h-4 text-emerald-500" /> : m.status === 'open' ? <div className="px-2 py-0.5 rounded bg-gold/10 text-[8px] font-black text-gold border border-gold/20">LIVE</div> : <Clock className="w-3.5 h-3.5 text-text-dim" />}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="p-6 pt-0">
-                  <div className="bg-bg-secondary border border-border-subtle rounded-xl p-5 relative overflow-hidden">
-                     <div className="flex justify-between items-end mb-4 relative z-10">
                         <div>
-                          <div className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] mb-1 italic">Current Multiplier</div>
-                          <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">10.00x</div>
+                          <div className="text-[10px] font-black text-white uppercase tracking-[0.2em] italic">LIVE_ARENA_FEED</div>
+                          <div className="text-[8px] text-text-muted uppercase tracking-[0.3em] font-extrabold italic">NETWORK_ACTIVE</div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-[9px] font-black text-gold uppercase tracking-[0.2em] mb-2 italic">Streak</div>
-                          <div className="flex gap-1">
-                            {[1, 2, 3].map(i => (
-                              <div key={i} className={`w-2.5 h-1 rounded-full ${i <= 2 ? 'bg-gold' : 'bg-white/10'}`} />
-                            ))}
+                    </div>
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/5 border border-emerald-500/10 shadow-inner">
+                      <span className="text-[9px] font-black text-emerald-500 tracking-widest italic">SECURE</span>
+                    </div>
+                  </div>
+
+                  <div className="p-6 space-y-3">
+                    {matches.map((m, i) => (
+                      <motion.div 
+                        key={i} 
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: i * 0.1 }}
+                        className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-500 ${
+                          m.status === 'open' ? 'bg-bg-secondary border-gold/20 shadow-sm' : 'bg-transparent border-border-subtle opacity-30'
+                        }`}
+                      >
+                        <div className="flex items-center gap-5">
+                          <span className="text-[9px] font-black text-text-muted uppercase w-8 italic">{m.day}</span>
+                          <div className="flex flex-col">
+                            <span className="text-xs font-bold text-white tracking-tight font-display">{m.match}</span>
+                            <span className="text-[7px] font-extrabold text-text-dim uppercase tracking-[0.2em] mt-1 italic">H2H Verified</span>
                           </div>
                         </div>
-                     </div>
-                     <div className="h-1 bg-white/5 rounded-full overflow-hidden">
-                        <div className="h-full bg-gold w-2/3 transition-all duration-1000" />
-                     </div>
+                        <div className="flex items-center gap-3">
+                          {m.status === 'correct' ? <Check className="w-4 h-4 text-emerald-500" /> : m.status === 'open' ? <div className="px-2 py-0.5 rounded bg-gold/10 text-[8px] font-black text-gold border border-gold/20">LIVE</div> : <Clock className="w-3.5 h-3.5 text-text-dim" />}
+                        </div>
+                      </motion.div>
+                    ))}
                   </div>
-                </div>
-              </div>
+
+                  <div className="p-6 pt-0">
+                    <motion.div 
+                      style={{ y: y2 }}
+                      className="bg-bg-secondary border border-border-subtle rounded-xl p-5 relative overflow-hidden glass-layered shadow-depth-gold"
+                    >
+                      <div className="flex justify-between items-end mb-4 relative z-10">
+                          <div>
+                            <div className="text-[9px] font-black text-text-muted uppercase tracking-[0.2em] mb-1 italic">Current Multiplier</div>
+                            <div className="text-xl font-black font-display text-white italic tracking-tighter uppercase">10.00x</div>
+                          </div>
+                          <div className="text-right">
+                            <div className="text-[9px] font-black text-gold uppercase tracking-[0.2em] mb-2 italic">Streak</div>
+                            <div className="flex gap-1">
+                              {[1, 2, 3].map(i => (
+                                <div key={i} className={`w-2.5 h-1 rounded-full ${i <= 2 ? 'bg-gold' : 'bg-white/10'}`} />
+                              ))}
+                            </div>
+                          </div>
+                      </div>
+                      <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                          <div className="h-full bg-gold w-2/3 transition-all duration-1000" />
+                      </div>
+                    </motion.div>
+                  </div>
+                </motion.div>
+              </motion.div>
             </div>
 
           </div>
