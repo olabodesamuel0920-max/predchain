@@ -47,10 +47,10 @@ function LoginForm() {
           className="inline-flex items-center gap-3 badge-luxury mb-8 px-6 py-2 bg-white/[0.02] border-white/10"
         >
            <Radio className="w-3.5 h-3.5 text-gold animate-pulse" /> 
-           <span className="font-black tracking-[0.2em] text-[9px] italic">ARENA_SECURE_GATEWAY</span>
+           <span className="font-black tracking-[0.2em] text-[9px] italic">ELITE ACCESS</span>
         </motion.div>
         <h2 className="mb-4 uppercase italic font-black leading-none tracking-tighter text-4xl sm:text-5xl text-white">Welcome <span className="text-gradient-gold">Back.</span></h2>
-        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">INITIALIZE ARENA AUTHENTICATION</p>
+        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">LOGIN</p>
       </div>
 
       <form action={loginAction} className="space-y-8">
@@ -76,14 +76,14 @@ function LoginForm() {
         
         <div className="space-y-3">
           <label className="flex items-center gap-3 text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">
-            <Mail className="w-4 h-4 opacity-40" /> EMAIL_IDENTIFIER
+            <Mail className="w-4 h-4 opacity-40" /> EMAIL ADDRESS
           </label>
           <div className="relative group">
             <input 
               name="email" 
               type="email" 
               required 
-              placeholder="PLAYER@ARENA.COM" 
+              placeholder="MEMBER@PREDCHAIN.COM" 
               className="w-full bg-[#07090e] border border-white/5 rounded-2xl py-5 px-8 text-sm text-white placeholder:text-white/5 focus:outline-none focus:border-gold/30 transition-all shadow-inner group-hover:border-white/10 uppercase font-black italic tracking-wider" 
             />
             <div className="absolute inset-0 rounded-2xl bg-gold/[0.02] opacity-0 group-focus-within:opacity-100 transition-opacity pointer-events-none" />
@@ -93,9 +93,9 @@ function LoginForm() {
         <div className="space-y-3">
           <div className="flex justify-between items-center ml-2">
             <label className="flex items-center gap-3 text-[10px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 italic">
-              <Lock className="w-4 h-4 opacity-40" /> ACCESS_KEY
+              <Lock className="w-4 h-4 opacity-40" /> PASSWORD
             </label>
-            <Link href="/forgot-password" title="Recover Password" className="text-[9px] text-gold/40 font-black uppercase tracking-[0.3em] hover:text-gold transition-colors italic">RECOVER_KEY</Link>
+            <Link href="/forgot-password" title="Recover Password" className="text-[9px] text-gold/40 font-black uppercase tracking-[0.3em] hover:text-gold transition-colors italic">FORGOT PASSWORD</Link>
           </div>
           <div className="relative group">
             <input 
@@ -119,7 +119,7 @@ function LoginForm() {
                <Activity className="w-5 h-5 animate-spin" />
              ) : (
                <>
-                 AUTHENTICATE ACCESS <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+                 SECURE LOGIN <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
                </>
              )}
           </span>
@@ -128,7 +128,7 @@ function LoginForm() {
 
       <div className="mt-16 text-center">
         <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30">
-          NOT A MEMBER YET? <Link href={signupUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-1 italic">JOIN_ARENA</Link>
+          NOT A MEMBER YET? <Link href={signupUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-1 italic">CREATE ACCOUNT</Link>
         </p>
       </div>
     </div>
@@ -157,7 +157,7 @@ export default function LoginPage() {
             animate={{ opacity: 1, x: 0 }}
             className="badge-luxury mb-12 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
           >
-            ELITE_PERFORMANCE_ARENA
+            PREMIUM FOOTBALL PREDICTION
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
@@ -170,17 +170,17 @@ export default function LoginPage() {
             Win.
           </motion.h1>
           <p className="text-[12px] font-black text-text-dim uppercase tracking-[0.6em] opacity-30 leading-loose italic">
-            HIGH_YIELD_SPORTS_PREDICTION_ARENA
+            Premium Football Prediction
           </p>
         </div>
 
         <div className="relative z-10 flex items-center gap-10 text-text-dim opacity-30">
            <div className="flex items-center gap-4 bg-white/[0.02] border border-white/5 px-6 py-3 rounded-2xl shadow-inner">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">ARENA_SYNCED</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">ARENA LIVE</span>
            </div>
            <div className="w-px h-6 bg-white/10" />
-           <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">SECURE_GATEWAY_V2</span>
+           <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">SECURE ACCESS</span>
         </div>
       </div>
 
@@ -193,7 +193,7 @@ export default function LoginPage() {
              <div className="w-16 h-16 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center justify-center shadow-inner">
                 <Activity className="w-8 h-8 text-gold/20" />
              </div>
-             <div className="text-[11px] font-black text-gold/20 uppercase tracking-[0.6em] italic">CONNECTING_TO_ARENA...</div>
+             <div className="text-[11px] font-black text-gold/20 uppercase tracking-[0.6em] italic">SYNCHRONIZING...</div>
           </div>
         }>
           <LoginForm />

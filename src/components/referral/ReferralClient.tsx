@@ -61,15 +61,15 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              animate={{ opacity: 1 }}
              className="badge-luxury !text-gold mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
            >
-             PREDCHAIN PARTNER PROGRAM
+             PARTNER NETWORK
            </motion.div>
            <motion.h1 
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
              className="mb-10 uppercase italic font-black leading-none tracking-tighter text-5xl sm:text-8xl"
            >
-             Grow the Arena. <br />
-             <span className="text-gradient-gold">Command Rewards.</span>
+             Expand the Arena. <br />
+             <span className="text-gradient-gold">Command Prizes.</span>
            </motion.h1>
            <motion.p 
              initial={{ opacity: 0, y: 20 }}
@@ -87,7 +87,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                transition={{ delay: 0.2 }}
                className="flex flex-col sm:flex-row gap-8 justify-center"
              >
-                <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] shadow-2xl uppercase">JOIN THE PARTNERS</Link>
+                <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] shadow-2xl uppercase">JOIN PARTNER NETWORK</Link>
                 <Link href="/login" className="btn-luxury btn-outline btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">LOGIN</Link>
              </motion.div>
            )}
@@ -102,8 +102,8 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
         >
           <div className="lg:col-span-8 card-luxury !p-12 sm:!p-20 bg-[#07090e] border-white/10 flex flex-col justify-center relative overflow-hidden group depth-card shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)]">
              <div className="absolute top-0 right-0 p-16 opacity-[0.01] group-hover:opacity-[0.05] transition-all duration-1000 rotate-12 pointer-events-none"><Users className="w-80 h-80" /></div>
-             <div className="badge-luxury !text-gold mb-10 px-6 py-2 bg-white/[0.03] uppercase italic font-black tracking-[0.3em] w-fit text-[9px]">PARTNER_REWARDS</div>
-             <h2 className="text-4xl sm:text-6xl font-black italic uppercase tracking-tighter mb-8 leading-none text-white">The Partner <span className="text-gradient-gold">Program.</span></h2>
+             <div className="badge-luxury !text-gold mb-10 px-6 py-2 bg-white/[0.03] uppercase italic font-black tracking-[0.3em] w-fit text-[9px]">SCOUT REWARDS</div>
+             <h2 className="text-4xl sm:text-6xl font-black italic uppercase tracking-tighter mb-8 leading-none text-white">The Arena <span className="text-gradient-gold">Partners.</span></h2>
              <p className="text-text-dim text-base sm:text-lg font-medium opacity-40 max-w-xl leading-relaxed italic group-hover:opacity-100 transition-opacity duration-700">
                 PredChain partners grow the most transparent football prediction arena in existence. Every verified player you invite strengthens the community and unlocks automated payouts.
              </p>
@@ -120,7 +120,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              </div>
              <div className="flex items-center gap-3 text-[10px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/5 px-6 py-3 rounded-2xl border border-emerald-500/10 italic glass-layered shadow-inner">
                 <Gift className="w-4 h-4 opacity-40" />
-                Verified Revenue
+                Verified Earnings
              </div>
           </motion.div>
         </motion.div>
@@ -192,9 +192,9 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                    <div className="flex items-center justify-between pt-10 border-t border-white/5">
                       <div className="flex items-center gap-4">
                          <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.8)]" />
-                         <span className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.2em] italic">Live Tracking Active</span>
+                         <span className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.2em] italic">Live Updates Active</span>
                       </div>
-                      <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-20 italic">SECURE_ACCESS</span>
+                      <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-20 italic">SECURE ACCESS</span>
                    </div>
                 </div>
 
@@ -226,8 +226,8 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                       <table className="w-full text-left border-collapse">
                          <thead>
                             <tr className="bg-white/[0.02] border-b border-white/5">
-                               <th className="px-12 py-8 text-[11px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">PARTICIPANT</th>
-                               <th className="px-12 py-8 text-[11px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40 text-center">TIMESTAMP</th>
+                               <th className="px-12 py-8 text-[11px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">PLAYER</th>
+                               <th className="px-12 py-8 text-[11px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40 text-center">DATE</th>
                                <th className="px-12 py-8 text-[11px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40 text-center">REWARD</th>
                                <th className="px-12 py-8 text-[11px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40 text-right">STATUS</th>
                             </tr>
@@ -236,7 +236,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                             {referrals.length === 0 ? (
                                <tr>
                                   <td colSpan={4} className="py-40 text-center">
-                                     <p className="text-[12px] font-black text-text-dim uppercase tracking-[0.5em] opacity-20 italic">No partner activity detected.</p>
+                                     <p className="text-[12px] font-black text-text-dim uppercase tracking-[0.5em] opacity-20 italic">No activity detected.</p>
                                   </td>
                                </tr>
                             ) : (
@@ -247,7 +247,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                                           <div className="w-12 h-12 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-sm font-black text-text-dim group-hover/row:text-gold group-hover/row:border-gold/30 transition-all duration-700 italic shadow-inner group-hover/row:rotate-12">
                                              {r.referred_user?.username?.[0]?.toUpperCase() || 'P'}
                                           </div>
-                                          <span className="text-lg font-black text-white uppercase tracking-tighter italic group-hover/row:text-gold transition-colors font-display">@{r.referred_user?.username || 'ACTIVE_PLAYER'}</span>
+                                          <span className="text-lg font-black text-white uppercase tracking-tighter italic group-hover/row:text-gold transition-colors font-display">@{r.referred_user?.username || 'Active Challenger'}</span>
                                        </div>
                                     </td>
                                     <td className="px-12 py-10 text-center">
@@ -258,7 +258,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                                     </td>
                                     <td className="px-12 py-10 text-right">
                                        <div className={`badge-luxury !py-2 !px-6 italic font-black text-[10px] tracking-[0.15em] shadow-inner ${r.status === 'qualified' ? '!bg-emerald-500/5 !text-emerald-500 border-emerald-500/10 shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'opacity-20'}`}>
-                                          {r.status === 'qualified' ? 'CONFIRMED' : 'PENDING'}
+                                          {r.status === 'qualified' ? 'VERIFIED' : 'PENDING'}
                                        </div>
                                     </td>
                                  </tr>
@@ -288,7 +288,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                    Secure your position in the PredChain arena and grow your revenue through our professional partner program.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-8 justify-center">
-                   <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">Join the Partners</Link>
+                   <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">JOIN THE PARTNERS</Link>
                    <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">View Arena</Link>
                 </div>
              </div>

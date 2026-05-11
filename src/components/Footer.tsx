@@ -80,7 +80,7 @@ export default function Footer() {
                  links: [
                    { h: '/terms', l: 'Terms of Service' },
                    { h: '/privacy', l: 'Privacy Policy' },
-                   { h: '/rules', l: 'Arena Rules' }
+                   { h: '/rules', l: 'Match Rules' }
                  ] 
                }
              ].map((group, i) => (
@@ -108,9 +108,9 @@ export default function Footer() {
              <div className="flex flex-wrap items-center justify-center md:justify-start gap-10">
                 <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-4 py-2 rounded-full shadow-inner">
                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-                   <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">ARENA_LIVE</span>
+                   <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">ARENA ONLINE</span>
                 </div>
-                <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-30">© 2026 PREDCHAIN • ELITE FOOTBALL ARENA</span>
+                <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-30">© 2026 PREDCHAIN • PREMIUM FOOTBALL PREDICTION</span>
             </div>
             
             <div className="flex items-center gap-6">

@@ -85,7 +85,7 @@ export default function Navbar() {
             <div className="flex items-center gap-3">
               <div className="hidden sm:flex items-center gap-5 mr-1">
                 {!user ? (
-                  <Link href="/login" className="text-[10px] font-black text-text-dim hover:text-white transition-all uppercase tracking-[0.2em] italic">Login</Link>
+                  <Link href="/login" className="text-[10px] font-black text-text-dim hover:text-white transition-all uppercase tracking-[0.2em] italic">LOGIN</Link>
                 ) : null}
               </div>
 
@@ -96,7 +96,7 @@ export default function Navbar() {
                 </Link>
               ) : (
                 <Link href="/dashboard" className="btn-luxury btn-outline btn-premium-depth !py-2.5 !px-6 flex items-center gap-2.5 bg-white/[0.02]">
-                  <span className="text-[10px] font-black tracking-widest uppercase italic">Dashboard</span>
+                  <span className="text-[10px] font-black tracking-widest uppercase italic">DASHBOARD</span>
                   <Globe className="w-3.5 h-3.5 text-gold/60" />
                 </Link>
               )}
@@ -158,7 +158,7 @@ export default function Navbar() {
           <div className="mt-auto flex flex-col gap-4 pt-10 border-t border-white/5">
             {!user ? (
                <Link href="/accounts" onClick={closeMenu} className="btn-luxury btn-gold btn-premium-depth w-full !py-5 text-[11px] uppercase tracking-[0.2em] font-black italic shadow-2xl">
-                 Start Your Streak
+                 START YOUR STREAK
                </Link>
             ) : (
                <button onClick={() => { logout(); closeMenu(); }} className="btn-luxury btn-outline btn-premium-depth w-full !py-5 text-[11px] uppercase tracking-[0.2em] font-black italic text-rose-500 border-rose-500/20 bg-rose-500/5">

@@ -129,9 +129,9 @@ export default function DashboardView({ metrics, recentPurchases }: DashboardVie
                   <div className="absolute -top-4 -right-4 w-16 h-16 bg-blue-electric/5 blur-2xl rounded-full" />
                   <div className="flex items-center gap-3 mb-3 relative z-10">
                      <div className="w-4 h-4 rounded-full bg-success shadow-[0_0_8px_var(--success)]" />
-                     <div className="text-[10px] font-black text-white uppercase tracking-widest">Performance node</div>
+                     <div className="text-[10px] font-black text-white uppercase tracking-widest">Performance Hub</div>
                   </div>
-                  <p className="text-[11px] text-muted leading-relaxed relative z-10 font-bold opacity-60 italic">99.98% availability detected. Node alpha stable.</p>
+                  <p className="text-[11px] text-muted leading-relaxed relative z-10 font-bold opacity-60 italic">System performance verified. Platform stable.</p>
                </div>
 
                <div className={`p-4 rounded-xl border relative overflow-hidden ${metrics.pendingPayouts > 0 ? 'bg-danger/[0.04] border-danger/20' : 'bg-success/[0.04] border-success/20 shadow-sm'}`}>
@@ -141,7 +141,7 @@ export default function DashboardView({ metrics, recentPurchases }: DashboardVie
                   </div>
                   <p className="text-[11px] text-muted leading-relaxed font-bold opacity-60 italic">
                      {metrics.pendingPayouts > 0 
-                      ? `${metrics.pendingPayouts} requests require synchronization.` 
+                      ? `${metrics.pendingPayouts} requests require verification.` 
                       : 'Payout queue clear. Audit balanced.'}
                   </p>
                </div>

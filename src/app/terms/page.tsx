@@ -14,7 +14,7 @@ export default function TermsPage() {
             <span className="text-[10px] font-bold text-muted uppercase tracking-widest italic opacity-40">Legal Framework</span>
           </div>
           <h1 className="font-display text-4xl md:text-7xl font-bold text-white italic uppercase tracking-tighter mb-4 leading-none">
-            Terms of <span className="text-gradient-blue italic">Service</span>
+            Terms of <span className="text-gradient-gold italic">Service</span>
           </h1>
           <p className="text-[11px] font-bold text-secondary uppercase tracking-widest max-w-lg mx-auto leading-relaxed italic opacity-40">
             Elite participation rules and terms for the PredChain football challenge platform.
@@ -46,7 +46,7 @@ export default function TermsPage() {
           ].map((item, i) => (
              <section key={i} className="card p-8 md:p-10 bg-white/[0.015] border-white/5 hover:border-white/10 transition-all shadow-xl group">
                <div className="flex items-center gap-3 mb-8">
-                  <div className="w-1.5 h-1.5 bg-blue-electric rounded-full opacity-40 group-hover:bg-gold transition-colors" />
+                  <div className="w-1.5 h-1.5 bg-gold rounded-full opacity-40 transition-colors" />
                   <h2 className="text-white font-bold text-sm md:text-lg uppercase italic tracking-tighter">{item.title}</h2>
                </div>
                <p className="text-xs md:text-sm font-medium text-secondary uppercase tracking-wide leading-relaxed opacity-60">

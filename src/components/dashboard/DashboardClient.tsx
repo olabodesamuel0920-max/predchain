@@ -163,7 +163,7 @@ export default function DashboardClient({
         {/* Dashboard Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-12 mb-20 animate-fade-in">
           <div className="space-y-6">
-            <div className="badge-luxury !text-gold bg-gold/5 px-6 py-2 uppercase tracking-[0.4em] font-black text-[9px] italic">OPERATIONAL_CONTROL</div>
+            <div className="badge-luxury !text-gold bg-gold/5 px-6 py-2 uppercase tracking-[0.4em] font-black text-[9px] italic">DASHBOARD</div>
             <h1 className="leading-none tracking-tighter uppercase italic font-black text-5xl md:text-7xl text-white">Performance <span className="text-gradient-gold">Hub.</span></h1>
             <div className="flex flex-wrap items-center gap-10">
               <div className="flex items-center gap-5">
@@ -172,13 +172,13 @@ export default function DashboardClient({
                  </div>
                  <div className="flex flex-col gap-1">
                     <span className="text-lg font-black text-white uppercase tracking-tight italic font-display">@{displayName}</span>
-                    <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 italic">ARENA_UPLINK • {user.id.slice(0, 8)}</span>
+                    <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 italic">ARENA HANDLE • {user.id.slice(0, 8)}</span>
                  </div>
               </div>
               <div className="w-px h-8 bg-white/10 hidden md:block" />
               <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-4 py-2 rounded-full shadow-inner">
                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-                 <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">ARENA_SYNCED</span>
+                 <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">ARENA LIVE</span>
               </div>
             </div>
           </div>
@@ -262,13 +262,13 @@ export default function DashboardClient({
                     
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-16 relative z-10">
                        <div className="max-w-xl">
-                          <div className="badge-luxury !text-gold mb-12 px-8 py-2.5 uppercase tracking-[0.4em] font-black italic bg-white/[0.02] border-white/10 w-fit">WINNING_STREAK_METRICS</div>
+                          <div className="badge-luxury !text-gold mb-12 px-8 py-2.5 uppercase tracking-[0.4em] font-black italic bg-white/[0.02] border-white/10 w-fit">STREAK PERFORMANCE</div>
                           <h2 className="text-5xl md:text-8xl font-black tracking-tighter mb-10 font-display uppercase italic text-white leading-none">Arena <br /><span className="text-gradient-gold">Velocity.</span></h2>
                           <p className="text-text-dim text-base md:text-lg font-medium opacity-40 leading-relaxed mb-16 italic group-hover:opacity-100 transition-opacity duration-1000">
-                            {userEntry ? `Your ${currentPlan?.name} program is active. Maintain perfect execution across 3 match days to trigger your verified multiplier payout.` : 'Your prediction arena is currently inactive. Select an entry tier to initialize your participation in the arena.'}
+                            {userEntry ? `Your ${currentPlan?.name} program is active. Maintain perfect execution across 3 match days to trigger your verified multiplier payout.` : 'Your prediction arena is currently inactive. Select an entry tier to begin your participation in the arena.'}
                           </p>
                           <Link href={userEntry ? "/dashboard?tab=arena" : "/accounts"} className="btn-luxury btn-gold btn-premium-depth !px-16 !py-6 shadow-2xl flex items-center justify-center w-full sm:w-auto text-[11px] font-black italic tracking-[0.3em] uppercase">
-                             {userEntry ? 'OPEN_ARENA_FEED' : 'SELECT_ENTRY_TIER'} <ArrowRight className="w-5 h-5 ml-5 transition-transform group-hover:translate-x-2" />
+                             {userEntry ? 'ENTER ARENA' : 'SELECT PLAN'} <ArrowRight className="w-5 h-5 ml-5 transition-transform group-hover:translate-x-2" />
                           </Link>
                        </div>
                        
@@ -285,7 +285,7 @@ export default function DashboardClient({
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center">
                               <span className="text-7xl font-black text-white font-display leading-none italic">{streak}/3</span>
-                              <span className="text-[10px] font-black text-gold uppercase tracking-[0.4em] mt-5 opacity-40 italic">STREAK_ACTIVE</span>
+                              <span className="text-[10px] font-black text-gold uppercase tracking-[0.4em] mt-5 opacity-40 italic">STREAK LIVE</span>
                             </div>
                           </div>
                        </div>
@@ -296,15 +296,15 @@ export default function DashboardClient({
                  <div className="card-luxury !p-0 overflow-hidden group bg-[#07090e] border-white/10 shadow-2xl">
                     <div className="px-12 py-8 bg-white/[0.02] border-b border-white/5 flex justify-between items-center">
                        <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] flex items-center gap-4 opacity-40 italic">
-                          <History className="w-5 h-5 text-gold/40" /> ARENA_LEDGER_FEED
+                          <History className="w-5 h-5 text-gold/40" /> ARENA RECORDS
                        </span>
-                       <button onClick={() => setActiveTab('wallet')} className="text-[10px] font-black text-gold hover:text-white transition-all uppercase tracking-[0.2em] italic">VIEW_ALL_ENTRIES</button>
+                       <button onClick={() => setActiveTab('wallet')} className="text-[10px] font-black text-gold hover:text-white transition-all uppercase tracking-[0.2em] italic">VIEW ALL</button>
                     </div>
                     <div className="divide-y divide-white/5">
                        {transactions.length === 0 ? (
                         <div className="py-40 text-center opacity-20 space-y-6">
                            <Activity className="w-16 h-16 mx-auto text-gold/20" />
-                           <span className="text-[12px] font-black uppercase tracking-[0.5em] italic leading-none">NO_LEDGER_EVENTS_RECORDED</span>
+                           <span className="text-[12px] font-black uppercase tracking-[0.5em] italic leading-none">NO RECORDS FOUND</span>
                         </div>
                        ) : (
                         transactions.slice(0, 5).map(tx => (
@@ -332,7 +332,7 @@ export default function DashboardClient({
               <div className="lg:col-span-4 space-y-10">
                  <div className="card-luxury !p-12 group bg-[#07090e] border-white/10 shadow-2xl depth-card">
                     <div className="flex items-center justify-between mb-10">
-                       <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] italic opacity-40">PERFORMANCE_TELEMETRY</span>
+                       <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.4em] italic opacity-40">PERFORMANCE DATA</span>
                        <Activity className="w-5 h-5 text-emerald-500 opacity-30 animate-pulse" />
                     </div>
                     <div className="flex items-end gap-3 h-32 mb-10">
@@ -348,12 +348,12 @@ export default function DashboardClient({
                          </div>
                        ))}
                     </div>
-                    <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 italic leading-loose">Live synchronisation with global arena match outcomes in progress.</p>
+                    <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 italic leading-loose">Live match updates with global arena outcomes in progress.</p>
                  </div>
 
                  <Link href="/arena" className="card-luxury !p-12 block group hover:border-gold/30 transition-all duration-700 bg-[#07090e] border-white/10 shadow-2xl depth-card">
                     <div className="flex items-center justify-between mb-8">
-                       <span className="text-[10px] font-black text-gold uppercase tracking-[0.4em] italic opacity-40">EXPLORE_ARENA</span>
+                       <span className="text-[10px] font-black text-gold uppercase tracking-[0.4em] italic opacity-40">EXPLORE ARENA</span>
                        <ArrowUpRight className="w-6 h-6 text-gold group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-500" />
                     </div>
                     <p className="text-[11px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 leading-loose italic group-hover:opacity-100 transition-opacity duration-700">Audit the live match arena, monitor upcoming fixtures and analyze global prediction trends.</p>
@@ -376,11 +376,11 @@ export default function DashboardClient({
                      </div>
                      <div className="space-y-3">
                         <h3 className="text-3xl md:text-5xl font-black text-white font-display uppercase italic tracking-tighter leading-none">Arena Active</h3>
-                        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic leading-none">Tournament Cycle {activeRound?.round_number || '01'} • Match Stream Functional</p>
+                        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic leading-none">Match Round {activeRound?.round_number || '01'} • Match Stream Functional</p>
                      </div>
                   </div>
                   <div className="px-16 py-8 bg-black/60 border border-white/5 rounded-[2.5rem] text-center shadow-inner glass-layered">
-                     <span className="text-[10px] font-black text-text-dim uppercase mb-4 tracking-[0.4em] opacity-30 block italic">SESSION_CLOSE</span>
+                     <span className="text-[10px] font-black text-text-dim uppercase mb-4 tracking-[0.4em] opacity-30 block italic">SECURE LOGOUT</span>
                      <div className="text-4xl font-black text-white font-display tracking-tighter italic leading-none transition-transform group-hover:scale-110 duration-700">
                         {activeRound?.end_date ? new Date(activeRound.end_date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true }) : 'LOCKED'}
                      </div>
@@ -391,8 +391,8 @@ export default function DashboardClient({
                   {matches.length === 0 ? (
                     <div className="col-span-full py-64 text-center card-luxury border border-dashed border-white/10 bg-[#07090e] rounded-[4rem] shadow-inner opacity-20 group">
                        <Zap className="w-20 h-20 mx-auto text-gold/20 animate-pulse mb-10" />
-                       <span className="text-sm font-black uppercase tracking-[0.6em] italic block mb-12">NO_MATCH_FIXTURES_STREAMING</span>
-                       <button onClick={() => window.location.reload()} className="btn-luxury btn-outline !px-16 !py-5 font-black text-[11px] tracking-[0.3em] italic uppercase">INITIALIZE_REFEED</button>
+                       <span className="text-sm font-black uppercase tracking-[0.6em] italic block mb-12">NO MATCHES AVAILABLE</span>
+                       <button onClick={() => window.location.reload()} className="btn-luxury btn-outline !px-16 !py-5 font-black text-[11px] tracking-[0.3em] italic uppercase">REFRESH ARENA</button>
                     </div>
                   ) : (
                     matches.map((m, i) => {
@@ -470,11 +470,11 @@ export default function DashboardClient({
                   {/* Ledger */}
                   <div className="lg:col-span-8 card-luxury !p-0 overflow-hidden shadow-2xl bg-[#07090e] border-white/10">
                      <div className="px-12 py-8 bg-white/[0.02] border-b border-white/5 flex flex-col sm:flex-row justify-between items-center gap-6">
-                        <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] flex items-center gap-4 opacity-40 italic"><History className="w-5 h-5 text-gold/40" /> FINANCIAL_SYNC_FEED</span>
+                        <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] flex items-center gap-4 opacity-40 italic"><History className="w-5 h-5 text-gold/40" /> PAYOUT RECORDS</span>
                         <div className="flex bg-black shadow-inner border border-white/5 rounded-[1.5rem] p-1.5 gap-2">
                            {[
-                             { id: 'transactions', label: 'Arena_Ledger' },
-                             { id: 'payouts', label: 'Withdrawal_Logs' }
+                             { id: 'transactions', label: 'Arena Ledger' },
+                             { id: 'payouts', label: 'Payout Logs' }
                            ].map(t => (
                              <button key={t.id} onClick={() => setWalletSubTab(t.id as any)} className={`px-8 py-3 text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl transition-all duration-500 font-display italic ${walletSubTab === t.id ? 'bg-white/10 text-white shadow-lg scale-105' : 'text-text-dim opacity-30 hover:opacity-100'}`}>{t.label}</button>
                            ))}
@@ -485,7 +485,7 @@ export default function DashboardClient({
                           transactions.length === 0 ? (
                             <div className="py-48 text-center opacity-20 space-y-8">
                                <History className="w-20 h-20 mx-auto text-gold/10 animate-pulse" />
-                               <span className="text-xs font-black uppercase tracking-[0.5em] italic block">NO_LEDGER_DATA_FOUND</span>
+                               <span className="text-xs font-black uppercase tracking-[0.5em] italic block">NO RECORDS FOUND</span>
                             </div>
                           ) : (
                              transactions.map(tx => (
@@ -507,7 +507,7 @@ export default function DashboardClient({
                         {walletSubTab === 'payouts' && (
                           <div className="py-48 text-center opacity-20 space-y-8">
                              <ShieldAlert className="w-20 h-20 mx-auto text-gold/10" />
-                             <span className="text-xs font-black uppercase tracking-[0.5em] italic block">WITHDRAWAL_INTEGRITY_VERIFIED</span>
+                             <span className="text-xs font-black uppercase tracking-[0.5em] italic block">SECURE WITHDRAWAL VERIFIED</span>
                           </div>
                         )}
                      </div>
@@ -516,7 +516,7 @@ export default function DashboardClient({
                   {/* Wallet Actions */}
                   <div className="lg:col-span-4 space-y-10">
                      <div className="card-luxury !p-12 bg-[#07090e] border-gold/15 shadow-2xl depth-card">
-                        <span className="text-[10px] font-black text-gold uppercase tracking-[0.4em] mb-12 block opacity-40 italic">UPLINK_FUNDING</span>
+                        <span className="text-[10px] font-black text-gold uppercase tracking-[0.4em] mb-12 block opacity-40 italic">DEPOSIT FUNDS</span>
                         <div className="grid grid-cols-2 gap-4 mb-10">
                            {[5000, 10000, 20000, 50000].map(amt => (
                              <button key={amt} onClick={() => handleTopUp(amt)} className="py-5 bg-white/[0.02] border border-white/5 rounded-2xl text-[11px] font-black text-white hover:bg-gold hover:text-black transition-all duration-500 italic tracking-[0.2em] shadow-inner font-display uppercase">+ ₦{amt.toLocaleString()}</button>
@@ -526,14 +526,14 @@ export default function DashboardClient({
                      </div>
 
                      <div className="card-luxury !p-12 bg-black border-white/10 shadow-2xl depth-card">
-                        <span className="text-[10px] font-black text-white uppercase tracking-[0.4em] mb-12 block opacity-30 italic">INITIALIZE_WITHDRAWAL</span>
+                        <span className="text-[10px] font-black text-white uppercase tracking-[0.4em] mb-12 block opacity-30 italic">REQUEST PAYOUT</span>
                         <form onSubmit={handlePayout} className="space-y-10">
                            <div className="space-y-5">
-                              <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">PAYOUT_AMOUNT (₦)</span>
+                              <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">PAYOUT AMOUNT (₦)</span>
                               <input type="number" value={payoutAmount} onChange={(e) => setPayoutAmount(e.target.value)} placeholder="0.00" className="w-full bg-[#07090e] border border-white/10 rounded-2xl px-8 py-8 text-white text-5xl font-black font-display tracking-tighter focus:border-gold/60 focus:bg-black transition-all outline-none shadow-inner" required />
                            </div>
                            <button disabled={isPending || balance < 5000} type="submit" className="btn-luxury btn-primary btn-premium-depth w-full py-6 text-[12px] font-black italic tracking-[0.3em] shadow-[0_30px_60px_-15px_rgba(242,201,76,0.2)] uppercase">
-                              {isPending ? "PROCESSING_PAYOUT..." : "CONFIRM_WITHDRAWAL"}
+                              {isPending ? "PROCESSING..." : "CONFIRM PAYOUT"}
                            </button>
                         </form>
                      </div>
@@ -554,15 +554,15 @@ export default function DashboardClient({
                   
                   <div className="flex flex-col md:flex-row items-center justify-between gap-20 relative z-10">
                      <div className="max-w-2xl">
-                        <div className="badge-luxury !text-gold mb-12 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] w-fit">PARTNER_PROGRAM</div>
+                        <div className="badge-luxury !text-gold mb-12 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] w-fit">PARTNER PROGRAM</div>
                         <h2 className="text-5xl md:text-9xl font-black tracking-tighter mb-12 font-display uppercase italic text-white leading-none">Network <br /><span className="text-gradient-gold">Growth.</span></h2>
                         <p className="text-text-dim text-lg md:text-xl font-medium opacity-40 leading-relaxed italic group-hover:opacity-100 transition-opacity duration-1000">
-                           Initialize invitations to professional challengers and analysis experts. Command a verified ₦1,000 performance reward for every successful partner activation in your network.
+                           Send invitations to professional challengers and analysis experts. Command a verified ₦1,000 performance reward for every successful partner activation in your network.
                         </p>
                      </div>
                      <div className="card-luxury !p-16 md:!p-24 bg-black border-gold/20 text-center shadow-[0_40px_80px_-20px_rgba(242,201,76,0.1)] min-w-[320px] glass-layered group shadow-depth-gold relative overflow-hidden">
                         <div className="absolute inset-0 bg-gold/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                        <span className="text-[12px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 block mb-8 italic">VERIFIED_PARTNERS</span>
+                        <span className="text-[12px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 block mb-8 italic">REFERRAL NETWORK</span>
                         <div className="text-8xl md:text-9xl font-black text-white font-display tracking-tighter leading-none italic transition-transform group-hover:scale-110 duration-1000 group-hover:text-gold">{profile?.referral_count || 0}</div>
                      </div>
                   </div>
@@ -574,18 +574,18 @@ export default function DashboardClient({
                         <svg className="w-6 h-6 text-gold/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                         </svg>
-                        <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] font-display">UNIQUE_INVITATION_UPLINK</span>
+                        <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] font-display">UNIQUE REFERRAL LINK</span>
                      </div>
                      <div className="flex flex-col sm:flex-row gap-6 p-5 bg-black border border-white/5 rounded-[2.5rem] shadow-inner group overflow-hidden glass-layered">
                         <input readOnly value={`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`} className="flex-1 bg-transparent px-8 py-5 font-black text-base text-gold outline-none italic opacity-80 font-display tracking-wider" />
                         <button 
                           onClick={() => { 
                             navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`); 
-                            showSuccess('INVITATION_LINK_SECURED'); 
+                            showSuccess('LINK COPIED'); 
                           }} 
                           className="btn-luxury btn-gold btn-premium-depth !px-16 !py-6 rounded-2xl font-black uppercase text-[12px] italic tracking-[0.2em] shadow-2xl transition-all duration-700"
                         >
-                          COPY_PARTNER_LINK
+                          COPY LINK
                         </button>
                      </div>
                   </div>
@@ -615,7 +615,7 @@ export default function DashboardClient({
                 {successMsg ? <Check className="w-8 h-8" /> : <ShieldAlert className="w-8 h-8" />}
              </div>
              <div className="flex flex-col text-left relative z-10">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mb-2 italic">{successMsg ? 'AUTHENTICATION_SUCCESS' : 'SYSTEM_INTEGRITY_ALERT'}</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mb-2 italic">{successMsg ? 'SUCCESS' : 'SYSTEM ALERT'}</span>
                 <span className="text-base font-black tracking-tighter font-display italic uppercase">{successMsg || errorMsg}</span>
              </div>
              <button onClick={clear} className="ml-auto w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors text-2xl font-light">×</button>

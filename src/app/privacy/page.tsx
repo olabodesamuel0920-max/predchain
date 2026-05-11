@@ -42,7 +42,7 @@ export default function PrivacyPage() {
           ].map((item, i) => (
              <section key={i} className="card p-8 md:p-10 bg-white/[0.015] border-white/5 hover:border-white/10 transition-all shadow-xl group">
                <div className="flex items-center gap-3 mb-8">
-                  <div className="w-1.5 h-1.5 bg-gold rounded-full opacity-40 group-hover:bg-blue-electric transition-colors" />
+                  <div className="w-1.5 h-1.5 bg-gold rounded-full opacity-40 transition-colors" />
                   <h2 className="text-white font-bold text-sm md:text-lg uppercase italic tracking-tighter">{item.title}</h2>
                </div>
                <p className="text-xs md:text-sm font-medium text-secondary uppercase tracking-wide leading-relaxed opacity-60">

@@ -29,7 +29,7 @@ export default async function SettingsPage() {
   // We provide a fallback identity so the account center remains accessible for recovery/support.
   const fallbackProfile: Partial<Profile> = {
     id: user.id,
-    full_name: 'Protocol Member',
+    full_name: 'Elite Member',
     username: user.email?.split('@')[0] || 'member',
     email: user.email || '',
     role: 'user', // Match UserRole type

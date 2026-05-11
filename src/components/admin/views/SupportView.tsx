@@ -74,8 +74,8 @@ export default function SupportView() {
         <div className="flex items-center gap-4">
            <div className="p-2.5 bg-blue-electric/10 rounded-xl border border-blue-electric/20"><HelpCircle className="w-5 h-5 text-blue-electric" /></div>
            <div className="leading-tight">
-              <h2 className="font-display text-base font-black tracking-tight text-white uppercase italic">Support <span className="text-gradient-gold">Matrix.</span></h2>
-              <p className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-40 italic">Queue synchronization active</p>
+              <h2 className="font-display text-base font-black tracking-tight text-white uppercase italic">Support <span className="text-gradient-gold">Hub.</span></h2>
+              <p className="text-[9px] text-muted font-black uppercase tracking-widest mt-1 opacity-40 italic">Support queue active</p>
            </div>
         </div>
         <div className="flex items-center gap-4 w-full sm:w-auto">
@@ -172,20 +172,20 @@ export default function SupportView() {
                 <div className="p-4 bg-white/[0.03] rounded-2xl border border-white/5 mb-6 relative overflow-hidden group">
                   <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none group-hover:scale-110 transition-transform"><MessageSquare className="w-10 h-10" /></div>
                   <div className="text-[9px] text-muted uppercase font-black mb-4 tracking-widest flex items-center gap-2 opacity-40 italic">
-                     User Transmission:
+                     User Message:
                   </div>
                   <div className="text-[13px] text-white leading-relaxed font-bold italic opacity-85">"{selectedTicket.message}"</div>
                 </div>
 
                 <div className="flex flex-col gap-6">
                   <div className="flex justify-between items-center px-1">
-                     <div className="text-[9px] text-muted uppercase font-black tracking-widest opacity-40 italic leading-none">Management Notation</div>
+                     <div className="text-[9px] text-muted uppercase font-black tracking-widest opacity-40 italic leading-none">Staff Notes</div>
                      <span className="text-[8px] text-muted font-bold opacity-30">INTERNAL ONLY</span>
                   </div>
                   <textarea 
                     value={internalNotes}
                     onChange={(e) => setInternalNotes(e.target.value)}
-                    placeholder="Document system reconciliation..."
+                    placeholder="Enter internal resolution notes..."
                     className="input-premium h-28 text-[11px] font-black py-3 px-4 italic placeholder:opacity-20 transition-all resize-none"
                   />
                 </div>
@@ -226,8 +226,8 @@ export default function SupportView() {
                    <div className="flex items-center gap-4">
                       <div className="p-2 bg-white/5 rounded-xl text-muted group-hover:text-blue-electric transition-colors"><History className="w-4 h-4 opacity-40" /></div>
                       <div>
-                        <div className="text-[8px] text-muted font-black uppercase tracking-[0.2em] mb-1 opacity-30">Metadata Analysis</div>
-                        <div className="text-[10px] font-black text-white uppercase italic">{selectedTicket.category} • <span className={selectedTicket.priority === 'urgent' ? 'text-danger shadow-[0_0_8px_var(--danger)]/20' : 'text-success/60'}>{selectedTicket.priority} SEVERITY</span></div>
+                        <div className="text-[8px] text-muted font-black uppercase tracking-[0.2em] mb-1 opacity-30">Ticket Details</div>
+                        <div className="text-[10px] font-black text-white uppercase italic">{selectedTicket.category} • <span className={selectedTicket.priority === 'urgent' ? 'text-danger shadow-[0_0_8px_var(--danger)]/20' : 'text-success/60'}>{selectedTicket.priority} LEVEL</span></div>
                       </div>
                    </div>
                    <button 

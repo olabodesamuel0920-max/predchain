@@ -66,7 +66,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
           <div className="absolute inset-0 bg-gold/[0.02] blur-[150px] pointer-events-none" />
           
           {top3.map((player, i) => {
-            const name = player.profile?.username || player.profile?.full_name || 'ANONYMOUS_PLAYER';
+            const name = player.profile?.username || player.profile?.full_name || 'Elite Challenger';
             const isFirst = i === 0;
             const rankLabel = i === 0 ? 'Arena Master' : i === 1 ? 'High Tier' : 'Elite Player';
             
@@ -76,7 +76,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className={`card-luxury !p-12 sm:!p-16 text-center relative transition-all duration-700 bg-[#07090e] depth-card shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)] ${isFirst ? 'md:py-24 border-gold/30 z-20 scale-105' : 'md:opacity-60 scale-95 border-white/10 order-last md:order-none'}`}
+                className={`card-luxury !p-10 sm:!p-14 text-center relative transition-all duration-700 bg-[#07090e] depth-card shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)] ${isFirst ? 'md:py-24 border-gold/30 z-20 scale-105' : 'md:opacity-60 scale-95 border-white/10 order-last md:order-none'}`}
               >
                 {isFirst && (
                   <div className="absolute -top-6 left-1/2 -translate-x-1/2 w-14 h-14 bg-gold rounded-2xl flex items-center justify-center shadow-[0_20px_40px_-10px_rgba(242,201,76,0.5)] z-30 animate-bounce">
@@ -127,7 +127,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/30 group-focus-within:text-gold transition-all duration-500" />
               <input
                 type="search"
-                placeholder="SEARCH_CHALLENGERS..."
+                placeholder="SEARCH CHALLENGERS..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="w-full bg-[#07090e] border border-white/10 rounded-[2rem] py-5 pl-14 pr-8 text-[11px] font-black text-white focus:outline-none focus:border-gold/30 transition-all uppercase tracking-[0.2em] placeholder:opacity-20 italic shadow-inner"
@@ -142,10 +142,10 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-white/[0.02] border-b border-white/5">
-                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">RANK</th>
-                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">PLAYER</th>
-                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">STREAK</th>
-                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">ARENA</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">POSITION</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">CHALLENGER</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">PERFORMANCE</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">LEVEL</th>
                   <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40 text-right">STATUS</th>
                 </tr>
               </thead>
@@ -204,7 +204,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
                 <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !px-20 !py-6 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">
-                  INITIALIZE ARENA ACCESS <ArrowUpRight className="w-5 h-5 ml-3" />
+                  JOIN THE ARENA <ArrowUpRight className="w-5 h-5 ml-3" />
                 </Link>
                 <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !px-20 !py-6 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">VIEW ARENA</Link>
               </div>

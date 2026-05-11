@@ -30,34 +30,33 @@ function Counter({ end, prefix = '', suffix = '', duration = 2000 }: { end: numb
         if (entry.isIntersecting && !isVisible.current) {
           isVisible.current = true;
           startAnimation();
-        } else if (!entry.isIntersecting) {
-          isVisible.current = false;
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0.01 }
     );
 
-    if (ref.current) observer.observe(ref.current);
+    if (ref.current) {
+      observer.observe(ref.current);
+      // Fallback: check if already in viewport
+      const rect = ref.current.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        isVisible.current = true;
+        startAnimation();
+      }
+    }
     
-    // If end changes while visible, restart animation
-    if (isVisible.current) startAnimation();
-
     return () => observer.disconnect();
   }, [end, duration]);
 
-  return (
-    <span ref={ref}>
-      {prefix}{count.toLocaleString()}{suffix}
-    </span>
-  );
+  return <span ref={ref}>{prefix}{count.toLocaleString()}{suffix}</span>;
 }
 
 const STEPS = [
-  { label: 'Join', desc: 'Secure your elite account and enter the high-performance match arena.' },
-  { label: 'Analyze', desc: 'Leverage data-driven insights for upcoming match fixtures.' },
-  { label: 'Predict', desc: 'Lock in your 3-day winning streak of professional match predictions.' },
-  { label: 'Win Streak', desc: 'Maintain your winning target across consecutive matchdays.' },
-  { label: 'Get Paid', desc: 'Unlock and instantly withdraw your 10X reward multipliers.' },
+  { label: 'Join', desc: 'Secure your membership and enter the high-performance match arena.' },
+  { label: 'Analyze', desc: 'Study the upcoming fixtures with real-time match data.' },
+  { label: 'Predict', desc: 'Lock in one precise match outcome every 24 hours. Precision is the key to maintaining your position in the winning arena.' },
+  { label: 'Hold', desc: 'Maintain your perfect accuracy across consecutive matchdays.' },
+  { label: 'Win', desc: 'Unlock and instantly withdraw your 10X reward multipliers.' },
 ];
 
 export default function HomeClient({ stats }: { stats: PlatformStats }) {
@@ -93,7 +92,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 className="inline-flex items-center gap-3 badge-luxury mb-8 px-5 py-2 backdrop-blur-3xl bg-gold/5 border-gold/20 shadow-inner"
               >
                  <div className="w-2 h-2 rounded-full bg-gold animate-pulse shadow-[0_0_10px_rgba(242,201,76,0.8)]" /> 
-                 <span className="font-display tracking-[0.2em] font-black pb-px text-[9px] italic">ARENA_LIVE</span>
+                 <span className="font-display tracking-[0.2em] font-black pb-px text-[9px] italic">ARENA LIVE FEED</span>
               </motion.div>
 
               <motion.h1 
@@ -123,12 +122,12 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start"
               >
                 <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !py-5 !px-16 group shadow-2xl">
-                  <span className="pb-px font-black italic tracking-widest text-[11px] uppercase">JOIN_THE_ARENA</span>
+                  <span className="pb-px font-black italic tracking-widest text-[11px] uppercase">START YOUR STREAK</span>
                   <ArrowUpRight className="w-4.5 h-4.5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </Link>
                 <Link href="/how-it-works" className="btn-luxury btn-outline btn-premium-depth !py-5 !px-16 group border-white/10 bg-white/[0.02]">
                   <PlayCircle className="w-4.5 h-4.5 mr-3 text-gold/60" /> 
-                  <span className="pb-px font-black italic tracking-widest text-[11px] uppercase">ARENA_RULES</span>
+                  <span className="pb-px font-black italic tracking-widest text-[11px] uppercase">ARENA GUIDE</span>
                 </Link>
               </motion.div>
 
@@ -136,19 +135,19 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 1, delay: 0.5 }}
-                className="mt-16 grid grid-cols-2 md:grid-cols-3 gap-10 opacity-100 border-t border-white/5 pt-10 max-w-lg mx-auto lg:mx-0"
+                className="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-3 gap-8 sm:gap-10 border-t border-white/5 pt-8 sm:pt-10 max-w-lg mx-auto lg:mx-0"
               >
                 <div className="flex flex-col gap-2 group cursor-default">
                    <div className="text-2xl font-black font-display text-white italic tracking-tighter uppercase transition-colors group-hover:text-gold leading-none">₦5k—20k</div>
-                   <div className="text-[8px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">ENTRY_FEE</div>
+                   <div className="text-[8px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">MEMBERSHIP ENTRY</div>
                 </div>
                 <div className="flex flex-col gap-2 group cursor-default">
                    <div className="text-2xl font-black font-display text-white italic tracking-tighter uppercase transition-colors group-hover:text-gold leading-none">₦50k—200k</div>
-                   <div className="text-[8px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">STREAK_REWARD</div>
+                   <div className="text-[8px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">WINNING PRIZE</div>
                 </div>
                 <div className="flex flex-col gap-2 col-span-2 md:col-span-1 group cursor-default">
                    <div className="text-2xl font-black font-display text-white italic tracking-tighter uppercase transition-colors group-hover:text-gold leading-none">INSTANT</div>
-                   <div className="text-[8px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">PAYOUT_FLOW</div>
+                   <div className="text-[8px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">INSTANT PAYOUTS</div>
                 </div>
               </motion.div>
             </div>
@@ -176,15 +175,15 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                           <Activity className="w-6 h-6 text-gold" />
                         </div>
                         <div className="space-y-1">
-                          <div className="text-[11px] font-black text-white uppercase tracking-[0.25em] italic">ARENA_LIVE_FEED</div>
+                          <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">MATCH FEED ACTIVE</span>
                           <div className="flex items-center gap-2">
                              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                             <div className="text-[8px] text-text-dim uppercase tracking-[0.3em] font-black italic opacity-40">LIVE_ARENA_SYNC</div>
+                             <div className="text-[8px] text-text-dim uppercase tracking-[0.3em] font-black italic opacity-40">REAL-TIME SYNC</div>
                           </div>
                         </div>
                     </div>
                     <div className="px-4 py-2 rounded-xl bg-black border border-white/10 shadow-inner group-hover:border-gold/20 transition-all">
-                      <span className="text-[9px] font-black text-gold tracking-[0.2em] italic uppercase">Elite_Pass</span>
+                      <span className="text-[9px] font-black text-gold tracking-[0.2em] italic uppercase">Premium Pass</span>
                     </div>
                   </div>
 
@@ -202,7 +201,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                             <span className="text-sm font-black text-white tracking-tight font-display uppercase italic leading-none">{m.match}</span>
                             <div className="flex items-center gap-2">
                                <Globe className="w-3 h-3 text-text-dim" />
-                               <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-40">CERTIFIED_FEED</span>
+                               <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-40">MATCH DATA</span>
                             </div>
                           </div>
                         </div>
@@ -210,7 +209,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                           {m.status === 'correct' ? (
                              <div className="w-8 h-8 rounded-full bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center"><Check className="w-4 h-4 text-emerald-500" /></div>
                           ) : m.status === 'open' ? (
-                             <div className="px-3 py-1 rounded-lg bg-gold/10 text-[9px] font-black text-gold border border-gold/20 animate-pulse italic">IN_PLAY</div>
+                             <div className="px-3 py-1 rounded-lg bg-gold/10 text-[9px] font-black text-gold border border-gold/20 animate-pulse italic">LIVE</div>
                           ) : (
                              <Clock className="w-4 h-4 text-text-dim opacity-30" />
                           )}
@@ -251,7 +250,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                    <div className="parallax-layer-2 space-y-4">
                       <div className="flex items-center gap-3">
                          <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20"><Star className="w-4 h-4 text-gold" /></div>
-                         <span className="text-[9px] font-black text-white uppercase italic tracking-widest">ELITE_STATUS</span>
+                         <span className="text-[9px] font-black text-white uppercase italic tracking-widest">ARENA FEED</span>
                       </div>
                       <div className="h-px bg-white/5" />
                       <div className="space-y-2">
@@ -268,15 +267,15 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
       </section>
 
       {/* Metrics Section */}
-      <section className="relative z-10 py-16 sm:py-24 border-y border-white/5 bg-[#030508]/50 backdrop-blur-3xl overflow-hidden">
+      <section className="relative z-10 py-12 sm:py-24 border-y border-white/5 bg-[#030508]/50 backdrop-blur-3xl overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-gold/[0.02] via-transparent to-gold/[0.02] pointer-events-none" />
         <div className="container-tight">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-16">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-16">
             {[
-              { label: 'ACTIVE_PLAYERS', value: stats.activeChallengers, icon: <Users className="w-4 h-4" /> },
-              { label: 'STREAKS_WON', value: stats.perfectStreaks, icon: <Trophy className="w-4 h-4" /> },
-              { label: 'TOTAL_PAYOUTS', prefix: '₦', value: stats.totalCashPaid, icon: <Wallet className="w-4 h-4" /> },
-              { label: 'ARENA_CYCLES', value: stats.roundsCompleted, icon: <Zap className="w-4 h-4" /> },
+              { label: 'ACTIVE PLAYERS', value: stats.activeChallengers, icon: <Users className="w-4 h-4" /> },
+              { label: 'STREAKS WON', value: stats.perfectStreaks, icon: <Trophy className="w-4 h-4" /> },
+              { label: 'TOTAL PAYOUTS', prefix: '₦', value: stats.totalCashPaid, icon: <Wallet className="w-4 h-4" /> },
+              { label: 'MATCH ROUNDS', value: stats.roundsCompleted, icon: <Zap className="w-4 h-4" /> },
             ].map((m, i) => (
               <motion.div 
                 key={i} 
@@ -290,9 +289,9 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                   <div className="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center group-hover:bg-gold/10 group-hover:border-gold/20 transition-all shadow-inner">{m.icon}</div>
                   <span className="text-[10px] font-black uppercase tracking-[0.3em] italic opacity-40 group-hover:opacity-100">{m.label}</span>
                 </div>
-                <div className="text-4xl sm:text-6xl font-black font-display text-white italic tracking-tighter uppercase leading-none group-hover:scale-105 transition-transform origin-left">
-                  <Counter end={m.value} prefix={m.prefix} />
-                </div>
+                 <div className="text-4xl sm:text-6xl font-black font-display text-white italic tracking-tighter uppercase leading-none group-hover:scale-105 transition-transform origin-left">
+                   <Counter end={m.value} prefix={m.prefix} />
+                 </div>
               </motion.div>
             ))}
           </div>
@@ -308,7 +307,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
             viewport={{ once: true }}
             className="badge-luxury mb-10 px-8 py-2 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px] text-gold"
           >
-            ARENA_RULES
+            ARENA GUIDE
           </motion.div>
           <h2 className="mb-8 uppercase italic font-black text-5xl sm:text-8xl leading-none tracking-tighter text-white">How to Command <br />the <span className="text-gradient-gold">Elite Arena.</span></h2>
           <p className="text-text-secondary max-w-2xl font-medium leading-relaxed italic opacity-40 text-lg sm:text-xl">
@@ -316,7 +315,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 sm:gap-8">
           {STEPS.map((step, i) => (
             <motion.div 
               key={i} 

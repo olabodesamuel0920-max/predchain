@@ -74,7 +74,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             animate={{ opacity: 1 }}
             className="badge-luxury mb-8 px-6 py-2 bg-white/[0.02] border-white/10 italic font-black"
           >
-            ARENA ACCESS SYSTEM
+            MEMBERSHIP TIER
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -89,7 +89,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             transition={{ delay: 0.1 }}
             className="text-text-secondary text-sm sm:text-base font-medium leading-relaxed italic opacity-60"
           >
-            Deploy into the arena by securing a membership tier. Each level unlocks verified <span className="text-white font-black">10X multipliers</span> upon streak completion.
+            Enter the arena by securing a membership tier. Each level unlocks verified <span className="text-white font-black">10X multipliers</span> upon streak completion.
           </motion.p>
 
           {errorMsg && (
@@ -144,9 +144,9 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                 <div className="px-10 space-y-5 mb-12 flex-1 relative z-10">
                    {[
                       '3-Day Streak Eligibility',
-                      'Official Match Intel-Feed',
+                      'Official Match Data',
                       `₦${(tier.perks?.referral_bonus ?? 1000).toLocaleString()} Partner Credit`,
-                      'Automated Reward Flow'
+                      'Instant Reward Distribution'
                    ].map((feat, idx) => (
                       <div key={idx} className="flex items-center gap-4 group/item">
                          <div className="w-5 h-5 rounded-lg bg-white/[0.02] border border-white/5 flex items-center justify-center shrink-0 group-hover/item:border-gold/30 transition-all">
@@ -159,7 +159,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
 
                 <div className="p-10 pt-0 relative z-10 mt-auto">
                    <div className="bg-black/60 border border-white/5 rounded-2xl p-6 text-center glass-layered mb-8 shadow-inner group-hover:border-gold/10 transition-all duration-700">
-                      <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.4em] block mb-3 italic opacity-30">Maximum Reward Potential</span>
+                      <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.4em] block mb-3 italic opacity-30">STREAK PAYOUT</span>
                       <div className="flex items-center justify-center gap-3">
                          <span className="text-3xl font-black text-white font-display italic tracking-tighter transition-transform group-hover:scale-105 duration-700">₦{rewardVal.toLocaleString()}</span>
                          <ShieldCheck className="w-4 h-4 text-emerald-500 opacity-40" />
@@ -175,7 +175,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                         }`}
                       >
                          {isLoading ? <Activity className="w-4 h-4 animate-spin" /> : 
-                          (userId && !isWalletEnough) ? 'LOW WALLET RESERVE' : 'ACTIVATE WITH WALLET'}
+                          (userId && !isWalletEnough) ? 'INSUFFICIENT FUNDS' : 'ACTIVATE WITH WALLET'}
                       </button>
                       
                       <button
@@ -183,7 +183,7 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
                         disabled={isLoading}
                         className="text-[9px] font-black text-text-dim hover:text-white transition-all text-center uppercase tracking-[0.3em] italic opacity-40 hover:opacity-100"
                       >
-                         Secure External Payment Gateway
+                         DIRECT CARD ENTRY
                       </button>
                    </div>
                 </div>
@@ -195,9 +195,9 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
         {/* Platform Integrity Standards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-16 max-w-5xl mx-auto py-24 border-t border-white/5">
            {[
-              { icon: ShieldCheck, title: 'Asset Integrity', desc: 'Membership fees are locked in reserve until match outcomes are verified.' },
-              { icon: Globe, title: 'Network Feeds', desc: 'Arena fixtures and results are synchronized with global sports intelligence.' },
-              { icon: Crown, title: 'Priority Harvest', desc: 'Elite streak winners receive high-priority, automated reward distributions.' }
+              { icon: ShieldCheck, title: 'SECURE ENTRY', desc: 'Membership fees are locked in reserve until match outcomes are verified.' },
+              { icon: Globe, title: 'LIVE MATCH DATA', desc: 'Arena fixtures and results are synchronized with global sports intelligence.' },
+              { icon: Crown, title: 'INSTANT PAYOUTS', desc: 'Elite streak winners receive high-priority, automated reward distributions.' }
            ].map((item, i) => (
               <motion.div 
                 key={i} 

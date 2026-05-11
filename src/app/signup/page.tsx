@@ -48,10 +48,10 @@ function SignupForm() {
           className="inline-flex items-center gap-3 badge-luxury mb-8 px-6 py-2 bg-white/[0.02] border-white/10"
         >
            <Radio className="w-3.5 h-3.5 text-gold animate-pulse" /> 
-           <span className="font-black tracking-[0.2em] text-[9px] italic">ARENA_REGISTRATION</span>
+           <span className="font-black tracking-[0.2em] text-[9px] italic">ELITE ACCESS</span>
         </motion.div>
-        <h2 className="mb-4 uppercase italic font-black leading-none tracking-tighter text-4xl sm:text-5xl text-white">Initialize <span className="text-gradient-gold">Access.</span></h2>
-        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">JOIN THE ELITE PERFORMANCE ARENA</p>
+        <h2 className="mb-4 uppercase italic font-black leading-none tracking-tighter text-4xl sm:text-5xl text-white">Create <span className="text-gradient-gold">Account.</span></h2>
+        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">JOIN THE WINNING ARENA</p>
       </div>
 
       <form action={signupAction} className="space-y-6">
@@ -69,7 +69,7 @@ function SignupForm() {
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-3">
             <label className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">
-              LEGAL_NAME
+              FULL NAME
             </label>
             <input 
               name="full_name" 
@@ -81,7 +81,7 @@ function SignupForm() {
           </div>
           <div className="space-y-3">
             <label className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">
-              ARENA_HANDLE
+              PUBLIC USERNAME
             </label>
             <input 
               name="username" 
@@ -95,20 +95,20 @@ function SignupForm() {
 
         <div className="space-y-3">
           <label className="flex items-center gap-3 text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">
-            <Mail className="w-4 h-4 opacity-40" /> EMAIL_IDENTIFIER
+            <Mail className="w-4 h-4 opacity-40" /> EMAIL ADDRESS
           </label>
           <input 
             name="email" 
             type="email" 
             required 
-            placeholder="PLAYER@ARENA.COM" 
+            placeholder="MEMBER@PREDCHAIN.COM" 
             className="w-full bg-[#07090e] border border-white/5 rounded-2xl py-5 px-8 text-sm text-white placeholder:text-white/5 focus:outline-none focus:border-gold/30 transition-all shadow-inner uppercase font-black italic tracking-wider" 
           />
         </div>
 
         <div className="space-y-3">
           <label className="flex items-center gap-3 text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">
-            <Phone className="w-4 h-4 opacity-40" /> MOBILE_UPLINK
+            <Phone className="w-4 h-4 opacity-40" /> PHONE NUMBER
           </label>
           <input 
             name="phone" 
@@ -122,7 +122,7 @@ function SignupForm() {
         <div className="grid grid-cols-2 gap-6">
           <div className="space-y-3">
             <label className="flex items-center gap-3 text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">
-              <Lock className="w-4 h-4 opacity-40" /> ACCESS_KEY
+              <Lock className="w-4 h-4 opacity-40" /> PASSWORD
             </label>
             <input 
               name="password" 
@@ -134,7 +134,7 @@ function SignupForm() {
           </div>
           <div className="space-y-3">
             <label className="flex items-center gap-3 text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">
-              <Ticket className="w-4 h-4 opacity-40" /> INVITE_CODE
+              <Ticket className="w-4 h-4 opacity-40" /> INVITE CODE
             </label>
             <input 
               name="referral_code" 
@@ -157,7 +157,7 @@ function SignupForm() {
                <Activity className="w-5 h-5 animate-spin" />
              ) : (
                <>
-                 INITIALIZE ARENA ACCESS <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+                 JOIN THE ARENA <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
                </>
              )}
           </span>
@@ -166,7 +166,7 @@ function SignupForm() {
 
       <div className="mt-16 text-center">
         <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30">
-          ALREADY A MEMBER? <Link href={loginUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-1 italic">SIGN_IN</Link>
+          ALREADY A MEMBER? <Link href={loginUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-1 italic">SIGN IN</Link>
         </p>
       </div>
     </div>
@@ -195,7 +195,7 @@ export default function SignupPage() {
             animate={{ opacity: 1, x: 0 }}
             className="badge-luxury mb-12 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
           >
-            ELITE_PERFORMANCE_ARENA
+            PREMIUM FOOTBALL PREDICTION
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
@@ -208,17 +208,17 @@ export default function SignupPage() {
             Win Big.
           </motion.h1>
           <p className="text-[12px] font-black text-text-dim uppercase tracking-[0.6em] opacity-30 leading-loose italic">
-            HIGH_YIELD_SPORTS_PREDICTION_ARENA
+            Premium Football Prediction
           </p>
         </div>
 
         <div className="relative z-10 flex items-center gap-10 text-text-dim opacity-30">
            <div className="flex items-center gap-4 bg-white/[0.02] border border-white/5 px-6 py-3 rounded-2xl shadow-inner">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">ARENA_SYNCED</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">ARENA LIVE</span>
            </div>
            <div className="w-px h-6 bg-white/10" />
-           <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">256_BIT_ENCRYPTION</span>
+           <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">SECURE DATA</span>
         </div>
       </div>
 
@@ -231,7 +231,7 @@ export default function SignupPage() {
              <div className="w-16 h-16 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center justify-center shadow-inner">
                 <Activity className="w-8 h-8 text-gold/20" />
              </div>
-             <div className="text-[11px] font-black text-gold/20 uppercase tracking-[0.6em] italic">INITIALIZING_ARENA...</div>
+             <div className="text-[11px] font-black text-gold/20 uppercase tracking-[0.6em] italic">PREPARING...</div>
           </div>
         }>
           <SignupForm />
