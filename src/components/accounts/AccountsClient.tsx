@@ -74,14 +74,14 @@ export default function AccountsClient({ tiers, userId, walletBalance = 0, stats
             animate={{ opacity: 1 }}
             className="badge-luxury mb-8 px-6 py-2 bg-white/[0.02] border-white/10 italic font-black"
           >
-            ARENA ACCESS PROTOCOL
+            ARENA ACCESS SYSTEM
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-6 uppercase italic font-black tracking-tighter text-5xl sm:text-7xl leading-none"
           >
-            Select Your <span className="text-gradient-gold">Circuit.</span>
+            Select Your <span className="text-gradient-gold">Arena.</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

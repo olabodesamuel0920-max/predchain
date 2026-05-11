@@ -57,8 +57,8 @@ const STEPS = [
     number: '05',
     icon: Award,
     title: 'Claim Rewards',
-    description: 'Hit the 3/3 target and trigger your verified reward payout. Winnings are distributed instantly to your secure wallet.',
-    detail: 'Automated 10X reward flow on final whistle.',
+    description: 'Hit the 3/3 target and trigger your reward payout. Winnings are distributed instantly to your secure wallet.',
+    detail: 'Automated 10X payout on final whistle.',
   },
 ];
 
@@ -85,14 +85,14 @@ export default function HowItWorksPage() {
             whileInView={{ opacity: 1, y: 0 }}
             className="badge-luxury mb-10 px-8 py-2 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px]"
           >
-            ARENA_METHODOLOGY
+            ARENA_RULES
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             className="mb-10 leading-[1] uppercase italic font-black tracking-tighter text-5xl sm:text-8xl text-white"
           >
-            Dominate the <br /><span className="text-gradient-gold">Match Circuit.</span>
+            Dominate the <br /><span className="text-gradient-gold">Elite Arena.</span>
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0 }}
@@ -157,7 +157,7 @@ export default function HowItWorksPage() {
               whileInView={{ opacity: 1 }}
               className="badge-luxury mb-8 px-6 py-2 italic font-black uppercase tracking-[0.4em] text-[9px] text-gold"
             >
-              PAYOUT_STRUCTURE
+              ARENA_PAYOUTS
             </motion.div>
             <h2 className="mb-6 uppercase italic font-black text-5xl sm:text-7xl tracking-tighter leading-none text-white">Winning <span className="text-gradient-gold">Matrix.</span></h2>
             <p className="text-text-secondary opacity-60 font-medium tracking-wide italic text-lg">Standardized 10X reward multipliers at every match level.</p>
@@ -201,13 +201,13 @@ export default function HowItWorksPage() {
              <div className="absolute top-0 right-0 p-32 opacity-[0.01] group-hover:opacity-[0.05] transition-all duration-1000 pointer-events-none select-none rotate-12"><Globe className="w-[500px] h-[500px]" /></div>
              
              <div className="flex-1 text-center xl:text-left relative z-10">
-                <div className="badge-luxury !text-gold mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px] w-fit mx-auto xl:mx-0">PARTNER_PROTOCOL</div>
-                <h2 className="mb-10 text-5xl md:text-9xl leading-none italic font-black uppercase tracking-tighter text-white">Scale Your <br /><span className="text-gradient-gold">Network.</span></h2>
+                <div className="badge-luxury !text-gold mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px] w-fit mx-auto xl:mx-0">PARTNER_PROGRAM</div>
+                <h2 className="mb-10 text-5xl md:text-9xl leading-none italic font-black uppercase tracking-tighter text-white">Expand Your <br /><span className="text-gradient-gold">Squad.</span></h2>
                 <p className="text-text-secondary text-xl font-medium opacity-40 mb-16 max-w-xl mx-auto xl:mx-0 leading-relaxed italic group-hover:opacity-100 transition-opacity duration-1000">
-                  Connect elite players to the arena. Secure <span className="text-white font-black italic">₦1,000</span> for every successful match activation in your professional partner circuit.
+                  Recruit elite predictors to the arena. Earn <span className="text-white font-black italic">₦1,000</span> for every successful player registration in your professional scout network.
                 </p>
                 <Link href="/referral" className="btn-luxury btn-gold btn-premium-depth !px-16 !py-6 text-[11px] font-black italic tracking-[0.3em] shadow-2xl group uppercase">
-                   Partner Portal <ArrowUpRight className="w-5 h-5 ml-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                   Partner Program <ArrowUpRight className="w-5 h-5 ml-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </Link>
              </div>
              

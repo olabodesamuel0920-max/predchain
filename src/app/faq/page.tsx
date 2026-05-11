@@ -88,16 +88,16 @@ const FAQ_SECTIONS = [
     icon: Users,
     items: [
       {
-        q: 'How does the affiliate program work?',
+        q: 'How does the partner program work?',
         a: 'You earn ₦1,000 for every player who joins a PredChain tier using your unique invite link. There is no cap on earnings. Bonuses are deposited instantly to your wallet upon confirmed tier entry.',
       },
       {
         q: 'How do I get my invite link?',
-        a: 'Your unique invite link is automatically generated once you join a tier. You can find it on your dashboard under the Affiliates tab.',
+        a: 'Your unique invite link is automatically generated once you join a tier. You can find it on your dashboard under the Partners tab.',
       },
       {
         q: 'Can I earn bonuses without completing a streak?',
-        a: 'Yes. Affiliate earnings are independent of your challenge performance. You earn ₦1,000 per successful referral regardless of your streak status.',
+        a: 'Yes. Partner earnings are independent of your challenge performance. You earn ₦1,000 per successful referral regardless of your streak status.',
       },
     ],
   },
@@ -164,7 +164,7 @@ export default function FAQPage() {
         <div className="max-w-3xl mb-20">
            <div className="badge-luxury mb-6 px-5 py-1.5 flex items-center gap-2.5 bg-gold/5 border-gold/10 inline-flex">
               <HelpCircle className="w-4 h-4 text-gold" />
-              <span className="pb-px font-display tracking-[0.2em] font-extrabold uppercase">Knowledge Base</span>
+              <span className="pb-px font-display tracking-[0.2em] font-extrabold uppercase">Arena Intelligence</span>
            </div>
            <h1 className="mb-6 uppercase italic font-black leading-tight tracking-tight">Arena <span className="text-gradient-gold">Intelligence.</span></h1>
            <p className="text-text-secondary text-base font-medium opacity-70 leading-relaxed max-w-xl italic">

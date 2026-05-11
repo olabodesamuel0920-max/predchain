@@ -42,7 +42,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
             animate={{ opacity: 1 }}
             className="badge-luxury mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
           >
-            ARENA PERFORMANCE LEDGER
+            ARENA RANKINGS
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -57,7 +57,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
             transition={{ delay: 0.1 }}
             className="text-text-secondary text-base sm:text-xl font-medium opacity-60 leading-relaxed italic max-w-2xl mx-auto"
           >
-            The verified hierarchy of challengers ranked by circuit consistency and high-precision prediction accuracy.
+            The verified hierarchy of challengers ranked by streak consistency and prediction accuracy.
           </motion.p>
         </div>
 
@@ -102,7 +102,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                 </div>
 
                 <div className="inline-flex px-6 py-2 rounded-2xl bg-white/[0.03] border border-white/5 text-[9px] font-black text-text-dim uppercase tracking-[0.3em] italic shadow-inner">
-                  {player.tier?.name || 'STANDARD'} CIRCUIT
+                  {player.tier?.name || 'STANDARD'} ARENA
                 </div>
               </motion.div>
             );
@@ -142,23 +142,23 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-white/[0.02] border-b border-white/5">
-                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">RANK</th>
-                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">CHALLENGER</th>
-                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">STREAK_VELOCITY</th>
-                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">CIRCUIT</th>
-                  <th className="px-12 py-8 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40 text-right">STATUS</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">RANK</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">PLAYER</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">STREAK</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">ARENA</th>
+                  <th className="px-6 py-6 text-[10px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40 text-right">STATUS</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-white/5">
                 {filtered.map((row, i) => (
                   <tr key={row.id} className="hover:bg-white/[0.01] transition-all group/row duration-500">
-                    <td className="px-12 py-8 text-[11px] font-black text-text-dim group-hover/row:text-gold transition-colors italic tracking-widest opacity-30 group-hover/row:opacity-100">
+                    <td className="px-6 py-6 text-[11px] font-black text-text-dim group-hover/row:text-gold transition-colors italic tracking-widest opacity-30 group-hover/row:opacity-100">
                       #{String(i + 1).padStart(2, '0')}
                     </td>
-                    <td className="px-12 py-8">
-                      <span className="text-lg font-black text-white uppercase tracking-tighter italic font-display group-hover/row:text-gold transition-colors">@{row.profile?.username || 'GUEST_CHALLENGER'}</span>
+                    <td className="px-6 py-6">
+                      <span className="text-lg font-black text-white uppercase tracking-tighter italic font-display group-hover/row:text-gold transition-colors">@{row.profile?.username || 'PLAYER'}</span>
                     </td>
-                    <td className="px-12 py-8">
+                    <td className="px-6 py-6">
                       <div className="flex items-center gap-6">
                          <div className="text-2xl font-black italic tracking-tighter font-display transition-transform group-hover/row:scale-110 duration-500" style={{ color: row.streak_count === 3 ? 'var(--success)' : 'white' }}>{row.streak_count}/3</div>
                          <div className="w-24 h-1 bg-white/5 rounded-full overflow-hidden shrink-0 shadow-inner">
@@ -172,12 +172,12 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
                          </div>
                       </div>
                     </td>
-                    <td className="px-12 py-8">
+                    <td className="px-6 py-6">
                        <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] italic opacity-30 group-hover/row:opacity-100 transition-opacity">{row.tier?.name || 'STANDARD'}</span>
                     </td>
-                    <td className="px-12 py-8 text-right">
+                    <td className="px-6 py-6 text-right">
                       {row.is_winner
-                        ? <div className="badge-luxury !py-2 !px-6 italic font-black text-[9px] !bg-emerald-500/5 !text-emerald-500 border-emerald-500/10 tracking-[0.2em] shadow-inner">CONFIRMED</div>
+                        ? <div className="badge-luxury !py-2 !px-6 italic font-black text-[9px] !bg-emerald-500/5 !text-emerald-500 border-emerald-500/10 tracking-[0.2em] shadow-inner">VICTORY</div>
                         : <div className="badge-luxury !py-2 !px-6 italic font-black text-[9px] !bg-gold/5 !text-gold border-gold/10 tracking-[0.2em] shadow-inner">ACTIVE</div>
                       }
                     </td>
@@ -198,13 +198,13 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
            <div className="absolute inset-0 bg-[#05070a]" />
            <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.05] to-transparent opacity-50" />
            <div className="max-w-3xl mx-auto relative z-10">
-              <h2 className="mb-12 text-6xl md:text-9xl uppercase italic font-black leading-none text-white tracking-tighter">Join the <br /><span className="text-gradient-gold">Elite Hub.</span></h2>
+              <h2 className="mb-12 text-6xl md:text-9xl uppercase italic font-black leading-none text-white tracking-tighter">Join the <br /><span className="text-gradient-gold">Elite Arena.</span></h2>
               <p className="text-text-secondary text-lg font-medium mb-20 leading-relaxed italic opacity-60">
-                Ready to validate your accuracy on the global stage? Start your circuit activation and command the rankings today.
+                Ready to validate your accuracy on the global stage? Join the arena and command the rankings today.
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
                 <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !px-20 !py-6 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">
-                  INITIALIZE ACCESS <ArrowUpRight className="w-5 h-5 ml-3" />
+                  INITIALIZE ARENA ACCESS <ArrowUpRight className="w-5 h-5 ml-3" />
                 </Link>
                 <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !px-20 !py-6 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">VIEW ARENA</Link>
               </div>

@@ -61,7 +61,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              animate={{ opacity: 1 }}
              className="badge-luxury !text-gold mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
            >
-             OFFICIAL PARTNER PROTOCOL
+             PREDCHAIN PARTNER PROGRAM
            </motion.div>
            <motion.h1 
              initial={{ opacity: 0, y: 20 }}
@@ -77,7 +77,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              transition={{ delay: 0.1 }}
              className="text-text-secondary text-base sm:text-xl font-medium opacity-60 max-w-2xl mx-auto mb-16 leading-relaxed italic"
            >
-             Access the PredChain elite partner network. Secure the circuit and earn <span className="text-white font-black">₦1,000</span> for every confirmed activation. No caps, automated flow.
+             Access the PredChain elite partner program. Grow the arena and earn <span className="text-white font-black">₦1,000</span> for every confirmed player activation. No caps, instant payouts.
            </motion.p>
            
            {!user && (
@@ -87,8 +87,8 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                transition={{ delay: 0.2 }}
                className="flex flex-col sm:flex-row gap-8 justify-center"
              >
-                <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] shadow-2xl uppercase">Initialize Partnership</Link>
-                <Link href="/login" className="btn-luxury btn-outline btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">Partner Login</Link>
+                <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] shadow-2xl uppercase">JOIN THE PARTNERS</Link>
+                <Link href="/login" className="btn-luxury btn-outline btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">LOGIN</Link>
              </motion.div>
            )}
         </div>
@@ -102,10 +102,10 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
         >
           <div className="lg:col-span-8 card-luxury !p-12 sm:!p-20 bg-[#07090e] border-white/10 flex flex-col justify-center relative overflow-hidden group depth-card shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)]">
              <div className="absolute top-0 right-0 p-16 opacity-[0.01] group-hover:opacity-[0.05] transition-all duration-1000 rotate-12 pointer-events-none"><Users className="w-80 h-80" /></div>
-             <div className="badge-luxury !text-gold mb-10 px-6 py-2 bg-white/[0.03] uppercase italic font-black tracking-[0.3em] w-fit text-[9px]">NETWORK_EXPANSION</div>
-             <h2 className="text-4xl sm:text-6xl font-black italic uppercase tracking-tighter mb-8 leading-none text-white">The Partner <span className="text-gradient-gold">Circuit.</span></h2>
+             <div className="badge-luxury !text-gold mb-10 px-6 py-2 bg-white/[0.03] uppercase italic font-black tracking-[0.3em] w-fit text-[9px]">PARTNER_REWARDS</div>
+             <h2 className="text-4xl sm:text-6xl font-black italic uppercase tracking-tighter mb-8 leading-none text-white">The Partner <span className="text-gradient-gold">Program.</span></h2>
              <p className="text-text-dim text-base sm:text-lg font-medium opacity-40 max-w-xl leading-relaxed italic group-hover:opacity-100 transition-opacity duration-700">
-                PredChain partners scale the most transparent sports prediction arena in existence. Every verified entry you facilitate strengthens the pool and unlocks automated rewards.
+                PredChain partners grow the most transparent football prediction arena in existence. Every verified player you invite strengthens the community and unlocks automated payouts.
              </p>
           </div>
           
@@ -129,18 +129,18 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-40">
            {[
               { 
-                title: 'Real-Time Sync', 
-                desc: 'Every click and activation is synchronized instantly. Full transparency on your network velocity.', 
+                title: 'Live Tracking', 
+                desc: 'Every click and activation is tracked instantly. Full transparency on your network growth.', 
                 icon: Activity 
               },
               { 
-                title: 'Automated Flow', 
-                desc: 'Rewards are credited instantly upon circuit entry confirmation. Zero latency in reward flow.', 
+                title: 'Instant Payouts', 
+                desc: 'Rewards are credited instantly upon player activation. Zero delay in reward flow.', 
                 icon: Zap 
               },
               { 
-                title: 'Partner Assets', 
-                desc: 'Access elite marketing intelligence and support to help you scale your personal circuit.', 
+                title: 'Partner Support', 
+                desc: 'Access marketing assets and support to help you grow your partner rewards.', 
                 icon: ShieldCheck 
               }
            ].map((item, i) => (
@@ -168,7 +168,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
           <div className="space-y-16 mb-40">
              <div className="flex items-center gap-6 px-4">
                 <div className="w-12 h-12 rounded-2xl bg-gold/10 flex items-center justify-center text-gold border border-gold/15 shadow-inner"><Star className="w-6 h-6 animate-pulse" /></div>
-                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white font-display">Partner <span className="text-gradient-gold">Protocol.</span></h2>
+                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white font-display">Partner <span className="text-gradient-gold">Dashboard.</span></h2>
                 <div className="flex-1 h-px bg-white/5 ml-6" />
              </div>
 
@@ -180,7 +180,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                       <div className="flex items-center gap-6 mb-16">
                          <div className="w-14 h-14 rounded-2xl bg-white/[0.03] flex items-center justify-center text-gold border border-gold/15 shadow-inner group-hover:rotate-12 transition-transform duration-700"><LinkIcon className="w-6 h-6" /></div>
                          <div className="flex flex-col gap-1">
-                            <span className="text-[12px] font-black text-white uppercase tracking-[0.2em] italic">Network Link</span>
+                            <span className="text-[12px] font-black text-white uppercase tracking-[0.2em] italic">Partner Link</span>
                             <span className="text-[10px] font-black text-text-dim opacity-30 tracking-[0.4em] uppercase">ACCESS CODE: {referralCode}</span>
                          </div>
                       </div>
@@ -192,7 +192,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                    <div className="flex items-center justify-between pt-10 border-t border-white/5">
                       <div className="flex items-center gap-4">
                          <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(34,197,94,0.8)]" />
-                         <span className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.2em] italic">Tracking Operational</span>
+                         <span className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.2em] italic">Live Tracking Active</span>
                       </div>
                       <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-20 italic">SECURE_ACCESS</span>
                    </div>
@@ -217,7 +217,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              <div className="space-y-10">
                 <div className="flex items-center gap-6 px-4 opacity-40">
                    <Activity className="w-6 h-6 text-gold/60" />
-                   <h3 className="text-[12px] font-black uppercase tracking-[0.5em] text-white italic">Recent Circuit Activity</h3>
+                   <h3 className="text-[12px] font-black uppercase tracking-[0.5em] text-white italic">Recent Partner Activity</h3>
                    <div className="flex-1 h-px bg-white/5 ml-8" />
                 </div>
 
@@ -236,7 +236,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                             {referrals.length === 0 ? (
                                <tr>
                                   <td colSpan={4} className="py-40 text-center">
-                                     <p className="text-[12px] font-black text-text-dim uppercase tracking-[0.5em] opacity-20 italic">No circuit activity detected.</p>
+                                     <p className="text-[12px] font-black text-text-dim uppercase tracking-[0.5em] opacity-20 italic">No partner activity detected.</p>
                                   </td>
                                </tr>
                             ) : (
@@ -283,12 +283,12 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              <div className="absolute inset-0 bg-[#05070a]" />
              <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.05] to-transparent opacity-50" />
              <div className="relative z-10 max-w-3xl mx-auto">
-                <h2 className="text-5xl md:text-8xl mb-12 uppercase italic font-black tracking-tighter leading-none text-white">Join the <br /><span className="text-gradient-gold">Elite Protocol.</span></h2>
+                <h2 className="text-5xl md:text-8xl mb-12 uppercase italic font-black tracking-tighter leading-none text-white">Join the <br /><span className="text-gradient-gold">Partners.</span></h2>
                 <p className="text-text-secondary text-lg font-medium mb-16 leading-relaxed italic opacity-60">
-                   Secure your position in the PredChain arena and scale your revenue through our professional partner circuit.
+                   Secure your position in the PredChain arena and grow your revenue through our professional partner program.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-8 justify-center">
-                   <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">Initialize Partnership</Link>
+                   <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">Join the Partners</Link>
                    <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">View Arena</Link>
                 </div>
              </div>

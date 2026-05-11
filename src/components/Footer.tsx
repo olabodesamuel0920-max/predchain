@@ -38,8 +38,8 @@ export default function Footer() {
               <span className="font-display text-2xl font-black text-white uppercase italic tracking-tighter">PRED<span className="text-gold">CHAIN.</span></span>
             </Link>
             <p className="text-text-secondary text-xs sm:text-sm font-medium leading-relaxed max-w-sm italic opacity-40 group-hover:opacity-100 transition-opacity duration-700">
-               The premier circuit for high-performance sports analysis. 
-               Join an elite network of challengers building verified 3-day winning streaks for premium multipliers.
+               The premier platform for high-performance football analysis. 
+               Join an elite community of challengers building 3-day winning streaks for premium rewards.
             </p>
             <div className="flex gap-5">
                {[
@@ -60,27 +60,27 @@ export default function Footer() {
                { 
                  title: 'ARENA', 
                  links: [
-                   { h: '/', l: 'Front Line' },
-                   { h: '/how-it-works', l: 'Arena Methodology' },
-                   { h: '/accounts', l: 'Match Entry' },
-                   { h: '/arena', l: 'Live Match Feed' },
+                   { h: '/', l: 'Home' },
+                   { h: '/how-it-works', l: 'Guide' },
+                   { h: '/accounts', l: 'Tiers' },
+                   { h: '/arena', l: 'Live Arena' },
                  ] 
                },
                { 
-                 title: 'ELITE NETWORK', 
+                 title: 'COMMUNITY', 
                  links: [
-                   { h: '/winners', l: 'Verified Winners' },
-                   { h: '/leaderboard', l: 'Global Rankings' },
-                   { h: '/referral', l: 'Partner Portal' },
-                   { h: '/faq', l: 'Mission Intel' },
+                   { h: '/winners', l: 'Winners' },
+                   { h: '/leaderboard', l: 'Rankings' },
+                   { h: '/referral', l: 'Partners' },
+                   { h: '/faq', l: 'Help Center' },
                  ] 
                },
                { 
-                 title: 'CIRCUIT', 
+                 title: 'LEGAL', 
                  links: [
-                   { h: '/terms', l: 'Circuit Rules' },
+                   { h: '/terms', l: 'Terms of Service' },
                    { h: '/privacy', l: 'Privacy Policy' },
-                   { h: '/rules', l: 'Arena Protocol' }
+                   { h: '/rules', l: 'Arena Rules' }
                  ] 
                }
              ].map((group, i) => (
@@ -106,20 +106,20 @@ export default function Footer() {
         {/* Global Footer Bar */}
         <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-10">
              <div className="flex flex-wrap items-center justify-center md:justify-start gap-10">
-               <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-4 py-2 rounded-full shadow-inner">
-                  <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-                  <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">ARENA_OPERATIONAL</span>
-               </div>
-               <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-30">© 2026 PREDCHAIN • ELITE PERFORMANCE CIRCUIT</span>
+                <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-4 py-2 rounded-full shadow-inner">
+                   <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
+                   <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">ARENA_LIVE</span>
+                </div>
+                <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-30">© 2026 PREDCHAIN • ELITE FOOTBALL ARENA</span>
             </div>
             
             <div className="flex items-center gap-6">
                <span className="text-[9px] font-black text-text-dim/40 uppercase tracking-[0.3em] italic">
-                  SECURED_GATEWAY • ENCRYPTED_ACCESS
+                  SECURE ACCESS • ENCRYPTED
                </span>
                <div className="w-px h-3 bg-white/10 hidden sm:block" />
                <Link href="/terms" className="text-[9px] font-black text-text-dim/40 hover:text-white transition-colors uppercase tracking-[0.3em] italic">
-                  VERIFIED_ACCESS
+                  TERMS
                </Link>
             </div>
         </div>

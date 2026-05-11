@@ -10,42 +10,54 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 function Counter({ end, prefix = '', suffix = '', duration = 2000 }: { end: number; prefix?: string; suffix?: string; duration?: number }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
-  const started = useRef(false);
+  const isVisible = useRef(false);
 
   useEffect(() => {
+    const startAnimation = () => {
+      const startTime = performance.now();
+      const animate = (now: number) => {
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setCount(Math.round(eased * end));
+        if (progress < 1) requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const startTime = performance.now();
-          const animate = (now: number) => {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setCount(Math.round(eased * end));
-            if (progress < 1) requestAnimationFrame(animate);
-          };
-          requestAnimationFrame(animate);
+        if (entry.isIntersecting && !isVisible.current) {
+          isVisible.current = true;
+          startAnimation();
+        } else if (!entry.isIntersecting) {
+          isVisible.current = false;
         }
       },
       { threshold: 0.1 }
     );
+
     if (ref.current) observer.observe(ref.current);
+    
+    // If end changes while visible, restart animation
+    if (isVisible.current) startAnimation();
+
     return () => observer.disconnect();
   }, [end, duration]);
 
   return (
     <span ref={ref}>
+      {prefix}{count.toLocaleString()}{suffix}
     </span>
   );
 }
 
 const STEPS = [
-  { label: 'Initialize', desc: 'Secure your elite account and join the high-performance match circuit.' },
+  { label: 'Join', desc: 'Secure your elite account and enter the high-performance match arena.' },
   { label: 'Analyze', desc: 'Leverage data-driven insights for upcoming match fixtures.' },
-  { label: 'Authorize', desc: 'Lock in your 3-day winning streak of professional match predictions.' },
-  { label: 'Hold Streak', desc: 'Maintain your winning target across consecutive matchdays.' },
-  { label: 'Claim Rewards', desc: 'Unlock and instantly withdraw your 10X reward multipliers.' },
+  { label: 'Predict', desc: 'Lock in your 3-day winning streak of professional match predictions.' },
+  { label: 'Win Streak', desc: 'Maintain your winning target across consecutive matchdays.' },
+  { label: 'Get Paid', desc: 'Unlock and instantly withdraw your 10X reward multipliers.' },
 ];
 
 export default function HomeClient({ stats }: { stats: PlatformStats }) {
@@ -81,7 +93,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 className="inline-flex items-center gap-3 badge-luxury mb-8 px-5 py-2 backdrop-blur-3xl bg-gold/5 border-gold/20 shadow-inner"
               >
                  <div className="w-2 h-2 rounded-full bg-gold animate-pulse shadow-[0_0_10px_rgba(242,201,76,0.8)]" /> 
-                 <span className="font-display tracking-[0.2em] font-black pb-px text-[9px] italic">ARENA_UPLINK_ACTIVE</span>
+                 <span className="font-display tracking-[0.2em] font-black pb-px text-[9px] italic">ARENA_LIVE</span>
               </motion.div>
 
               <motion.h1 
@@ -91,7 +103,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 className="mb-8 tracking-tighter leading-[1] font-display font-black italic uppercase text-white"
               >
                 Command the <br />
-                <span className="text-gradient-gold">Match Circuit.</span>
+                <span className="text-gradient-gold">Match Arena.</span>
               </motion.h1>
 
               <motion.p 
@@ -116,7 +128,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 </Link>
                 <Link href="/how-it-works" className="btn-luxury btn-outline btn-premium-depth !py-5 !px-16 group border-white/10 bg-white/[0.02]">
                   <PlayCircle className="w-4.5 h-4.5 mr-3 text-gold/60" /> 
-                  <span className="pb-px font-black italic tracking-widest text-[11px] uppercase">METHODOLOGY</span>
+                  <span className="pb-px font-black italic tracking-widest text-[11px] uppercase">ARENA_RULES</span>
                 </Link>
               </motion.div>
 
@@ -167,7 +179,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                           <div className="text-[11px] font-black text-white uppercase tracking-[0.25em] italic">ARENA_LIVE_FEED</div>
                           <div className="flex items-center gap-2">
                              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                             <div className="text-[8px] text-text-dim uppercase tracking-[0.3em] font-black italic opacity-40">ACTIVE_NETWORK</div>
+                             <div className="text-[8px] text-text-dim uppercase tracking-[0.3em] font-black italic opacity-40">LIVE_ARENA_SYNC</div>
                           </div>
                         </div>
                     </div>
@@ -190,7 +202,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                             <span className="text-sm font-black text-white tracking-tight font-display uppercase italic leading-none">{m.match}</span>
                             <div className="flex items-center gap-2">
                                <Globe className="w-3 h-3 text-text-dim" />
-                               <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-40">VERIFIED_FEED</span>
+                               <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-40">CERTIFIED_FEED</span>
                             </div>
                           </div>
                         </div>
@@ -261,10 +273,10 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
         <div className="container-tight">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 sm:gap-16">
             {[
-              { label: 'VERIFIED_ANALYSTS', value: stats.activeChallengers, icon: <Users className="w-4 h-4" /> },
-              { label: 'MATCH_CIRCUITS', value: stats.roundsCompleted, icon: <Zap className="w-4 h-4" /> },
-              { label: 'ELITE_TARGETS', value: stats.perfectStreaks, icon: <Check className="w-4 h-4" /> },
-              { label: 'TOTAL_REWARDS', prefix: '₦', value: stats.totalCashPaid, icon: <Shield className="w-4 h-4" /> },
+              { label: 'ACTIVE_PLAYERS', value: stats.activeChallengers, icon: <Users className="w-4 h-4" /> },
+              { label: 'STREAKS_WON', value: stats.perfectStreaks, icon: <Trophy className="w-4 h-4" /> },
+              { label: 'TOTAL_PAYOUTS', prefix: '₦', value: stats.totalCashPaid, icon: <Wallet className="w-4 h-4" /> },
+              { label: 'ARENA_CYCLES', value: stats.roundsCompleted, icon: <Zap className="w-4 h-4" /> },
             ].map((m, i) => (
               <motion.div 
                 key={i} 
@@ -296,7 +308,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
             viewport={{ once: true }}
             className="badge-luxury mb-10 px-8 py-2 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px] text-gold"
           >
-            ARENA_METHODOLOGY
+            ARENA_RULES
           </motion.div>
           <h2 className="mb-8 uppercase italic font-black text-5xl sm:text-8xl leading-none tracking-tighter text-white">How to Command <br />the <span className="text-gradient-gold">Elite Arena.</span></h2>
           <p className="text-text-secondary max-w-2xl font-medium leading-relaxed italic opacity-40 text-lg sm:text-xl">

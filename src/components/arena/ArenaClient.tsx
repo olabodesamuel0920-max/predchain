@@ -149,10 +149,10 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                     <span className="text-[13px] font-black text-white uppercase tracking-[0.25em] italic font-display">Match Day Fixtures</span>
                  </div>
                  {!activeRound && (
-                   <div className="flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                      <div className="w-2 h-2 bg-gold/40 rounded-full animate-ping shadow-[0_0_10px_rgba(242,201,76,0.3)]" />
-                      <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">Synchronizing Feed...</span>
-                   </div>
+                    <div className="flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                       <div className="w-2 h-2 bg-gold/40 rounded-full animate-ping shadow-[0_0_10px_rgba(242,201,76,0.3)]" />
+                       <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">UPDATING LIVE FEED...</span>
+                    </div>
                  )}
               </div>
 
@@ -163,9 +163,9 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                     <div className="w-24 h-24 rounded-[2rem] bg-gold/5 border border-gold/10 flex items-center justify-center mb-12 relative z-10 group-hover/empty:scale-110 transition-transform duration-700 shadow-inner">
                        <Zap className="w-10 h-10 text-gold animate-pulse" />
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter mb-5 italic relative z-10 leading-none">Arena Feed <span className="text-gradient-gold">Calibrating.</span></h3>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter mb-5 italic relative z-10 leading-none">Initializing <span className="text-gradient-gold">Match Feed.</span></h3>
                     <p className="text-[11px] font-black text-text-dim uppercase tracking-[0.4em] max-w-sm mx-auto leading-relaxed italic opacity-40 relative z-10 group-hover/empty:opacity-80 transition-opacity">
-                       Synchronizing match intelligence and securing the perimeter. Elite fixtures will be accessible momentarily.
+                       Preparing the next elite match cycle. Live fixtures will be accessible shortly.
                     </p>
                   </div>
                 ) : (
@@ -215,7 +215,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                <div className="absolute top-0 right-0 p-8 opacity-[0.02] rotate-45 pointer-events-none"><Shield className="w-32 h-32" /></div>
                <div className="flex items-center gap-5 mb-12 relative z-10">
                   <div className="w-10 h-10 rounded-xl bg-gold/5 flex items-center justify-center border border-gold/10"><ShieldCheck className="w-5 h-5 text-gold" /></div>
-                  <h3 className="text-xl font-black italic uppercase tracking-tighter font-display text-white">Arena <span className="text-gradient-gold">Protocol.</span></h3>
+                  <h3 className="text-xl font-black italic uppercase tracking-tighter font-display text-white">Arena <span className="text-gradient-gold">Rules.</span></h3>
                </div>
                <ul className="space-y-10 relative z-10">
                   {[

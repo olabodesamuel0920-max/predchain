@@ -51,7 +51,7 @@ function SignupForm() {
            <span className="font-black tracking-[0.2em] text-[9px] italic">ARENA_REGISTRATION</span>
         </motion.div>
         <h2 className="mb-4 uppercase italic font-black leading-none tracking-tighter text-4xl sm:text-5xl text-white">Initialize <span className="text-gradient-gold">Access.</span></h2>
-        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">JOIN THE ELITE PERFORMANCE CIRCUIT</p>
+        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">JOIN THE ELITE PERFORMANCE ARENA</p>
       </div>
 
       <form action={signupAction} className="space-y-6">
@@ -157,7 +157,7 @@ function SignupForm() {
                <Activity className="w-5 h-5 animate-spin" />
              ) : (
                <>
-                 INITIALIZE CIRCUIT ACCESS <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+                 INITIALIZE ARENA ACCESS <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
                </>
              )}
           </span>
@@ -195,7 +195,7 @@ export default function SignupPage() {
             animate={{ opacity: 1, x: 0 }}
             className="badge-luxury mb-12 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
           >
-            ELITE_PERFORMANCE_CIRCUIT
+            ELITE_PERFORMANCE_ARENA
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}

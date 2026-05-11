@@ -86,7 +86,7 @@ export default function SupportView() {
               className="bg-white/5 border border-white/10 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2.5 rounded-xl focus:outline-none focus:border-blue-electric transition-all grow sm:grow-0"
             >
               <option value="all" className="bg-primary">GLOBAL STREAM</option>
-              <option value="open" className="bg-primary">OPEN PROTOCOLS</option>
+              <option value="open" className="bg-primary">OPEN TICKETS</option>
               <option value="in_progress" className="bg-primary">ACTIVE REVIEW</option>
               <option value="resolved" className="bg-primary">RESOLVED</option>
               <option value="closed" className="bg-primary">ARCHIVED</option>
@@ -100,7 +100,7 @@ export default function SupportView() {
           {tickets.length === 0 ? (
             <div className="card py-16 text-center flex flex-col items-center gap-4 opacity-20 border-dashed bg-transparent shadow-none">
                <Archive className="w-10 h-10 text-muted" />
-               <p className="text-[10px] font-black uppercase tracking-[0.2em] italic">No active protocols detected.</p>
+               <p className="text-[10px] font-black uppercase tracking-[0.2em] italic">No active tickets detected.</p>
             </div>
           ) : (
             tickets.map(t => (
@@ -150,7 +150,7 @@ export default function SupportView() {
           {!selectedTicket ? (
             <div className="card h-64 flex flex-col items-center justify-center border-dashed border-white/10 opacity-20 bg-transparent shadow-none">
               <MessageSquare className="w-6 h-6 mb-4 opacity-40" />
-              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-center max-w-[150px] leading-relaxed italic">Synchronize Protocol to Resolve</p>
+              <p className="text-[9px] font-black uppercase tracking-[0.2em] text-center max-w-[150px] leading-relaxed italic">Select Ticket to Resolve</p>
             </div>
           ) : (
             <div className="card p-0 animate-slide-up flex flex-col overflow-hidden shadow-xl border-blue-electric/10 bg-[#05070a]">
@@ -214,12 +214,12 @@ export default function SupportView() {
                     onClick={() => handleUpdateStatus('open')}
                     disabled={isPending || selectedTicket.status === 'open'}
                     className="h-10 rounded-xl text-[8px] font-black uppercase tracking-widest text-muted hover:text-white border border-transparent hover:border-white/5 transition-all opacity-40 hover:opacity-100 italic"
-                   >Re-Open Sequence</button>
+                   >Re-Open Ticket</button>
                    <button 
                     onClick={() => handleUpdateStatus('closed')}
                     disabled={isPending || selectedTicket.status === 'closed'}
                     className="h-10 rounded-xl text-[8px] font-black uppercase tracking-widest text-muted hover:text-danger border border-transparent hover:border-danger/10 transition-all opacity-40 hover:opacity-100 italic"
-                   >Close Protocol</button>
+                   >Close Ticket</button>
                 </div>
 
                 <div className="p-4 bg-white/[0.03] border border-white/5 rounded-2xl flex items-center justify-between group hover:border-blue-electric/20 transition-all">

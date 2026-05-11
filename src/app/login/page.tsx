@@ -50,7 +50,7 @@ function LoginForm() {
            <span className="font-black tracking-[0.2em] text-[9px] italic">ARENA_SECURE_GATEWAY</span>
         </motion.div>
         <h2 className="mb-4 uppercase italic font-black leading-none tracking-tighter text-4xl sm:text-5xl text-white">Welcome <span className="text-gradient-gold">Back.</span></h2>
-        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">INITIALIZE AUTHENTICATION PROTOCOL</p>
+        <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">INITIALIZE ARENA AUTHENTICATION</p>
       </div>
 
       <form action={loginAction} className="space-y-8">
@@ -157,7 +157,7 @@ export default function LoginPage() {
             animate={{ opacity: 1, x: 0 }}
             className="badge-luxury mb-12 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
           >
-            ELITE_PERFORMANCE_CIRCUIT
+            ELITE_PERFORMANCE_ARENA
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}

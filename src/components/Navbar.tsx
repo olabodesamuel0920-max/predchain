@@ -8,13 +8,13 @@ import { logout } from '@/app/actions/auth';
 import { createClient } from '@/lib/supabase/client';
 
 const navLinks = [
-  { href: '/', label: 'FRONT_LINE' },
-  { href: '/how-it-works', label: 'METHODOLOGY' },
-  { href: '/accounts', label: 'MEMBERSHIP' },
+  { href: '/', label: 'HOME' },
+  { href: '/how-it-works', label: 'GUIDE' },
+  { href: '/accounts', label: 'TIERS' },
   { href: '/arena', label: 'ARENA' },
-  { href: '/winners', label: 'VERIFIED' },
+  { href: '/winners', label: 'WINNERS' },
   { href: '/leaderboard', label: 'RANKINGS' },
-  { href: '/referral', label: 'NETWORK' },
+  { href: '/referral', label: 'PARTNERS' },
 ];
 
 const mobileSecondaryLinks = [
@@ -165,7 +165,7 @@ export default function Navbar() {
                  Log Out Session
                </button>
             )}
-            <p className="text-center text-[8px] font-black text-text-dim/30 uppercase tracking-[0.4em] mt-3 italic">ELITE PERFORMANCE GATEWAY</p>
+            <p className="text-center text-[8px] font-black text-text-dim/30 uppercase tracking-[0.4em] mt-3 italic">PREDCHAIN ELITE ARENA</p>
           </div>
         </div>
       </div>
