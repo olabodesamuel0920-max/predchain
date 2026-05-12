@@ -47,7 +47,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
           >
             <div className="badge-luxury px-5 py-2 flex items-center gap-3 bg-gold/5 border-gold/15 shadow-inner">
                <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.8)] animate-pulse" />
-               <span className="pb-px font-display tracking-[0.2em] font-black uppercase text-[9px] italic">LIVE MATCHES</span>
+               <span className="pb-px font-display tracking-[0.2em] font-black uppercase text-[9px] italic">LIVE ARENA</span>
             </div>
           </motion.div>
           
@@ -91,7 +91,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                  <span className="text-[12px] font-black text-white uppercase italic leading-none">{stats.activeChallengers.toLocaleString()}+ Active Challengers</span>
                   <div className="flex items-center gap-2">
                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                     <span className="text-[8px] font-black text-emerald-500/80 uppercase tracking-[0.3em] italic">Arena Operational</span>
+                      <span className="text-[8px] font-black text-emerald-500/80 uppercase tracking-[0.3em] italic">Verified Operational</span>
                   </div>
               </div>
             </div>
@@ -151,7 +151,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                  {!activeRound && (
                      <div className="flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
                         <div className="w-2 h-2 bg-gold/40 rounded-full animate-ping shadow-[0_0_10px_rgba(242,201,76,0.3)]" />
-                        <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">Syncing Match Data</span>
+                        <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">Connecting Arena Stream</span>
                      </div>
                  )}
               </div>
