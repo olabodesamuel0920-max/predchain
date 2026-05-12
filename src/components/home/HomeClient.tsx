@@ -103,7 +103,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
         <div className="absolute bottom-[10%] right-[10%] w-[500px] h-[500px] bg-gold-glow blur-[120px] rounded-full opacity-10" />
       </div>
             {/* Hero Section */}
-      <section className="relative z-10 pt-20 pb-12 sm:pt-36 sm:pb-24 overflow-hidden">
+      <section className="relative z-10 pt-20 pb-12 sm:pt-36 sm:pb-24 overflow-x-hidden">
         <div className="container-tight">
           <div className="flex flex-col lg:flex-row gap-12 lg:gap-20 items-center">
             
@@ -123,7 +123,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.1 }}
-                className="mb-8 tracking-tighter leading-[1] font-display font-black italic uppercase text-white"
+                className="mb-8 tracking-tighter leading-[1] font-display font-black italic uppercase text-white text-4xl xs:text-5xl sm:text-8xl"
               >
                 Command the <br />
                 <span className="text-gradient-gold">Match Arena.</span>
@@ -197,7 +197,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1 relative w-full perspective-container py-10"
+              className="flex-1 relative w-full perspective-container py-10 lg:py-20"
             >
               <div className="relative w-full max-w-2xl mx-auto lg:ml-auto">
                 {/* Hero Moment Animation */}
@@ -210,7 +210,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                   initial={{ opacity: 0, scale: 0.8, y: 50 }}
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   transition={{ delay: 2.8, duration: 1 }}
-                  className="absolute -bottom-10 -left-10 md:-left-20 w-[280px] md:w-[320px] z-20 pointer-events-none hidden sm:block"
+                  className="absolute -bottom-10 -left-10 md:-left-20 w-[280px] md:w-[320px] z-20 pointer-events-none hidden md:block"
                 >
                   <motion.div 
                     animate={{ y: [0, -10, 0] }}
@@ -243,7 +243,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                    initial={{ opacity: 0 }}
                    animate={{ opacity: 1 }}
                    transition={{ delay: 3.2 }}
-                   className="absolute -top-10 -right-10 w-40 h-40 bg-[#07090e]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-6 shadow-2xl z-0 hidden xl:block preserve-3d"
+                   className="absolute -top-10 -right-10 w-40 h-40 bg-[#07090e]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-6 shadow-2xl z-0 hidden md:block lg:hidden xl:block preserve-3d"
                 >
                    <div className="space-y-4 opacity-40">
                       <div className="flex items-center gap-3">
@@ -342,7 +342,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="card-luxury-gold !p-20 sm:!p-32 text-center border-gold/10 relative overflow-hidden group rounded-[3rem] shadow-[0_50px_100px_-30px_rgba(242,201,76,0.15)]"
+          className="card-luxury-gold !p-10 xs:!p-16 sm:!p-32 text-center border-gold/10 relative overflow-hidden group rounded-[3rem] shadow-[0_50px_100px_-30px_rgba(242,201,76,0.15)]"
         >
            <div className="absolute inset-0 bg-[#05070a]" />
            <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.05] to-transparent opacity-50" />
@@ -350,7 +350,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
            <div className="absolute bottom-0 left-0 p-32 opacity-[0.03] pointer-events-none group-hover:opacity-10 transition-all duration-1000 -rotate-12"><Shield className="w-64 h-64" /></div>
            
            <div className="max-w-2xl mx-auto relative z-10">
-              <h2 className="mb-8 text-5xl sm:text-7xl uppercase italic font-black leading-none tracking-tighter">Enter the <br /><span className="text-gradient-gold">Match Arena.</span></h2>
+              <h2 className="mb-8 text-4xl xs:text-5xl sm:text-7xl uppercase italic font-black leading-none tracking-tighter">Enter the <br /><span className="text-gradient-gold">Match Arena.</span></h2>
               <p className="text-text-secondary mb-12 text-base font-medium leading-relaxed italic opacity-60">Gain instant access to the world&apos;s premier high-performance sports arena. Secure your membership and start your first streak today.</p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-5 !px-16 !text-[11px] font-black uppercase tracking-[0.2em] shadow-2xl italic">CREATE ACCOUNT</Link>

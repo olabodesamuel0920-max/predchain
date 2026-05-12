@@ -55,8 +55,8 @@ export default function Navbar() {
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ${scrolled ? 'h-16' : 'h-20'}`}>
-        <div className="container-tight h-full py-2">
-          <div className={`h-full flex items-center justify-between px-5 rounded-2xl border transition-all duration-700 ${scrolled ? 'bg-bg-card/80 backdrop-blur-3xl border-white/10 shadow-2xl' : 'bg-transparent border-transparent'}`}>
+        <div className="container-tight h-full py-2 px-3 sm:px-6">
+          <div className={`h-full flex items-center justify-between px-3 sm:px-5 rounded-2xl border transition-all duration-700 ${scrolled ? 'bg-bg-card/80 backdrop-blur-3xl border-white/10 shadow-2xl' : 'bg-transparent border-transparent'}`}>
             
             {/* Logo */}
             <Link href="/" className="flex items-center gap-2.5 group shrink-0">
@@ -90,8 +90,9 @@ export default function Navbar() {
               </div>
 
               {!user ? (
-                <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !py-2.5 !px-6 flex items-center gap-2.5 shadow-xl">
-                  <span className="text-[10px] font-black tracking-widest italic">Join the Arena</span>
+                <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !py-2.5 !px-4 sm:!px-6 flex items-center gap-2.5 shadow-xl">
+                  <span className="text-[10px] font-black tracking-widest italic hidden xs:block">Join Arena</span>
+                  <span className="text-[10px] font-black tracking-widest italic xs:hidden">JOIN</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               ) : (
