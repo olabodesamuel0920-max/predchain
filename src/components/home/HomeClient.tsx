@@ -248,7 +248,7 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
                    <div className="space-y-4 opacity-40">
                       <div className="flex items-center gap-3">
                          <Star className="w-4 h-4 text-gold" />
-                         <span className="text-[8px] font-black text-white uppercase italic tracking-widest">Live Sync</span>
+                         <span className="text-[8px] font-black text-white uppercase italic tracking-widest">Live Updates</span>
                       </div>
                       <div className="h-px bg-white/5" />
                       <div className="space-y-2">

@@ -151,7 +151,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                  {!activeRound && (
                      <div className="flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
                         <div className="w-2 h-2 bg-gold/40 rounded-full animate-ping shadow-[0_0_10px_rgba(242,201,76,0.3)]" />
-                        <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">Connecting Arena Stream</span>
+                        <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">Loading Match Data</span>
                      </div>
                  )}
               </div>
