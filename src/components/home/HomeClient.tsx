@@ -3,7 +3,22 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { PlatformStats, HomeMatch } from '@/types';
-import { ArrowRight, ArrowUpRight, Check, Trophy, Zap, Users, Wallet, Globe, Activity, Radio, Clock, Shield, Star, PlayCircle } from 'lucide-react';
+import { 
+  Users, 
+  Zap, 
+  Wallet, 
+  Trophy, 
+  PlayCircle, 
+  ArrowUpRight, 
+  ChevronRight, 
+  Activity, 
+  Star, 
+  Clock, 
+  Globe,
+  CheckCircle2,
+  Shield
+} from 'lucide-react';
+import HeroMoment from './HeroMoment';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 /* ── Animated Counter ── */
@@ -179,108 +194,66 @@ export default function HomeClient({ stats }: { stats: PlatformStats }) {
 
             {/* Right: High Fidelity UI Visual */}
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9, rotateX: 10 }}
-              animate={{ opacity: 1, scale: 1, rotateX: 0 }}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="flex-1 relative w-full max-w-lg lg:max-w-xl perspective-container py-10"
+              className="flex-1 relative w-full perspective-container py-10"
             >
-              <div className="absolute inset-0 bg-gold/5 blur-[150px] opacity-20 animate-pulse pointer-events-none" />
-              
-              <div className="relative z-10 preserve-3d animate-float">
+              <div className="relative w-full max-w-2xl mx-auto lg:ml-auto">
+                {/* Hero Moment Animation */}
+                <div className="relative z-10">
+                   <HeroMoment />
+                </div>
+
+                {/* Floating Data Layer (Match Card) - Hidden on smallest mobile, simplified on tablets */}
                 <motion.div 
-                  whileHover={{ rotateX: 10, rotateY: -10, scale: 1.05 }}
-                  transition={{ type: "spring", stiffness: 200, damping: 15 }}
-                  className="card-luxury !bg-[#07090e] border-white/10 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] p-0 overflow-hidden depth-card relative group"
+                  initial={{ opacity: 0, scale: 0.8, y: 50 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ delay: 2.8, duration: 1 }}
+                  className="absolute -bottom-10 -left-10 md:-left-20 w-[280px] md:w-[320px] z-20 pointer-events-none hidden sm:block"
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.03] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  
-                  <div className="p-7 border-b border-white/5 flex justify-between items-center bg-white/[0.01] relative z-10">
-                    <div className="flex items-center gap-5">
-                        <div className="w-12 h-12 rounded-2xl bg-gold/5 flex items-center justify-center border border-gold/10 shadow-inner">
-                          <Activity className="w-6 h-6 text-gold" />
-                        </div>
-                        <div className="space-y-1">
-                          <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">Live Feed Active</span>
-                          <div className="flex items-center gap-2">
-                             <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                             <div className="text-[8px] text-text-dim uppercase tracking-[0.3em] font-black italic opacity-40">Live Sync</div>
+                  <motion.div 
+                    animate={{ y: [0, -10, 0] }}
+                    transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                    className="card-luxury !bg-[#07090e]/90 backdrop-blur-2xl border-white/10 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)] p-0 overflow-hidden depth-card"
+                  >
+                    <div className="p-5 border-b border-white/5 flex justify-between items-center bg-white/[0.01]">
+                       <div className="flex items-center gap-3">
+                          <div className="w-8 h-8 rounded-xl bg-gold/10 flex items-center justify-center border border-gold/20">
+                             <Activity className="w-4 h-4 text-gold" />
                           </div>
-                        </div>
+                          <span className="text-[8px] font-black text-gold/60 uppercase tracking-[0.2em] italic">Arena Data Stream</span>
+                       </div>
+                       <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     </div>
-                    <div className="px-4 py-2 rounded-xl bg-black border border-white/10 shadow-inner group-hover:border-gold/20 transition-all">
-                      <span className="text-[9px] font-black text-gold tracking-[0.2em] italic uppercase">Premium Pass</span>
+                    <div className="p-6 space-y-3">
+                       {matches.slice(0, 2).map((m, i) => (
+                         <div key={i} className="flex items-center justify-between p-3 rounded-xl border border-white/5 bg-black/40">
+                            <span className="text-[8px] font-black text-text-dim uppercase italic opacity-40">{m.day}</span>
+                            <span className="text-[10px] font-black text-white italic uppercase tracking-tight">{m.match}</span>
+                            <div className="w-2 h-2 rounded-full bg-gold/20 border border-gold/40" />
+                         </div>
+                       ))}
                     </div>
-                  </div>
-
-                  <div className="p-8 space-y-4 relative z-10">
-                    {matches.map((m, i) => (
-                      <motion.div 
-                        key={i} 
-                        className={`flex items-center justify-between p-5 rounded-2xl border transition-all duration-700 ${
-                          m.status === 'open' ? 'bg-[#0a0d14] border-gold/20 shadow-depth-gold' : 'bg-transparent border-white/5 opacity-20 grayscale'
-                        }`}
-                      >
-                        <div className="flex items-center gap-6">
-                          <span className="text-[10px] font-black text-text-dim uppercase w-10 italic opacity-40">{m.day}</span>
-                          <div className="flex flex-col gap-1">
-                            <span className="text-sm font-black text-white tracking-tight font-display uppercase italic leading-none">{m.match}</span>
-                            <div className="flex items-center gap-2">
-                               <Globe className="w-3 h-3 text-text-dim" />
-                               <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-40">Verified Data</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-4">
-                          {m.status === 'correct' ? (
-                             <div className="badge-luxury !py-2 !px-8 font-black !bg-emerald-500/5 !text-emerald-500 border-emerald-500/10 italic text-[10px] tracking-[0.3em]">Verified 10X Reward</div>
-                          ) : m.status === 'open' ? (
-                             <div className="px-3 py-1 rounded-lg bg-gold/10 text-[9px] font-black text-gold border border-gold/20 animate-pulse italic">Live</div>
-                          ) : (
-                             <Clock className="w-4 h-4 text-text-dim opacity-30" />
-                          )}
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  <div className="p-8 pt-0 relative z-10">
-                    <div className="bg-black/60 border border-white/5 rounded-2xl p-6 relative overflow-hidden glass-layered shadow-2xl group/streak">
-                      <div className="absolute inset-0 bg-gold/[0.02] opacity-0 group-hover/streak:opacity-100 transition-opacity" />
-                      <div className="flex justify-between items-end mb-5 relative z-10">
-                          <div>
-                            <div className="text-[10px] font-black text-text-dim uppercase tracking-[0.25em] mb-2 italic opacity-40">Reward Multiplier</div>
-                            <div className="text-2xl font-black font-display text-white italic tracking-tighter uppercase transition-colors group-hover/streak:text-gold leading-none">10.00X</div>
-                          </div>
-                          <div className="text-right">
-                            <div className="text-[10px] font-black text-gold uppercase tracking-[0.2em] mb-2 italic">Streak Progress</div>
-                            <div className="flex gap-2">
-                              {[1, 2, 3].map(i => (
-                                <div key={i} className={`w-4 h-1.5 rounded-full transition-all duration-700 ${i <= 2 ? 'bg-gold shadow-[0_0_8px_rgba(242,201,76,0.5)]' : 'bg-white/5'}`} />
-                              ))}
-                            </div>
-                          </div>
-                      </div>
-                      <div className="h-1.5 bg-white/5 rounded-full overflow-hidden shadow-inner">
-                          <div className="h-full bg-gold w-2/3 transition-all duration-1000 ease-out shadow-[0_0_15px_rgba(242,201,76,0.4)]" />
-                      </div>
-                    </div>
-                  </div>
+                  </motion.div>
                 </motion.div>
-                
-                {/* Secondary Depth Layer */}
+
+                {/* Secondary Detail Layer */}
                 <motion.div 
-                   style={{ y: y3 }}
-                   className="absolute -bottom-8 -right-8 w-48 h-48 bg-[#07090e] border border-white/5 rounded-3xl p-6 shadow-2xl glass-layered z-20 pointer-events-none hidden xl:block preserve-3d"
+                   initial={{ opacity: 0 }}
+                   animate={{ opacity: 1 }}
+                   transition={{ delay: 3.2 }}
+                   className="absolute -top-10 -right-10 w-40 h-40 bg-[#07090e]/80 backdrop-blur-xl border border-white/5 rounded-3xl p-6 shadow-2xl z-0 hidden xl:block preserve-3d"
                 >
-                   <div className="parallax-layer-2 space-y-4">
+                   <div className="space-y-4 opacity-40">
                       <div className="flex items-center gap-3">
-                         <div className="w-8 h-8 rounded-lg bg-gold/10 flex items-center justify-center border border-gold/20"><Star className="w-4 h-4 text-gold" /></div>
-                         <span className="text-[9px] font-black text-white uppercase italic tracking-widest">ARENA FEED</span>
+                         <Star className="w-4 h-4 text-gold" />
+                         <span className="text-[8px] font-black text-white uppercase italic tracking-widest">Live Sync</span>
                       </div>
                       <div className="h-px bg-white/5" />
                       <div className="space-y-2">
-                         <div className="h-2 bg-white/5 rounded-full w-full" />
-                         <div className="h-2 bg-white/5 rounded-full w-2/3" />
+                         <div className="h-1 bg-white/10 rounded-full w-full" />
+                         <div className="h-1 bg-white/10 rounded-full w-2/3" />
                       </div>
                    </div>
                 </motion.div>
