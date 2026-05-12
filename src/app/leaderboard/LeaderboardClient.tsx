@@ -42,7 +42,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
             animate={{ opacity: 1 }}
             className="badge-luxury mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
           >
-            ARENA RANKINGS
+            Rankings
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -127,7 +127,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
               <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-gold/30 group-focus-within:text-gold transition-all duration-500" />
               <input
                 type="search"
-                placeholder="SEARCH CHALLENGERS..."
+                placeholder="Search Challengers..."
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 className="w-full bg-[#07090e] border border-white/10 rounded-[2rem] py-5 pl-14 pr-8 text-[11px] font-black text-white focus:outline-none focus:border-gold/30 transition-all uppercase tracking-[0.2em] placeholder:opacity-20 italic shadow-inner"
@@ -204,7 +204,7 @@ export default function LeaderboardClient({ rankings }: LeaderboardClientProps) 
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
                 <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !px-20 !py-6 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">
-                  JOIN THE ARENA <ArrowUpRight className="w-5 h-5 ml-3" />
+                  START TODAY <ArrowUpRight className="w-5 h-5 ml-3" />
                 </Link>
                 <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !px-20 !py-6 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">VIEW ARENA</Link>
               </div>

@@ -61,7 +61,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              animate={{ opacity: 1 }}
              className="badge-luxury !text-gold mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black"
            >
-             PARTNER NETWORK
+             Community
            </motion.div>
            <motion.h1 
              initial={{ opacity: 0, y: 20 }}
@@ -87,7 +87,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                transition={{ delay: 0.2 }}
                className="flex flex-col sm:flex-row gap-8 justify-center"
              >
-                <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] shadow-2xl uppercase">JOIN PARTNER NETWORK</Link>
+                <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] shadow-2xl uppercase">Join the Community</Link>
                 <Link href="/login" className="btn-luxury btn-outline btn-premium-depth !py-6 !px-20 !text-[11px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">LOGIN</Link>
              </motion.div>
            )}
@@ -102,7 +102,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
         >
           <div className="lg:col-span-8 card-luxury !p-12 sm:!p-20 bg-[#07090e] border-white/10 flex flex-col justify-center relative overflow-hidden group depth-card shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)]">
              <div className="absolute top-0 right-0 p-16 opacity-[0.01] group-hover:opacity-[0.05] transition-all duration-1000 rotate-12 pointer-events-none"><Users className="w-80 h-80" /></div>
-             <div className="badge-luxury !text-gold mb-10 px-6 py-2 bg-white/[0.03] uppercase italic font-black tracking-[0.3em] w-fit text-[9px]">SCOUT REWARDS</div>
+             <div className="badge-luxury !text-gold mb-10 px-6 py-2 bg-white/[0.03] uppercase italic font-black tracking-[0.3em] w-fit text-[9px]">Community Rewards</div>
              <h2 className="text-4xl sm:text-6xl font-black italic uppercase tracking-tighter mb-8 leading-none text-white">The Arena <span className="text-gradient-gold">Partners.</span></h2>
              <p className="text-text-dim text-base sm:text-lg font-medium opacity-40 max-w-xl leading-relaxed italic group-hover:opacity-100 transition-opacity duration-700">
                 PredChain partners grow the most transparent football prediction arena in existence. Every verified player you invite strengthens the community and unlocks automated payouts.
@@ -163,7 +163,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
            ))}
         </div>
 
-        {/* Partner Dashboard (Authenticated Only) */}
+        {/* Community Hub (Authenticated Only) */}
         {user && (
           <div className="space-y-16 mb-40">
              <div className="flex items-center gap-6 px-4">
@@ -180,7 +180,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                       <div className="flex items-center gap-6 mb-16">
                          <div className="w-14 h-14 rounded-2xl bg-white/[0.03] flex items-center justify-center text-gold border border-gold/15 shadow-inner group-hover:rotate-12 transition-transform duration-700"><LinkIcon className="w-6 h-6" /></div>
                          <div className="flex flex-col gap-1">
-                            <span className="text-[12px] font-black text-white uppercase tracking-[0.2em] italic">Partner Link</span>
+                            <span className="text-[12px] font-black text-white uppercase tracking-[0.2em] italic">Invitation Link</span>
                             <span className="text-[10px] font-black text-text-dim opacity-30 tracking-[0.4em] uppercase">ACCESS CODE: {referralCode}</span>
                          </div>
                       </div>
@@ -217,7 +217,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
              <div className="space-y-10">
                 <div className="flex items-center gap-6 px-4 opacity-40">
                    <Activity className="w-6 h-6 text-gold/60" />
-                   <h3 className="text-[12px] font-black uppercase tracking-[0.5em] text-white italic">Recent Partner Activity</h3>
+                   <h3 className="text-[12px] font-black uppercase tracking-[0.5em] text-white italic">Recent Community Activity</h3>
                    <div className="flex-1 h-px bg-white/5 ml-8" />
                 </div>
 
@@ -288,7 +288,7 @@ export default function ReferralClient({ user, profile, referrals, totalEarnings
                    Secure your position in the PredChain arena and grow your revenue through our professional partner program.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-8 justify-center">
-                   <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">JOIN THE PARTNERS</Link>
+                   <Link href="/signup" className="btn-luxury btn-gold btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">Join the Community</Link>
                    <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !py-6 !px-20 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">View Arena</Link>
                 </div>
              </div>

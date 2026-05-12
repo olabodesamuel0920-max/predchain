@@ -34,7 +34,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
             className="lg:col-span-8 card-luxury !p-12 sm:!p-20 bg-[#07090e] border-white/10 flex flex-col justify-center relative overflow-hidden group depth-card shadow-[0_50px_100px_-30px_rgba(0,0,0,0.8)]"
           >
              <div className="absolute top-0 right-0 p-12 opacity-[0.01] group-hover:opacity-[0.05] transition-all duration-1000 rotate-12 pointer-events-none"><Trophy className="w-64 h-64" /></div>
-             <div className="badge-luxury mb-10 px-6 py-2 bg-white/[0.03] uppercase italic font-black tracking-[0.4em] w-fit text-[9px]">PRIZE RECORDS</div>
+             <div className="badge-luxury mb-10 px-6 py-2 bg-white/[0.03] uppercase italic font-black tracking-[0.4em] w-fit text-[9px]">Verified Payouts</div>
              <h1 className="mb-6 uppercase italic font-black leading-none tracking-tighter text-5xl sm:text-7xl text-white">Verified <span className="text-gradient-gold">Winners.</span></h1>
              <p className="text-text-dim text-base sm:text-lg font-medium opacity-40 max-w-lg leading-relaxed italic group-hover:opacity-100 transition-opacity duration-700">
                 A transparent record of challengers who successfully built their streaks and secured automated rewards.
@@ -54,7 +54,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
               </div>
              <div className="flex items-center gap-3 text-[9px] font-black text-emerald-500 uppercase tracking-widest bg-emerald-500/5 px-5 py-2.5 rounded-2xl border border-emerald-500/10 italic glass-layered shadow-inner">
                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-                Verified Records
+                Platform Records
              </div>
           </motion.div>
         </div>
@@ -63,7 +63,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
         <div className="space-y-10 mb-32">
           <div className="flex items-center gap-5 px-4 opacity-30">
              <Trophy className="w-5 h-5 text-gold/60" />
-             <h2 className="text-[11px] font-black uppercase tracking-[0.5em] text-white italic">PRIZE DISTRIBUTIONS</h2>
+             <h2 className="text-[11px] font-black uppercase tracking-[0.5em] text-white italic">Recent Winners</h2>
              <div className="flex-1 h-px bg-white/5 ml-8" />
           </div>
 
@@ -71,7 +71,7 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
             {winners.length === 0 ? (
                <div className="card-luxury !p-40 text-center col-span-full border border-white/5 bg-[#07090e] rounded-[3rem] shadow-inner opacity-20 group">
                   <Zap className="w-12 h-12 mx-auto mb-8 text-gold/20 animate-pulse group-hover:text-gold/40 transition-colors" />
-                  <p className="text-[12px] font-black uppercase tracking-[0.5em] italic opacity-40 leading-none">Awaiting next streak confirmation...</p>
+                  <p className="text-[12px] font-black uppercase tracking-[0.5em] italic opacity-40 leading-none">The next streak winner is being verified. Check back soon.</p>
                </div>
             ) : (
                   winners.map((w, i) => {
@@ -100,11 +100,11 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
 
                         <div className="bg-black/60 p-5 rounded-2xl flex items-center justify-between border border-white/5 shadow-inner group-hover:border-gold/10 transition-all duration-700 glass-layered">
                           <div className="flex flex-col gap-0.5">
-                            <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-30">PRIZE</span>
+                            <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-30">Reward</span>
                             <span className="text-xl font-black text-white italic tracking-tighter font-display group-hover:text-gold transition-colors duration-700 leading-none">₦{w.payout_amount.toLocaleString()}</span>
                           </div>
                           <div className="text-right flex flex-col gap-0.5">
-                            <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-30">STREAK</span>
+                            <span className="text-[8px] font-black text-text-dim uppercase tracking-[0.2em] italic opacity-30">Performance</span>
                             <span className="text-lg font-black text-emerald-500 italic leading-none transition-transform group-hover:scale-110 duration-700">3/3</span>
                           </div>
                         </div>
@@ -130,15 +130,15 @@ export default function WinnersClient({ winners, stats }: WinnersClientProps) {
            <div className="absolute inset-0 bg-[#05070a]" />
            <div className="absolute inset-0 bg-gradient-to-br from-gold/[0.05] to-transparent opacity-50" />
            <div className="max-w-2xl mx-auto relative z-10">
-              <h2 className="mb-8 text-5xl md:text-7xl uppercase italic font-black leading-none text-white tracking-tighter">Claim Your <br /><span className="text-gradient-gold">Position.</span></h2>
+              <h2 className="mb-8 text-5xl md:text-7xl uppercase italic font-black leading-none text-white tracking-tighter">Secure Your <br /><span className="text-gradient-gold">Victory.</span></h2>
               <p className="text-text-secondary text-sm font-medium mb-16 leading-relaxed italic opacity-60">
-                The record is set. Successful streaks trigger instant payouts. Start your prediction arena today and dominate the arena.
+                The standard is defined. Demonstrate your skill, maintain your streak, and earn your place among our verified elite.
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
-                <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !py-5 !px-16 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">
-                  JOIN THE ARENA <ArrowUpRight className="w-5 h-5 ml-3" />
-                </Link>
-                <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !py-5 !px-16 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">VIEW ARENA</Link>
+                 <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !py-5 !px-16 !text-[12px] font-black italic tracking-[0.2em] shadow-2xl uppercase">
+                   Join the Arena <ArrowUpRight className="w-5 h-5 ml-3" />
+                 </Link>
+                <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !py-5 !px-16 !text-[12px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">VIEW LIVE ARENA</Link>
               </div>
            </div>
         </motion.div>

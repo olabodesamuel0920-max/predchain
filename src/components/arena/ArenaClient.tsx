@@ -77,7 +77,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
             className="flex flex-col sm:flex-row items-center gap-10"
           >
             <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !py-5 !px-16 w-full sm:w-auto shadow-2xl group text-[11px] font-black italic tracking-widest">
-               JOIN THE CHALLENGE <ArrowUpRight className="w-4.5 h-4.5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+               Join the Arena <ArrowUpRight className="w-4.5 h-4.5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
             </Link>
             <div className="flex items-center gap-6">
               <div className="flex -space-x-4">
@@ -89,10 +89,10 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
               </div>
               <div className="flex flex-col gap-1">
                  <span className="text-[12px] font-black text-white uppercase italic leading-none">{stats.activeChallengers.toLocaleString()}+ Active Challengers</span>
-                 <div className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span className="text-[8px] font-black text-emerald-500/80 uppercase tracking-[0.3em] italic">System Status: Online</span>
-                 </div>
+                  <div className="flex items-center gap-2">
+                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                     <span className="text-[8px] font-black text-emerald-500/80 uppercase tracking-[0.3em] italic">Arena Operational</span>
+                  </div>
               </div>
             </div>
           </motion.div>
@@ -149,10 +149,10 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                     <span className="text-[13px] font-black text-white uppercase tracking-[0.25em] italic font-display">Upcoming Matches</span>
                  </div>
                  {!activeRound && (
-                    <div className="flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
-                       <div className="w-2 h-2 bg-gold/40 rounded-full animate-ping shadow-[0_0_10px_rgba(242,201,76,0.3)]" />
-                       <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">REFRESHING FIXTURES</span>
-                    </div>
+                     <div className="flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-white/[0.02] border border-white/5">
+                        <div className="w-2 h-2 bg-gold/40 rounded-full animate-ping shadow-[0_0_10px_rgba(242,201,76,0.3)]" />
+                        <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">Syncing Match Data</span>
+                     </div>
                  )}
               </div>
 
@@ -163,9 +163,9 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                     <div className="w-24 h-24 rounded-[2rem] bg-gold/5 border border-gold/10 flex items-center justify-center mb-12 relative z-10 group-hover/empty:scale-110 transition-transform duration-700 shadow-inner">
                        <Zap className="w-10 h-10 text-gold animate-pulse" />
                     </div>
-                    <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter mb-5 italic relative z-10 leading-none">FIXTURES <span className="text-gradient-gold">AWAITING.</span></h3>
+                    <h3 className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tighter mb-5 italic relative z-10 leading-none">UPCOMING MATCH <span className="text-gradient-gold">CYCLES.</span></h3>
                     <p className="text-[11px] font-black text-text-dim uppercase tracking-[0.4em] max-w-sm mx-auto leading-relaxed italic opacity-40 relative z-10 group-hover/empty:opacity-80 transition-opacity">
-                       PREPARING MATCH FIXTURES. VERIFIED DATA WILL BE ACCESSIBLE SHORTLY.
+                       Our analysts are finalizing the next match cycle. Matches will be live shortly.
                     </p>
                   </div>
                 ) : (
@@ -200,7 +200,7 @@ export default function ArenaClient({ activeRound, matches, stats }: ArenaClient
                        </div>
                        
                        <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !py-4.5 !px-12 !text-[11px] w-full sm:w-auto group/btn relative z-10 font-black italic tracking-widest shadow-2xl">
-                          SECURE PICK <ArrowUpRight className="w-4 h-4 ml-3 transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1" />
+                          Make Prediction <ArrowUpRight className="w-4 h-4 ml-3 transition-transform group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1" />
                        </Link>
                     </motion.div>
                   ))

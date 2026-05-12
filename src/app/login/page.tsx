@@ -47,7 +47,7 @@ function LoginForm() {
           className="inline-flex items-center gap-3 badge-luxury mb-8 px-6 py-2 bg-white/[0.02] border-white/10"
         >
            <Radio className="w-3.5 h-3.5 text-gold animate-pulse" /> 
-           <span className="font-black tracking-[0.2em] text-[9px] italic">ELITE ACCESS</span>
+           <span className="font-black tracking-[0.2em] text-[9px] italic">Login</span>
         </motion.div>
         <h2 className="mb-4 uppercase italic font-black leading-none tracking-tighter text-4xl sm:text-5xl text-white">Welcome <span className="text-gradient-gold">Back.</span></h2>
         <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 italic">LOGIN</p>
@@ -119,7 +119,7 @@ function LoginForm() {
                <Activity className="w-5 h-5 animate-spin" />
              ) : (
                <>
-                 SECURE LOGIN <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
+                 Login <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-2" />
                </>
              )}
           </span>
@@ -128,7 +128,7 @@ function LoginForm() {
 
       <div className="mt-16 text-center">
         <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30">
-          NOT A MEMBER YET? <Link href={signupUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-1 italic">CREATE ACCOUNT</Link>
+          NOT A MEMBER YET? <Link href={signupUrl} className="text-gold hover:text-white transition-colors border-b border-gold/20 hover:border-white ml-2 pb-1 italic">Create account</Link>
         </p>
       </div>
     </div>
@@ -177,10 +177,10 @@ export default function LoginPage() {
         <div className="relative z-10 flex items-center gap-10 text-text-dim opacity-30">
            <div className="flex items-center gap-4 bg-white/[0.02] border border-white/5 px-6 py-3 rounded-2xl shadow-inner">
               <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-              <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">ARENA LIVE</span>
+              <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">ARENA ONLINE</span>
            </div>
            <div className="w-px h-6 bg-white/10" />
-           <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">SECURE ACCESS</span>
+           <span className="text-[10px] font-black uppercase tracking-[0.4em] italic">MEMBER ACCESS</span>
         </div>
       </div>
 
@@ -193,7 +193,7 @@ export default function LoginPage() {
              <div className="w-16 h-16 rounded-[2rem] bg-white/[0.02] border border-white/5 flex items-center justify-center shadow-inner">
                 <Activity className="w-8 h-8 text-gold/20" />
              </div>
-             <div className="text-[11px] font-black text-gold/20 uppercase tracking-[0.6em] italic">SYNCHRONIZING...</div>
+             <div className="text-[11px] font-black text-gold/20 uppercase tracking-[0.6em] italic">CONNECTING...</div>
           </div>
         }>
           <LoginForm />

@@ -63,7 +63,7 @@ export default function Footer() {
                    { h: '/', l: 'Home' },
                    { h: '/how-it-works', l: 'Guide' },
                    { h: '/accounts', l: 'Tiers' },
-                   { h: '/arena', l: 'Live Arena' },
+                   { h: '/arena', l: 'Arena' },
                  ] 
                },
                { 
@@ -72,7 +72,7 @@ export default function Footer() {
                    { h: '/winners', l: 'Winners' },
                    { h: '/leaderboard', l: 'Rankings' },
                    { h: '/referral', l: 'Partners' },
-                   { h: '/faq', l: 'Help Center' },
+                   { h: '/faq', l: 'FAQ' },
                  ] 
                },
                { 
@@ -108,14 +108,14 @@ export default function Footer() {
              <div className="flex flex-wrap items-center justify-center md:justify-start gap-10">
                 <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-4 py-2 rounded-full shadow-inner">
                    <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-                   <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">ARENA ONLINE</span>
+                   <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">Arena Operational</span>
                 </div>
                 <span className="text-[9px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-30">© 2026 PREDCHAIN • PREMIUM FOOTBALL PREDICTION</span>
             </div>
             
             <div className="flex items-center gap-6">
                <span className="text-[9px] font-black text-text-dim/40 uppercase tracking-[0.3em] italic">
-                  SECURE ACCESS • ENCRYPTED
+                  Verified Access
                </span>
                <div className="w-px h-3 bg-white/10 hidden sm:block" />
                <Link href="/terms" className="text-[9px] font-black text-text-dim/40 hover:text-white transition-colors uppercase tracking-[0.3em] italic">

@@ -178,7 +178,7 @@ export default function DashboardClient({
               <div className="w-px h-8 bg-white/10 hidden md:block" />
               <div className="flex items-center gap-3 bg-white/[0.02] border border-white/5 px-4 py-2 rounded-full shadow-inner">
                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(34,197,94,0.8)]" />
-                 <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">ARENA LIVE</span>
+                 <span className="text-[9px] font-black text-emerald-500 uppercase tracking-[0.3em] italic">Arena Operational</span>
               </div>
             </div>
           </div>
@@ -262,7 +262,7 @@ export default function DashboardClient({
                     
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-16 relative z-10">
                        <div className="max-w-xl">
-                          <div className="badge-luxury !text-gold mb-12 px-8 py-2.5 uppercase tracking-[0.4em] font-black italic bg-white/[0.02] border-white/10 w-fit">STREAK PERFORMANCE</div>
+                          <div className="badge-luxury !text-gold mb-12 px-8 py-2.5 uppercase tracking-[0.4em] font-black italic bg-white/[0.02] border-white/10 w-fit">Winning Streak</div>
                           <h2 className="text-5xl md:text-8xl font-black tracking-tighter mb-10 font-display uppercase italic text-white leading-none">Arena <br /><span className="text-gradient-gold">Velocity.</span></h2>
                           <p className="text-text-dim text-base md:text-lg font-medium opacity-40 leading-relaxed mb-16 italic group-hover:opacity-100 transition-opacity duration-1000">
                             {userEntry ? `Your ${currentPlan?.name} program is active. Maintain perfect execution across 3 match days to trigger your verified multiplier payout.` : 'Your prediction arena is currently inactive. Select an entry tier to begin your participation in the arena.'}
@@ -296,7 +296,7 @@ export default function DashboardClient({
                  <div className="card-luxury !p-0 overflow-hidden group bg-[#07090e] border-white/10 shadow-2xl">
                     <div className="px-12 py-8 bg-white/[0.02] border-b border-white/5 flex justify-between items-center">
                        <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] flex items-center gap-4 opacity-40 italic">
-                          <History className="w-5 h-5 text-gold/40" /> ARENA RECORDS
+                          <History className="w-5 h-5 text-gold/40" /> Platform Records
                        </span>
                        <button onClick={() => setActiveTab('wallet')} className="text-[10px] font-black text-gold hover:text-white transition-all uppercase tracking-[0.2em] italic">VIEW ALL</button>
                     </div>
@@ -304,7 +304,7 @@ export default function DashboardClient({
                        {transactions.length === 0 ? (
                         <div className="py-40 text-center opacity-20 space-y-6">
                            <Activity className="w-16 h-16 mx-auto text-gold/20" />
-                           <span className="text-[12px] font-black uppercase tracking-[0.5em] italic leading-none">NO RECORDS FOUND</span>
+                           <span className="text-[12px] font-black uppercase tracking-[0.5em] italic leading-none">No records found</span>
                         </div>
                        ) : (
                         transactions.slice(0, 5).map(tx => (
@@ -485,7 +485,7 @@ export default function DashboardClient({
                           transactions.length === 0 ? (
                             <div className="py-48 text-center opacity-20 space-y-8">
                                <History className="w-20 h-20 mx-auto text-gold/10 animate-pulse" />
-                               <span className="text-xs font-black uppercase tracking-[0.5em] italic block">NO RECORDS FOUND</span>
+                               <span className="text-xs font-black uppercase tracking-[0.5em] italic block">No records found</span>
                             </div>
                           ) : (
                              transactions.map(tx => (
@@ -554,7 +554,7 @@ export default function DashboardClient({
                   
                   <div className="flex flex-col md:flex-row items-center justify-between gap-20 relative z-10">
                      <div className="max-w-2xl">
-                        <div className="badge-luxury !text-gold mb-12 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] w-fit">PARTNER PROGRAM</div>
+                        <div className="badge-luxury !text-gold mb-12 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] w-fit">Community</div>
                         <h2 className="text-5xl md:text-9xl font-black tracking-tighter mb-12 font-display uppercase italic text-white leading-none">Network <br /><span className="text-gradient-gold">Growth.</span></h2>
                         <p className="text-text-dim text-lg md:text-xl font-medium opacity-40 leading-relaxed italic group-hover:opacity-100 transition-opacity duration-1000">
                            Send invitations to professional challengers and analysis experts. Command a verified ₦1,000 performance reward for every successful partner activation in your network.
@@ -562,7 +562,7 @@ export default function DashboardClient({
                      </div>
                      <div className="card-luxury !p-16 md:!p-24 bg-black border-gold/20 text-center shadow-[0_40px_80px_-20px_rgba(242,201,76,0.1)] min-w-[320px] glass-layered group shadow-depth-gold relative overflow-hidden">
                         <div className="absolute inset-0 bg-gold/[0.02] opacity-0 group-hover:opacity-100 transition-opacity duration-1000" />
-                        <span className="text-[12px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 block mb-8 italic">REFERRAL NETWORK</span>
+                        <span className="text-[12px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 block mb-8 italic">Community Network</span>
                         <div className="text-8xl md:text-9xl font-black text-white font-display tracking-tighter leading-none italic transition-transform group-hover:scale-110 duration-1000 group-hover:text-gold">{profile?.referral_count || 0}</div>
                      </div>
                   </div>
@@ -574,7 +574,7 @@ export default function DashboardClient({
                         <svg className="w-6 h-6 text-gold/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" /><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
                         </svg>
-                        <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] font-display">UNIQUE REFERRAL LINK</span>
+                        <span className="text-[11px] font-black text-white uppercase tracking-[0.4em] font-display">Invitation Link</span>
                      </div>
                      <div className="flex flex-col sm:flex-row gap-6 p-5 bg-black border border-white/5 rounded-[2.5rem] shadow-inner group overflow-hidden glass-layered">
                         <input readOnly value={`${process.env.NEXT_PUBLIC_APP_URL || 'https://predchain.com'}/signup?ref=${profile.username}`} className="flex-1 bg-transparent px-8 py-5 font-black text-base text-gold outline-none italic opacity-80 font-display tracking-wider" />
@@ -594,7 +594,7 @@ export default function DashboardClient({
                         <Gift className="w-9 h-9" />
                      </div>
                      <h4 className="text-3xl font-black text-white font-display mb-4 uppercase italic tracking-tighter leading-none group-hover:text-gold transition-colors">Earn ₦1,000</h4>
-                     <p className="text-[11px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 mb-0 leading-loose italic">Verified per activation <br />within your partner network.</p>
+                     <p className="text-[11px] font-black text-text-dim uppercase tracking-[0.4em] opacity-30 mb-0 leading-loose italic">Verified per activation <br />within your invitation network.</p>
                   </div>
                </div>
             </div>
@@ -615,7 +615,7 @@ export default function DashboardClient({
                 {successMsg ? <Check className="w-8 h-8" /> : <ShieldAlert className="w-8 h-8" />}
              </div>
              <div className="flex flex-col text-left relative z-10">
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mb-2 italic">{successMsg ? 'SUCCESS' : 'SYSTEM ALERT'}</span>
+                <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-40 mb-2 italic">{successMsg ? 'Success' : 'Alert'}</span>
                 <span className="text-base font-black tracking-tighter font-display italic uppercase">{successMsg || errorMsg}</span>
              </div>
              <button onClick={clear} className="ml-auto w-10 h-10 rounded-full hover:bg-white/10 flex items-center justify-center transition-colors text-2xl font-light">×</button>

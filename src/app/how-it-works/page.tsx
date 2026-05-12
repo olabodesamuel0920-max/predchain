@@ -36,7 +36,7 @@ const STEPS = [
     number: '02',
     icon: Search,
     title: 'Study Fixtures',
-    description: 'Study the upcoming match schedule. Our live match feeds provide real-time intelligence for all elite league fixtures.',
+    description: 'Explore upcoming fixtures. Our live match data provides real-time insights for every professional fixture.',
     detail: 'Professional match data updated every 60 seconds.',
   },
   {
@@ -49,16 +49,16 @@ const STEPS = [
   {
     number: '04',
     icon: TrendingUp,
-    title: 'Hold The Streak',
-    description: 'Track your winning progress live. To unlock the 10X multiplier, you must maintain a perfect 3-day winning streak.',
-    detail: 'Live performance indicators synced to your hub.',
+    title: 'Maintain Your Momentum',
+    description: 'Monitor your performance in real-time. Secure a perfect 3-day winning streak to trigger the elite 10X reward multiplier.',
+    detail: 'Live performance tracking available in your portal.',
   },
   {
     number: '05',
     icon: Award,
-    title: 'Claim Rewards',
-    description: 'Hit the 3/3 target and trigger your reward payout. Winnings are distributed instantly to your secure wallet.',
-    detail: 'Automated 10X payout on final whistle.',
+    title: 'Withdraw Earnings',
+    description: 'Achieve the 3/3 target to trigger your payout. Winnings are settled instantly to your designated secure wallet.',
+    detail: 'Automated 10X settlement upon final whistle.',
   },
 ];
 
@@ -85,7 +85,7 @@ export default function HowItWorksPage() {
             whileInView={{ opacity: 1, y: 0 }}
             className="badge-luxury mb-10 px-8 py-2 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px]"
           >
-            ARENA GUIDE
+            How it Works
           </motion.div>
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
@@ -104,7 +104,7 @@ export default function HowItWorksPage() {
           </motion.p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !px-16 !py-6 text-[11px] font-black italic tracking-[0.2em] shadow-2xl group uppercase">
-               START WINNING STREAK <ArrowUpRight className="w-5 h-5 ml-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+               Join the Arena <ArrowUpRight className="w-5 h-5 ml-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
             </Link>
             <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !px-16 !py-6 text-[11px] font-black italic tracking-[0.2em] border-white/10 bg-white/[0.02] uppercase">BROWSE MATCHES</Link>
           </div>
@@ -140,7 +140,7 @@ export default function HowItWorksPage() {
                  </p>
                  <div className="p-8 bg-white/[0.02] border border-white/5 rounded-[2rem] flex items-center gap-8 group-hover:bg-white/[0.04] transition-all shadow-inner">
                     <ShieldCheck className="w-6 h-6 text-emerald-500 shrink-0 opacity-20 group-hover:opacity-100 transition-all duration-700" />
-                    <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">MATCH FEED ACTIVE</span>
+                    <span className="text-[9px] font-black text-gold/40 uppercase tracking-[0.3em] italic">Live Feed Active</span>
                     <span className="text-[11px] font-black text-text-dim uppercase tracking-[0.3em] italic opacity-30 group-hover:opacity-100 transition-all duration-700">{step.detail}</span>
                  </div>
               </div>
@@ -158,10 +158,10 @@ export default function HowItWorksPage() {
               whileInView={{ opacity: 1 }}
               className="badge-luxury mb-8 px-6 py-2 italic font-black uppercase tracking-[0.4em] text-[9px] text-gold"
             >
-              PRIZE MATRIX
+              Elite Payout Structure
             </motion.div>
             <h2 className="mb-6 uppercase italic font-black text-5xl sm:text-7xl tracking-tighter leading-none text-white">Winning <span className="text-gradient-gold">Tiers.</span></h2>
-            <p className="text-text-secondary opacity-60 font-medium tracking-wide italic text-lg">Standardized 10X reward multipliers at every match level.</p>
+            <p className="text-text-secondary opacity-60 font-medium tracking-wide italic text-lg">Guaranteed 10X reward returns across every performance tier.</p>
           </div>
           
           <div className="card-luxury !p-0 overflow-hidden bg-[#07090e] border-white/10 shadow-[0_50px_100px_-30px_rgba(0,0,0,0.9)] relative group depth-card">
@@ -183,7 +183,7 @@ export default function HowItWorksPage() {
                       <td className="px-10 py-10 text-right">
                         <div className="flex flex-col items-end gap-4 transition-transform group-hover/row:scale-105 origin-right duration-700">
                            <span className="text-4xl md:text-7xl font-black font-display text-white tracking-tighter italic leading-none">₦{r.reward}</span>
-                           <div className="badge-luxury !py-2 !px-8 font-black !bg-emerald-500/5 !text-emerald-500 border-emerald-500/10 italic text-[10px] tracking-[0.3em]">10X STREAK PAYOUT</div>
+                           <div className="badge-luxury !py-2 !px-8 font-black !bg-emerald-500/5 !text-emerald-500 border-emerald-500/10 italic text-[10px] tracking-[0.3em]">Verified 10X Reward</div>
                         </div>
                       </td>
                     </tr>
@@ -202,13 +202,13 @@ export default function HowItWorksPage() {
              <div className="absolute top-0 right-0 p-32 opacity-[0.01] group-hover:opacity-[0.05] transition-all duration-1000 pointer-events-none select-none rotate-12"><Globe className="w-[500px] h-[500px]" /></div>
              
              <div className="flex-1 text-center xl:text-left relative z-10">
-                <div className="badge-luxury !text-gold mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px] w-fit mx-auto xl:mx-0">PARTNER NETWORK</div>
+                <div className="badge-luxury !text-gold mb-10 px-8 py-2.5 bg-white/[0.02] border-white/10 italic font-black uppercase tracking-[0.4em] text-[9px] w-fit mx-auto xl:mx-0">Community</div>
                 <h2 className="mb-10 text-5xl md:text-9xl leading-none italic font-black uppercase tracking-tighter text-white">Expand Your <br /><span className="text-gradient-gold">Squad.</span></h2>
                 <p className="text-text-secondary text-xl font-medium opacity-40 mb-16 max-w-xl mx-auto xl:mx-0 leading-relaxed italic group-hover:opacity-100 transition-opacity duration-1000">
                   Recruit elite predictors to the arena. Earn <span className="text-white font-black italic">₦1,000</span> for every successful player registration in your professional scout network.
                 </p>
                 <Link href="/referral" className="btn-luxury btn-gold btn-premium-depth !px-16 !py-6 text-[11px] font-black italic tracking-[0.3em] shadow-2xl group uppercase">
-                   ARENA PARTNERS <ArrowUpRight className="w-5 h-5 ml-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
+                   VIEW NETWORK <ArrowUpRight className="w-5 h-5 ml-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
                 </Link>
              </div>
              
@@ -223,7 +223,7 @@ export default function HowItWorksPage() {
                      <div className="w-16 h-16 bg-white/[0.03] rounded-2xl border border-white/5 flex items-center justify-center text-gold/20 group-hover/icon:bg-gold group-hover/icon:text-black group-hover/icon:rotate-12 transition-all duration-700 shadow-inner">
                         <item.icon className="w-7 h-7" />
                      </div>
-                     <div className="text-[8px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">INSTANT PAYOUTS</div>
+                     <div className="text-[8px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-40">Direct Payouts</div>
                      <span className="text-[11px] font-black text-text-dim uppercase tracking-[0.4em] italic opacity-30 group-hover/icon:opacity-100 transition-opacity">{item.text}</span>
                   </div>
                 ))}
@@ -247,8 +247,8 @@ export default function HowItWorksPage() {
                  Secure your arena membership, analyze the fixtures, and claim your first 3-day winning streak today.
               </p>
               <div className="flex flex-col sm:flex-row gap-8 justify-center">
-                <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !px-20 !py-7 text-[13px] font-black italic tracking-[0.3em] shadow-2xl uppercase">JOIN THE ARENA</Link>
-                <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !px-20 !py-7 text-[13px] font-black italic tracking-[0.3em] border-white/10 bg-white/[0.02] uppercase">LIVE ARENA</Link>
+                <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !px-20 !py-7 text-[13px] font-black italic tracking-[0.3em] shadow-2xl uppercase">ENTER THE ARENA</Link>
+                <Link href="/arena" className="btn-luxury btn-outline btn-premium-depth !px-20 !py-7 text-[13px] font-black italic tracking-[0.3em] border-white/10 bg-white/[0.02] uppercase">VIEW ARENA</Link>
               </div>
            </div>
         </motion.div>

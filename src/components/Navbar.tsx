@@ -91,7 +91,7 @@ export default function Navbar() {
 
               {!user ? (
                 <Link href="/accounts" className="btn-luxury btn-gold btn-premium-depth !py-2.5 !px-6 flex items-center gap-2.5 shadow-xl">
-                  <span className="text-[10px] font-black tracking-widest italic">START STREAK</span>
+                  <span className="text-[10px] font-black tracking-widest italic">Join the Arena</span>
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               ) : (
@@ -158,11 +158,11 @@ export default function Navbar() {
           <div className="mt-auto flex flex-col gap-4 pt-10 border-t border-white/5">
             {!user ? (
                <Link href="/accounts" onClick={closeMenu} className="btn-luxury btn-gold btn-premium-depth w-full !py-5 text-[11px] uppercase tracking-[0.2em] font-black italic shadow-2xl">
-                 START YOUR STREAK
+                 Join the Arena
                </Link>
             ) : (
                <button onClick={() => { logout(); closeMenu(); }} className="btn-luxury btn-outline btn-premium-depth w-full !py-5 text-[11px] uppercase tracking-[0.2em] font-black italic text-rose-500 border-rose-500/20 bg-rose-500/5">
-                 Log Out Session
+                 Logout
                </button>
             )}
             <p className="text-center text-[8px] font-black text-text-dim/30 uppercase tracking-[0.4em] mt-3 italic">PREDCHAIN ELITE ARENA</p>
