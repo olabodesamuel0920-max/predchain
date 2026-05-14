@@ -44,6 +44,13 @@ export default function HeroMoment() {
               alt="The Strike" 
               className="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity duration-1000"
             />
+            {/* Impact Flash on Strike */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.2, 0] }}
+              transition={{ duration: 0.3, delay: 0.5 }}
+              className="absolute inset-0 bg-gold/30 z-10 pointer-events-none blur-xl" 
+            />
             {/* Animated Ball */}
             <motion.div
               initial={{ x: -100, y: 100, scale: 0.5, opacity: 0 }}
@@ -59,10 +66,26 @@ export default function HeroMoment() {
           <motion.div
             key="goal"
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
+            animate={{ 
+              opacity: 1, 
+              scale: 1,
+              x: [0, -10, 10, -10, 10, 0], // Screen shake
+              transition: { 
+                opacity: { duration: 0.2 },
+                scale: { duration: 0.4 },
+                x: { duration: 0.5, ease: "easeInOut" }
+              }
+            }}
             exit={{ opacity: 0, scale: 1.2 }}
             className="absolute inset-0 flex items-center justify-center z-30"
           >
+            {/* Screen Flash */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: [0, 0.4, 0] }}
+              transition={{ duration: 0.4 }}
+              className="absolute inset-0 bg-white z-50 pointer-events-none" 
+            />
             <div className="absolute inset-0 bg-gold/20 blur-[100px] animate-pulse" />
             <motion.h2 
               initial={{ letterSpacing: '0.5em', filter: 'blur(20px)' }}
