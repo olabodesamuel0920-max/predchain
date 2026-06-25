@@ -24,17 +24,40 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
 
-      - name: Link, Query, Repair, Dry-run, and Deploy
+      - name: Link, Dry-run, and Deploy Migrations
         run: |
           # Redirect all output to step.log
           exec > >(tee -i step.log) 2>&1
           
           echo "=== LINKING PROJECT ==="
-          supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
+          if ! supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Linking project failed."
+            exit 1
+          fi
           
-          echo "=== QUERYING MIGRATION HISTORY ==="
-          # Execute query to see remote migrations
-          supabase db query "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version" --password "$SUPABASE_DB_PASSWORD" || true
-          
-          echo "=== MIGRATION LIST ==="
+          echo "=== MIGRATION LIST BEFORE ==="
           supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
+          
+          echo "=== DRY RUN ==="
+          if ! supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Dry run failed."
+            exit 1
+          fi
+          
+          echo "=== DEPLOYING MIGRATIONS ==="
+          if ! supabase db push --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Deployment failed."
+            exit 1
+          fi
+          
+          echo "=== MIGRATION LIST AFTER ==="
+          supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
+
+      - name: Send logs to public channel
+        if: always()
+        run: |
+          if [ -f step.log ]; then
+            curl -H "Title: Step Log" --data-binary @step.log ntfy.sh/predchain_logs_6d24e36e || true
+          else
+            echo "step.log not found." | curl -H "Title: Error Log" -d @- ntfy.sh/predchain_logs_6d24e36e || true
+          fi
