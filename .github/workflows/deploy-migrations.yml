@@ -27,5 +27,41 @@ jobs:
       - name: Link Supabase project
         run: supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
 
-      - name: List migrations
-        run: supabase migration list --password "$SUPABASE_DB_PASSWORD"
+      - name: Run repair and list
+        run: |
+          echo "=== RUNNING REPAIR ==="
+          supabase migration repair 0000 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0001 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0002 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0003 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0004 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0005 --status applied --password "$SUPABASE_DB_PASSWORD" --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0006 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0007 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0008 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          supabase migration repair 0009 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          
+          echo "=== LISTING MIGRATIONS ==="
+          supabase migration list --password "$SUPABASE_DB_PASSWORD" > migration_list.txt
+          cat migration_list.txt
+
+      - name: Dry run migrations
+        run: |
+          echo "=== DRY RUN ==="
+          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > dry_run.txt
+          cat dry_run.txt
+
+      - name: Deploy migrations
+        run: |
+          echo "=== DEPLOY ==="
+          supabase db push --password "$SUPABASE_DB_PASSWORD" > deploy_run.txt
+          cat deploy_run.txt
+
+      - name: Upload logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: migration-logs
+          path: |
+            migration_list.txt
+            dry_run.txt
+            deploy_run.txt
