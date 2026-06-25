@@ -1,0 +1,1 @@
+-- compatibility placeholder for old migration history
