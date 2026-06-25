@@ -24,7 +24,7 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
 
-      - name: Link, Revert 0009, Dry-run, and Deploy Migrations
+      - name: Link, Dry-run, and Deploy Migrations
         run: |
           # Redirect all output to step.log
           exec > >(tee -i step.log) 2>&1
@@ -32,13 +32,6 @@ jobs:
           echo "=== LINKING PROJECT ==="
           if ! supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"; then
             echo "ERROR: Linking project failed."
-            exit 1
-          fi
-          
-          echo "=== REVERTING REMOTE 0009 RECORD ==="
-          # Revert the dangling 0009 record from the remote history so we can apply 0009 cleanly
-          if ! supabase migration repair --status reverted 0009 --password "$SUPABASE_DB_PASSWORD"; then
-            echo "ERROR: Reverting 0009 record failed."
             exit 1
           fi
           
