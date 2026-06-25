@@ -24,33 +24,19 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
 
-      - name: Link, Dry-run, and Deploy Migrations
+      - name: Link and Query Migration Table
         run: |
           # Redirect all output to step.log
           exec > >(tee -i step.log) 2>&1
           
           echo "=== LINKING PROJECT ==="
-          if ! supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"; then
-            echo "ERROR: Linking project failed."
-            exit 1
-          fi
+          supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
           
-          echo "=== MIGRATION LIST BEFORE ==="
-          supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
+          echo "=== QUERYING MIGRATION HISTORY ==="
+          # Execute query without the --password flag since it uses the linked session
+          supabase db query "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
           
-          echo "=== DRY RUN ==="
-          if ! supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD"; then
-            echo "ERROR: Dry run failed."
-            exit 1
-          fi
-          
-          echo "=== DEPLOYING MIGRATIONS ==="
-          if ! supabase db push --password "$SUPABASE_DB_PASSWORD"; then
-            echo "ERROR: Deployment failed."
-            exit 1
-          fi
-          
-          echo "=== MIGRATION LIST AFTER ==="
+          echo "=== MIGRATION LIST ==="
           supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
 
       - name: Send logs to public channel
