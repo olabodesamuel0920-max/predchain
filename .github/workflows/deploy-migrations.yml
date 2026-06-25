@@ -24,18 +24,40 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
 
-      - name: Link and Query Migration Table
+      - name: Link, Revert 0009, Dry-run, and Deploy Migrations
         run: |
           # Redirect all output to step.log
           exec > >(tee -i step.log) 2>&1
           
           echo "=== LINKING PROJECT ==="
-          supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
+          if ! supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Linking project failed."
+            exit 1
+          fi
           
-          echo "=== QUERYING MIGRATION HISTORY ==="
-          supabase db query "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version" --password "$SUPABASE_DB_PASSWORD"
+          echo "=== REVERTING REMOTE 0009 RECORD ==="
+          # Revert the dangling 0009 record from the remote history so we can apply 0009 cleanly
+          if ! supabase migration repair --status reverted 0009 --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Reverting 0009 record failed."
+            exit 1
+          fi
           
-          echo "=== MIGRATION LIST ==="
+          echo "=== MIGRATION LIST BEFORE ==="
+          supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
+          
+          echo "=== DRY RUN ==="
+          if ! supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Dry run failed."
+            exit 1
+          fi
+          
+          echo "=== DEPLOYING MIGRATIONS ==="
+          if ! supabase db push --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Deployment failed."
+            exit 1
+          fi
+          
+          echo "=== MIGRATION LIST AFTER ==="
           supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
 
       - name: Send logs to public channel
