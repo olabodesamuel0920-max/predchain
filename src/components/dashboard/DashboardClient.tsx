@@ -78,7 +78,16 @@ export default function DashboardClient({
   const [isPending, startTransition] = useTransition();
   const searchParams = useSearchParams();
   const [payoutAmount, setPayoutAmount] = useState('');
-  const [bankInfo, setBankInfo] = useState({ bank: '', account: '', name: '' });
+  const [deviceFingerprint, setDeviceFingerprint] = useState('');
+
+  useEffect(() => {
+    let clientId = localStorage.getItem('predchain_client_id');
+    if (!clientId) {
+      clientId = 'device_' + Math.random().toString(36).substring(2, 15) + '_' + Date.now();
+      localStorage.setItem('predchain_client_id', clientId);
+    }
+    setDeviceFingerprint(clientId);
+  }, []);
 
   const totalRewards = transactions.filter(t => t.type === 'reward').reduce((acc, t) => acc + t.amount, 0);
   const totalReferrals = transactions.filter(t => t.type === 'referral_bonus').reduce((acc, t) => acc + t.amount, 0);
@@ -111,6 +120,8 @@ export default function DashboardClient({
     formData.append('matchId', matchId);
     formData.append('entryId', userEntry.id);
     formData.append('prediction', choice);
+    formData.append('device_fingerprint', deviceFingerprint);
+    formData.append('timezone', Intl.DateTimeFormat().resolvedOptions().timeZone);
 
     startTransition(async () => {
       try {
@@ -130,7 +141,7 @@ export default function DashboardClient({
     }
     startTransition(async () => {
       try {
-        await requestPayout(Number(payoutAmount), bankInfo);
+        await requestPayout(Number(payoutAmount));
         showSuccess('Withdrawal request submitted.');
         setPayoutAmount('');
       } catch (err: any) {
@@ -193,6 +204,32 @@ export default function DashboardClient({
                 <span className="text-[10px] font-black italic uppercase tracking-[0.2em]">Disconnect</span>
              </button>
           </div>
+        </div>
+
+        {/* Verification Status Warning Banners */}
+        <div className="flex flex-col gap-4 mb-10">
+          {!profile.phone_verified && (
+            <div className="p-6 bg-rose-500/10 border border-rose-500/20 rounded-2xl flex items-center justify-between gap-6 shadow-lg animate-pulse">
+              <div className="flex items-center gap-4">
+                <ShieldAlert className="w-5 h-5 text-rose-500 shrink-0" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-rose-500 italic leading-relaxed">
+                  PHONE VERIFICATION REQUIRED: Please verify your phone number in Settings to start securing predictions in the Arena.
+                </span>
+              </div>
+              <Link href="/dashboard/settings" className="btn btn-primary !py-2.5 !px-6 text-[9px] font-black uppercase tracking-widest shrink-0">Verify Now</Link>
+            </div>
+          )}
+          {profile.identity_status !== 'verified' && (
+            <div className="p-6 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-center justify-between gap-6 shadow-lg">
+              <div className="flex items-center gap-4">
+                <ShieldAlert className="w-5 h-5 text-amber-500 shrink-0" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-amber-500 italic leading-relaxed">
+                  KYC VERIFICATION REQUIRED: Your KYC is currently {profile.identity_status || 'unverified'}. Payout withdrawals and automatic reward distributions are locked until KYC is approved in Settings.
+                </span>
+              </div>
+              <Link href="/dashboard/settings" className="btn btn-primary !py-2.5 !px-6 text-[9px] font-black uppercase tracking-widest bg-amber-500 hover:bg-amber-600 shrink-0">Complete KYC</Link>
+            </div>
+          )}
         </div>
 
         {/* Global Key Metrics */}
@@ -387,52 +424,93 @@ export default function DashboardClient({
                   </div>
                </motion.div>
 
-               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+               <div className="space-y-16">
                   {matches.length === 0 ? (
-                    <div className="col-span-full py-64 text-center card-luxury border border-dashed border-white/10 bg-[#07090e] rounded-[4rem] shadow-inner opacity-20 group">
+                    <div className="py-64 text-center card-luxury border border-dashed border-white/10 bg-[#07090e] rounded-[4rem] shadow-inner opacity-20">
                        <Zap className="w-20 h-20 mx-auto text-gold/20 animate-pulse mb-10" />
-                       <span className="text-sm font-black uppercase tracking-[0.6em] italic block mb-12">NO MATCHES AVAILABLE</span>
+                       <span className="text-sm font-black uppercase tracking-[0.6em] italic block">NO MATCHES AVAILABLE</span>
                        <button onClick={() => window.location.reload()} className="btn-luxury btn-outline !px-16 !py-5 font-black text-[11px] tracking-[0.3em] italic uppercase">REFRESH ARENA</button>
                     </div>
                   ) : (
-                    matches.map((m, i) => {
-                      const pred = predictions.find(p => p.match_id === m.id);
+                    [1, 2, 3].map(day => {
+                      const dayMatches = matches.filter(m => m.matchday === day);
+                      const isDayPredicted = predictions.some(p => {
+                        const match = matches.find(m => m.id === p.match_id);
+                        return match?.matchday === day;
+                      });
+
                       return (
-                        <motion.div 
-                          key={m.id} 
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: i * 0.05 }}
-                          className="card-luxury !p-12 group/match relative overflow-hidden flex flex-col bg-[#07090e] border-white/10 shadow-2xl depth-card duration-700"
-                        >
-                           <div className="flex justify-between items-center mb-16">
-                              <span className="text-[11px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 italic">{new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}_UTC</span>
-                              <div className={`badge-luxury !py-2 !px-6 text-[9px] font-black tracking-[0.3em] italic ${pred ? '!bg-emerald-500/5 !text-emerald-500 border-emerald-500/10 shadow-inner' : 'bg-white/[0.02] text-text-dim opacity-20 border-white/5'}`}>
-                                {pred ? 'SECURED' : 'PENDING'}
+                        <div key={day} className="space-y-6">
+                          <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                            <h4 className="text-xs font-black uppercase tracking-[0.4em] text-white italic">Day {day} Challenges</h4>
+                            {isDayPredicted ? (
+                              <span className="text-[8px] font-black text-emerald-500 bg-emerald-500/5 border border-emerald-500/10 px-3 py-1 rounded-full uppercase tracking-widest italic">Day secured</span>
+                            ) : (
+                              <span className="text-[8px] font-black text-gold bg-gold/5 border border-gold/10 px-3 py-1 rounded-full uppercase tracking-widest italic">Selection pending</span>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+                            {dayMatches.length === 0 ? (
+                              <div className="col-span-full py-12 text-center card-luxury border border-dashed border-white/10 bg-[#07090e]/40 rounded-2xl opacity-20">
+                                <span className="text-[9px] font-black uppercase tracking-[0.4em] italic block">No challenges scheduled for Day {day}</span>
                               </div>
-                           </div>
-                           <div className="space-y-8 text-center mb-16 flex-1">
-                              <h4 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter italic font-display group-hover/match:text-gold transition-all duration-700">{m.home_team}</h4>
-                              <div className="text-[10px] font-black text-text-dim opacity-20 tracking-[0.6em] italic py-2">_VS_</div>
-                              <h4 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter italic font-display group-hover/match:text-gold transition-all duration-700">{m.away_team}</h4>
-                           </div>
-                           <div className="grid grid-cols-3 gap-5 pt-10 border-t border-white/5">
-                              {['1', 'X', '2'].map(choice => (
-                                 <button 
-                                   key={choice}
-                                   onClick={() => handlePrediction(m.id, choice as '1' | 'X' | '2')}
-                                   disabled={isPending || !!pred || !userEntry}
-                                   className={`py-6 rounded-[1.5rem] font-black text-[13px] transition-all duration-700 border font-display italic tracking-widest ${
-                                     pred?.prediction === choice 
-                                     ? 'bg-gold text-black border-gold shadow-[0_15px_30px_rgba(242,201,76,0.3)] scale-105' 
-                                     : 'bg-white/[0.02] border-white/5 text-text-dim opacity-40 hover:opacity-100 hover:text-white hover:border-gold/30 hover:bg-gold/5'
-                                   }`}
-                                 >
-                                   {choice}
-                                 </button>
-                              ))}
-                           </div>
-                        </motion.div>
+                            ) : (
+                              dayMatches.map((m, i) => {
+                                const pred = predictions.find(p => p.match_id === m.id);
+                                const isLocked = new Date(m.kickoff_time) < new Date() || m.status !== 'scheduled';
+
+                                return (
+                                  <motion.div 
+                                    key={m.id} 
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.05 }}
+                                    className={`card-luxury !p-12 group/match relative overflow-hidden flex flex-col bg-[#07090e] border-white/10 shadow-2xl depth-card duration-700 ${
+                                      pred ? 'border-emerald-500/30' : ''
+                                    }`}
+                                  >
+                                     <div className="flex justify-between items-center mb-16">
+                                        <span className="text-[11px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 italic">
+                                          {new Date(m.kickoff_time).toLocaleDateString([], { month: 'short', day: 'numeric' })} @ {new Date(m.kickoff_time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                        <div className={`badge-luxury !py-2 !px-6 text-[9px] font-black tracking-[0.3em] italic ${
+                                          pred 
+                                            ? '!bg-emerald-500/5 !text-emerald-500 border-emerald-500/10' 
+                                            : isLocked 
+                                              ? '!bg-rose-500/5 !text-rose-500 border-rose-500/10' 
+                                              : 'bg-white/[0.02] text-text-dim opacity-20'
+                                        }`}>
+                                          {pred ? 'SECURED' : isLocked ? 'LOCKED' : 'OPEN'}
+                                        </div>
+                                     </div>
+                                     <div className="space-y-8 text-center mb-16 flex-1">
+                                        <h4 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter italic font-display group-hover/match:text-gold transition-all duration-700">{m.home_team}</h4>
+                                        <div className="text-[10px] font-black text-text-dim opacity-20 tracking-[0.6em] italic py-2">_VS_</div>
+                                        <h4 className="text-2xl md:text-3xl font-black text-white uppercase tracking-tighter italic font-display group-hover/match:text-gold transition-all duration-700">{m.away_team}</h4>
+                                     </div>
+                                     <div className="grid grid-cols-3 gap-5 pt-10 border-t border-white/5">
+                                        {['1', 'X', '2'].map(choice => (
+                                           <button 
+                                             key={choice}
+                                             onClick={() => handlePrediction(m.id, choice as '1' | 'X' | '2')}
+                                             disabled={isPending || isLocked || !!pred || (isDayPredicted && !pred) || !userEntry}
+                                             className={`py-6 rounded-[1.5rem] font-black text-[13px] transition-all duration-700 border font-display italic tracking-widest ${
+                                               pred?.prediction === choice 
+                                               ? 'bg-gold text-black border-gold shadow-[0_15px_30px_rgba(242,201,76,0.3)] scale-105' 
+                                               : 'bg-white/[0.02] border-white/5 text-text-dim opacity-40 hover:opacity-100 hover:text-white hover:border-gold/30 hover:bg-gold/5'
+                                             }`}
+                                           >
+                                             {choice}
+                                           </button>
+                                        ))}
+                                     </div>
+                                  </motion.div>
+                                );
+                              })
+                            )}
+                          </div>
+                        </div>
                       );
                     })
                   )}
@@ -525,21 +603,53 @@ export default function DashboardClient({
                         <p className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] opacity-30 text-center leading-loose italic">Fast, high-integrity funding secured via the global Paystack gateway.</p>
                      </div>
 
-                     <div className="card-luxury !p-12 bg-black border-white/10 shadow-2xl depth-card">
-                        <span className="text-[10px] font-black text-white uppercase tracking-[0.4em] mb-12 block opacity-30 italic">REQUEST PAYOUT</span>
-                        <form onSubmit={handlePayout} className="space-y-10">
-                           <div className="space-y-5">
-                              <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">PAYOUT AMOUNT (₦)</span>
-                              <input type="number" value={payoutAmount} onChange={(e) => setPayoutAmount(e.target.value)} placeholder="0.00" className="w-full bg-[#07090e] border border-white/10 rounded-2xl px-8 py-8 text-white text-5xl font-black font-display tracking-tighter focus:border-gold/60 focus:bg-black transition-all outline-none shadow-inner" required />
+                      {/* Request Payout Card */}
+                      <div className="card-luxury !p-12 bg-black border-white/10 shadow-2xl depth-card">
+                         <span className="text-[10px] font-black text-white uppercase tracking-[0.4em] mb-12 block opacity-30 italic">REQUEST PAYOUT</span>
+                         
+                         {profile.identity_status !== 'verified' ? (
+                           <div className="p-4 bg-rose-500/5 border border-rose-500/10 rounded-xl text-[9px] text-rose-400 font-bold uppercase italic mb-6 leading-relaxed flex items-center gap-2">
+                             <Lock className="w-3.5 h-3.5" /> KYC verification required for withdrawals. Go to Settings to complete.
                            </div>
-                           <button disabled={isPending || balance < 5000} type="submit" className="btn-luxury btn-primary btn-premium-depth w-full py-6 text-[12px] font-black italic tracking-[0.3em] shadow-[0_30px_60px_-15px_rgba(242,201,76,0.2)] uppercase">
-                              {isPending ? "PROCESSING..." : "CONFIRM PAYOUT"}
-                           </button>
-                        </form>
-                     </div>
-                  </div>
-               </div>
-            </div>
+                         ) : profile.bank_account_flagged ? (
+                           <div className="p-4 bg-rose-500/5 border border-rose-500/10 rounded-xl text-[9px] text-rose-400 font-bold uppercase italic mb-6 leading-relaxed flex items-center gap-2">
+                             <Lock className="w-3.5 h-3.5" /> Bank details flagged for duplication review. Withdrawals locked.
+                           </div>
+                         ) : profile.risk_score >= 70 ? (
+                           <div className="p-4 bg-rose-500/5 border border-rose-500/10 rounded-xl text-[9px] text-rose-400 font-bold uppercase italic mb-6 leading-relaxed flex items-center gap-2">
+                             <Lock className="w-3.5 h-3.5" /> Account under security review. Withdrawals locked.
+                           </div>
+                         ) : balance < 5000 ? (
+                           <div className="p-4 bg-white/[0.02] border border-white/5 rounded-xl text-[9px] text-secondary font-bold uppercase italic mb-6 leading-relaxed">
+                             Minimum withdrawal threshold is ₦5,000. Current balance: ₦{balance.toLocaleString()}
+                           </div>
+                         ) : null}
+
+                         <form onSubmit={handlePayout} className="space-y-10">
+                            <div className="space-y-5">
+                               <span className="text-[10px] font-black text-text-dim uppercase tracking-[0.3em] ml-2 opacity-30 italic">PAYOUT AMOUNT (₦)</span>
+                               <input 
+                                 type="number" 
+                                 value={payoutAmount} 
+                                 onChange={(e) => setPayoutAmount(e.target.value)} 
+                                 placeholder="0.00" 
+                                 disabled={profile.identity_status !== 'verified' || profile.bank_account_flagged || profile.risk_score >= 70}
+                                 className="w-full bg-[#07090e] border border-white/10 rounded-2xl px-8 py-8 text-white text-5xl font-black font-display tracking-tighter focus:border-gold/60 focus:bg-black transition-all outline-none shadow-inner disabled:opacity-40" 
+                                 required 
+                               />
+                            </div>
+                            <button 
+                              disabled={isPending || balance < 5000 || profile.identity_status !== 'verified' || profile.bank_account_flagged || profile.risk_score >= 70} 
+                              type="submit" 
+                              className="btn-luxury btn-primary btn-premium-depth w-full py-6 text-[12px] font-black italic tracking-[0.3em] shadow-[0_30px_60px_-15px_rgba(242,201,76,0.2)] uppercase"
+                            >
+                               {isPending ? "PROCESSING..." : "CONFIRM PAYOUT"}
+                            </button>
+                         </form>
+                      </div>
+                   </div>
+                </div>
+             </div>
           )}
 
           {/* NETWORK (PARTNERS) */}

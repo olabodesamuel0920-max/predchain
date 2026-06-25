@@ -31,6 +31,7 @@ import MatchesView from '@/components/admin/views/MatchesView';
 import SupportView from '@/components/admin/views/SupportView';
 import SettingsView from '@/components/admin/views/SettingsView';
 import PlaysView from '@/components/admin/views/PlaysView';
+import FraudView from '@/components/admin/views/FraudView';
 
 interface AdminClientProps {
   initialMetrics: { totalUsers: number; totalRevenue: number; pendingPayouts: number };
@@ -47,7 +48,7 @@ export default function AdminClient({
   recentPurchases,
   payoutRequests
 }: AdminClientProps) {
-  const [activeView, setActiveView] = useState<'dashboard'|'users'|'finance'|'matches'|'support'|'settings'|'plays'>('dashboard');
+  const [activeView, setActiveView] = useState<'dashboard'|'users'|'finance'|'matches'|'support'|'settings'|'plays'|'fraud'>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const navItems = [
@@ -56,6 +57,7 @@ export default function AdminClient({
     { id: 'plays' as const, label: 'User Plays', icon: TrendingUp },
     { id: 'finance' as const, label: 'Bank & Ledger', icon: CreditCard },
     { id: 'matches' as const, label: 'Arena Control', icon: Target },
+    { id: 'fraud' as const, label: 'Security & Fraud', icon: Shield },
     { id: 'support' as const, label: 'Help Desk', icon: HelpCircle },
     { id: 'settings' as const, label: 'System Config', icon: Settings },
   ];
@@ -253,6 +255,7 @@ export default function AdminClient({
               {activeView === 'finance' && <FinanceView payoutRequests={payoutRequests} initialMetrics={initialMetrics} />}
               {activeView === 'matches' && <MatchesView matches={matches} rounds={rounds} />}
               {activeView === 'plays' && <PlaysView rounds={rounds} />}
+              {activeView === 'fraud' && <FraudView />}
               {activeView === 'support' && <SupportView />}
               {activeView === 'settings' && <SettingsView />}
            </div>

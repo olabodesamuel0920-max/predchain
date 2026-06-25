@@ -471,3 +471,231 @@ export async function overrideMatchScore(matchId: string, homeScore: number, awa
   revalidatePath('/admin');
   return { success: true };
 }
+
+/**
+ * Admin action to approve KYC verification for a user.
+ */
+export async function approveKyc(userId: string, notes: string) {
+  const admin = await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  const { error } = await adminClient
+    .from('profiles')
+    .update({
+      identity_status: 'verified',
+      identity_notes: notes
+    })
+    .eq('id', userId);
+
+  if (error) throw error;
+
+  // Log audit
+  await adminClient.from('admin_audit_logs').insert({
+    admin_id: admin.id,
+    action: 'approve_kyc',
+    target_user_id: userId,
+    details: { notes }
+  });
+
+  // Evaluate referral bonus in case referee is now verified
+  await adminClient.rpc('evaluate_referral_bonus', { p_referred_user_id: userId });
+
+  revalidatePath('/admin');
+  revalidatePath('/dashboard');
+  return { success: true };
+}
+
+/**
+ * Admin action to reject KYC verification for a user.
+ */
+export async function rejectKyc(userId: string, notes: string) {
+  const admin = await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  const { error } = await adminClient
+    .from('profiles')
+    .update({
+      identity_status: 'rejected',
+      identity_notes: notes
+    })
+    .eq('id', userId);
+
+  if (error) throw error;
+
+  await adminClient.from('admin_audit_logs').insert({
+    admin_id: admin.id,
+    action: 'reject_kyc',
+    target_user_id: userId,
+    details: { notes }
+  });
+
+  revalidatePath('/admin');
+  return { success: true };
+}
+
+/**
+ * Admin action to clear bank duplication review flags.
+ */
+export async function clearBankFlag(userId: string) {
+  const admin = await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  const { error } = await adminClient
+    .from('profiles')
+    .update({
+      bank_account_flagged: false,
+      bank_account_flagged_reason: null,
+      status: 'active'
+    })
+    .eq('id', userId);
+
+  if (error) throw error;
+
+  await adminClient.from('admin_audit_logs').insert({
+    admin_id: admin.id,
+    action: 'clear_bank_flag',
+    target_user_id: userId
+  });
+
+  revalidatePath('/admin');
+  return { success: true };
+}
+
+/**
+ * Admin action to approve a winner from the manual review queue.
+ */
+export async function approveWinner(winnerId: string) {
+  const admin = await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  const { error } = await adminClient.rpc('approve_winner_atomic', {
+    p_winner_id: winnerId,
+    p_admin_id: admin.id
+  });
+
+  if (error) throw error;
+
+  revalidatePath('/admin');
+  revalidatePath('/winners');
+  return { success: true };
+}
+
+/**
+ * Fetch all flagged profiles and overlaps for the Fraud Dashboard.
+ */
+export async function getFraudReport() {
+  await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  // Fetch profiles that are flagged, high risk, under review, or suspended
+  const { data: profiles, error } = await adminClient
+    .from('profiles')
+    .select('*')
+    .or('risk_score.gte.30,bank_account_flagged.eq.true,status.eq.under_review,status.eq.suspended')
+    .order('risk_score', { ascending: false });
+
+  if (error) throw error;
+
+  const reports = [];
+
+  for (const profile of profiles || []) {
+    // Find overlapping profiles sharing same IP, Device Fingerprint, Phone, or Bank Account
+    const overlapConditions = [];
+    if (profile.last_device_fingerprint && profile.last_device_fingerprint !== 'unknown') {
+      overlapConditions.push(`last_device_fingerprint.eq.${profile.last_device_fingerprint}`);
+    }
+    if (profile.last_ip_address) {
+      overlapConditions.push(`last_ip_address.eq.${profile.last_ip_address}`);
+    }
+    if (profile.bank_account_number) {
+      overlapConditions.push(`bank_account_number.eq.${profile.bank_account_number}`);
+    }
+    if (profile.normalized_phone) {
+      overlapConditions.push(`normalized_phone.eq.${profile.normalized_phone}`);
+    }
+
+    let linkedAccounts: any[] = [];
+    if (overlapConditions.length > 0) {
+      const { data: overlaps } = await adminClient
+        .from('profiles')
+        .select('id, username, full_name, risk_score, status, phone, bank_account_number, last_device_fingerprint, last_ip_address')
+        .or(overlapConditions.join(','))
+        .neq('id', profile.id);
+      linkedAccounts = overlaps || [];
+    }
+
+    // Determine flag reasons
+    const reasons: string[] = [];
+    
+    // Check if phone matches other accounts
+    const phoneOverlap = linkedAccounts.some(acc => acc.phone === profile.phone && profile.phone);
+    if (phoneOverlap) reasons.push('same phone attempt');
+
+    // Check if device matches other accounts
+    const deviceOverlap = linkedAccounts.some(acc => acc.last_device_fingerprint === profile.last_device_fingerprint && profile.last_device_fingerprint && profile.last_device_fingerprint !== 'unknown');
+    if (deviceOverlap) reasons.push('same device');
+
+    // Check if IP matches other accounts
+    const ipOverlap = linkedAccounts.some(acc => acc.last_ip_address === profile.last_ip_address && profile.last_ip_address);
+    if (ipOverlap) reasons.push('same IP');
+
+    // Check if bank account matches other accounts
+    const bankOverlap = linkedAccounts.some(acc => acc.bank_account_number === profile.bank_account_number && profile.bank_account_number);
+    if (profile.bank_account_flagged || bankOverlap) reasons.push('same bank account');
+
+    // Check referral chain overlap
+    const { data: userReferrals } = await adminClient
+      .from('referrals')
+      .select('referrer_id, referred_user_id')
+      .or(`referrer_id.eq.${profile.id},referred_user_id.eq.${profile.id}`);
+
+    let hasReferralOverlap = false;
+    if (userReferrals && userReferrals.length > 0) {
+      for (const ref of userReferrals) {
+        const otherId = ref.referrer_id === profile.id ? ref.referred_user_id : ref.referrer_id;
+        const otherProfile = linkedAccounts.find(acc => acc.id === otherId);
+        if (otherProfile) {
+          hasReferralOverlap = true;
+          break;
+        }
+      }
+    }
+    if (hasReferralOverlap) reasons.push('referral chain overlap');
+
+    // Check for suspicious prediction/payment/withdrawal pattern
+    const { data: withdrawals } = await adminClient
+      .from('payout_requests')
+      .select('status')
+      .eq('user_id', profile.id);
+    const rejectedCount = withdrawals?.filter((w: any) => w.status === 'rejected').length || 0;
+    
+    if (profile.risk_score >= 70 || rejectedCount >= 2 || profile.status === 'under_review' || profile.status === 'suspended') {
+      reasons.push('suspicious prediction/payment/withdrawal pattern');
+    }
+
+    reports.push({
+      profile,
+      reasons: reasons.length > 0 ? reasons : ['medium risk score overlap'],
+      linkedAccounts
+    });
+  }
+
+  return reports;
+}
+
+/**
+ * Fetch all round winners from review queue.
+ */
+export async function getWinnerReviewQueue() {
+  await verifyAdmin();
+  const adminClient = await createAdminClient();
+
+  const { data, error } = await adminClient
+    .from('winners')
+    .select('*, profile:profiles(*), round:challenge_rounds(*)')
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+  return data;
+}
+

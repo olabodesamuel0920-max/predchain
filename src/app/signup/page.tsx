@@ -12,10 +12,23 @@ function SignupForm() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [referralCode, setReferralCode] = useState('');
+  const [deviceFingerprint, setDeviceFingerprint] = useState('');
+  const [timezone, setTimezone] = useState('UTC');
 
   useEffect(() => {
     const ref = searchParams.get('ref');
     if (ref) setReferralCode(ref);
+
+    let fingerprint = localStorage.getItem('predchain_client_id');
+    if (!fingerprint) {
+      fingerprint = 'pc_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('predchain_client_id', fingerprint);
+    }
+    setDeviceFingerprint(fingerprint);
+
+    try {
+      setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC');
+    } catch (e) {}
   }, [searchParams]);
 
   const signupAction = async (formData: FormData) => {
@@ -55,6 +68,8 @@ function SignupForm() {
       </div>
 
       <form action={signupAction} className="space-y-6">
+        <input type="hidden" name="device_fingerprint" value={deviceFingerprint} />
+        <input type="hidden" name="timezone" value={timezone} />
         {errorMsg && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}

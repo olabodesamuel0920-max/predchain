@@ -9,6 +9,7 @@ export default async function WinnersPage() {
   const { data: winners } = await supabase
     .from('winners')
     .select('*, profile:profiles(*), round:challenge_rounds(*)')
+    .eq('verified', true)
     .order('created_at', { ascending: false })
 
   const stats = await fetchPlatformStats()

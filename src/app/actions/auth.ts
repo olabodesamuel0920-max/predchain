@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
+import { normalizePhone, logSecurityEvent } from '@/lib/security'
 
 function validatePassword(password: string): string | null {
   if (password.length < 8) return 'Password must be at least 8 characters long.'
@@ -21,17 +22,22 @@ export async function signup(formData: FormData) {
   const username = formData.get('username') as string
   const phone = formData.get('phone') as string
   const referral_code = formData.get('referral_code') as string || null
+  const device_fingerprint = formData.get('device_fingerprint') as string || 'unknown'
+  const timezone = formData.get('timezone') as string || 'UTC'
 
   // --- PASSWORD STRENGTH CHECK ---
   const passwordError = validatePassword(password)
   if (passwordError) return { error: passwordError }
 
   // --- UNIQUE PHONE CHECK ---
+  const normalizedPhone = normalizePhone(phone)
+  if (!normalizedPhone) return { error: 'A valid phone number is required.' }
+
   const { data: existingPhone } = await supabase
     .from('profiles')
     .select('id')
-    .eq('phone', phone)
-    .single()
+    .eq('normalized_phone', normalizedPhone)
+    .maybeSingle()
 
   if (existingPhone) {
     return { error: 'This phone number is already linked to a PredChain profile.' }
@@ -70,6 +76,16 @@ export async function signup(formData: FormData) {
     return { error: error.message }
   }
 
+  if (data.user) {
+    await logSecurityEvent({
+      userId: data.user.id,
+      eventType: 'signup',
+      deviceFingerprint: device_fingerprint,
+      timezone: timezone,
+      metadata: { email, username }
+    })
+  }
+
   revalidatePath('/', 'layout')
   
   const returnTo = formData.get('returnTo') as string
@@ -88,14 +104,25 @@ export async function login(formData: FormData) {
 
   const email = formData.get('email') as string
   const password = formData.get('password') as string
+  const device_fingerprint = formData.get('device_fingerprint') as string || 'unknown'
+  const timezone = formData.get('timezone') as string || 'UTC'
 
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
   })
 
   if (error) {
     return { error: error.message }
+  }
+
+  if (data.user) {
+    await logSecurityEvent({
+      userId: data.user.id,
+      eventType: 'login',
+      deviceFingerprint: device_fingerprint,
+      timezone: timezone
+    })
   }
 
   revalidatePath('/', 'layout')
@@ -156,6 +183,20 @@ export async function updateProfile(formData: FormData) {
 
   // Simple validation
   if (username && username.length < 3) return { error: 'Username must be at least 3 characters' }
+
+  const normalized = normalizePhone(phone)
+  if (normalized) {
+    const { data: existingPhone } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('normalized_phone', normalized)
+      .neq('id', user.id)
+      .maybeSingle()
+
+    if (existingPhone) {
+      return { error: 'This phone number is already linked to another PredChain profile.' }
+    }
+  }
 
   const { error } = await supabase
     .from('profiles')

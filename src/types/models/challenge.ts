@@ -29,6 +29,7 @@ export interface ChallengeMatch {
   away_score: number | null;
   kickoff_time: string;
   status: 'scheduled' | 'live' | 'finished';
+  matchday: number;
 }
 
 export interface ChallengeEntry {

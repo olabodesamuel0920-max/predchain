@@ -13,12 +13,26 @@ function LoginForm() {
   const [infoMsg, setInfoMsg] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
 
+  const [deviceFingerprint, setDeviceFingerprint] = useState('');
+  const [timezone, setTimezone] = useState('UTC');
+
   useEffect(() => {
     const errorParam = searchParams.get('error');
     if (errorParam) setErrorMsg(decodeURIComponent(errorParam));
 
     const messageParam = searchParams.get('message');
     if (messageParam) setInfoMsg(decodeURIComponent(messageParam));
+
+    let fingerprint = localStorage.getItem('predchain_client_id');
+    if (!fingerprint) {
+      fingerprint = 'pc_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+      localStorage.setItem('predchain_client_id', fingerprint);
+    }
+    setDeviceFingerprint(fingerprint);
+
+    try {
+      setTimezone(Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC');
+    } catch (e) {}
   }, [searchParams]);
 
   const loginAction = async (formData: FormData) => {
@@ -54,6 +68,8 @@ function LoginForm() {
       </div>
 
       <form action={loginAction} className="space-y-8">
+        <input type="hidden" name="device_fingerprint" value={deviceFingerprint} />
+        <input type="hidden" name="timezone" value={timezone} />
         {errorMsg && (
           <motion.div 
             initial={{ opacity: 0, scale: 0.95 }}

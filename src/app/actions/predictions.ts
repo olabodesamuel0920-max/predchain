@@ -3,6 +3,7 @@
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { verifyAdmin } from './admin';
+import { logSecurityEvent } from '@/lib/security';
 
 export async function submitPrediction(formData: FormData) {
   const supabase = await createClient();
@@ -13,8 +14,24 @@ export async function submitPrediction(formData: FormData) {
   const matchId = formData.get('matchId') as string;
   const entryId = formData.get('entryId') as string;
   const prediction = formData.get('prediction') as string; // '1', 'X', '2'
+  const device_fingerprint = formData.get('device_fingerprint') as string || 'unknown';
+  const timezone = formData.get('timezone') as string || 'UTC';
 
-  // 1. Validate Ownership & Round-Match Integrity
+  // 1. Enforce phone verification and status check
+  const adminClient = await createAdminClient();
+  const { data: profile } = await adminClient
+    .from('profiles')
+    .select('phone_verified, status')
+    .eq('id', user.id)
+    .single();
+
+  if (!profile) throw new Error('Profile not found.');
+  if (profile.status === 'suspended') throw new Error('Your account is suspended.');
+  if (!profile.phone_verified) {
+    throw new Error('Please verify your phone number in Settings before submitting predictions.');
+  }
+
+  // 2. Validate Ownership & Round-Match Integrity
   const { data: entry, error: entryError } = await supabase
     .from('challenge_entries')
     .select('user_id, round_id, is_winner')
@@ -47,7 +64,16 @@ export async function submitPrediction(formData: FormData) {
     throw new Error('This match is already locked or started.');
   }
 
-  // 2. Insert/Update Prediction
+  // Log prediction security event
+  await logSecurityEvent({
+    userId: user.id,
+    eventType: 'prediction',
+    deviceFingerprint: device_fingerprint,
+    timezone: timezone,
+    metadata: { matchId, entryId, prediction }
+  });
+
+  // 3. Insert/Update Prediction
   const { error: upsertError } = await supabase
     .from('predictions')
     .upsert({

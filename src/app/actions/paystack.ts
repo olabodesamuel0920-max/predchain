@@ -120,6 +120,17 @@ export async function verifyPayment(reference: string) {
 
   // 3. Handle Wallet Funding
   if (type === 'wallet_funding') {
+    // Check if this wallet funding reference has already been processed
+    const { data: existingTx } = await adminClient
+      .from('wallet_transactions')
+      .select('id')
+      .eq('reference', `topup_${reference}`)
+      .maybeSingle();
+
+    if (existingTx) {
+      return { success: true, message: 'Wallet funding already processed' };
+    }
+
     let { data: wallet, error: walletError } = await adminClient
       .from('wallets')
       .select('id, balance_ngn')
