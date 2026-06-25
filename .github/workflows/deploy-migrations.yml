@@ -24,20 +24,62 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
 
-      - name: Link and Query Migration Table
+      - name: Link, Repair, Dry-run, and Deploy Migrations
         run: |
           # Redirect all output to step.log
           exec > >(tee -i step.log) 2>&1
           
           echo "=== LINKING PROJECT ==="
-          supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
+          if ! supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Linking project failed."
+            exit 1
+          fi
           
-          echo "=== QUERYING MIGRATION HISTORY ==="
-          # Execute query without the --password flag since it uses the linked session
-          supabase db query "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
+          echo "=== QUERYING MIGRATION HISTORY BEFORE ==="
+          psql "postgresql://postgres:$SUPABASE_DB_PASSWORD@db.$SUPABASE_PROJECT_REF.supabase.co:5432/postgres" -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
           
-          echo "=== MIGRATION LIST ==="
+          echo "=== DELETING DANGLING 0009 RECORD ==="
+          psql "postgresql://postgres:$SUPABASE_DB_PASSWORD@db.$SUPABASE_PROJECT_REF.supabase.co:5432/postgres" -c "DELETE FROM supabase_migrations.schema_migrations WHERE version = '0009';"
+          
+          echo "=== QUERYING MIGRATION HISTORY AFTER ==="
+          psql "postgresql://postgres:$SUPABASE_DB_PASSWORD@db.$SUPABASE_PROJECT_REF.supabase.co:5432/postgres" -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
+          
+          echo "=== MIGRATION LIST BEFORE PUSH ==="
           supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
+          
+          echo "=== DRY RUN ==="
+          if ! supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Dry run failed."
+            exit 1
+          fi
+          
+          echo "=== DEPLOYING MIGRATIONS ==="
+          if ! supabase db push --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Deployment failed."
+            exit 1
+          fi
+          
+          echo "=== MIGRATION LIST AFTER PUSH ==="
+          supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
+
+      - name: Run Live Database Verification
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: https://${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          # Redirect all output to step.log (append mode)
+          exec > >(tee -i -a step.log) 2>&1
+          
+          echo "=== RUNNING LIVE VERIFICATION ==="
+          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
+            echo "WARNING: SUPABASE_SERVICE_ROLE_KEY secret is not set in GitHub repository."
+            echo "Cannot run live database verification pass without the service role key."
+          else
+            echo "Installing @supabase/supabase-js..."
+            npm install @supabase/supabase-js
+            echo "Executing verification script..."
+            node tmp/verify_database.js
+          fi
 
       - name: Send logs to public channel
         if: always()
