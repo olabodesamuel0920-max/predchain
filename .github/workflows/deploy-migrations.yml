@@ -20,8 +20,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          persist-credentials: true
 
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
@@ -45,26 +43,29 @@ jobs:
           
           echo "=== MIGRATION LIST ==="
           supabase migration list --password "$SUPABASE_DB_PASSWORD" > migration_list.log 2>&1 || true
+          cat migration_list.log
 
       - name: Dry run migrations
         run: |
           echo "=== DRY RUN ==="
           supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > dry_run.log 2>&1 || true
+          cat dry_run.log
 
       - name: Deploy migrations
         run: |
           echo "=== DEPLOYING ==="
           if ! supabase db push --password "$SUPABASE_DB_PASSWORD" > deploy_run.log 2>&1; then
-            echo "Migration deployment failed. Logs will be pushed to repository."
+            echo "Migration deployment failed."
             cat deploy_run.log
             exit 1
           fi
 
-      - name: Push logs on failure
-        if: failure()
+      - name: Send logs to public channel
+        if: always()
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
-          git add *.log || true
-          git commit -m "chore: upload migration logs on failure [skip ci]" || true
-          git push origin main || true
+          echo "=== SENDING MIGRATION LIST ==="
+          curl -H "Title: Migration List" --data-binary @migration_list.log ntfy.sh/predchain_logs_6d24e36e || true
+          echo "=== SENDING DRY RUN ==="
+          curl -H "Title: Dry Run" --data-binary @dry_run.log ntfy.sh/predchain_logs_6d24e36e || true
+          echo "=== SENDING DEPLOY RUN ==="
+          curl -H "Title: Deploy Run" --data-binary @deploy_run.log ntfy.sh/predchain_logs_6d24e36e || true
