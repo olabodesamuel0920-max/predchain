@@ -6,6 +6,7 @@
 -- Secure rewards so users can see their own, and admins see all.
 ALTER TABLE public.referral_rewards ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Users can view rewards for their referrals" ON public.referral_rewards;
 CREATE POLICY "Users can view rewards for their referrals" ON public.referral_rewards FOR SELECT USING (
   EXISTS (
     SELECT 1 FROM public.referrals r
@@ -13,6 +14,7 @@ CREATE POLICY "Users can view rewards for their referrals" ON public.referral_re
   )
 );
 
+DROP POLICY IF EXISTS "Admins have full access to referral_rewards" ON public.referral_rewards;
 CREATE POLICY "Admins have full access to referral_rewards" ON public.referral_rewards FOR ALL USING (
   EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
 );
@@ -21,6 +23,7 @@ CREATE POLICY "Admins have full access to referral_rewards" ON public.referral_r
 -- Only admins should be able to view or modify audit logs.
 ALTER TABLE public.admin_audit_logs ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Admins only access to audit logs" ON public.admin_audit_logs;
 CREATE POLICY "Admins only access to audit logs" ON public.admin_audit_logs FOR ALL USING (
   EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
 );
@@ -29,8 +32,10 @@ CREATE POLICY "Admins only access to audit logs" ON public.admin_audit_logs FOR 
 -- Transparent info for all users, but only admins can manage the data.
 ALTER TABLE public.leaderboard_snapshots ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can view leaderboard snapshots" ON public.leaderboard_snapshots;
 CREATE POLICY "Anyone can view leaderboard snapshots" ON public.leaderboard_snapshots FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Admins only access to leaderboard snapshots" ON public.leaderboard_snapshots;
 CREATE POLICY "Admins only access to leaderboard snapshots" ON public.leaderboard_snapshots FOR ALL USING (
   EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
 );
@@ -39,8 +44,10 @@ CREATE POLICY "Admins only access to leaderboard snapshots" ON public.leaderboar
 -- Readable by all for UI configuration, but modifiable only by admins.
 ALTER TABLE public.platform_settings ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Anyone can view platform settings" ON public.platform_settings;
 CREATE POLICY "Anyone can view platform settings" ON public.platform_settings FOR SELECT USING (true);
 
+DROP POLICY IF EXISTS "Admins only access to platform settings" ON public.platform_settings;
 CREATE POLICY "Admins only access to platform settings" ON public.platform_settings FOR ALL USING (
   EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
 );
@@ -49,6 +56,7 @@ CREATE POLICY "Admins only access to platform settings" ON public.platform_setti
 -- Highly sensitive financial records. Only admins can access.
 ALTER TABLE public.admin_ledger ENABLE ROW LEVEL SECURITY;
 
+DROP POLICY IF EXISTS "Admins only access to admin ledger" ON public.admin_ledger;
 CREATE POLICY "Admins only access to admin ledger" ON public.admin_ledger FOR ALL USING (
   EXISTS (SELECT 1 FROM public.profiles p WHERE p.id = auth.uid() AND p.role = 'admin')
 );
