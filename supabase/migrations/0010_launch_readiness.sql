@@ -313,7 +313,7 @@ DROP TRIGGER IF EXISTS trg_check_one_prediction_per_matchday ON public.predictio
 CREATE TRIGGER trg_check_one_prediction_per_matchday
 BEFORE INSERT OR UPDATE ON public.predictions
 FOR EACH ROW
-EXECUTE FUNCTION public.trg_check_one_prediction_per_matchday();
+EXECUTE FUNCTION public.check_one_prediction_per_matchday();
 
 -- 8b. REWRITE CREATE PAYOUT REQUEST ATOMIC
 -- Enforce phone verification, KYC status, bank flag, suspended role, and risk scores at database level.
