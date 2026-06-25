@@ -35,12 +35,6 @@ jobs:
             exit 1
           fi
           
-          echo "=== REVERTING dangling 0009 RECORD ==="
-          if ! supabase migration repair --status reverted 0009 --password "$SUPABASE_DB_PASSWORD"; then
-            echo "ERROR: Reverting 0009 record failed."
-            exit 1
-          fi
-          
           echo "=== MIGRATION LIST BEFORE PUSH ==="
           supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
           
