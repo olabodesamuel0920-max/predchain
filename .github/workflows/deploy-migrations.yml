@@ -24,11 +24,17 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
 
-      - name: Link Supabase project
-        run: supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
-
-      - name: Run repair and list
+      - name: Link, Repair, Dry-run, and Deploy
         run: |
+          # Redirect all output to step.log
+          exec > >(tee -i step.log) 2>&1
+          
+          echo "=== LINKING PROJECT ==="
+          if ! supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Linking project failed."
+            exit 1
+          fi
+          
           echo "=== RUNNING REPAIR ==="
           supabase migration repair 0000 --status applied --password "$SUPABASE_DB_PASSWORD" || true
           supabase migration repair 0001 --status applied --password "$SUPABASE_DB_PASSWORD" || true
@@ -42,30 +48,22 @@ jobs:
           supabase migration repair 0009 --status applied --password "$SUPABASE_DB_PASSWORD" || true
           
           echo "=== MIGRATION LIST ==="
-          supabase migration list --password "$SUPABASE_DB_PASSWORD" > migration_list.log 2>&1 || true
-          cat migration_list.log
-
-      - name: Dry run migrations
-        run: |
+          supabase migration list --password "$SUPABASE_DB_PASSWORD"
+          
           echo "=== DRY RUN ==="
-          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD" > dry_run.log 2>&1 || true
-          cat dry_run.log
-
-      - name: Deploy migrations
-        run: |
+          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD"
+          
           echo "=== DEPLOYING ==="
-          if ! supabase db push --password "$SUPABASE_DB_PASSWORD" > deploy_run.log 2>&1; then
-            echo "Migration deployment failed."
-            cat deploy_run.log
+          if ! supabase db push --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Deploying migrations failed."
             exit 1
           fi
 
       - name: Send logs to public channel
         if: always()
         run: |
-          echo "=== SENDING MIGRATION LIST ==="
-          curl -H "Title: Migration List" --data-binary @migration_list.log ntfy.sh/predchain_logs_6d24e36e || true
-          echo "=== SENDING DRY RUN ==="
-          curl -H "Title: Dry Run" --data-binary @dry_run.log ntfy.sh/predchain_logs_6d24e36e || true
-          echo "=== SENDING DEPLOY RUN ==="
-          curl -H "Title: Deploy Run" --data-binary @deploy_run.log ntfy.sh/predchain_logs_6d24e36e || true
+          if [ -f step.log ]; then
+            curl -H "Title: Step Log" --data-binary @step.log ntfy.sh/predchain_logs_6d24e36e || true
+          else
+            echo "step.log not found." | curl -H "Title: Error Log" -d @- ntfy.sh/predchain_logs_6d24e36e || true
+          fi
