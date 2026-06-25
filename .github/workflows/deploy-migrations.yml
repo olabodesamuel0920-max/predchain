@@ -36,13 +36,13 @@ jobs:
           fi
           
           echo "=== QUERYING MIGRATION HISTORY BEFORE ==="
-          psql "postgresql://postgres:$SUPABASE_DB_PASSWORD@db.$SUPABASE_PROJECT_REF.supabase.co:5432/postgres" -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
+          PGPASSWORD="$SUPABASE_DB_PASSWORD" psql -h "db.$SUPABASE_PROJECT_REF.supabase.co" -U postgres -d postgres -p 5432 -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
           
           echo "=== DELETING DANGLING 0009 RECORD ==="
-          psql "postgresql://postgres:$SUPABASE_DB_PASSWORD@db.$SUPABASE_PROJECT_REF.supabase.co:5432/postgres" -c "DELETE FROM supabase_migrations.schema_migrations WHERE version = '0009';"
+          PGPASSWORD="$SUPABASE_DB_PASSWORD" psql -h "db.$SUPABASE_PROJECT_REF.supabase.co" -U postgres -d postgres -p 5432 -c "DELETE FROM supabase_migrations.schema_migrations WHERE version = '0009';"
           
           echo "=== QUERYING MIGRATION HISTORY AFTER ==="
-          psql "postgresql://postgres:$SUPABASE_DB_PASSWORD@db.$SUPABASE_PROJECT_REF.supabase.co:5432/postgres" -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
+          PGPASSWORD="$SUPABASE_DB_PASSWORD" psql -h "db.$SUPABASE_PROJECT_REF.supabase.co" -U postgres -d postgres -p 5432 -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
           
           echo "=== MIGRATION LIST BEFORE PUSH ==="
           supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
