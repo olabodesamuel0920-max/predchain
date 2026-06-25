@@ -35,14 +35,11 @@ jobs:
             exit 1
           fi
           
-          echo "=== QUERYING MIGRATION HISTORY BEFORE ==="
-          PGPASSWORD="$SUPABASE_DB_PASSWORD" psql -h "db.$SUPABASE_PROJECT_REF.supabase.co" -U postgres -d postgres -p 5432 -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
-          
-          echo "=== DELETING DANGLING 0009 RECORD ==="
-          PGPASSWORD="$SUPABASE_DB_PASSWORD" psql -h "db.$SUPABASE_PROJECT_REF.supabase.co" -U postgres -d postgres -p 5432 -c "DELETE FROM supabase_migrations.schema_migrations WHERE version = '0009';"
-          
-          echo "=== QUERYING MIGRATION HISTORY AFTER ==="
-          PGPASSWORD="$SUPABASE_DB_PASSWORD" psql -h "db.$SUPABASE_PROJECT_REF.supabase.co" -U postgres -d postgres -p 5432 -c "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version"
+          echo "=== REVERTING dangling 0009 RECORD ==="
+          if ! supabase migration repair --status reverted 0009 --password "$SUPABASE_DB_PASSWORD"; then
+            echo "ERROR: Reverting 0009 record failed."
+            exit 1
+          fi
           
           echo "=== MIGRATION LIST BEFORE PUSH ==="
           supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
