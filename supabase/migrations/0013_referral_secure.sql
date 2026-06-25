@@ -1,3 +1,4 @@
+-- 12. DYNAMIC REFERRAL REWARD EVALUATION
 CREATE OR REPLACE FUNCTION public.evaluate_referral_bonus(p_referred_user_id UUID)
 RETURNS VOID AS $$
 DECLARE
@@ -96,7 +97,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 13. REWRITE PROCESS REFERRAL REWARD ATOMIC
+-- 13. REWRITE PROCESS REFERRAL REWARD TRANSACTION
 -- Tracks referral bonus instantly but does not credit wallet instantly (is_paid = FALSE, status = 'joined').
 -- Blocks self-referral and linked-account referral abuse.
 CREATE OR REPLACE FUNCTION public.process_referral_reward_atomic(
@@ -173,5 +174,3 @@ BEGIN
 
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
-COMMIT;

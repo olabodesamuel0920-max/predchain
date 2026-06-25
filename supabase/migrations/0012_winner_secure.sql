@@ -1,4 +1,4 @@
--- 10. REWRITE ATOMIC ROUND WINNER SETTLEMENT
+-- 10. REWRITE ROUND WINNER SETTLEMENT
 -- Winnings enter manual review queue first; do not credit wallet automatically.
 ALTER TABLE public.winners ALTER COLUMN verified SET DEFAULT FALSE;
 
@@ -47,7 +47,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- 11. ATOMIC WINNER APPROVAL RPC
+-- 11. WINNER APPROVAL RPC
 CREATE OR REPLACE FUNCTION public.approve_winner_atomic(
   p_winner_id UUID,
   p_admin_id UUID
@@ -94,5 +94,3 @@ BEGIN
   VALUES (p_admin_id, 'approve_winner_payout', v_user_id, jsonb_build_object('winner_id', p_winner_id, 'amount', v_payout_amount));
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
-
--- 12. DYNAMIC REFERRAL REWARD EVALUATION RPC
