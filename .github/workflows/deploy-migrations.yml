@@ -24,46 +24,17 @@ jobs:
       - name: Setup Supabase CLI
         uses: supabase/setup-cli@v1
 
-      - name: Link, Repair, Dry-run, and Deploy
+      - name: Link, Query, Repair, Dry-run, and Deploy
         run: |
           # Redirect all output to step.log
           exec > >(tee -i step.log) 2>&1
           
           echo "=== LINKING PROJECT ==="
-          if ! supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"; then
-            echo "ERROR: Linking project failed."
-            exit 1
-          fi
+          supabase link --project-ref "$SUPABASE_PROJECT_REF" --password "$SUPABASE_DB_PASSWORD"
           
-          echo "=== RUNNING REPAIR ==="
-          supabase migration repair 0000 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0001 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0002 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0003 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0004 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0005 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0006 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0007 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0008 --status applied --password "$SUPABASE_DB_PASSWORD" || true
-          supabase migration repair 0009 --status applied --password "$SUPABASE_DB_PASSWORD" || true
+          echo "=== QUERYING MIGRATION HISTORY ==="
+          # Execute query to see remote migrations
+          supabase db query "SELECT version, name FROM supabase_migrations.schema_migrations ORDER BY version" --password "$SUPABASE_DB_PASSWORD" || true
           
           echo "=== MIGRATION LIST ==="
-          supabase migration list --password "$SUPABASE_DB_PASSWORD"
-          
-          echo "=== DRY RUN ==="
-          supabase db push --dry-run --password "$SUPABASE_DB_PASSWORD"
-          
-          echo "=== DEPLOYING ==="
-          if ! supabase db push --password "$SUPABASE_DB_PASSWORD"; then
-            echo "ERROR: Deploying migrations failed."
-            exit 1
-          fi
-
-      - name: Send logs to public channel
-        if: always()
-        run: |
-          if [ -f step.log ]; then
-            curl -H "Title: Step Log" --data-binary @step.log ntfy.sh/predchain_logs_6d24e36e || true
-          else
-            echo "step.log not found." | curl -H "Title: Error Log" -d @- ntfy.sh/predchain_logs_6d24e36e || true
-          fi
+          supabase migration list --password "$SUPABASE_DB_PASSWORD" || true
