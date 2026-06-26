@@ -1,6 +1,6 @@
 name: Deploy Supabase Migrations
 
-# Trigger QA Run 2
+# Trigger QA Run 3
 on:
   push:
     branches:
@@ -51,6 +51,9 @@ jobs:
             echo "WARNING: SUPABASE_SERVICE_ROLE_KEY secret is not set in GitHub repository."
             echo "Cannot run live database verification pass without the service role key."
           else
+            echo "=== DUMPING PROFILES CHECK CONSTRAINTS ==="
+            PGPASSWORD="$SUPABASE_DB_PASSWORD" psql -h "db.$SUPABASE_PROJECT_REF.supabase.co" -U postgres -d postgres -c "SELECT conname, pg_get_constraintdef(oid) FROM pg_constraint WHERE conrelid = 'public.profiles'::regclass;" || true
+            
             echo "Installing @supabase/supabase-js..."
             npm install @supabase/supabase-js
             echo "Executing verification script..."

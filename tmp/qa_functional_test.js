@@ -335,7 +335,7 @@ async function runQaPass() {
 
     // 7. KYC pending blocks payout
     console.log(`[Test 7] Verifying unverified KYC blocks payout request...`);
-    await supabase.from('profiles').update({ bank_account_flagged: false, status: 'user', identity_status: 'unverified' }).eq('id', userAId);
+    await supabase.from('profiles').update({ bank_account_flagged: false, status: 'active', identity_status: 'unverified' }).eq('id', userAId);
     await supabase.from('wallets').update({ balance_ngn: 20000 }).eq('id', walletAId);
 
     const { error: payoutErr } = await supabase.rpc('create_payout_request_atomic', {
@@ -356,7 +356,7 @@ async function runQaPass() {
       identity_status: 'verified',
       identity_legal_name: "QA User A Legal",
       bank_account_flagged: false,
-      status: 'user'
+      status: 'active'
     }).eq('id', userAId);
 
     if (kycApproveErr) throw new Error(`KYC approval simulation failed: ${kycApproveErr.message}`);
