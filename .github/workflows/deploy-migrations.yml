@@ -1,6 +1,5 @@
 name: Deploy Supabase Migrations
 
-# Trigger QA Run 3
 on:
   push:
     branches:
@@ -44,43 +43,12 @@ jobs:
           NEXT_PUBLIC_SUPABASE_URL: https://${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
-          # Redirect output to step.log
-          exec > >(tee -i step.log) 2>&1
-          
           if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
             echo "WARNING: SUPABASE_SERVICE_ROLE_KEY secret is not set in GitHub repository."
             echo "Cannot run live database verification pass without the service role key."
           else
-            echo "=== DUMPING PROFILES CHECK CONSTRAINTS ==="
-            PGPASSWORD="$SUPABASE_DB_PASSWORD" psql -h "db.$SUPABASE_PROJECT_REF.supabase.co" -U postgres -d postgres -c "SELECT conname, pg_get_constraintdef(oid) FROM pg_constraint WHERE conrelid = 'public.profiles'::regclass;" || true
-            
             echo "Installing @supabase/supabase-js..."
             npm install @supabase/supabase-js
             echo "Executing verification script..."
             node tmp/verify_database.js
-          fi
-
-      - name: Run Live QA Functional Test
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: https://${{ secrets.SUPABASE_PROJECT_REF }}.supabase.co
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
-        run: |
-          # Redirect output to qa.log
-          exec > >(tee -i qa.log) 2>&1
-          
-          if [ -z "$SUPABASE_SERVICE_ROLE_KEY" ]; then
-            echo "WARNING: SUPABASE_SERVICE_ROLE_KEY is not set."
-          else
-            echo "Executing functional QA script..."
-            node tmp/qa_functional_test.js
-          fi
-
-      - name: Send logs to public channel
-        if: always()
-        run: |
-          if [ -f step.log ]; then
-            curl -H "Title: Verification Log" --data-binary @step.log ntfy.sh/predchain_logs_6d24e36e || true
-          fi
-          if [ -f qa.log ]; then
-            curl -H "Title: QA Log" --data-binary @qa.log ntfy.sh/predchain_logs_6d24e36e || true
           fi
